@@ -28,7 +28,6 @@ export default withTRPC<AppRouter>({
     // Defining sub-links:
     // LoggerLink: Log all requests on console for debugging.
     // BatchLink: Send a number of requests together as a batch. (Better performance)
-
     const links = [
       loggerLink({
         enabled: () => process.env.NEXT_PUBLIC_ENVIRONMENT === "develop",
@@ -38,6 +37,12 @@ export default withTRPC<AppRouter>({
         maxBatchSize: 10,
       }),
     ];
+
+    const ONE_DAY_SECONDS = 60 * 60 * 24;
+    ctx?.res?.setHeader(
+      "Cache-Control",
+      `s-maxage=1, stale-while-revalidate=${ONE_DAY_SECONDS}`
+    );
 
     return {
       queryClientConfig: {
@@ -49,20 +54,17 @@ export default withTRPC<AppRouter>({
       },
       headers() {
         if (ctx?.req) {
+          const { connection: _connection, ...headers } = ctx.req.headers;
           return {
-            // Add headers to the request into the server,
-            // this way the server will have access to the cookies.
-            ...ctx.req.headers,
-            // Request is done on the server.
-            "x-ssr": 1,
+            ...headers,
+            "x-ssr": "1",
           };
         }
-
         return {};
       },
       links,
       transformer: superjson,
     };
   },
-  ssr: false,
+  ssr: true,
 })(App);
