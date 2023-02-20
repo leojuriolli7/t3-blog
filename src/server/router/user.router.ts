@@ -125,6 +125,18 @@ export const userRouter = createRouter()
       };
     },
   })
+  .mutation("logout", {
+    resolve({ ctx }) {
+      ctx.user = null;
+
+      ctx.res.setHeader("Set-Cookie", [
+        serialize("token", "", {
+          maxAge: -1,
+          path: "/",
+        }),
+      ]);
+    },
+  })
   .query("me", {
     resolve({ ctx }) {
       return ctx.user;

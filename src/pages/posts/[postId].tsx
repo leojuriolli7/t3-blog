@@ -19,10 +19,12 @@ const SinglePostPage: React.FC = () => {
   if (!data || error) return <Error statusCode={404} />;
 
   return (
-    <div>
-      <h1>{data?.title}</h1>
+    <div className="mt-20 w-full">
+      <main className="w-8/12 max-w-xl mx-auto flex flex-col gap-10 bg-slate-100 shadow-md p-12">
+        <h1 className="text-xl font-medium">{data?.title}</h1>
 
-      <p>{data?.body}</p>
+        <p>{data?.body}</p>
+      </main>
     </div>
   );
 };

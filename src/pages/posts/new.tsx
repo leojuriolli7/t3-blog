@@ -19,18 +19,37 @@ const CreatePostPage: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {error && error.message}
+    <div className="mt-20 w-full">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-5/12 max-w-xs mx-auto flex flex-col items-center gap-10"
+      >
+        {error && error.message}
 
-      <h1>Create a post</h1>
+        <h1 className="text-2xl font-medium text-center">Create a post</h1>
 
-      <input type="text" placeholder="your post title" {...register("title")} />
-      <br />
-      <textarea placeholder="your post content" {...register("body")} />
-      <br />
+        <input
+          type="text"
+          placeholder="your post title"
+          className="bg-slate-100 p-3 w-full"
+          {...register("title")}
+        />
+        <br />
+        <textarea
+          className="bg-slate-100 p-3 w-full"
+          placeholder="your post content"
+          {...register("body")}
+        />
+        <br />
 
-      <button type="submit">Create</button>
-    </form>
+        <button
+          className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
+          type="submit"
+        >
+          Create
+        </button>
+      </form>
+    </div>
   );
 };
 

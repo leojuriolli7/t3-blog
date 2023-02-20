@@ -1,58 +1,18 @@
-html {
-  font-size: 16px;
-}
-html,
-body {
-  padding: 1.5rem;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-main {
-  max-width: 1024px;
-  margin: 0 auto;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-article {
-  border: solid 1px black;
-  padding: 1rem;
-}
-
-article > p {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-a {
-  text-decoration: underline;
-}
-
-input,
-textarea {
-  font-size: 1.5rem;
-  padding: 1rem;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 button {
-  background-color: blueviolet;
-  color: white;
-  font-size: 1.5rem;
-  padding: 1.5rem;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+button:disabled {
+  cursor: not-allowed;
+  filter: opacity(0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }

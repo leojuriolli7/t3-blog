@@ -29,6 +29,7 @@ const LoginForm = () => {
     mutate: login,
     error,
     isSuccess,
+    isLoading,
   } = trpc.useMutation(["users.request-otp"], {});
 
   const onSubmit = (values: CreateUserInput) => {
@@ -42,27 +43,35 @@ const LoginForm = () => {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="mt-20 w-full">
+      <form
+        className="w-5/12 max-w-xs mx-auto flex flex-col items-center gap-10"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {error && error.message}
 
         {isSuccess && <p>Check your e-mail</p>}
-        {/* TO-DO: Option to re-send e-mail*/}
-        <h1>Login</h1>
+        <h1 className="text-2xl font-medium text-center">Login</h1>
 
         <input
           type="email"
-          placeholder="jane.doe@example.com"
+          placeholder="your@email.com"
           {...register("email")}
+          className="bg-slate-100 p-3 w-full"
         />
 
-        <br />
-
-        <button type="submit">Login</button>
+        <button
+          disabled={isLoading}
+          className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
+          type="submit"
+        >
+          Login
+        </button>
+        <Link href="/register" legacyBehavior passHref>
+          <a className="underline text-emerald-600">Register</a>
+        </Link>
       </form>
-
-      <Link href="/register">Register</Link>
-    </>
+    </div>
   );
 };
 
