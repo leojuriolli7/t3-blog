@@ -30,7 +30,9 @@ export default withTRPC<AppRouter>({
     // BatchLink: Send a number of requests together as a batch. (Better performance)
 
     const links = [
-      loggerLink(),
+      loggerLink({
+        enabled: () => process.env.NEXT_PUBLIC_ENVIRONMENT === "develop",
+      }),
       httpBatchLink({
         url,
         maxBatchSize: 10,
