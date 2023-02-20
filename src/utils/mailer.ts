@@ -13,10 +13,9 @@ export async function sendLoginEmail({
   const isDevelopment = process.env.NEXT_PUBLIC_ENVIRONMENT === "develop";
 
   const productionTransporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 587,
+    service: "gmail",
     auth: {
-      user: "apikey",
+      user: process.env.MAILER_USER,
       pass: process.env.MAILER_PASSWORD,
     },
   });
