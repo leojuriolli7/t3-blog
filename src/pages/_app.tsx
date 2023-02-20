@@ -10,7 +10,9 @@ import { trpc } from "@utils/trpc";
 import { UserContextProvider } from "src/context/user.context";
 
 function App({ Component, pageProps }: AppProps) {
-  const { data, isLoading } = trpc.useQuery(["users.me"]);
+  const { data, isLoading } = trpc.useQuery(["users.me"], {
+    refetchInterval: 1000,
+  });
 
   if (isLoading) return <p>Loading user...</p>;
 

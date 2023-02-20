@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 
-// TO-DO: use public and private keys.
 const SECRET = process.env.SECRET || "changeme";
 
 export function signJwt(data: object) {
