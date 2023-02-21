@@ -33,14 +33,15 @@ const PostListingPage: React.FC = () => {
         </nav>
       </div>
       {data?.map((post) => (
-        <Link href={`/posts/${post.id}`} key={post.id}>
-          <article className="bg-slate-100 shadow-md w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:scale-110 transition-all">
-            <h2 className="text-xl font-medium">{post.title}</h2>
-            <span className="line-clamp-2">{post.body}</span>
-            <Link href={`/posts/${post.id}`} legacyBehavior passHref>
-              <a className="underline text-emerald-500">Read post</a>
-            </Link>
-          </article>
+        <Link href={`/posts/${post.id}`} key={post.id} legacyBehavior>
+          <a className="w-full">
+            <article className="bg-slate-100 shadow-md w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:scale-110 transition-all">
+              <h2 className="text-xl font-medium">{post.title}</h2>
+              <span className="line-clamp-2">{post.body}</span>
+
+              <p className="underline text-emerald-500">Read post</p>
+            </article>
+          </a>
         </Link>
       ))}
     </div>
