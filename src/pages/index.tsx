@@ -11,7 +11,7 @@ const PostListingPage: React.FC = () => {
 
   const user = useUserContext();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (!data && isLoading) return <p>Loading...</p>;
 
   return (
     <div className="flex flex-col items-center gap-10 py-12 w-2/4 max-w-2xl mx-auto">

@@ -14,7 +14,7 @@ const SinglePostPage: React.FC = () => {
     },
   ]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (!data && isLoading) return <p>Loading...</p>;
 
   if (!data || error) return <Error statusCode={404} />;
 
