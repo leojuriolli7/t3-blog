@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer";
+import * as fs from "fs";
+import * as handlebars from "handlebars";
+import * as path from "path";
 
 export async function sendLoginEmail({
   email,
@@ -30,13 +33,22 @@ export async function sendLoginEmail({
     },
   });
 
+  const __dirname = path.resolve();
+  const filePath = path.join(__dirname, "public/static/mail-template.html");
+  const source = fs.readFileSync(filePath, "utf-8").toString();
+  const template = handlebars.compile(source);
+  const replacements = {
+    linkToT3Blog: `${url}/login#token=${token}`,
+  };
+  const htmlToSend = template(replacements);
+
   const emailObject = {
     from: '"Leonardo Dias" <leojuriolli@gmail.com>',
     to: email,
     subject: "Login to your account",
     // By using 'login#token=' instead of 'login?token=', the token will not be
-    // saved in the browser's history.
-    html: `Login by clicking <a href="${url}/login#token=${token}">here</a>`,
+    // saved in the browser's history.,
+    html: htmlToSend,
   };
 
   if (isDevelopment) {
