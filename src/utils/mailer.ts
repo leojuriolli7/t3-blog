@@ -35,10 +35,8 @@ export async function sendLoginEmail({
     to: email,
     subject: "Login to your account",
     // By using 'login#token=' instead of 'login?token=', the token will not be
-    // saved in the browser's history.,
-    html: {
-      path: process.env.EMAIL_TEMPLATE_URL,
-    },
+    // saved in the browser's history.
+    html: `Login by clicking <a href="${url}/login#token=${token}">here</a>`,
   };
 
   if (isDevelopment) {
