@@ -38,12 +38,12 @@ const CreatePostPage: React.FC = () => {
         <input
           type="text"
           placeholder="your post title"
-          className="bg-slate-100 p-3 w-full"
+          className="bg-slate-100 p-3 w-full dark:bg-zinc-800"
           {...register("title")}
         />
 
         <textarea
-          className="bg-slate-100 p-3 w-full h-44"
+          className="bg-slate-100 p-3 w-full h-44 dark:bg-zinc-800"
           placeholder="your post content"
           {...register("body")}
         />

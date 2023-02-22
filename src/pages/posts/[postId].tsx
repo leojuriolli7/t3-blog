@@ -30,7 +30,7 @@ const SinglePostPage: React.FC = () => {
   return (
     <div className="mt-20 w-full">
       <div className="w-8/12 max-w-2xl mx-auto">
-        <main className="w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12">
+        <main className="w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12 dark:bg-zinc-800">
           <ReactMarkdown className="prose text-4xl font-bold">
             {data?.title}
           </ReactMarkdown>

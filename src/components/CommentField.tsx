@@ -57,7 +57,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <textarea
-          className="bg-slate-100 p-3 w-full mt-2 shadow-md"
+          className="bg-slate-100 p-3 w-full mt-2 shadow-md dark:bg-zinc-900"
           defaultValue={undefined}
           {...register("body")}
           placeholder={parentId ? "Post reply" : "Post comment"}

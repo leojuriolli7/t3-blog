@@ -1,29 +1,38 @@
 import { trpc } from "@utils/trpc";
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ReactMarkdown from "@components/ReactMarkdown";
 import { useUserContext } from "src/context/user.context";
+import { useTheme } from "next-themes";
 
 const PostListingPage: React.FC = () => {
   const { data, isLoading } = trpc.useQuery(["posts.posts"]);
   const { mutate: logout } = trpc.useMutation(["users.logout"]);
 
+  const [mounted, setMounted] = useState(false);
+  const { theme, systemTheme, setTheme } = useTheme();
+  const user = useUserContext();
+
+  const currentTheme = theme === "system" ? systemTheme : theme;
+
   const onClickLogout = useCallback(() => logout(), [logout]);
 
-  const user = useUserContext();
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!data && isLoading) return <p>Loading...</p>;
 
   return (
     <div className="flex flex-col items-center gap-10 py-12 w-2/4 max-w-2xl mx-auto">
-      <div className="w-full">
-        <nav className="flex justify-between w-full">
+      <div className="w-full flex justify-between">
+        <nav className="flex gap-10">
           {user ? (
             <>
               <Link href="/posts/new">Create post</Link>
-              <p className="cursor-pointer" onClick={onClickLogout}>
+              <button className="cursor-pointer" onClick={onClickLogout}>
                 Logout
-              </p>
+              </button>
             </>
           ) : (
             <>
@@ -32,11 +41,18 @@ const PostListingPage: React.FC = () => {
             </>
           )}
         </nav>
+        {mounted ? (
+          <button
+            onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
+          >
+            {currentTheme} theme
+          </button>
+        ) : null}
       </div>
       {data?.map((post) => (
         <Link href={`/posts/${post.id}`} key={post.id} legacyBehavior>
           <a className="w-full">
-            <article className="bg-slate-100 shadow-md w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:scale-110 transition-all">
+            <article className="bg-slate-100 dark:bg-zinc-800 shadow-md w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:scale-110 transition-all">
               <ReactMarkdown className="prose text-2xl font-bold">
                 {post.title}
               </ReactMarkdown>

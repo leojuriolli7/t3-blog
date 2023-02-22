@@ -7,6 +7,7 @@ import superjson from "superjson";
 import { AppRouter } from "@server/router/app.router";
 import { url } from "../constants";
 import { trpc } from "@utils/trpc";
+import { ThemeProvider } from "next-themes";
 import { UserContextProvider } from "src/context/user.context";
 import Head from "next/head";
 
@@ -19,11 +20,13 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <UserContextProvider value={data}>
-      <Head>
-        <title>T3 Blog</title>
-        <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
-      </Head>
-      <Component {...pageProps} />
+      <ThemeProvider attribute="class">
+        <Head>
+          <title>T3 Blog</title>
+          <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+        </Head>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </UserContextProvider>
   );
 }

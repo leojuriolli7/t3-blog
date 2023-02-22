@@ -57,7 +57,7 @@ const LoginForm = () => {
           type="email"
           placeholder="your@email.com"
           {...register("email")}
-          className="bg-slate-100 p-3 w-full"
+          className="bg-slate-100 p-3 w-full dark:bg-zinc-800"
         />
 
         <button
