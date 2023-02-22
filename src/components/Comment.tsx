@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useUserContext } from "src/context/user.context";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
+import ReactMarkdown from "./ReactMarkdown";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -74,7 +75,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           {isDistance ? createdAt?.distance : createdAt?.date}
         </p>
       </div>
-      <p>{comment.body}</p>
+      <ReactMarkdown className="prose-sm">{comment.body}</ReactMarkdown>
 
       <div className="w-full flex justify-between">
         <button

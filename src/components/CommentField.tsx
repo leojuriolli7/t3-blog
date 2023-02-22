@@ -9,25 +9,32 @@ type Props = {
 };
 
 const CommentField: React.FC<Props> = ({ parentId }) => {
-  const { handleSubmit, reset, register } = useForm<CreateCommentInput>();
+  const { handleSubmit, reset, register } = useForm<CreateCommentInput>({
+    defaultValues: {
+      body: undefined,
+    },
+  });
 
   const router = useRouter();
   const postId = router.query.postId as string;
   const utils = trpc.useContext();
 
-  const { mutate, isLoading } = trpc.useMutation(["comments.add-comment"], {
-    onSuccess: () => {
-      reset();
+  const { mutate, isLoading, error } = trpc.useMutation(
+    ["comments.add-comment"],
+    {
+      onSuccess: () => {
+        reset();
 
-      // This will refetch the comments.
-      utils.invalidateQueries([
-        "comments.all-comments",
-        {
-          postId,
-        },
-      ]);
-    },
-  });
+        // This will refetch the comments.
+        utils.invalidateQueries([
+          "comments.all-comments",
+          {
+            postId,
+          },
+        ]);
+      },
+    }
+  );
 
   const onSubmit = useCallback(
     (values: CreateCommentInput) => {
@@ -46,9 +53,12 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
     <div className="mt-6">
       <h2 className="text-lg font-medium">Comments</h2>
 
+      {error && error.message}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <textarea
           className="bg-slate-100 p-3 w-full mt-2 shadow-md"
+          defaultValue={undefined}
           {...register("body")}
           placeholder={parentId ? "Post reply" : "Post comment"}
         />
@@ -60,6 +70,20 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
           >
             Send comment
           </button>
+
+          {!parentId && (
+            <p className="prose">
+              supports{" "}
+              <a
+                className="text-emerald-500"
+                href="https://www.markdownguide.org/basic-syntax/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                markdown
+              </a>
+            </p>
+          )}
         </div>
       </form>
     </div>

@@ -16,3 +16,8 @@ button:disabled {
   padding: 0;
   box-sizing: border-box;
 }
+
+.markdown__content :not(pre) code {
+  background: #047857;
+  color: white;
+}

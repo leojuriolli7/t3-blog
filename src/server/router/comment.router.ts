@@ -52,6 +52,13 @@ export const commentRouter = createRouter()
 
       const { user } = ctx;
 
+      if (!body) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Comment can't be empty",
+        });
+      }
+
       try {
         const comment = await ctx.prisma.comment.create({
           data: {
@@ -91,6 +98,13 @@ export const commentRouter = createRouter()
     async resolve({ ctx, input }) {
       try {
         const { commentId } = input;
+
+        // TO-DO: Finish delete comment implementation
+        await ctx.prisma.comment.deleteMany({
+          where: {
+            parentId: commentId,
+          },
+        });
 
         await ctx.prisma.comment.delete({
           where: {

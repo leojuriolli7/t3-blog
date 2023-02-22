@@ -14,17 +14,18 @@ const CreatePostPage: React.FC = () => {
     },
   });
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(
     (values: CreatePostInput) => {
       create(values);
-    };
-  }, [create]);
+    },
+    [create]
+  );
 
   return (
     <div className="mt-20 w-full">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-5/12 max-w-xs mx-auto flex flex-col items-center gap-10"
+        className="w-5/12 max-w-sm mx-auto flex flex-col items-center gap-10"
       >
         {error && error.message}
 
@@ -36,9 +37,9 @@ const CreatePostPage: React.FC = () => {
           className="bg-slate-100 p-3 w-full"
           {...register("title")}
         />
-        <br />
+
         <textarea
-          className="bg-slate-100 p-3 w-full"
+          className="bg-slate-100 p-3 w-full h-44"
           placeholder="your post content"
           {...register("body")}
         />
@@ -50,6 +51,20 @@ const CreatePostPage: React.FC = () => {
         >
           Create
         </button>
+
+        <div>
+          <p className="prose">
+            PS: You can use{" "}
+            <a
+              className="text-emerald-500"
+              href="https://www.markdownguide.org/basic-syntax/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              markdown!
+            </a>
+          </p>
+        </div>
       </form>
     </div>
   );
