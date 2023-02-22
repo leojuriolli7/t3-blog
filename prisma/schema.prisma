@@ -57,7 +57,7 @@ model Comment {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  Post   Post   @relation(fields: [postId], references: [id])
+  Post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
 
   children Comment[] @relation("comment_children")

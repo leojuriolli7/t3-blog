@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import ReactMarkdown from "@components/ReactMarkdown";
 import { useUserContext } from "src/context/user.context";
 import { useTheme } from "next-themes";
+import ShouldRender from "@components/ShouldRender";
 
 const PostListingPage: React.FC = () => {
   const { data, isLoading } = trpc.useQuery(["posts.posts"]);
@@ -16,6 +17,10 @@ const PostListingPage: React.FC = () => {
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   const onClickLogout = useCallback(() => logout(), [logout]);
+  const toggleTheme = useCallback(
+    () => setTheme(currentTheme === "dark" ? "light" : "dark"),
+    [setTheme, currentTheme]
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -27,27 +32,20 @@ const PostListingPage: React.FC = () => {
     <div className="flex flex-col items-center gap-10 py-12 w-2/4 max-w-2xl mx-auto">
       <div className="w-full flex justify-between">
         <nav className="flex gap-10">
-          {user ? (
-            <>
-              <Link href="/posts/new">Create post</Link>
-              <button className="cursor-pointer" onClick={onClickLogout}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link href="/login">Login</Link>
-              <Link href="/register">Register</Link>
-            </>
-          )}
+          <ShouldRender if={user}>
+            <Link href="/posts/new">Create post</Link>
+            <button className="cursor-pointer" onClick={onClickLogout}>
+              Logout
+            </button>
+          </ShouldRender>
+          <ShouldRender if={!user}>
+            <Link href="/login">Login</Link>
+            <Link href="/register">Register</Link>
+          </ShouldRender>
         </nav>
-        {mounted ? (
-          <button
-            onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
-          >
-            {currentTheme} theme
-          </button>
-        ) : null}
+        <ShouldRender if={mounted}>
+          <button onClick={toggleTheme}>theme</button>
+        </ShouldRender>
       </div>
       {data?.map((post) => (
         <Link href={`/posts/${post.id}`} key={post.id} legacyBehavior>

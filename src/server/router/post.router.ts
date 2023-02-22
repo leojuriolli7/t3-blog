@@ -43,6 +43,26 @@ export const postRouter = createRouter()
         where: {
           id: input.postId,
         },
+        include: {
+          user: true,
+        },
+      });
+    },
+  })
+  .mutation("delete-post", {
+    input: getSinglePostSchema,
+    async resolve({ ctx, input }) {
+      if (!ctx.user) {
+        new trpc.TRPCError({
+          code: "FORBIDDEN",
+          message: "Unauthorized",
+        });
+      }
+
+      await ctx.prisma.post.delete({
+        where: {
+          id: input.postId,
+        },
       });
     },
   });

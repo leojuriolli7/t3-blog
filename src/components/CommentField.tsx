@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { CreateCommentInput } from "src/schema/comment.schema";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
+import ShouldRender from "./ShouldRender";
 
 type Props = {
   parentId?: string;
@@ -18,6 +19,8 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
   const utils = trpc.useContext();
+
+  const isReply = parentId;
 
   const { mutate, isLoading, error } = trpc.useMutation(
     ["comments.add-comment"],
@@ -50,8 +53,10 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
   );
 
   return (
-    <div className="mt-6">
-      <h2 className="text-lg font-medium">Comments</h2>
+    <div className={isReply ? `` : "mt-6"}>
+      <ShouldRender if={!isReply}>
+        <h2 className="text-lg font-medium">Comments</h2>
+      </ShouldRender>
 
       {error && error.message}
 
@@ -60,7 +65,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
           className="bg-slate-100 p-3 w-full mt-2 shadow-md dark:bg-zinc-900"
           defaultValue={undefined}
           {...register("body")}
-          placeholder={parentId ? "Post reply" : "Post comment"}
+          placeholder={isReply ? "Post reply" : "Post comment"}
         />
         <div className="flex w-full justify-between">
           <button
@@ -71,7 +76,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
             Send comment
           </button>
 
-          {!parentId && (
+          <ShouldRender if={!isReply}>
             <p className="prose dark:prose-invert">
               supports{" "}
               <a
@@ -83,7 +88,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
                 markdown
               </a>
             </p>
-          )}
+          </ShouldRender>
         </div>
       </form>
     </div>

@@ -1,12 +1,14 @@
 import { trpc } from "@utils/trpc";
 import { CommentWithChildren } from "@utils/types";
-import { format, formatDistance } from "date-fns";
 import { useRouter } from "next/router";
-import { useCallback, useMemo, useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
+import { useCallback, useState } from "react";
 import { useUserContext } from "src/context/user.context";
+import useGetDate from "src/hooks/useGetDate";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ReactMarkdown from "./ReactMarkdown";
+import ShouldRender from "./ShouldRender";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -16,15 +18,15 @@ type Dates = "distance" | "date";
 
 const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [replying, setReplying] = useState(false);
-  const [selectedDateType, setSelectedDateType] = useState<Dates>("distance");
-  const isDistance = selectedDateType === "distance";
   const user = useUserContext();
   const utils = trpc.useContext();
+
+  const { date, toggleDateType } = useGetDate(comment?.createdAt);
 
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { mutate: deleteComment, isLoading } = trpc.useMutation(
+  const { mutate: deleteComment, isLoading: deleting } = trpc.useMutation(
     ["comments.delete-comment"],
     {
       onSuccess: () => {
@@ -44,20 +46,6 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     [deleteComment, comment]
   );
 
-  const createdAt: Record<Dates, string> = useMemo(
-    () => ({
-      distance: formatDistance(comment?.createdAt, new Date(), {
-        addSuffix: true,
-      }),
-      date: format(comment?.createdAt, "dd/MM/yyyy - HH:mm"),
-    }),
-    [comment]
-  );
-
-  const toggleDateType = useCallback(() => {
-    setSelectedDateType(isDistance ? "date" : "distance");
-  }, [isDistance]);
-
   const toggleReplying = useCallback(
     () => setReplying((previousState) => !previousState),
     []
@@ -72,28 +60,28 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         <h3 className="font-medium">{comment.user.name}</h3>
 
         <p className="cursor-pointer" onClick={toggleDateType}>
-          {isDistance ? createdAt?.distance : createdAt?.date}
+          {date}
         </p>
       </div>
       <ReactMarkdown className="prose-sm">{comment.body}</ReactMarkdown>
 
-      <div className="w-full flex justify-between">
+      <div className="relative w-full flex justify-between">
         <button
           onClick={toggleReplying}
-          className="w-auto underline text-emerald-300"
+          className="w-auto underline text-emerald-500"
         >
           {replying ? "Stop replying" : "Reply"}
         </button>
 
-        {user?.id === comment.userId && (
+        <ShouldRender if={user?.id === comment.userId}>
           <button
             onClick={onClickDeleteComment}
-            className="w-auto underline text-emerald-300"
-            disabled={isLoading}
+            disabled={deleting}
+            className="absolute -bottom-2 -right-2 bg-teal-100 p-2 shadow-lg hover:opacity-70"
           >
-            Delete
+            <AiFillDelete className=" text-emerald-500" size={23} />
           </button>
-        )}
+        </ShouldRender>
       </div>
 
       {replying && <CommentField parentId={comment.id} />}

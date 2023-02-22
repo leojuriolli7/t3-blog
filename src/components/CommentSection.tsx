@@ -4,6 +4,7 @@ import React from "react";
 import CommentField from "./CommentField";
 import Comments from "./Comments";
 import formatComments from "@utils/formatComments";
+import ShouldRender from "./ShouldRender";
 
 const CommentSection: React.FC = () => {
   const router = useRouter();
@@ -21,11 +22,11 @@ const CommentSection: React.FC = () => {
   return (
     <div>
       <CommentField />
-      {data && (
+      <ShouldRender if={data}>
         <div className="w-full mt-10">
           <Comments comments={formattedComments} />
         </div>
-      )}
+      </ShouldRender>
     </div>
   );
 };
