@@ -58,7 +58,7 @@ const CreatePostPage: React.FC = () => {
         </button>
 
         <div>
-          <p className="prose">
+          <p className="prose dark:prose-invert">
             PS: You can use{" "}
             <a
               className="text-emerald-500"

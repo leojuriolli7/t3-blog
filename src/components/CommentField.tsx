@@ -72,7 +72,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
           </button>
 
           {!parentId && (
-            <p className="prose">
+            <p className="prose dark:prose-invert">
               supports{" "}
               <a
                 className="text-emerald-500"

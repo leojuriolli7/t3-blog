@@ -10,7 +10,7 @@ type Props = {
 const CustomReactMarkdown: React.FC<Props> = ({ children, className }) => {
   return (
     <ReactMarkdown
-      className={`${className} prose-emerald markdown__content`}
+      className={`${className} prose-emerald markdown__content dark:prose-invert`}
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw]}
     >

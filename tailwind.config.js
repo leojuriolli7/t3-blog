@@ -6,7 +6,6 @@ module.exports = {
     content: ["./src/**/*.tsx"],
   },
   theme: {
-    typography: (theme) => ({}),
     extend: {},
   },
   plugins: [
