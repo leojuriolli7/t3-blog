@@ -77,7 +77,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           <button
             onClick={onClickDeleteComment}
             disabled={deleting}
-            className="absolute -bottom-2 -right-2 bg-teal-100 p-2 shadow-lg hover:opacity-70"
+            className="absolute -bottom-2 -right-2 bg-teal-100 dark:bg-teal-900 p-2 shadow-lg hover:opacity-70"
           >
             <AiFillDelete className=" text-emerald-500" size={23} />
           </button>

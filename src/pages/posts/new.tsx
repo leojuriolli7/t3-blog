@@ -3,6 +3,7 @@ import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { CreatePostInput } from "src/schema/post.schema";
+import MainLayout from "@components/MainLayout";
 
 const CreatePostPage: React.FC = () => {
   const { register, handleSubmit } = useForm<CreatePostInput>();
@@ -26,10 +27,10 @@ const CreatePostPage: React.FC = () => {
   );
 
   return (
-    <div className="mt-20 w-full">
+    <MainLayout>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-5/12 max-w-sm mx-auto flex flex-col items-center gap-10"
+        className="w-full max-w-sm mx-auto flex flex-col items-center gap-10"
       >
         {error && error.message}
 
@@ -71,7 +72,7 @@ const CreatePostPage: React.FC = () => {
           </p>
         </div>
       </form>
-    </div>
+    </MainLayout>
   );
 };
 

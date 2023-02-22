@@ -1,3 +1,4 @@
+import MainLayout from "@components/MainLayout";
 import { trpc } from "@utils/trpc";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -27,9 +28,9 @@ function RegisterPage() {
   );
 
   return (
-    <div className="mt-20 w-full">
+    <MainLayout>
       <form
-        className="w-5/12 max-w-xs mx-auto flex flex-col items-center gap-10"
+        className="max-w-xs mx-auto flex flex-col items-center gap-10"
         onSubmit={handleSubmit(onSubmit)}
       >
         {error && error.message}
@@ -40,12 +41,12 @@ function RegisterPage() {
           type="email"
           placeholder="your@email.com"
           {...register("email")}
-          className="bg-slate-100 p-3 w-full dark:bg-zinc-800"
+          className="bg-slate-200 p-3 w-full dark:bg-zinc-800"
         />
 
         <input
           type="text"
-          className="bg-slate-100 p-3 w-full dark:bg-zinc-800"
+          className="bg-slate-200 p-3 w-full dark:bg-zinc-800"
           placeholder="your name"
           {...register("name")}
         />
@@ -61,7 +62,7 @@ function RegisterPage() {
           <a className="underline text-emerald-600">Login</a>
         </Link>
       </form>
-    </div>
+    </MainLayout>
   );
 }
 

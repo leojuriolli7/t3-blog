@@ -1,3 +1,4 @@
+import MainLayout from "@components/MainLayout";
 import dynamic from "next/dynamic";
 
 const LoginForm = dynamic(() => import("@components/LoginForm"), {
@@ -6,9 +7,9 @@ const LoginForm = dynamic(() => import("@components/LoginForm"), {
 
 const LoginPage = () => {
   return (
-    <div>
+    <MainLayout>
       <LoginForm />
-    </div>
+    </MainLayout>
   );
 };
 

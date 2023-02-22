@@ -43,35 +43,33 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="mt-20 w-full">
-      <form
-        className="w-5/12 max-w-xs mx-auto flex flex-col items-center gap-10"
-        onSubmit={handleSubmit(onSubmit)}
+    <form
+      className="max-w-xs mx-auto flex flex-col items-center gap-10"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      {error && error.message}
+
+      {isSuccess && <p>Check your e-mail</p>}
+      <h1 className="text-2xl font-medium text-center">Login</h1>
+
+      <input
+        type="email"
+        placeholder="your@email.com"
+        {...register("email")}
+        className="bg-slate-200 p-3 w-full dark:bg-zinc-800"
+      />
+
+      <button
+        disabled={isLoading}
+        className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
+        type="submit"
       >
-        {error && error.message}
-
-        {isSuccess && <p>Check your e-mail</p>}
-        <h1 className="text-2xl font-medium text-center">Login</h1>
-
-        <input
-          type="email"
-          placeholder="your@email.com"
-          {...register("email")}
-          className="bg-slate-100 p-3 w-full dark:bg-zinc-800"
-        />
-
-        <button
-          disabled={isLoading}
-          className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
-          type="submit"
-        >
-          Login
-        </button>
-        <Link href="/register" legacyBehavior passHref>
-          <a className="underline text-emerald-600">Register</a>
-        </Link>
-      </form>
-    </div>
+        Login
+      </button>
+      <Link href="/register" legacyBehavior passHref>
+        <a className="underline text-emerald-600">Register</a>
+      </Link>
+    </form>
   );
 };
 

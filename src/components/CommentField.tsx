@@ -62,12 +62,12 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <textarea
-          className="bg-slate-100 p-3 w-full mt-2 shadow-md dark:bg-zinc-900"
+          className="bg-slate-100 p-3 w-full mt-2 shadow-md dark:bg-zinc-900 h-40"
           defaultValue={undefined}
           {...register("body")}
           placeholder={isReply ? "Post reply" : "Post comment"}
         />
-        <div className="flex w-full justify-between">
+        <div className="sm:flex w-full sm:justify-between">
           <button
             className="px-5 py-2 mt-2 bg-emerald-500 text-white"
             type="submit"

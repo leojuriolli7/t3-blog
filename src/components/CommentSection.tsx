@@ -20,7 +20,7 @@ const CommentSection: React.FC = () => {
   const formattedComments = formatComments(data || []);
 
   return (
-    <div>
+    <div className="w-full">
       <CommentField />
       <ShouldRender if={data}>
         <div className="w-full mt-10">
