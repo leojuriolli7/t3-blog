@@ -38,7 +38,7 @@ export async function sendLoginEmail({
   const source = fs.readFileSync(filePath, "utf-8").toString();
   const template = handlebars.compile(source);
   const replacements = {
-    linkToT3Blog: `${url}/login#token=${token}`,
+    linkToT3Blog: `${url}/login?token=${token}`,
   };
   const htmlToSend = template(replacements);
 
@@ -46,8 +46,6 @@ export async function sendLoginEmail({
     from: '"Leonardo Dias" <leojuriolli@gmail.com>',
     to: email,
     subject: "Login to your account",
-    // By using 'login#token=' instead of 'login?token=', the token will not be
-    // saved in the browser's history.,
     html: htmlToSend,
   };
 

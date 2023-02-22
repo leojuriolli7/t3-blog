@@ -36,7 +36,7 @@ const LoginForm = () => {
     login({ ...values, redirect: router.asPath });
   };
 
-  const hash = router.asPath.split("#token=")[1];
+  const hash = router.asPath.split("?token=")[1];
 
   if (hash) {
     return <VerifyToken hash={hash} />;

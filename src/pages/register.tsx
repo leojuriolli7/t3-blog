@@ -9,14 +9,15 @@ function RegisterPage() {
   const { handleSubmit, register } = useForm<CreateUserInput>();
   const router = useRouter();
 
-  const { mutate: registerUser, error } = trpc.useMutation(
-    ["users.register-user"],
-    {
-      onSuccess: () => {
-        router.push("/login");
-      },
-    }
-  );
+  const {
+    mutate: registerUser,
+    error,
+    isLoading,
+  } = trpc.useMutation(["users.register-user"], {
+    onSuccess: () => {
+      router.push("/login");
+    },
+  });
 
   const onSubmit = useCallback(
     (values: CreateUserInput) => {
@@ -50,6 +51,7 @@ function RegisterPage() {
         />
 
         <button
+          disabled={isLoading}
           className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
           type="submit"
         >

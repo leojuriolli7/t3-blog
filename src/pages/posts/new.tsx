@@ -8,7 +8,11 @@ const CreatePostPage: React.FC = () => {
   const { register, handleSubmit } = useForm<CreatePostInput>();
   const router = useRouter();
 
-  const { mutate: create, error } = trpc.useMutation(["posts.create-post"], {
+  const {
+    mutate: create,
+    error,
+    isLoading,
+  } = trpc.useMutation(["posts.create-post"], {
     onSuccess: ({ id }) => {
       router.push(`/posts/${id}`);
     },
@@ -48,6 +52,7 @@ const CreatePostPage: React.FC = () => {
         <button
           className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
           type="submit"
+          disabled={isLoading}
         >
           Create
         </button>
