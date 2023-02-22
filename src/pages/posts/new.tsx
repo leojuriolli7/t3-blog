@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -14,9 +14,11 @@ const CreatePostPage: React.FC = () => {
     },
   });
 
-  const onSubmit = (values: CreatePostInput) => {
-    create(values);
-  };
+  const onSubmit = useCallback(() => {
+    (values: CreatePostInput) => {
+      create(values);
+    };
+  }, [create]);
 
   return (
     <div className="mt-20 w-full">
