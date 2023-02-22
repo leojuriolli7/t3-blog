@@ -1,8 +1,8 @@
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import React from "react";
-import CommentForm from "./CommentForm";
-import CommentList from "./CommentList";
+import CommentField from "./CommentField";
+import Comments from "./Comments";
 import formatComments from "@utils/formatComments";
 
 const CommentSection: React.FC = () => {
@@ -20,11 +20,10 @@ const CommentSection: React.FC = () => {
 
   return (
     <div>
-      <CommentForm />
+      <CommentField />
       {data && (
         <div className="w-full mt-10">
-          <CommentList comments={formattedComments} />
-          <CommentList comments={formattedComments} />
+          <Comments comments={formattedComments} />
         </div>
       )}
     </div>

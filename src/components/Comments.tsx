@@ -4,7 +4,7 @@ import Comment from "./Comment";
 
 type Props = { comments: Array<CommentWithChildren> };
 
-const CommentList: React.FC<Props> = ({ comments }) => {
+const Comments: React.FC<Props> = ({ comments }) => {
   return (
     <div className="flex w-full flex-col gap-10">
       {comments.map((comment) => {
@@ -14,4 +14,4 @@ const CommentList: React.FC<Props> = ({ comments }) => {
   );
 };
 
-export default CommentList;
+export default Comments;

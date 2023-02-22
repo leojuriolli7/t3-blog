@@ -4,8 +4,8 @@ import { format, formatDistance } from "date-fns";
 import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
 import { useUserContext } from "src/context/user.context";
-import CommentForm from "./CommentForm";
-import ListComments from "./CommentList";
+import CommentField from "./CommentField";
+import ListComments from "./Comments";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -95,7 +95,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         )}
       </div>
 
-      {replying && <CommentForm parentId={comment.id} />}
+      {replying && <CommentField parentId={comment.id} />}
 
       {comment.children && comment.children.length > 0 && (
         <ListComments comments={comment.children} />

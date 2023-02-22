@@ -8,7 +8,7 @@ type Props = {
   parentId?: string;
 };
 
-const CommentForm: React.FC<Props> = ({ parentId }) => {
+const CommentField: React.FC<Props> = ({ parentId }) => {
   const { handleSubmit, reset, register } = useForm<CreateCommentInput>();
 
   const router = useRouter();
@@ -66,4 +66,4 @@ const CommentForm: React.FC<Props> = ({ parentId }) => {
   );
 };
 
-export default CommentForm;
+export default CommentField;

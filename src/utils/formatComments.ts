@@ -1,6 +1,6 @@
 import { Comment, CommentWithChildren } from "@utils/types";
 
-function formComments(comments: Array<Comment>) {
+function formatComments(comments: Array<Comment>) {
   const map = new Map();
 
   const commentsWithChildren: CommentWithChildren[] = comments?.map(
@@ -32,4 +32,4 @@ function formComments(comments: Array<Comment>) {
   return roots;
 }
 
-export default formComments;
+export default formatComments;
