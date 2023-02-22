@@ -1,6 +1,7 @@
 import { trpc } from "@utils/trpc";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { CreateUserInput } from "src/schema/user.schema";
 
@@ -17,9 +18,12 @@ function RegisterPage() {
     }
   );
 
-  const onSubmit = (values: CreateUserInput) => {
-    registerUser(values);
-  };
+  const onSubmit = useCallback(
+    (values: CreateUserInput) => {
+      registerUser(values);
+    },
+    [registerUser]
+  );
 
   return (
     <div className="mt-20 w-full">
