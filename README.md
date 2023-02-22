@@ -14,6 +14,7 @@ This is a fullstack blog application made with the [T3 Stack](https://create.t3.
 - [Zod](https://github.com/colinhacks/zod) for validations.
 - [React Hook Form](https://react-hook-form.com) for forms.
 - [Nodemailer](https://nodemailer.com/) for mailing the one-time password link.
+- [React Markdown](https://github.com/remarkjs/react-markdown) for markdown text.
 
 ### Features
 - Create posts.
