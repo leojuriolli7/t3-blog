@@ -27,13 +27,17 @@ const Header: React.FC = () => {
             Logout
           </button>
 
-          <MdAddBox
-            size={25}
-            className="sm:hidden block dark:text-emerald-500 text-emerald-700"
-          />
+          <Link href="/posts/new" passHref>
+            <MdAddBox
+              size={25}
+              className="sm:hidden block dark:text-emerald-500 text-emerald-700"
+            />
+          </Link>
           <MdLogout
             size={25}
             className="sm:hidden block dark:text-emerald-500 text-emerald-700"
+            onClick={onClickLogout}
+            aria-label="Logout"
           />
         </ShouldRender>
         <ShouldRender if={!user}>
@@ -44,14 +48,18 @@ const Header: React.FC = () => {
             <a className="hidden sm:block">Register</a>
           </Link>
 
-          <MdLogin
-            size={25}
-            className="sm:hidden block dark:text-emerald-500 text-emerald-700"
-          />
-          <FaUserPlus
-            size={25}
-            className="sm:hidden block dark:text-emerald-500 text-emerald-700"
-          />
+          <Link href="/login">
+            <MdLogin
+              size={25}
+              className="sm:hidden block dark:text-emerald-500 text-emerald-700"
+            />
+          </Link>
+          <Link href="/register">
+            <FaUserPlus
+              size={25}
+              className="sm:hidden block dark:text-emerald-500 text-emerald-700"
+            />
+          </Link>
         </ShouldRender>
       </nav>
       <Link href="/">
