@@ -1,6 +1,10 @@
 import { createRouter } from "@server/createRouter";
 import * as trpc from "@trpc/server";
-import { createPostSchema, getSinglePostSchema } from "src/schema/post.schema";
+import {
+  createPostSchema,
+  getSinglePostSchema,
+  updatePostSchema,
+} from "src/schema/post.schema";
 
 export const postRouter = createRouter()
   .mutation("create-post", {
@@ -52,20 +56,50 @@ export const postRouter = createRouter()
       });
     },
   })
+  .middleware(async ({ ctx, next }) => {
+    if (!ctx.user) {
+      throw new trpc.TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Login to post a comment",
+      });
+    }
+
+    return next();
+  })
   .mutation("delete-post", {
     input: getSinglePostSchema,
     async resolve({ ctx, input }) {
-      if (!ctx.user) {
-        new trpc.TRPCError({
-          code: "FORBIDDEN",
-          message: "Unauthorized",
-        });
-      }
-
       await ctx.prisma.post.delete({
         where: {
           id: input.postId,
         },
       });
+    },
+  })
+  .mutation("update-post", {
+    input: updatePostSchema,
+    async resolve({ ctx, input }) {
+      if (!input?.title && !input.body) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "At least one field must be updated",
+        });
+      }
+
+      const post = await ctx.prisma.post.update({
+        where: {
+          id: input.postId,
+        },
+        data: {
+          ...(input.body && {
+            body: input.body,
+          }),
+          ...(input.title && {
+            title: input.title,
+          }),
+        },
+      });
+
+      return post;
     },
   });
