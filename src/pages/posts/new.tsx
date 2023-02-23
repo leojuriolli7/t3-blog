@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { CreatePostInput } from "src/schema/post.schema";
 import MainLayout from "@components/MainLayout";
+import withAuth from "@components/withAuth";
 
 const CreatePostPage: React.FC = () => {
   const { register, handleSubmit } = useForm<CreatePostInput>();
@@ -76,4 +77,4 @@ const CreatePostPage: React.FC = () => {
   );
 };
 
-export default CreatePostPage;
+export default withAuth(CreatePostPage);
