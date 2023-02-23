@@ -1,10 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
-  purge: {
-    enabled: true,
-    content: ["./src/**/*.tsx"],
-  },
+  content: ["./src/**/*.tsx"],
   theme: {
     screens: {
       xs: "425px",
