@@ -33,6 +33,9 @@ export const postRouter = createRouter()
         orderBy: {
           createdAt: "desc",
         },
+        include: {
+          user: true,
+        },
       });
     },
   })

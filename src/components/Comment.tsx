@@ -52,10 +52,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
   );
 
   return (
-    <div
-      className="w-full flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800"
-      key={comment.id}
-    >
+    <div className="w-full flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800">
       <div className="flex w-full justify-between">
         <h3 className="font-medium">{comment.user.name}</h3>
 

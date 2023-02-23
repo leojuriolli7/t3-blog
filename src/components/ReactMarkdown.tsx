@@ -1,21 +1,37 @@
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import ShouldRender from "./ShouldRender";
+import Skeleton, { SkeletonProps } from "./Skeleton";
 
-type Props = {
-  children: string;
+type Props = SkeletonProps & {
+  children?: string;
   className?: string;
+  loading?: boolean;
 };
 
-const CustomReactMarkdown: React.FC<Props> = ({ children, className }) => {
+const CustomReactMarkdown: React.FC<Props> = ({
+  children,
+  className,
+  loading,
+  ...props
+}) => {
   return (
-    <ReactMarkdown
-      className={`${className} prose-emerald markdown__content dark:prose-invert`}
-      remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeRaw]}
-    >
-      {children}
-    </ReactMarkdown>
+    <>
+      <ShouldRender if={loading}>
+        <Skeleton {...props} />
+      </ShouldRender>
+
+      <ShouldRender if={!loading}>
+        <ReactMarkdown
+          className={`${className} prose-emerald markdown__content dark:prose-invert break-words`}
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+        >
+          {children || ""}
+        </ReactMarkdown>
+      </ShouldRender>
+    </>
   );
 };
 

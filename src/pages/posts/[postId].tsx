@@ -8,8 +8,8 @@ import { useUserContext } from "src/context/user.context";
 import useGetDate from "src/hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
 import { AiFillDelete } from "react-icons/ai";
-import Header from "@components/Header";
 import MainLayout from "@components/MainLayout";
+import Skeleton from "@components/Skeleton";
 
 type ReplyData = {
   parentId: string;
@@ -24,7 +24,7 @@ const SinglePostPage: React.FC = () => {
   const user = useUserContext();
   const utils = trpc.useContext();
 
-  const { data, isLoading, error } = trpc.useQuery([
+  const { data, isLoading } = trpc.useQuery([
     "posts.single-post",
     {
       postId,
@@ -54,14 +54,10 @@ const SinglePostPage: React.FC = () => {
     [deletePost, postId]
   );
 
-  if (!data && isLoading) return <p>Loading...</p>;
-
-  if (!data || error) return <Error statusCode={404} />;
-
   return (
     <MainLayout>
       <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12 dark:bg-zinc-800">
-        <ShouldRender if={loggedUserCreatedPost}>
+        <ShouldRender if={data && loggedUserCreatedPost}>
           <button
             onClick={onClickDeletePost}
             disabled={deleting}
@@ -71,20 +67,32 @@ const SinglePostPage: React.FC = () => {
           </button>
         </ShouldRender>
 
-        <ReactMarkdown className="prose text-4xl font-bold">
+        <ReactMarkdown
+          className="prose text-4xl font-bold"
+          heading
+          loading={isLoading}
+        >
           {data?.title}
         </ReactMarkdown>
 
         <div>
-          <p onClick={toggleDateType}>
-            By {data.user.name}
-            <span className="cursor-pointer">{` ${
-              isDistance ? "" : "at"
-            } ${date}`}</span>
-          </p>
+          <ShouldRender if={isLoading}>
+            <Skeleton width="w-1/2" />
+          </ShouldRender>
+
+          <ShouldRender if={!isLoading}>
+            <p onClick={toggleDateType}>
+              By {data?.user?.name}
+              <span className="cursor-pointer">{` ${
+                isDistance ? "" : "at"
+              } ${date}`}</span>
+            </p>
+          </ShouldRender>
         </div>
 
-        <ReactMarkdown className="prose">{data.body}</ReactMarkdown>
+        <ReactMarkdown className="prose" lines={5} loading={isLoading}>
+          {data?.body}
+        </ReactMarkdown>
       </main>
 
       <CommentSection />
