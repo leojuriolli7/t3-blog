@@ -3,6 +3,7 @@ import { CommentWithChildren } from "@utils/types";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "src/context/user.context";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "src/hooks/useGetDate";
 import { toast } from "react-toastify";
 import CommentField from "./CommentField";
@@ -20,6 +21,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [replying, setReplying] = useState(false);
   const user = useUserContext();
   const utils = trpc.useContext();
+  const [parentRef] = useAutoAnimate();
 
   const router = useRouter();
   const postId = router.query.postId as string;
@@ -62,7 +64,10 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
   }, [deleteError]);
 
   return (
-    <div className="w-full flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800">
+    <div
+      ref={parentRef}
+      className="w-full flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800"
+    >
       <div className="flex w-full justify-between">
         <h3 className="font-medium">{comment.user.name}</h3>
 
