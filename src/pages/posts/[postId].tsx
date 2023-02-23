@@ -6,12 +6,11 @@ import CommentSection from "@components/CommentSection";
 import { useUserContext } from "src/context/user.context";
 import useGetDate from "src/hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { MdClose } from "react-icons/md";
 import MainLayout from "@components/MainLayout";
 import Skeleton from "@components/Skeleton";
 import { useForm } from "react-hook-form";
 import { UpdatePostInput } from "src/schema/post.schema";
+import ActionButton from "@components/ActionButton";
 
 type ReplyData = {
   parentId: string;
@@ -113,26 +112,16 @@ const SinglePostPage: React.FC = () => {
       <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12 dark:bg-zinc-800">
         <ShouldRender if={data && loggedUserCreatedPost}>
           <div className="absolute -top-2 right-2 flex gap-3 align-center">
-            <button
+            <ActionButton
+              action={isEditing ? "close" : "edit"}
               onClick={toggleIsEditing}
-              className="bg-teal-100 dark:bg-teal-900 p-2 shadow-lg hover:opacity-70"
-            >
-              <ShouldRender if={!isEditing}>
-                <AiFillEdit className=" text-emerald-500" size={23} />
-              </ShouldRender>
+            />
 
-              <ShouldRender if={isEditing}>
-                <MdClose className=" text-emerald-500" size={23} />
-              </ShouldRender>
-            </button>
-
-            <button
+            <ActionButton
               onClick={onClickDeletePost}
               disabled={deleting}
-              className=" bg-teal-100 dark:bg-teal-900 p-2 shadow-lg hover:opacity-70"
-            >
-              <AiFillDelete className=" text-emerald-500" size={23} />
-            </button>
+              action="delete"
+            />
           </div>
         </ShouldRender>
 

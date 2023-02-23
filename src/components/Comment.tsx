@@ -1,7 +1,6 @@
 import { trpc } from "@utils/trpc";
 import { CommentWithChildren } from "@utils/types";
 import { useRouter } from "next/router";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "src/context/user.context";
 import useGetDate from "src/hooks/useGetDate";
@@ -9,16 +8,14 @@ import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ReactMarkdown from "./ReactMarkdown";
 import ShouldRender from "./ShouldRender";
-import { MdClose } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { UpdateCommentInput } from "src/schema/comment.schema";
 import { toast } from "react-hot-toast";
+import ActionButton from "./ActionButton";
 
 type CommentProps = {
   comment: CommentWithChildren;
 };
-
-type Dates = "distance" | "date";
 
 const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [replying, setReplying] = useState(false);
@@ -150,25 +147,16 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
 
         <ShouldRender if={user?.id === comment.userId}>
           <div className="absolute -bottom-2 -right-2 flex gap-2 items-center">
-            <button
+            <ActionButton
+              action={isEditing ? "close" : "edit"}
               onClick={toggleIsEditing}
-              className="bg-teal-100 dark:bg-teal-900 p-2 shadow-lg hover:opacity-70"
-            >
-              <ShouldRender if={!isEditing}>
-                <AiFillEdit className=" text-emerald-500" size={23} />
-              </ShouldRender>
+            />
 
-              <ShouldRender if={isEditing}>
-                <MdClose className=" text-emerald-500" size={23} />
-              </ShouldRender>
-            </button>
-            <button
-              onClick={onClickDeleteComment}
+            <ActionButton
+              action="delete"
               disabled={deleting}
-              className="bg-teal-100 dark:bg-teal-900 p-2 shadow-lg hover:opacity-70"
-            >
-              <AiFillDelete className=" text-emerald-500" size={23} />
-            </button>
+              onClick={onClickDeleteComment}
+            />
           </div>
         </ShouldRender>
       </div>
