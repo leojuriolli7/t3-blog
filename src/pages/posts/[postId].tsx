@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import ReactMarkdown from "@components/ReactMarkdown";
 import { useRouter } from "next/router";
@@ -38,7 +38,7 @@ const SinglePostPage: React.FC = () => {
   const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const { register, handleSubmit, watch } = useForm<UpdatePostInput>({
+  const { register, handleSubmit, watch, setValue } = useForm<UpdatePostInput>({
     defaultValues: {
       body: data?.body,
       title: data?.title,
@@ -100,6 +100,13 @@ const SinglePostPage: React.FC = () => {
       }),
     [deletePost, postId]
   );
+
+  useEffect(() => {
+    if (data) {
+      setValue("body", data?.body);
+      setValue("title", data?.title);
+    }
+  }, [data]);
 
   return (
     <MainLayout>
