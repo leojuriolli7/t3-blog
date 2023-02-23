@@ -5,6 +5,7 @@ import {
   createCommentSchema,
   deleteCommentSchema,
   getCommentsSchema,
+  updateCommentSchema,
 } from "src/schema/comment.schema";
 
 export const commentRouter = createRouter()
@@ -142,5 +143,29 @@ export const commentRouter = createRouter()
           code: "BAD_REQUEST",
         });
       }
+    },
+  })
+  .mutation("update-comment", {
+    input: updateCommentSchema,
+    async resolve({ ctx, input }) {
+      if (!input.body) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Comment can't be empty",
+        });
+      }
+
+      const comment = await ctx.prisma.comment.update({
+        where: {
+          id: input.commentId,
+        },
+        data: {
+          ...(input.body && {
+            body: input.body,
+          }),
+        },
+      });
+
+      return comment;
     },
   });

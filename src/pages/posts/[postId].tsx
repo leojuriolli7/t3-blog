@@ -44,6 +44,7 @@ const SinglePostPage: React.FC = () => {
       title: data?.title,
     },
   });
+
   const { mutate: update, isLoading: updating } = trpc.useMutation(
     ["posts.update-post"],
     {

@@ -10,6 +10,7 @@ import { trpc } from "@utils/trpc";
 import { ThemeProvider } from "next-themes";
 import { UserContextProvider } from "src/context/user.context";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 
 function App({ Component, pageProps }: AppProps) {
   const { data, isLoading } = trpc.useQuery(["users.me"], {
@@ -26,6 +27,7 @@ function App({ Component, pageProps }: AppProps) {
           <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
         </Head>
         <Component {...pageProps} />
+        <Toaster />
       </ThemeProvider>
     </UserContextProvider>
   );

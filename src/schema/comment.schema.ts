@@ -15,3 +15,10 @@ export const getCommentsSchema = z.object({
 export const deleteCommentSchema = z.object({
   commentId: z.string(),
 });
+
+export const updateCommentSchema = z.object({
+  body: z.string().optional(),
+  commentId: z.string(),
+});
+
+export type UpdateCommentInput = z.TypeOf<typeof updateCommentSchema>;
