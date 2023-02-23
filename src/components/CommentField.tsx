@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { CreateCommentInput } from "src/schema/comment.schema";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
+import { useUserContext } from "src/context/user.context";
+import { toast } from "react-toastify";
 import ShouldRender from "./ShouldRender";
 
 type Props = {
@@ -10,11 +12,14 @@ type Props = {
 };
 
 const CommentField: React.FC<Props> = ({ parentId }) => {
-  const { handleSubmit, reset, register } = useForm<CreateCommentInput>({
+  const { handleSubmit, reset, register, watch } = useForm<CreateCommentInput>({
     defaultValues: {
       body: undefined,
     },
   });
+
+  const user = useUserContext();
+  const bodyValue = watch("body");
 
   const router = useRouter();
   const postId = router.query.postId as string;
@@ -41,15 +46,21 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
   const onSubmit = useCallback(
     (values: CreateCommentInput) => {
-      const payload = {
-        ...values,
-        postId,
-        parentId,
-      };
+      if (!user) {
+        return toast.info("Please login to comment");
+      }
 
-      mutate(payload);
+      if (user) {
+        const payload = {
+          ...values,
+          postId,
+          parentId,
+        };
+
+        mutate(payload);
+      }
     },
-    [mutate, parentId, postId]
+    [mutate, parentId, postId, user]
   );
 
   return (
@@ -71,7 +82,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
           <button
             className="px-5 py-2 mt-2 bg-emerald-500 text-white"
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !bodyValue}
           >
             Send comment
           </button>

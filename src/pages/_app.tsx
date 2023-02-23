@@ -3,6 +3,8 @@ import { loggerLink } from "@trpc/client/links/loggerLink";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { withTRPC } from "@trpc/next";
 import type { AppProps } from "next/app";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import superjson from "superjson";
 import { AppRouter } from "@server/router/app.router";
 import { url } from "../constants";
@@ -10,7 +12,6 @@ import { trpc } from "@utils/trpc";
 import { ThemeProvider } from "next-themes";
 import { UserContextProvider } from "src/context/user.context";
 import Head from "next/head";
-import { Toaster } from "react-hot-toast";
 
 function App({ Component, pageProps }: AppProps) {
   const { data, isLoading } = trpc.useQuery(["users.me"], {
@@ -27,7 +28,12 @@ function App({ Component, pageProps }: AppProps) {
           <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
         </Head>
         <Component {...pageProps} />
-        <Toaster />
+        <ToastContainer
+          closeButton={false}
+          toastClassName={() =>
+            "relative bg-white dark:bg-zinc-900 text-neutral-800 dark:text-white flex p-1 min-h-15 rounded-md justify-between overflow-hidden cursor-pointer p-5 border-2 dark:border-zinc-800 :dark:fill:slate-50 mb-4"
+          }
+        />
       </ThemeProvider>
     </UserContextProvider>
   );

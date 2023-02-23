@@ -8,9 +8,8 @@ import useGetDate from "src/hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
 import MainLayout from "@components/MainLayout";
 import Skeleton from "@components/Skeleton";
-import { useForm } from "react-hook-form";
-import { UpdatePostInput } from "src/schema/post.schema";
 import ActionButton from "@components/ActionButton";
+import EditPostForm from "@components/EditPostForm";
 
 type ReplyData = {
   parentId: string;
@@ -37,48 +36,6 @@ const SinglePostPage: React.FC = () => {
   const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const { register, handleSubmit, watch, setValue } = useForm<UpdatePostInput>({
-    defaultValues: {
-      body: data?.body,
-      title: data?.title,
-    },
-  });
-
-  const { mutate: update, isLoading: updating } = trpc.useMutation(
-    ["posts.update-post"],
-    {
-      onSuccess: () => {
-        utils.invalidateQueries([
-          "posts.single-post",
-          {
-            postId,
-          },
-        ]);
-      },
-    }
-  );
-
-  const watchBody = watch("body");
-  const watchTitle = watch("title");
-
-  const shouldBlockUserFromUpdating =
-    !watchBody ||
-    !watchTitle ||
-    (watchTitle === data?.title && watchBody === data?.body);
-
-  const toggleIsEditing = useCallback(() => setIsEditing((prev) => !prev), []);
-
-  const onSubmit = useCallback(
-    (values: UpdatePostInput) => {
-      update({
-        ...values,
-        postId,
-      });
-
-      setIsEditing(false);
-    },
-    [update, postId]
-  );
 
   const { mutate: deletePost, isLoading: deleting } = trpc.useMutation(
     ["posts.delete-post"],
@@ -100,12 +57,7 @@ const SinglePostPage: React.FC = () => {
     [deletePost, postId]
   );
 
-  useEffect(() => {
-    if (data) {
-      setValue("body", data?.body);
-      setValue("title", data?.title);
-    }
-  }, [data]);
+  const toggleIsEditing = useCallback(() => setIsEditing((prev) => !prev), []);
 
   return (
     <MainLayout>
@@ -126,31 +78,7 @@ const SinglePostPage: React.FC = () => {
         </ShouldRender>
 
         <ShouldRender if={isEditing}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="w-full mx-auto flex flex-col items-center gap-10"
-          >
-            <input
-              type="text"
-              placeholder="your post title"
-              className="bg-gray-300 p-3 w-full dark:bg-neutral-900"
-              {...register("title")}
-            />
-
-            <textarea
-              className="bg-gray-300 p-3 w-full h-44 dark:bg-neutral-900"
-              placeholder="your post content"
-              {...register("body")}
-            />
-
-            <button
-              className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
-              type="submit"
-              disabled={updating || shouldBlockUserFromUpdating}
-            >
-              Update
-            </button>
-          </form>
+          <EditPostForm onFinish={toggleIsEditing} post={data} />
         </ShouldRender>
 
         <ShouldRender if={!isEditing}>
@@ -168,7 +96,7 @@ const SinglePostPage: React.FC = () => {
             </ShouldRender>
 
             <ShouldRender if={!isLoading}>
-              <p onClick={toggleDateType}>
+              <p onClick={toggleDateType} className="w-fit">
                 By {data?.user?.name}
                 <span className="cursor-pointer">{` ${
                   isDistance ? "" : "at"

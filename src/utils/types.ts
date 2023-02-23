@@ -12,3 +12,5 @@ export type Comment = InferQueryOutput<"comments.all-comments">[number];
 export type CommentWithChildren = Comment & {
   children: Array<CommentWithChildren>;
 };
+
+export type Post = InferQueryOutput<"posts.single-post">;

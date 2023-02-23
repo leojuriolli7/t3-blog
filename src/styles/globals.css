@@ -21,3 +21,7 @@ button:disabled {
   background: #047857;
   color: white;
 }
+
+:root {
+  --toastify-color-info: #059669 !important;
+}

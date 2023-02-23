@@ -4,14 +4,13 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "src/context/user.context";
 import useGetDate from "src/hooks/useGetDate";
+import { toast } from "react-toastify";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ReactMarkdown from "./ReactMarkdown";
 import ShouldRender from "./ShouldRender";
-import { useForm } from "react-hook-form";
-import { UpdateCommentInput } from "src/schema/comment.schema";
-import { toast } from "react-hot-toast";
 import ActionButton from "./ActionButton";
+import EditCommentForm from "./EditCommentForm";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -27,42 +26,6 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const toggleIsEditing = useCallback(() => setIsEditing((prev) => !prev), []);
-
-  const { register, handleSubmit, watch } = useForm<UpdateCommentInput>({
-    defaultValues: {
-      body: comment?.body,
-    },
-  });
-
-  const {
-    mutate: update,
-    isLoading: updating,
-    error: updateError,
-  } = trpc.useMutation(["comments.update-comment"], {
-    onSuccess: () => {
-      utils.invalidateQueries([
-        "comments.all-comments",
-        {
-          postId,
-        },
-      ]);
-    },
-  });
-
-  const watchBody = watch("body");
-  const shouldBlockUserFromUpdating = !watchBody || watchBody === comment?.body;
-
-  const onSubmit = useCallback(
-    (values: UpdateCommentInput) => {
-      update({
-        commentId: comment.id,
-        body: values.body,
-      });
-
-      setIsEditing(false);
-    },
-    [update, comment]
-  );
 
   const { date, toggleDateType } = useGetDate(comment?.createdAt);
 
@@ -96,11 +59,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     if (deleteError) {
       toast.error(deleteError?.message);
     }
-
-    if (updateError) {
-      toast.error(updateError?.message);
-    }
-  }, [updateError, deleteError]);
+  }, [deleteError]);
 
   return (
     <div className="w-full flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800">
@@ -116,23 +75,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       </ShouldRender>
 
       <ShouldRender if={isEditing}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <textarea
-            className="bg-slate-100 p-3 w-full mt-2 shadow-md dark:bg-zinc-900 h-40"
-            {...register("body")}
-            placeholder="type your comment"
-          />
-
-          <ShouldRender if={isEditing}>
-            <button
-              className="bg-emerald-500 text-white min-w-fit px-8 py-2 mt-2"
-              type="submit"
-              disabled={updating || shouldBlockUserFromUpdating}
-            >
-              Update
-            </button>
-          </ShouldRender>
-        </form>
+        <EditCommentForm onFinish={toggleIsEditing} comment={comment} />
       </ShouldRender>
 
       <div className="relative w-full flex justify-between items-center">
