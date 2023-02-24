@@ -22,10 +22,12 @@ button:disabled {
   color: white;
 }
 
+// Change react-toastify info color
 :root {
   --toastify-color-info: #059669 !important;
 }
 
+// Set MD Editor to 100%
 .rc-md-editor {
   width: 100%;
 }
