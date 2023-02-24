@@ -10,6 +10,12 @@ export const createPostSchema = z.object({
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;
 
+export const getPostsSchema = z.object({
+  limit: z.number(),
+  cursor: z.string().nullish(),
+  skip: z.number().optional(),
+});
+
 export const getSinglePostSchema = z.object({
   postId: z.string().uuid(),
 });
