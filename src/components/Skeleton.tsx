@@ -14,8 +14,9 @@ const Skeleton: React.FC<SkeletonProps> = ({
       {Array.from({ length: lines }).map((_, i) => (
         <div
           key={i}
-          style={heading ? { height: "1.5rem" } : { height: "0.625rem" }}
-          className={`bg-gray-300 dark:bg-neutral-700 w-full ${
+          className={`${
+            heading ? "h-6" : "h-2.5"
+          } bg-gray-300 dark:bg-neutral-700 w-full ${
             i !== lines - 1 ? "mb-4" : ""
           }`}
         />
