@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 import { CreatePostInput } from "src/schema/post.schema";
 import MainLayout from "@components/MainLayout";
 import withAuth from "@components/withAuth";
+import MarkdownEditor from "@components/MarkdownEditor";
 
 const CreatePostPage: React.FC = () => {
-  const { register, handleSubmit } = useForm<CreatePostInput>();
+  const { register, handleSubmit, control } = useForm<CreatePostInput>();
   const router = useRouter();
 
   const {
@@ -31,7 +32,7 @@ const CreatePostPage: React.FC = () => {
     <MainLayout>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-sm mx-auto flex flex-col items-center gap-10"
+        className="w-full max-w-3xl mx-auto flex flex-col items-center gap-10"
       >
         {error && error.message}
 
@@ -40,16 +41,15 @@ const CreatePostPage: React.FC = () => {
         <input
           type="text"
           placeholder="your post title"
-          className="bg-slate-100 p-3 w-full dark:bg-zinc-800"
+          className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-zinc-800"
           {...register("title")}
         />
 
-        <textarea
-          className="bg-slate-100 p-3 w-full h-44 dark:bg-zinc-800"
-          placeholder="your post content"
-          {...register("body")}
+        <MarkdownEditor
+          placeholder="your post content - you can use markdown!"
+          control={control}
+          name="body"
         />
-        <br />
 
         <button
           className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
@@ -58,20 +58,6 @@ const CreatePostPage: React.FC = () => {
         >
           Create
         </button>
-
-        <div>
-          <p className="prose dark:prose-invert">
-            PS: You can use{" "}
-            <a
-              className="text-emerald-500"
-              href="https://www.markdownguide.org/basic-syntax/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              markdown!
-            </a>
-          </p>
-        </div>
       </form>
     </MainLayout>
   );

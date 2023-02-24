@@ -59,6 +59,10 @@ const SinglePostPage: React.FC = () => {
 
   const toggleIsEditing = useCallback(() => setIsEditing((prev) => !prev), []);
 
+  useEffect(() => {
+    if (!user) setIsEditing(false);
+  }, [user]);
+
   return (
     <MainLayout>
       <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12 dark:bg-zinc-800">

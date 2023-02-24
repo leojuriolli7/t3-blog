@@ -6,17 +6,19 @@ import { useRouter } from "next/router";
 import { useUserContext } from "src/context/user.context";
 import { toast } from "react-toastify";
 import ShouldRender from "./ShouldRender";
+import MarkdownEditor from "./MarkdownEditor";
 
 type Props = {
   parentId?: string;
 };
 
 const CommentField: React.FC<Props> = ({ parentId }) => {
-  const { handleSubmit, reset, register, watch } = useForm<CreateCommentInput>({
-    defaultValues: {
-      body: undefined,
-    },
-  });
+  const { handleSubmit, setValue, watch, control } =
+    useForm<CreateCommentInput>({
+      defaultValues: {
+        body: undefined,
+      },
+    });
 
   const user = useUserContext();
   const bodyValue = watch("body");
@@ -31,7 +33,8 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
     ["comments.add-comment"],
     {
       onSuccess: () => {
-        reset();
+        // Reset markdown editor content.
+        setValue("body", "");
 
         // This will refetch the comments.
         utils.invalidateQueries([
@@ -71,11 +74,12 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
       {error && error.message}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <textarea
-          className="bg-slate-100 p-3 w-full mt-2 shadow-md dark:bg-zinc-900 h-40"
+      <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
+        <MarkdownEditor
+          variant="condensed"
+          name="body"
+          control={control}
           defaultValue={undefined}
-          {...register("body")}
           placeholder={isReply ? "Post reply" : "Post comment"}
         />
         <div className="sm:flex w-full sm:justify-between">
@@ -89,7 +93,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
           <ShouldRender if={!isReply}>
             <p className="prose dark:prose-invert">
-              supports{" "}
+              powered by{" "}
               <a
                 className="text-emerald-500"
                 href="https://www.markdownguide.org/basic-syntax/"

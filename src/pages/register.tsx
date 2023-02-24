@@ -41,12 +41,12 @@ function RegisterPage() {
           type="email"
           placeholder="your@email.com"
           {...register("email")}
-          className="bg-slate-200 p-3 w-full dark:bg-zinc-800"
+          className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-zinc-800"
         />
 
         <input
           type="text"
-          className="bg-slate-200 p-3 w-full dark:bg-zinc-800"
+          className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-zinc-800"
           placeholder="your name"
           {...register("name")}
         />

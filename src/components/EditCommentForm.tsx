@@ -5,6 +5,7 @@ import { CommentWithChildren } from "@utils/types";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import MarkdownEditor from "./MarkdownEditor";
 
 type Props = {
   comment: CommentWithChildren;
@@ -17,11 +18,12 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { register, handleSubmit, watch } = useForm<UpdateCommentInput>({
-    defaultValues: {
-      body: comment?.body,
-    },
-  });
+  const { register, handleSubmit, watch, control } =
+    useForm<UpdateCommentInput>({
+      defaultValues: {
+        body: comment?.body,
+      },
+    });
 
   const {
     mutate: update,
@@ -61,9 +63,10 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <textarea
-        className="bg-slate-100 p-3 w-full mt-2 shadow-md dark:bg-zinc-900 h-40"
-        {...register("body")}
+      <MarkdownEditor
+        control={control}
+        variant="condensed"
+        name="body"
         placeholder="type your comment"
       />
 
