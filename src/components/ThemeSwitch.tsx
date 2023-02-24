@@ -21,7 +21,12 @@ const ThemeSwitch: React.FC = () => {
 
   return (
     <ShouldRender if={mounted}>
-      <button onClick={toggleTheme} type="button" className="hover:opacity-75">
+      <button
+        onClick={toggleTheme}
+        type="button"
+        className="hover:opacity-75"
+        aria-label="Change theme"
+      >
         <ShouldRender if={isDarkMode}>
           <RiMoonClearFill className="text-emerald-500" size={27} />
         </ShouldRender>
