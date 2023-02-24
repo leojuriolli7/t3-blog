@@ -74,7 +74,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
       {error && error.message}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
         <MarkdownEditor
           variant="condensed"
           name="body"
@@ -93,7 +93,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
           <ShouldRender if={!isReply}>
             <p className="prose dark:prose-invert">
-              supports{" "}
+              powered by{" "}
               <a
                 className="text-emerald-500"
                 href="https://www.markdownguide.org/basic-syntax/"

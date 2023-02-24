@@ -16,7 +16,7 @@ import { url } from "../constants";
 
 function App({ Component, pageProps }: AppProps) {
   const { data, isLoading } = trpc.useQuery(["users.me"], {
-    // refetchInterval: 1000,
+    refetchInterval: 1000,
   });
 
   if (isLoading) return <p>Loading user...</p>;

@@ -63,6 +63,10 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     }
   }, [deleteError]);
 
+  useEffect(() => {
+    if (!user) setIsEditing(false);
+  }, [user]);
+
   return (
     <div
       ref={parentRef}

@@ -41,12 +41,15 @@ const CreatePostPage: React.FC = () => {
         <input
           type="text"
           placeholder="your post title"
-          className="bg-slate-100 p-3 w-full dark:bg-zinc-800"
+          className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-zinc-800"
           {...register("title")}
         />
 
-        <MarkdownEditor control={control} name="body" />
-        <br />
+        <MarkdownEditor
+          placeholder="your post content - you can use markdown!"
+          control={control}
+          name="body"
+        />
 
         <button
           className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
@@ -55,20 +58,6 @@ const CreatePostPage: React.FC = () => {
         >
           Create
         </button>
-
-        <div>
-          <p className="prose dark:prose-invert">
-            PS: You can use{" "}
-            <a
-              className="text-emerald-500"
-              href="https://www.markdownguide.org/basic-syntax/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              markdown!
-            </a>
-          </p>
-        </div>
       </form>
     </MainLayout>
   );

@@ -13,7 +13,6 @@ type Props = {
 
 const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const utils = trpc.useContext();
-
   const router = useRouter();
   const postId = router.query.postId as string;
 
@@ -74,7 +73,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
       <input
         type="text"
         placeholder="your post title"
-        className="bg-white p-3 w-full dark:bg-neutral-900"
+        className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-neutral-900"
         {...register("title")}
       />
 
