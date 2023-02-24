@@ -1,21 +1,22 @@
-import "@styles/globals.css";
+import Head from "next/head";
 import { loggerLink } from "@trpc/client/links/loggerLink";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { withTRPC } from "@trpc/next";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import superjson from "superjson";
 import { AppRouter } from "@server/router/app.router";
-import { url } from "../constants";
 import { trpc } from "@utils/trpc";
 import { ThemeProvider } from "next-themes";
 import { UserContextProvider } from "src/context/user.context";
-import Head from "next/head";
+import "@styles/globals.scss";
+import "react-markdown-editor-lite/lib/index.css";
+import "react-toastify/dist/ReactToastify.css";
+import { url } from "../constants";
 
 function App({ Component, pageProps }: AppProps) {
   const { data, isLoading } = trpc.useQuery(["users.me"], {
-    refetchInterval: 1000,
+    // refetchInterval: 1000,
   });
 
   if (isLoading) return <p>Loading user...</p>;

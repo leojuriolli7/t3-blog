@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  filter: opacity(0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.markdown__content :not(pre) code {
+  background: #047857;
+  color: white;
+}
+
+:root {
+  --toastify-color-info: #059669 !important;
+}
+
+.rc-md-editor {
+  width: 100%;
+}
+
+// MD Editor responsiveness adjustments.
+@media (max-width: 425px) {
+  .rc-md-editor .editor-container {
+    flex-direction: column;
+  }
+
+  .editor-container .sec-html {
+    border-top: 1px solid grey;
+  }
+}
+
+// Create new tailwind class for MD editor dark-mode styles.
+@layer utilities {
+  .md-dark-mode {
+    .editor-container {
+      .sec-html {
+        background: #171717;
+        border: none;
+
+        .custom-html-style {
+          color: #f4f4f5;
+        }
+      }
+
+      .sec-md {
+        border: none;
+      }
+
+      .sec-md textarea {
+        background: #171717 !important;
+        color: #f4f4f5 !important;
+      }
+    }
+
+    .rc-md-navigation {
+      background: #171717 !important;
+      color: #f4f4f5 !important;
+    }
+
+    .custom-html-style {
+      table th {
+        background: #171717 !important;
+      }
+
+      pre,
+      code {
+        background-color: #0f172a;
+      }
+    }
+  }
+}

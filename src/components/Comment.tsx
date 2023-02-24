@@ -76,7 +76,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         </p>
       </div>
       <ShouldRender if={!isEditing}>
-        <ReactMarkdown className="prose-sm">{comment.body}</ReactMarkdown>
+        <ReactMarkdown className="prose">{comment.body}</ReactMarkdown>
       </ShouldRender>
 
       <ShouldRender if={isEditing}>

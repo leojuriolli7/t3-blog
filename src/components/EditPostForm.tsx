@@ -4,6 +4,7 @@ import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";
 import { Post } from "@utils/types";
 import { useRouter } from "next/router";
+import MarkdownEditor from "./MarkdownEditor";
 
 type Props = {
   post?: Post;
@@ -16,12 +17,13 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { register, handleSubmit, watch, setValue } = useForm<UpdatePostInput>({
-    defaultValues: {
-      body: post?.body,
-      title: post?.title,
-    },
-  });
+  const { register, handleSubmit, watch, setValue, control } =
+    useForm<UpdatePostInput>({
+      defaultValues: {
+        body: post?.body,
+        title: post?.title,
+      },
+    });
 
   const { mutate: update, isLoading: updating } = trpc.useMutation(
     ["posts.update-post"],
@@ -72,15 +74,11 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
       <input
         type="text"
         placeholder="your post title"
-        className="bg-gray-300 p-3 w-full dark:bg-neutral-900"
+        className="bg-white p-3 w-full dark:bg-neutral-900"
         {...register("title")}
       />
 
-      <textarea
-        className="bg-gray-300 p-3 w-full h-44 dark:bg-neutral-900"
-        placeholder="your post content"
-        {...register("body")}
-      />
+      <MarkdownEditor control={control} name="body" />
 
       <button
         className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
