@@ -3,6 +3,7 @@ import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createPostSchema,
+  getPostsSchema,
   getSinglePostSchema,
   updatePostSchema,
 } from "src/schema/post.schema";
@@ -40,8 +41,14 @@ export const postRouter = createRouter()
     },
   })
   .query("posts", {
-    resolve({ ctx }) {
-      return ctx.prisma.post.findMany({
+    input: getPostsSchema,
+    async resolve({ ctx, input }) {
+      const { limit, skip, cursor } = input;
+
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           createdAt: "desc",
         },
@@ -49,6 +56,16 @@ export const postRouter = createRouter()
           user: true,
         },
       });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+      return {
+        posts,
+        nextCursor,
+      };
     },
   })
   .query("single-post", {
