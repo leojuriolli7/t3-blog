@@ -30,6 +30,10 @@ button:disabled {
 // Set MD Editor to 100%
 .rc-md-editor {
   width: 100%;
+
+  .sec-md textarea {
+    overflow-y: auto !important;
+  }
 }
 
 // MD Editor responsiveness adjustments.
@@ -38,8 +42,14 @@ button:disabled {
     flex-direction: column;
   }
 
-  .editor-container .sec-html {
-    border-top: 1px solid grey;
+  .editor-container .sec-md {
+    border-bottom: 1px solid #bcbcbc;
+  }
+
+  .editor-container .sec-md {
+    textarea {
+      border-right: none !important;
+    }
   }
 }
 
@@ -60,12 +70,16 @@ button:disabled {
 
       .sec-md {
         border: none;
+
+        @media (max-width: 425px) {
+          border-bottom: 1px solid #232323 !important;
+        }
       }
 
       .sec-md textarea {
         background: #171717 !important;
         color: #f4f4f5 !important;
-        border-bottom: 1px solid #757575;
+        border-right: 1px solid #232323;
       }
     }
 
