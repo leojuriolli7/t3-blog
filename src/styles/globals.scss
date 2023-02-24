@@ -22,10 +22,12 @@ button:disabled {
   color: white;
 }
 
+// Change react-toastify info color
 :root {
   --toastify-color-info: #059669 !important;
 }
 
+// Set MD Editor to 100%
 .rc-md-editor {
   width: 100%;
 }
@@ -44,6 +46,8 @@ button:disabled {
 // Create new tailwind class for MD editor dark-mode styles.
 @layer utilities {
   .md-dark-mode {
+    background: #171717;
+
     .editor-container {
       .sec-html {
         background: #171717;
@@ -61,6 +65,7 @@ button:disabled {
       .sec-md textarea {
         background: #171717 !important;
         color: #f4f4f5 !important;
+        border-bottom: 1px solid #757575;
       }
     }
 

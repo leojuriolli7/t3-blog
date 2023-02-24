@@ -9,8 +9,12 @@ const PostListingPage: React.FC = () => {
 
   return (
     <MainLayout>
-      {(isLoading ? loadingArray : data)?.map((post) => (
-        <PostCard key={post?.id} post={post} loading={isLoading} />
+      {(isLoading ? loadingArray : data)?.map((post, i) => (
+        <PostCard
+          key={isLoading ? i : post?.id}
+          post={post}
+          loading={isLoading}
+        />
       ))}
     </MainLayout>
   );
