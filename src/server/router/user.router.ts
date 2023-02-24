@@ -7,7 +7,8 @@ import {
   verifyOtpSchema,
 } from "src/schema/user.schema";
 import { sendLoginEmail } from "@utils/mailer";
-import { baseUrl } from "../../constants";
+import { baseUrl } from "@utils/constants";
+import { isStringEmpty } from "@utils/checkEmpty";
 import { decode, encode } from "@utils/base64";
 import { signJwt } from "@utils/jwt";
 import { serialize } from "cookie";
@@ -18,6 +19,13 @@ export const userRouter = createRouter()
     input: createUserSchema,
     async resolve({ ctx, input }) {
       const { email, name } = input;
+
+      if (isStringEmpty(email) || isStringEmpty(name)) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "E-mail and name can't be empty",
+        });
+      }
 
       try {
         const user = await ctx.prisma.user.create({
@@ -51,6 +59,13 @@ export const userRouter = createRouter()
     input: requestOtpSchema,
     async resolve({ ctx, input }) {
       const { redirect, email } = input;
+
+      if (isStringEmpty(email)) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "E-mail can't be empty",
+        });
+      }
 
       const user = await ctx.prisma.user.findUnique({
         where: {

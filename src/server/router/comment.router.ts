@@ -1,6 +1,6 @@
-import { Comment } from "@prisma/client";
 import { createRouter } from "@server/createRouter";
 import * as trpc from "@trpc/server";
+import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createCommentSchema,
   deleteCommentSchema,
@@ -55,7 +55,7 @@ export const commentRouter = createRouter()
 
       const { user } = ctx;
 
-      if (!body) {
+      if (isStringEmpty(body)) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
           message: "Comment can't be empty",
@@ -148,10 +148,10 @@ export const commentRouter = createRouter()
   .mutation("update-comment", {
     input: updateCommentSchema,
     async resolve({ ctx, input }) {
-      if (!input.body) {
+      if (isStringEmpty(input.body)) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
-          message: "Comment can't be empty",
+          message: "Comment cannot be empty",
         });
       }
 

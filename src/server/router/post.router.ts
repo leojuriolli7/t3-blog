@@ -1,5 +1,6 @@
 import { createRouter } from "@server/createRouter";
 import * as trpc from "@trpc/server";
+import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createPostSchema,
   getSinglePostSchema,
@@ -14,6 +15,13 @@ export const postRouter = createRouter()
         new trpc.TRPCError({
           code: "FORBIDDEN",
           message: "Cannot create posts while not logged in",
+        });
+      }
+
+      if (isStringEmpty(input.body) || isStringEmpty(input.title)) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Body title are required",
         });
       }
 
@@ -83,6 +91,13 @@ export const postRouter = createRouter()
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
           message: "At least one field must be updated",
+        });
+      }
+
+      if (isStringEmpty(input.body) || isStringEmpty(input.title)) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Body and title cannot be empty",
         });
       }
 

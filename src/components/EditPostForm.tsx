@@ -1,10 +1,14 @@
 import { useForm } from "react-hook-form";
-import { UpdatePostInput } from "src/schema/post.schema";
+import { createPostSchema, UpdatePostInput } from "src/schema/post.schema";
 import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";
 import { Post } from "@utils/types";
 import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
+import Field from "./Field";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isObjectEmpty } from "@utils/checkEmpty";
+import { toast } from "react-toastify";
 
 type Props = {
   post?: Post;
@@ -16,35 +20,34 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { register, handleSubmit, watch, setValue, control } =
+  const { register, handleSubmit, setValue, control, formState } =
     useForm<UpdatePostInput>({
+      resolver: zodResolver(createPostSchema),
+      shouldFocusError: false,
       defaultValues: {
         body: post?.body,
         title: post?.title,
       },
     });
 
-  const { mutate: update, isLoading: updating } = trpc.useMutation(
-    ["posts.update-post"],
-    {
-      onSuccess: () => {
-        utils.invalidateQueries([
-          "posts.single-post",
-          {
-            postId,
-          },
-        ]);
-      },
-    }
-  );
+  const { errors } = formState;
 
-  const watchBody = watch("body");
-  const watchTitle = watch("title");
+  const {
+    mutate: update,
+    isLoading: updating,
+    error: updateError,
+  } = trpc.useMutation(["posts.update-post"], {
+    onSuccess: () => {
+      utils.invalidateQueries([
+        "posts.single-post",
+        {
+          postId,
+        },
+      ]);
+    },
+  });
 
-  const shouldBlockUserFromUpdating =
-    !watchBody ||
-    !watchTitle ||
-    (watchTitle === post?.title && watchBody === post?.body);
+  const shouldBlockUserFromUpdating = !isObjectEmpty(errors);
 
   const onSubmit = useCallback(
     (values: UpdatePostInput) => {
@@ -65,19 +68,27 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     }
   }, [post, setValue]);
 
+  useEffect(() => {
+    if (updateError) toast.error(updateError?.message);
+  }, [updateError]);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="w-full mx-auto flex flex-col items-center gap-10"
     >
-      <input
-        type="text"
-        placeholder="your post title"
-        className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-neutral-900"
-        {...register("title")}
-      />
+      <Field error={errors.title}>
+        <input
+          type="text"
+          placeholder="your post title"
+          className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-neutral-900"
+          {...register("title")}
+        />
+      </Field>
 
-      <MarkdownEditor control={control} name="body" />
+      <Field error={errors.body}>
+        <MarkdownEditor control={control} name="body" />
+      </Field>
 
       <button
         className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"

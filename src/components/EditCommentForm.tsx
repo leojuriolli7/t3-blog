@@ -1,11 +1,17 @@
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { UpdateCommentInput } from "src/schema/comment.schema";
+import {
+  UpdateCommentInput,
+  updateCommentSchema,
+} from "src/schema/comment.schema";
 import { CommentWithChildren } from "@utils/types";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { zodResolver } from "@hookform/resolvers/zod";
 import MarkdownEditor from "./MarkdownEditor";
+import Field from "./Field";
+import { isObjectEmpty } from "@utils/checkEmpty";
 
 type Props = {
   comment: CommentWithChildren;
@@ -18,12 +24,16 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { register, handleSubmit, watch, control } =
-    useForm<UpdateCommentInput>({
-      defaultValues: {
-        body: comment?.body,
-      },
-    });
+  const { handleSubmit, control, formState } = useForm<UpdateCommentInput>({
+    resolver: zodResolver(updateCommentSchema),
+    shouldFocusError: false,
+    defaultValues: {
+      body: comment?.body,
+      commentId: comment?.id,
+    },
+  });
+
+  const { errors } = formState;
 
   const {
     mutate: update,
@@ -40,8 +50,7 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
     },
   });
 
-  const watchBody = watch("body");
-  const shouldBlockUserFromUpdating = !watchBody || watchBody === comment?.body;
+  const shouldBlockUserFromUpdating = !isObjectEmpty(errors);
 
   const onSubmit = useCallback(
     (values: UpdateCommentInput) => {
@@ -60,15 +69,18 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
       toast.error(updateError?.message);
     }
   }, [updateError]);
+  console.log("updateError:", updateError);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <MarkdownEditor
-        control={control}
-        variant="condensed"
-        name="body"
-        placeholder="type your comment"
-      />
+      <Field error={errors.body}>
+        <MarkdownEditor
+          control={control}
+          variant="condensed"
+          name="body"
+          placeholder="type your comment"
+        />
+      </Field>
 
       <button
         className="bg-emerald-500 text-white min-w-fit px-8 py-2 mt-2"

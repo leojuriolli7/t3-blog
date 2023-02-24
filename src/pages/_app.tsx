@@ -12,7 +12,7 @@ import { UserContextProvider } from "src/context/user.context";
 import "@styles/globals.scss";
 import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
-import { url } from "../constants";
+import { url } from "@utils/constants";
 
 function App({ Component, pageProps }: AppProps) {
   const { data, isLoading } = trpc.useQuery(["users.me"], {

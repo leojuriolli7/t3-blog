@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",
+    "@hookform/resolvers": "^2.9.11",
     "@prisma/client": "^4.10.1",
     "@trpc/client": "^9.25.3",
     "@trpc/next": "^9.25.3",

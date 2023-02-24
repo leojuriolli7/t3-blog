@@ -1,8 +1,11 @@
 import z from "zod";
 
 export const createPostSchema = z.object({
-  title: z.string().max(256, "Max title length is 256"),
-  body: z.string().min(10),
+  title: z
+    .string()
+    .min(5, "Minimum title length is 5")
+    .max(256, "Max title length is 256"),
+  body: z.string().min(5, "Minimum body length is 5"),
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;

@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const createCommentSchema = z.object({
-  body: z.string(),
+  body: z.string().min(2, "Minimum comment length is 2"),
   postId: z.string().uuid(),
   parentId: z.string().optional(),
 });
@@ -17,7 +17,7 @@ export const deleteCommentSchema = z.object({
 });
 
 export const updateCommentSchema = z.object({
-  body: z.string().optional(),
+  body: z.string().min(2, "Minimum comment length is 2"),
   commentId: z.string(),
 });
 

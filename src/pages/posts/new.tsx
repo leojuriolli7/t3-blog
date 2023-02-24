@@ -1,19 +1,29 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CreatePostInput } from "src/schema/post.schema";
+import { CreatePostInput, createPostSchema } from "src/schema/post.schema";
 import MainLayout from "@components/MainLayout";
 import withAuth from "@components/withAuth";
 import MarkdownEditor from "@components/MarkdownEditor";
+import { toast } from "react-toastify";
+import Field from "@components/Field";
+import { isObjectEmpty } from "@utils/checkEmpty";
 
 const CreatePostPage: React.FC = () => {
-  const { register, handleSubmit, control } = useForm<CreatePostInput>();
+  const { register, handleSubmit, control, formState } =
+    useForm<CreatePostInput>({
+      resolver: zodResolver(createPostSchema),
+      shouldFocusError: false,
+    });
   const router = useRouter();
+
+  const { errors } = formState;
 
   const {
     mutate: create,
-    error,
+    error: createError,
     isLoading,
   } = trpc.useMutation(["posts.create-post"], {
     onSuccess: ({ id }) => {
@@ -28,33 +38,39 @@ const CreatePostPage: React.FC = () => {
     [create]
   );
 
+  useEffect(() => {
+    if (createError) toast.error(createError?.message);
+  }, [createError]);
+
   return (
     <MainLayout>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-3xl mx-auto flex flex-col items-center gap-10"
+        className="w-full max-w-3xl mx-auto flex flex-col gap-10"
       >
-        {error && error.message}
-
         <h1 className="text-2xl font-medium text-center">Create a post</h1>
 
-        <input
-          type="text"
-          placeholder="your post title"
-          className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-zinc-800"
-          {...register("title")}
-        />
+        <Field error={errors.title}>
+          <input
+            type="text"
+            placeholder="your post title"
+            className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
+            {...register("title")}
+          />
+        </Field>
 
-        <MarkdownEditor
-          placeholder="your post content - you can use markdown!"
-          control={control}
-          name="body"
-        />
+        <Field error={errors.body}>
+          <MarkdownEditor
+            placeholder="your post content - you can use markdown!"
+            control={control}
+            name="body"
+          />
+        </Field>
 
         <button
-          className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
+          className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isObjectEmpty(errors)}
         >
           Create
         </button>

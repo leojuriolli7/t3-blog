@@ -1,8 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@utils/trpc";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { CreateUserInput } from "src/schema/user.schema";
+import { toast } from "react-toastify";
+import { isObjectEmpty } from "@utils/checkEmpty";
+import { RequestOtpInput, requestOtpSchema } from "src/schema/user.schema";
+import Field from "./Field";
 
 const VerifyToken = ({ hash }: { hash: string }) => {
   const router = useRouter();
@@ -23,20 +28,27 @@ const VerifyToken = ({ hash }: { hash: string }) => {
 
 const LoginForm = () => {
   const router = useRouter();
-  const { handleSubmit, register } = useForm<CreateUserInput>();
+  const { handleSubmit, register, formState } = useForm<RequestOtpInput>({
+    resolver: zodResolver(requestOtpSchema),
+  });
+  const { errors } = formState;
 
   const {
     mutate: login,
-    error,
+    error: loginError,
     isSuccess,
     isLoading,
   } = trpc.useMutation(["users.request-otp"], {});
 
-  const onSubmit = (values: CreateUserInput) => {
+  const onSubmit = (values: RequestOtpInput) => {
     login({ ...values, redirect: router.asPath });
   };
 
   const hash = router.asPath.split("?token=")[1];
+
+  useEffect(() => {
+    if (loginError) toast.error(loginError?.message);
+  }, [loginError]);
 
   if (hash) {
     return <VerifyToken hash={hash} />;
@@ -47,20 +59,20 @@ const LoginForm = () => {
       className="max-w-xs mx-auto flex flex-col items-center gap-10"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {error && error.message}
-
       {isSuccess && <p>Check your e-mail</p>}
       <h1 className="text-2xl font-medium text-center">Login</h1>
 
-      <input
-        type="email"
-        placeholder="your@email.com"
-        {...register("email")}
-        className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-zinc-800"
-      />
+      <Field error={errors.email}>
+        <input
+          type="email"
+          placeholder="your@email.com"
+          {...register("email")}
+          className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-zinc-800"
+        />
+      </Field>
 
       <button
-        disabled={isLoading}
+        disabled={isLoading || !isObjectEmpty(errors)}
         className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
         type="submit"
       >
