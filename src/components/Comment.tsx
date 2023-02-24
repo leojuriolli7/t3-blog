@@ -75,7 +75,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       <div className="flex w-full justify-between">
         <h3 className="font-medium">{comment.user.name}</h3>
 
-        <p className="cursor-pointer" onClick={toggleDateType}>
+        <p className="cursor-pointer select-none" onClick={toggleDateType}>
           {date}
         </p>
       </div>

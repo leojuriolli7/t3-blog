@@ -1,0 +1,7 @@
+User-agent: Googlebot
+Disallow: /login/
+Disallow: /register/
+Disallow: /new/
+
+User-agent: *
+Allow: /

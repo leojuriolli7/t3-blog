@@ -100,7 +100,7 @@ const SinglePostPage: React.FC = () => {
             </ShouldRender>
 
             <ShouldRender if={!isLoading}>
-              <p onClick={toggleDateType} className="w-fit">
+              <p onClick={toggleDateType} className="w-fit select-none">
                 By {data?.user?.name}
                 <span className="cursor-pointer">{` ${
                   isDistance ? "" : "at"
