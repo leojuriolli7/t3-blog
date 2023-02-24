@@ -13,11 +13,12 @@ type Props = {
 };
 
 const CommentField: React.FC<Props> = ({ parentId }) => {
-  const { handleSubmit, reset, watch, control } = useForm<CreateCommentInput>({
-    defaultValues: {
-      body: undefined,
-    },
-  });
+  const { handleSubmit, setValue, watch, control } =
+    useForm<CreateCommentInput>({
+      defaultValues: {
+        body: undefined,
+      },
+    });
 
   const user = useUserContext();
   const bodyValue = watch("body");
@@ -32,7 +33,8 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
     ["comments.add-comment"],
     {
       onSuccess: () => {
-        reset();
+        // Reset markdown editor content.
+        setValue("body", "");
 
         // This will refetch the comments.
         utils.invalidateQueries([
