@@ -9,7 +9,12 @@ type Props = {
   url?: string;
 };
 
-const MetaTags: React.FC<Props> = ({ title, description, url = baseUrl }) => {
+const MetaTags: React.FC<Props> = ({
+  title,
+  description,
+  url = baseUrl,
+  image,
+}) => {
   const formattedTitle = useMemo(() => {
     if (title) {
       return `T3 Blog | ${title}`;
@@ -20,13 +25,14 @@ const MetaTags: React.FC<Props> = ({ title, description, url = baseUrl }) => {
 
   const DEFAULT_DESCRIPTION = "Blog built with the T3 Stack.";
   const LOGO_PATH = `${baseUrl}/static/logo.png`;
+  const favicon = `${baseUrl}/static/favicon.ico`;
 
   const currentDescription = description || DEFAULT_DESCRIPTION;
 
   return (
     <Head>
       <title>{formattedTitle}</title>
-      <link rel="icon" href={LOGO_PATH} />
+      <link rel="icon" href={favicon} />
       <meta name="title" content={formattedTitle} />
       <meta name="description" content={currentDescription} />
 
@@ -34,13 +40,13 @@ const MetaTags: React.FC<Props> = ({ title, description, url = baseUrl }) => {
       <meta property="og:url" content={url} />
       <meta property="og:title" content={formattedTitle} />
       <meta property="og:description" content={currentDescription} />
-      <meta property="og:image" content={LOGO_PATH} />
+      <meta property="og:image" content={LOGO_PATH || image} />
 
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="twitter:url" content={url} />
       <meta property="twitter:title" content={formattedTitle} />
       <meta property="twitter:description" content={currentDescription} />
-      <meta property="twitter:image" content={LOGO_PATH} />
+      <meta property="twitter:image" content={LOGO_PATH || image} />
     </Head>
   );
 };

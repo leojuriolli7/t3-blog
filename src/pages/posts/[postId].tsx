@@ -11,6 +11,7 @@ import ActionButton from "@components/ActionButton";
 import EditPostForm from "@components/EditPostForm";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
+import Link from "next/link";
 
 type ReplyData = {
   parentId: string;
@@ -104,11 +105,29 @@ const SinglePostPage: React.FC = () => {
               </ShouldRender>
 
               <ShouldRender if={!isLoading}>
-                <p onClick={toggleDateType} className="w-fit select-none">
-                  By {data?.user?.name}
-                  <span className="cursor-pointer">{` ${
-                    isDistance ? "" : "at"
-                  } ${date}`}</span>
+                <p className="w-fit">
+                  By{" "}
+                  <Link href={`/users/${data?.user?.id}`} passHref>
+                    <a
+                      title="Go to user's profile"
+                      className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+                    >
+                      {data?.user?.name}
+                    </a>
+                  </Link>
+                  <ShouldRender if={data?.user?.id === session?.user.id}>
+                    <span className=" text-emerald-700 dark:text-emerald-500">
+                      {" "}
+                      (You)
+                    </span>
+                  </ShouldRender>
+                  <span
+                    onClick={toggleDateType}
+                    className="cursor-pointer select-none"
+                    role="button"
+                    aria-label="Change date visualization type"
+                    title="Change date visualization type"
+                  >{` ${isDistance ? "" : "at"} ${date}`}</span>
                 </p>
               </ShouldRender>
             </div>

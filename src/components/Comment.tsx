@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "src/hooks/useGetDate";
 import { toast } from "react-toastify";
+import { FiExternalLink } from "react-icons/fi";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ReactMarkdown from "./ReactMarkdown";
@@ -12,6 +13,7 @@ import ShouldRender from "./ShouldRender";
 import ActionButton from "./ActionButton";
 import EditCommentForm from "./EditCommentForm";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -73,7 +75,25 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       className="w-full flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800"
     >
       <div className="flex w-full justify-between">
-        <h3 className="font-medium">{comment.user.name}</h3>
+        <div className="flex gap-1 items-center">
+          <h3 className="font-medium">
+            {comment.user.name}{" "}
+            <ShouldRender if={comment.userId === session?.user.id}>
+              <span className=" text-emerald-500"> (You)</span>
+            </ShouldRender>
+          </h3>
+          <Link href={`/users/${comment.userId}`} passHref>
+            <a title="Visit user profile" target="_blank" rel="noreferrer">
+              <FiExternalLink
+                size={15}
+                className="text-emerald-500 mb-1 cursor-pointer hover:opacity-60"
+                aria-label="Click to go to this user's page"
+                title="Click to go to this user's page"
+                role="link"
+              />
+            </a>
+          </Link>
+        </div>
 
         <p className="cursor-pointer select-none" onClick={toggleDateType}>
           {date}

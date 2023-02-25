@@ -5,6 +5,7 @@ import {
   createPostSchema,
   getPostsSchema,
   getSinglePostSchema,
+  getUserPostsSchema,
   updatePostSchema,
 } from "src/schema/post.schema";
 
@@ -79,6 +80,37 @@ export const postRouter = createRouter()
           user: true,
         },
       });
+    },
+  })
+  .query("user.posts", {
+    input: getUserPostsSchema,
+    async resolve({ ctx, input }) {
+      const { limit, skip, cursor } = input;
+
+      const posts = await ctx.prisma.post.findMany({
+        where: {
+          userId: input.userId,
+        },
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+      return {
+        posts,
+        nextCursor,
+      };
     },
   })
   .middleware(async ({ ctx, next }) => {

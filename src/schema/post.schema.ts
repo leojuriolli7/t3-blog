@@ -16,6 +16,13 @@ export const getPostsSchema = z.object({
   skip: z.number().optional(),
 });
 
+export const getUserPostsSchema = z.object({
+  limit: z.number(),
+  cursor: z.string().nullish(),
+  skip: z.number().optional(),
+  userId: z.string(),
+});
+
 export const getSinglePostSchema = z.object({
   postId: z.string().uuid(),
 });
