@@ -8,7 +8,6 @@ import ShouldRender from "@components/ShouldRender";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
-import { formatDistanceToNow } from "date-fns";
 import useGetDate from "src/hooks/useGetDate";
 
 const UserPage: React.FC = () => {
@@ -19,16 +18,14 @@ const UserPage: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
-  const memberSinceDate = (date?: Date) => {
-    if (date) return formatDistanceToNow(date);
-  };
-
   const { data: user } = trpc.useQuery([
     "users.single-post",
     {
       userId,
     },
   ]);
+
+  const { date, toggleDateType } = useGetDate(user?.createdAt);
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
@@ -43,8 +40,6 @@ const UserPage: React.FC = () => {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
-
-  const { date, toggleDateType, isDistance } = useGetDate(user?.createdAt);
 
   const dataToShow = useMemo(
     () => data?.pages.flatMap((page) => page.posts),
