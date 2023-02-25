@@ -12,7 +12,7 @@ export const postRouter = createRouter()
   .mutation("create-post", {
     input: createPostSchema,
     async resolve({ ctx, input }) {
-      if (!ctx.user) {
+      if (!ctx.session) {
         new trpc.TRPCError({
           code: "FORBIDDEN",
           message: "Cannot create posts while not logged in",
@@ -31,7 +31,7 @@ export const postRouter = createRouter()
           ...input,
           user: {
             connect: {
-              id: ctx?.user?.id,
+              id: ctx?.session?.user?.id,
             },
           },
         },
@@ -82,7 +82,7 @@ export const postRouter = createRouter()
     },
   })
   .middleware(async ({ ctx, next }) => {
-    if (!ctx.user) {
+    if (!ctx.session) {
       throw new trpc.TRPCError({
         code: "UNAUTHORIZED",
         message: "Login to post a comment",

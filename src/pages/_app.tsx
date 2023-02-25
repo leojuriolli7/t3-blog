@@ -6,23 +6,16 @@ import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 import superjson from "superjson";
 import { AppRouter } from "@server/router/app.router";
-import { trpc } from "@utils/trpc";
 import { ThemeProvider } from "next-themes";
-import { UserContextProvider } from "src/context/user.context";
+import { SessionProvider } from "next-auth/react";
 import "@styles/globals.scss";
 import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
 import { url } from "@utils/constants";
 
-function App({ Component, pageProps }: AppProps) {
-  const { data, isLoading } = trpc.useQuery(["users.me"], {
-    refetchInterval: 1000,
-  });
-
-  if (isLoading) return <p>Loading user...</p>;
-
+function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <UserContextProvider value={data}>
+    <SessionProvider session={session}>
       <ThemeProvider attribute="class">
         <Head>
           <title>T3 Blog</title>
@@ -36,7 +29,7 @@ function App({ Component, pageProps }: AppProps) {
           }
         />
       </ThemeProvider>
-    </UserContextProvider>
+    </SessionProvider>
   );
 }
 

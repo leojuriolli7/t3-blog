@@ -6,13 +6,13 @@ import {
 } from "src/schema/comment.schema";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import { useUserContext } from "src/context/user.context";
 import { isObjectEmpty } from "@utils/checkEmpty";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import ShouldRender from "./ShouldRender";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
+import { useSession } from "next-auth/react";
 
 type Props = {
   parentId?: string;
@@ -35,7 +35,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
   const { errors } = formState;
 
-  const user = useUserContext();
+  const { status: sessionStatus } = useSession();
   const utils = trpc.useContext();
 
   const isReply = parentId;
@@ -61,11 +61,11 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
 
   const onSubmit = useCallback(
     (values: CreateCommentInput) => {
-      if (!user) {
+      if (sessionStatus !== "authenticated") {
         return toast.info("Please login to comment");
       }
 
-      if (user) {
+      if (sessionStatus === "authenticated") {
         const payload = {
           ...values,
           postId,
@@ -75,7 +75,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
         mutate(payload);
       }
     },
-    [mutate, parentId, postId, user]
+    [mutate, parentId, postId, sessionStatus]
   );
 
   useEffect(() => {
