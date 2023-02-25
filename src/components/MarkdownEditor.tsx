@@ -21,7 +21,6 @@ const enabledPlugins = [
   "header",
   "font-bold",
   "font-italic",
-  "font-underline",
   "font-strikethrough",
   "list-unordered",
   "list-ordered",
