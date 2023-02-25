@@ -70,7 +70,7 @@ const SinglePostPage: React.FC = () => {
       <MetaTags title={data?.title} description={data?.body} />
 
       <MainLayout>
-        <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12 dark:bg-zinc-800">
+        <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-8 xs:p-12 dark:bg-zinc-800">
           <ShouldRender if={data && loggedUserCreatedPost}>
             <div className="absolute -top-2 right-2 flex gap-3 align-center">
               <ActionButton
@@ -92,7 +92,7 @@ const SinglePostPage: React.FC = () => {
 
           <ShouldRender if={!isEditing}>
             <ReactMarkdown
-              className="prose text-4xl font-bold"
+              className="prose xs:text-4xl text-3xl font-bold"
               heading
               loading={isLoading}
             >
