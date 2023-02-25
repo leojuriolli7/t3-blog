@@ -22,7 +22,7 @@ export const postRouter = createRouter()
       if (isStringEmpty(input.body) || isStringEmpty(input.title)) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
-          message: "Body title are required",
+          message: "Body and title are required",
         });
       }
 
