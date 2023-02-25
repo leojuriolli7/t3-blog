@@ -1,31 +1,23 @@
 import Link from "next/link";
-import { trpc } from "@utils/trpc";
-import { useUserContext } from "src/context/user.context";
-import { useCallback } from "react";
+import { useSession } from "next-auth/react";
 import { MdLogout, MdAddBox, MdLogin } from "react-icons/md";
 import { FaAppleAlt, FaUserPlus } from "react-icons/fa";
 import ShouldRender from "./ShouldRender";
 import ThemeSwitch from "./ThemeSwitch";
 
 const Header: React.FC = () => {
-  const user = useUserContext();
-  const { mutate: logout } = trpc.useMutation(["users.logout"]);
-
-  const onClickLogout = useCallback(() => logout(), [logout]);
+  const session = useSession();
 
   return (
     <header className="w-full relative flex justify-center items-center">
       <nav className="absolute left-0 flex sm:gap-5 gap-3">
-        <ShouldRender if={user}>
+        <ShouldRender if={session.status === "authenticated"}>
           <Link href="/posts/new" passHref>
             <a className="hidden sm:block">Create post</a>
           </Link>
-          <button
-            className=" hidden sm:block cursor-pointer "
-            onClick={onClickLogout}
-          >
-            Logout
-          </button>
+          <Link href="/api/auth/signout" passHref>
+            <a className="hidden sm:block">Logout</a>
+          </Link>
 
           <Link href="/posts/new" passHref>
             <MdAddBox
@@ -33,28 +25,29 @@ const Header: React.FC = () => {
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"
             />
           </Link>
-          <MdLogout
-            size={25}
-            className="sm:hidden block dark:text-emerald-500 text-emerald-700"
-            onClick={onClickLogout}
-            aria-label="Logout"
-          />
+          <Link href="/api/auth/signout" passHref>
+            <MdLogout
+              size={25}
+              className="sm:hidden block dark:text-emerald-500 text-emerald-700"
+              aria-label="Logout"
+            />
+          </Link>
         </ShouldRender>
-        <ShouldRender if={!user}>
-          <Link href="/login" passHref>
+        <ShouldRender if={session.status === "unauthenticated"}>
+          <Link href="/api/auth/signin" passHref>
             <a className="hidden sm:block">Login</a>
           </Link>
-          <Link href="/register" passHref>
+          <Link href="/api/auth/signin" passHref>
             <a className="hidden sm:block">Register</a>
           </Link>
 
-          <Link href="/login">
+          <Link href="/api/auth/signin">
             <MdLogin
               size={25}
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"
             />
           </Link>
-          <Link href="/register">
+          <Link href="/api/auth/signin">
             <FaUserPlus
               size={25}
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"

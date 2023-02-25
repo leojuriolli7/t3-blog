@@ -3,13 +3,13 @@ import { trpc } from "@utils/trpc";
 import ReactMarkdown from "@components/ReactMarkdown";
 import { useRouter } from "next/router";
 import CommentSection from "@components/CommentSection";
-import { useUserContext } from "src/context/user.context";
 import useGetDate from "src/hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
 import MainLayout from "@components/MainLayout";
 import Skeleton from "@components/Skeleton";
 import ActionButton from "@components/ActionButton";
 import EditPostForm from "@components/EditPostForm";
+import { useSession } from "next-auth/react";
 
 type ReplyData = {
   parentId: string;
@@ -21,7 +21,7 @@ export type ReplyingTo = ReplyData | undefined;
 const SinglePostPage: React.FC = () => {
   const router = useRouter();
   const postId = router.query.postId as string;
-  const user = useUserContext();
+  const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
 
   const { data, isLoading } = trpc.useQuery([
@@ -31,7 +31,7 @@ const SinglePostPage: React.FC = () => {
     },
   ]);
 
-  const loggedUserCreatedPost = user?.id === data?.userId;
+  const loggedUserCreatedPost = session?.user?.id === data?.userId;
 
   const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
 
@@ -60,8 +60,8 @@ const SinglePostPage: React.FC = () => {
   const toggleIsEditing = useCallback(() => setIsEditing((prev) => !prev), []);
 
   useEffect(() => {
-    if (!user) setIsEditing(false);
-  }, [user]);
+    if (sessionStatus !== "authenticated") setIsEditing(false);
+  }, [sessionStatus]);
 
   return (
     <MainLayout>

@@ -2,7 +2,6 @@ import { trpc } from "@utils/trpc";
 import { CommentWithChildren } from "@utils/types";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { useUserContext } from "src/context/user.context";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "src/hooks/useGetDate";
 import { toast } from "react-toastify";
@@ -12,6 +11,7 @@ import ReactMarkdown from "./ReactMarkdown";
 import ShouldRender from "./ShouldRender";
 import ActionButton from "./ActionButton";
 import EditCommentForm from "./EditCommentForm";
+import { useSession } from "next-auth/react";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -19,7 +19,7 @@ type CommentProps = {
 
 const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [replying, setReplying] = useState(false);
-  const user = useUserContext();
+  const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
   const [parentRef] = useAutoAnimate();
 
@@ -64,8 +64,8 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
   }, [deleteError]);
 
   useEffect(() => {
-    if (!user) setIsEditing(false);
-  }, [user]);
+    if (sessionStatus !== "authenticated") setIsEditing(false);
+  }, [sessionStatus]);
 
   return (
     <div
@@ -97,7 +97,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           </button>
         </ShouldRender>
 
-        <ShouldRender if={user?.id === comment.userId}>
+        <ShouldRender if={session?.user?.id === comment.userId}>
           <div className="absolute -bottom-2 -right-2 flex gap-2 items-center">
             <ActionButton
               action={isEditing ? "close" : "edit"}

@@ -39,7 +39,7 @@ export const commentRouter = createRouter()
     },
   })
   .middleware(async ({ ctx, next }) => {
-    if (!ctx.user) {
+    if (!ctx.session?.user) {
       throw new trpc.TRPCError({
         code: "UNAUTHORIZED",
         message: "Login to post a comment",
@@ -53,7 +53,7 @@ export const commentRouter = createRouter()
     async resolve({ ctx, input }) {
       const { body, postId, parentId } = input;
 
-      const { user } = ctx;
+      const { session } = ctx;
 
       if (isStringEmpty(body)) {
         throw new trpc.TRPCError({
@@ -73,7 +73,7 @@ export const commentRouter = createRouter()
             },
             user: {
               connect: {
-                id: user?.id,
+                id: session?.user?.id,
               },
             },
             ...(parentId && {
