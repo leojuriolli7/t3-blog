@@ -23,7 +23,7 @@ const Header: React.FC = () => {
             <a className="hidden sm:block">Logout</a>
           </Link>
 
-          <Link href="/api/auth/signout" passHref>
+          <Link href={`/users/${session.data?.user.id}`} passHref>
             <FaUserCircle
               size={25}
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"
