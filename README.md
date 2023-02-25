@@ -3,24 +3,25 @@
 Deployed to Vercel on https://t3-blog-pi.vercel.app/
 
 
-This is a fullstack blog application made with the [T3 Stack](https://create.t3.gg/). It uses a *one-time password* sent as a link to your e-mail for logging in. 
-(eg: `https//example.com/login#token=...`) 
+This is a fullstack blog application made with the [T3 Stack](https://create.t3.gg/). 
+
+### Features
+- Login with Google, Github or discord, or with a [Magic link](https://www.beyondidentity.com/glossary/magic-linkshttps://www.beyondidentity.com/glossary/magic-links) to your e-mail.
+- Create & edit posts.
+- Comment on posts.
+- Use [Markdown](https://www.markdownguide.org/basic-syntax/) to write down your posts & comments.
+- Reply to comments on posts (**Infinitely nested comment replies** like reddit)
 
 ### The Stack
 - Next.js 
 - [Prisma](https://www.prisma.io/) for type-safe communication with the database.
 - [tRPC](https://trpc.io) for a type-safe API & data-fetching.
+- [Next Auth](https://next-auth.js.org/) for authorization. - Also using the [Prisma Adapter](https://next-auth.js.org/adapters/prisma) to store session info in my DB.
 - [Tailwind CSS](https://tailwindcss.com/) for styling.
 - [Zod](https://github.com/colinhacks/zod) for validations.
 - [React Hook Form](https://react-hook-form.com) for forms.
-- [Nodemailer](https://nodemailer.com/) for mailing the one-time password link.
-- [React Markdown](https://github.com/remarkjs/react-markdown) for markdown text.
+- [React Markdown](https://github.com/remarkjs/react-markdown) for reading markdown text & [react-markdown-editor-lite](https://github.com/HarryChen0506/react-markdown-editor-lite/) for a very quick and performant MD editor.
+- [Next Themes](https://github.com/pacocoursey/next-themes) for easy dark mode support.
+- [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts.
 
-### Features
-- Create posts.
-- Use [Markdown](https://www.markdownguide.org/basic-syntax/) to write down your posts.
-- Login with a [Magic link](https://www.beyondidentity.com/glossary/magic-linkshttps://www.beyondidentity.com/glossary/magic-links) to your e-mail.
-- Comment on posts.
-- Reply to comments on posts (**Nested comment replies** like reddit)
-- Use Markdown on your comments.
 
