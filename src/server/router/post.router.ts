@@ -85,7 +85,7 @@ export const postRouter = createRouter()
     if (!ctx.session) {
       throw new trpc.TRPCError({
         code: "UNAUTHORIZED",
-        message: "Login to post a comment",
+        message: "Login to create a post",
       });
     }
 
