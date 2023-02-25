@@ -2,7 +2,7 @@ import React from "react";
 
 const TermsAndConditionsPage: React.FC = () => {
   return (
-    <div className="prose w-full mx-auto py-20 sm:px-0 px-20">
+    <div className="prose w-full mx-auto py-20 sm:px-0 px-20 dark:prose-invert">
       <h2>
         <strong>Terms and Conditions</strong>
       </h2>
