@@ -74,7 +74,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       ref={parentRef}
       className="w-full flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800"
     >
-      <div className="flex w-full justify-between">
+      <div className="flex w-full justify-between gap-10 sm:gap-0">
         <div className="flex gap-1 items-center">
           <h3 className="font-medium">
             {comment.user.name}{" "}

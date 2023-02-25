@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import { formatDistanceToNow } from "date-fns";
+import useGetDate from "src/hooks/useGetDate";
 
 const UserPage: React.FC = () => {
   const router = useRouter();
@@ -43,6 +44,8 @@ const UserPage: React.FC = () => {
       }
     );
 
+  const { date, toggleDateType, isDistance } = useGetDate(user?.createdAt);
+
   const dataToShow = useMemo(
     () => data?.pages.flatMap((page) => page.posts),
     [data]
@@ -69,7 +72,7 @@ const UserPage: React.FC = () => {
             className="rounded-full"
             alt={user?.name as string}
           />
-          <div className="text-center">
+          <div className="text-center w-64">
             <ShouldRender if={!!user?.name}>
               <p className="text-xl">
                 {user?.name}{" "}
@@ -83,7 +86,16 @@ const UserPage: React.FC = () => {
             </ShouldRender>
             <ShouldRender if={!!user?.createdAt}>
               <p className="mt-2 text-neutral-800 dark:text-neutral-400 dark:opacity-80">
-                Member since {memberSinceDate(user?.createdAt)}
+                Member since{" "}
+                <span
+                  onClick={toggleDateType}
+                  className="cursor-pointer select-none"
+                  role="button"
+                  aria-label="Change date visualization type"
+                  title="Change date visualization type"
+                >
+                  {date}
+                </span>
               </p>
             </ShouldRender>
           </div>
