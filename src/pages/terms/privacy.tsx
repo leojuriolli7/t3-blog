@@ -2,7 +2,7 @@ import React from "react";
 
 const PrivacyPolicyPage: React.FC = () => {
   return (
-    <div className="prose w-full mx-auto py-20 sm:px-0 px-20">
+    <div className="prose w-full mx-auto py-20 sm:px-0 px-20 dark:prose-invert">
       <h1>Privacy Policy</h1>
       <p>Last updated: February 25, 2023</p>
       <p>
