@@ -2,8 +2,10 @@ import { useCallback } from "react";
 import { Controller } from "react-hook-form";
 import MarkdownIt from "markdown-it";
 import dynamic from "next/dynamic";
+import hljs from "highlight.js";
 import insert from "markdown-it-ins";
 import taskLists from "markdown-it-task-lists";
+import "highlight.js/styles/atom-one-light.css";
 
 type Variants = "condensed" | "regular";
 
@@ -51,6 +53,14 @@ const MarkdownEditor: React.FC<Props> = ({
     html: true,
     linkify: true,
     typographer: true,
+    highlight: function (str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(lang, str).value;
+        } catch (__) {}
+      }
+      return ""; // use external default escaping
+    },
   })
     .use(insert)
     .use(taskLists);
