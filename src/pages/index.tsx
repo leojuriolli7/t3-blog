@@ -4,6 +4,7 @@ import MainLayout from "@components/MainLayout";
 import PostCard from "@components/PostCard";
 import useOnScreen from "src/hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
+import MetaTags from "@components/MetaTags";
 
 const PostListingPage: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -37,21 +38,24 @@ const PostListingPage: React.FC = () => {
   }, [reachedBottom]);
 
   return (
-    <MainLayout>
-      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-        <PostCard
-          key={isLoading ? i : post?.id}
-          post={post}
-          loading={isLoading}
-        />
-      ))}
+    <>
+      <MetaTags title="Home" />
+      <MainLayout>
+        {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
+          <PostCard
+            key={isLoading ? i : post?.id}
+            post={post}
+            loading={isLoading}
+          />
+        ))}
 
-      <ShouldRender if={isFetchingNextPage}>
-        <PostCard loading />
-      </ShouldRender>
+        <ShouldRender if={isFetchingNextPage}>
+          <PostCard loading />
+        </ShouldRender>
 
-      <div ref={bottomRef} />
-    </MainLayout>
+        <div ref={bottomRef} />
+      </MainLayout>
+    </>
   );
 };
 

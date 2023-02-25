@@ -10,6 +10,7 @@ import MarkdownEditor from "@components/MarkdownEditor";
 import { toast } from "react-toastify";
 import Field from "@components/Field";
 import { isObjectEmpty } from "@utils/checkEmpty";
+import MetaTags from "@components/MetaTags";
 
 const CreatePostPage: React.FC = () => {
   const { register, handleSubmit, control, formState } =
@@ -43,39 +44,42 @@ const CreatePostPage: React.FC = () => {
   }, [createError]);
 
   return (
-    <MainLayout>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-3xl mx-auto flex flex-col gap-10"
-      >
-        <h1 className="text-2xl font-medium text-center">Create a post</h1>
-
-        <Field error={errors.title}>
-          <input
-            type="text"
-            placeholder="your post title"
-            className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
-            {...register("title")}
-          />
-        </Field>
-
-        <Field error={errors.body}>
-          <MarkdownEditor
-            placeholder="your post content - you can use markdown!"
-            control={control}
-            name="body"
-          />
-        </Field>
-
-        <button
-          className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
-          type="submit"
-          disabled={isLoading || !isObjectEmpty(errors)}
+    <>
+      <MetaTags title="New post" />
+      <MainLayout>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full max-w-3xl mx-auto flex flex-col gap-10"
         >
-          Create
-        </button>
-      </form>
-    </MainLayout>
+          <h1 className="text-2xl font-medium text-center">Create a post</h1>
+
+          <Field error={errors.title}>
+            <input
+              type="text"
+              placeholder="your post title"
+              className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
+              {...register("title")}
+            />
+          </Field>
+
+          <Field error={errors.body}>
+            <MarkdownEditor
+              placeholder="your post content - you can use markdown!"
+              control={control}
+              name="body"
+            />
+          </Field>
+
+          <button
+            className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
+            type="submit"
+            disabled={isLoading || !isObjectEmpty(errors)}
+          >
+            Create
+          </button>
+        </form>
+      </MainLayout>
+    </>
   );
 };
 

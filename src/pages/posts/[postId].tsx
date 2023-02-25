@@ -10,6 +10,7 @@ import Skeleton from "@components/Skeleton";
 import ActionButton from "@components/ActionButton";
 import EditPostForm from "@components/EditPostForm";
 import { useSession } from "next-auth/react";
+import MetaTags from "@components/MetaTags";
 
 type ReplyData = {
   parentId: string;
@@ -64,59 +65,63 @@ const SinglePostPage: React.FC = () => {
   }, [sessionStatus]);
 
   return (
-    <MainLayout>
-      <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12 dark:bg-zinc-800">
-        <ShouldRender if={data && loggedUserCreatedPost}>
-          <div className="absolute -top-2 right-2 flex gap-3 align-center">
-            <ActionButton
-              action={isEditing ? "close" : "edit"}
-              onClick={toggleIsEditing}
-            />
+    <>
+      <MetaTags title={data?.title} description={data?.body} />
 
-            <ActionButton
-              onClick={onClickDeletePost}
-              disabled={deleting}
-              action="delete"
-            />
-          </div>
-        </ShouldRender>
+      <MainLayout>
+        <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-12 dark:bg-zinc-800">
+          <ShouldRender if={data && loggedUserCreatedPost}>
+            <div className="absolute -top-2 right-2 flex gap-3 align-center">
+              <ActionButton
+                action={isEditing ? "close" : "edit"}
+                onClick={toggleIsEditing}
+              />
 
-        <ShouldRender if={isEditing}>
-          <EditPostForm onFinish={toggleIsEditing} post={data} />
-        </ShouldRender>
+              <ActionButton
+                onClick={onClickDeletePost}
+                disabled={deleting}
+                action="delete"
+              />
+            </div>
+          </ShouldRender>
 
-        <ShouldRender if={!isEditing}>
-          <ReactMarkdown
-            className="prose text-4xl font-bold"
-            heading
-            loading={isLoading}
-          >
-            {data?.title}
-          </ReactMarkdown>
+          <ShouldRender if={isEditing}>
+            <EditPostForm onFinish={toggleIsEditing} post={data} />
+          </ShouldRender>
 
-          <div>
-            <ShouldRender if={isLoading}>
-              <Skeleton width="w-1/2" />
-            </ShouldRender>
+          <ShouldRender if={!isEditing}>
+            <ReactMarkdown
+              className="prose text-4xl font-bold"
+              heading
+              loading={isLoading}
+            >
+              {data?.title}
+            </ReactMarkdown>
 
-            <ShouldRender if={!isLoading}>
-              <p onClick={toggleDateType} className="w-fit select-none">
-                By {data?.user?.name}
-                <span className="cursor-pointer">{` ${
-                  isDistance ? "" : "at"
-                } ${date}`}</span>
-              </p>
-            </ShouldRender>
-          </div>
+            <div>
+              <ShouldRender if={isLoading}>
+                <Skeleton width="w-1/2" />
+              </ShouldRender>
 
-          <ReactMarkdown className="prose" lines={5} loading={isLoading}>
-            {data?.body}
-          </ReactMarkdown>
-        </ShouldRender>
-      </main>
+              <ShouldRender if={!isLoading}>
+                <p onClick={toggleDateType} className="w-fit select-none">
+                  By {data?.user?.name}
+                  <span className="cursor-pointer">{` ${
+                    isDistance ? "" : "at"
+                  } ${date}`}</span>
+                </p>
+              </ShouldRender>
+            </div>
 
-      <CommentSection />
-    </MainLayout>
+            <ReactMarkdown className="prose" lines={5} loading={isLoading}>
+              {data?.body}
+            </ReactMarkdown>
+          </ShouldRender>
+        </main>
+
+        <CommentSection />
+      </MainLayout>
+    </>
   );
 };
 
