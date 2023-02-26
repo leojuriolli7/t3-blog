@@ -55,12 +55,18 @@ const SinglePostPage: React.FC = () => {
 
   const handleLikeOrDislikePost = useCallback(
     (dislike: boolean) => () => {
-      likePost({
-        postId,
-        dislike: dislike,
-      });
+      if (!session?.user) {
+        return toast.info("Login to like or dislike posts");
+      }
+
+      if (session?.user) {
+        return likePost({
+          postId,
+          dislike: dislike,
+        });
+      }
     },
-    [postId, likePost]
+    [postId, likePost, session]
   );
 
   const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
@@ -170,14 +176,14 @@ const SinglePostPage: React.FC = () => {
 
           <div className="flex gap-3 absolute -bottom-4 left-4">
             <LikeButton
-              disabled={liking || isLoading || !session?.user}
+              disabled={liking || isLoading}
               label={data?.likes}
               onClick={handleLikeOrDislikePost(false)}
               likedOrDislikedByMe={data?.likedByMe}
             />
 
             <LikeButton
-              disabled={liking || isLoading || !session?.user}
+              disabled={liking || isLoading}
               label={data?.dislikes}
               onClick={handleLikeOrDislikePost(true)}
               dislike
