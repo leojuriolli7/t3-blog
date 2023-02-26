@@ -14,6 +14,7 @@ import EditPostForm from "@components/EditPostForm";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
+import { Post } from "@utils/types";
 
 type ReplyData = {
   parentId: string;
@@ -28,30 +29,111 @@ const SinglePostPage: React.FC = () => {
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
 
-  const { data, isLoading } = trpc.useQuery([
-    "posts.single-post",
+  const { data, isLoading } = trpc.useQuery(
+    [
+      "posts.single-post",
+      {
+        postId,
+      },
+    ],
     {
-      postId,
-    },
-  ]);
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const loggedUserCreatedPost = session?.user?.id === data?.userId;
 
-  const {
-    mutateAsync: likePost,
-    isLoading: liking,
-    error: likeError,
-  } = trpc.useMutation(["likes.like-post"], {
-    onSuccess: () => {
-      // This will refetch the single-post query.
-      utils.invalidateQueries([
-        "posts.single-post",
-        {
-          postId,
-        },
-      ]);
-    },
-  });
+  const { mutate: likePost, error: likeError } = trpc.useMutation(
+    ["likes.like-post"],
+    {
+      onMutate: async ({ dislike, postId }) => {
+        // Cancel any outgoing refetches
+        // (so they don't overwrite our optimistic update)
+        await utils.cancelQuery(["posts.single-post", { postId }]);
+
+        const prevData = utils.getQueryData(["posts.single-post", { postId }]);
+
+        const userHadAlreadyLiked = prevData!.likedByMe;
+        const userHadDisliked = prevData!.dislikedByMe;
+
+        // User undoing dislike by clicking dislike button again.
+        if (userHadDisliked && dislike) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            dislikes: prevData!.dislikes - 1,
+            dislikedByMe: false,
+          }));
+        }
+
+        // User disliking post.
+        if (!userHadDisliked && dislike) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            dislikes: prevData!.dislikes + 1,
+            dislikedByMe: true,
+          }));
+        }
+
+        // User disliking post and undoing previous like.
+        if (userHadAlreadyLiked && dislike) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            dislikes: prevData!.dislikes + 1,
+            likedByMe: false,
+            dislikedByMe: true,
+            likes: prevData!.likes - 1,
+          }));
+        }
+
+        // User liking post.
+        if (!userHadAlreadyLiked && !dislike) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            likes: prevData!.likes + 1,
+            likedByMe: true,
+          }));
+        }
+
+        // User liking post and undoing previous dislike.
+        if (userHadDisliked && !dislike) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            likes: prevData!.likes + 1,
+            likedByMe: true,
+            dislikedByMe: false,
+            dislikes: prevData!.dislikes - 1,
+          }));
+        }
+
+        // User undoing like by clicking like button again.
+        if (userHadAlreadyLiked && !dislike) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            likes: prevData!.likes - 1,
+            likedByMe: false,
+          }));
+        }
+
+        // Return the previous data so we can revert if something goes wrong
+        return { prevData };
+      },
+      // If the mutation fails,
+      // use the context returned from onMutate to roll back
+      onError: (err, newData, context) => {
+        utils.setQueryData(["posts.single-post"], context?.prevData as Post);
+      },
+      // Always refetch after error or success
+      onSettled: () => {
+        // This will refetch the single-post query.
+        utils.invalidateQueries([
+          "posts.single-post",
+          {
+            postId,
+          },
+        ]);
+      },
+    }
+  );
 
   const handleLikeOrDislikePost = useCallback(
     (dislike: boolean) => () => {
@@ -176,14 +258,14 @@ const SinglePostPage: React.FC = () => {
 
           <div className="flex gap-3 absolute -bottom-4 left-4">
             <LikeButton
-              disabled={liking || isLoading}
+              disabled={isLoading}
               label={data?.likes}
               onClick={handleLikeOrDislikePost(false)}
               likedOrDislikedByMe={data?.likedByMe}
             />
 
             <LikeButton
-              disabled={liking || isLoading}
+              disabled={isLoading}
               label={data?.dislikes}
               onClick={handleLikeOrDislikePost(true)}
               dislike
