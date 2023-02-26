@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
+import NoPostsAnimation from "@public/static/ghost.json";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import useOnScreen from "src/hooks/useOnScreen";
+import Lottie from "react-lottie";
 import PostCard from "@components/PostCard";
 import Image from "next/image";
 import ShouldRender from "@components/ShouldRender";
@@ -9,6 +11,13 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import useGetDate from "src/hooks/useGetDate";
+import Link from "next/link";
+
+const LOTTIE_OPTIONS = {
+  loop: true,
+  autoplay: true,
+  animationData: NoPostsAnimation,
+};
 
 const UserPage: React.FC = () => {
   const router = useRouter();
@@ -45,6 +54,8 @@ const UserPage: React.FC = () => {
     () => data?.pages.flatMap((page) => page.posts),
     [data]
   );
+
+  const noDataToShow = !isLoading && !dataToShow?.length && !hasNextPage;
 
   const loadingArray = Array.from<undefined>({ length: 4 });
 
@@ -97,7 +108,7 @@ const UserPage: React.FC = () => {
         </section>
 
         <section className="w-full">
-          <h2 className="text-3xl mb-5">User posts</h2>
+          <h2 className="sm:text-3xl text-2xl mb-5">User posts</h2>
           <div className="w-full flex flex-col gap-10">
             {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
               <PostCard
@@ -109,6 +120,18 @@ const UserPage: React.FC = () => {
 
             <ShouldRender if={isFetchingNextPage}>
               <PostCard loading />
+            </ShouldRender>
+
+            <ShouldRender if={noDataToShow}>
+              <div className="flex flex-col items-center">
+                <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
+                <p className="text-center">
+                  It seems you have not created any posts yet.
+                </p>
+                <Link href="/posts/new" passHref>
+                  <a className="text-center mt-2">Get to it!</a>
+                </Link>
+              </div>
             </ShouldRender>
           </div>
         </section>
