@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import ReactMarkdown from "@components/ReactMarkdown";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import CommentSection from "@components/CommentSection";
+import LikeButton from "@components/LikeButton";
 import useGetDate from "src/hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
 import MainLayout from "@components/MainLayout";
@@ -35,8 +37,33 @@ const SinglePostPage: React.FC = () => {
 
   const loggedUserCreatedPost = session?.user?.id === data?.userId;
 
-  const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
+  const {
+    mutateAsync: likePost,
+    isLoading: liking,
+    error: likeError,
+  } = trpc.useMutation(["likes.like-post"], {
+    onSuccess: () => {
+      // This will refetch the single-post query.
+      utils.invalidateQueries([
+        "posts.single-post",
+        {
+          postId,
+        },
+      ]);
+    },
+  });
 
+  const handleLikeOrDislikePost = useCallback(
+    (dislike: boolean) => () => {
+      likePost({
+        postId,
+        dislike: dislike,
+      });
+    },
+    [postId, likePost]
+  );
+
+  const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const { mutate: deletePost, isLoading: deleting } = trpc.useMutation(
@@ -64,6 +91,10 @@ const SinglePostPage: React.FC = () => {
   useEffect(() => {
     if (sessionStatus !== "authenticated") setIsEditing(false);
   }, [sessionStatus]);
+
+  useEffect(() => {
+    if (likeError) toast.error(likeError?.message);
+  }, [likeError]);
 
   return (
     <>
@@ -136,6 +167,23 @@ const SinglePostPage: React.FC = () => {
               {data?.body}
             </ReactMarkdown>
           </ShouldRender>
+
+          <div className="flex gap-3 absolute -bottom-4 left-4">
+            <LikeButton
+              disabled={liking || isLoading || !session?.user}
+              label={data?.likes}
+              onClick={handleLikeOrDislikePost(false)}
+              likedOrDislikedByMe={data?.likedByMe}
+            />
+
+            <LikeButton
+              disabled={liking || isLoading || !session?.user}
+              label={data?.dislikes}
+              onClick={handleLikeOrDislikePost(true)}
+              dislike
+              likedOrDislikedByMe={data?.dislikedByMe}
+            />
+          </div>
         </main>
 
         <CommentSection />
