@@ -109,6 +109,7 @@ export const postRouter = createRouter()
         },
         include: {
           user: true,
+          likes: true,
         },
       });
 
@@ -117,8 +118,11 @@ export const postRouter = createRouter()
         const nextItem = posts.pop(); // return the last item from the array
         nextCursor = nextItem?.id;
       }
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
       return {
-        posts,
+        posts: postsWithLikes,
         nextCursor,
       };
     },
