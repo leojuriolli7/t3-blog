@@ -41,6 +41,18 @@ model Session {
   @@index([userId])
 }
 
+model Like { 
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String
+  postId String
+  dislike Boolean @default(false)
+
+  @@id([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -49,6 +61,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+
+  likes Like[] 
 
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
@@ -75,9 +89,8 @@ model Post {
   user      User     @relation(fields: [userId], references: [id])
   userId    String
 
+  likes Like[]
   Comment Comment[]
-
-  likes Int @default(0)
 
   @@index([userId])
 }

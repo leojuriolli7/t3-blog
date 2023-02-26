@@ -10,12 +10,17 @@ const CommentSection: React.FC = () => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { data } = trpc.useQuery([
-    "comments.all-comments",
+  const { data } = trpc.useQuery(
+    [
+      "comments.all-comments",
+      {
+        postId,
+      },
+    ],
     {
-      postId,
-    },
-  ]);
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const formattedComments = formatComments(data || []);
 

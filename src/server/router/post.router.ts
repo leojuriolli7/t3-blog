@@ -1,4 +1,5 @@
 import { createRouter } from "@server/createRouter";
+import { getPostWithLikes } from "@server/utils";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
@@ -55,6 +56,7 @@ export const postRouter = createRouter()
         },
         include: {
           user: true,
+          likes: true,
         },
       });
 
@@ -63,23 +65,31 @@ export const postRouter = createRouter()
         const nextItem = posts.pop(); // return the last item from the array
         nextCursor = nextItem?.id;
       }
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
       return {
-        posts,
+        posts: postsWithLikes,
         nextCursor,
       };
     },
   })
   .query("single-post", {
     input: getSinglePostSchema,
-    resolve({ ctx, input }) {
-      return ctx.prisma.post.findUnique({
+    async resolve({ ctx, input }) {
+      const post = await ctx.prisma.post.findUnique({
         where: {
           id: input.postId,
         },
         include: {
           user: true,
+          likes: true,
         },
       });
+
+      const postWithLikes = getPostWithLikes(post, ctx?.session);
+
+      return postWithLikes;
     },
   })
   .query("user.posts", {
@@ -99,6 +109,7 @@ export const postRouter = createRouter()
         },
         include: {
           user: true,
+          likes: true,
         },
       });
 
@@ -107,8 +118,11 @@ export const postRouter = createRouter()
         const nextItem = posts.pop(); // return the last item from the array
         nextCursor = nextItem?.id;
       }
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
       return {
-        posts,
+        posts: postsWithLikes,
         nextCursor,
       };
     },
