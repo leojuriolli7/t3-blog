@@ -91,6 +91,20 @@ export const postRouter = createRouter()
           likes: true,
           tags: true,
         },
+        ...(input.userId && {
+          where: {
+            userId: input.userId,
+          },
+        }),
+        ...(input.tagId && {
+          where: {
+            tags: {
+              some: {
+                id: input.tagId,
+              },
+            },
+          },
+        }),
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
@@ -124,42 +138,6 @@ export const postRouter = createRouter()
       const postWithLikes = getPostWithLikes(post, ctx?.session);
 
       return postWithLikes;
-    },
-  })
-  .query("user.posts", {
-    input: getUserPostsSchema,
-    async resolve({ ctx, input }) {
-      const { limit, skip, cursor } = input;
-
-      const posts = await ctx.prisma.post.findMany({
-        where: {
-          userId: input.userId,
-        },
-        take: limit + 1,
-        skip: skip,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          user: true,
-          likes: true,
-          tags: true,
-        },
-      });
-
-      let nextCursor: typeof cursor | undefined = undefined;
-      if (posts.length > limit) {
-        const nextItem = posts.pop(); // return the last item from the array
-        nextCursor = nextItem?.id;
-      }
-
-      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
-
-      return {
-        posts: postsWithLikes,
-        nextCursor,
-      };
     },
   })
   .middleware(async ({ ctx, next }) => {

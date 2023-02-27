@@ -30,7 +30,7 @@ const UserPage: React.FC = () => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
-        "posts.user.posts",
+        "posts.posts",
         {
           userId,
           limit: 4,

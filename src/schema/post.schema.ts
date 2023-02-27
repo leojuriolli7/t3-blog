@@ -19,6 +19,8 @@ export const getPostsSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish(),
   skip: z.number().optional(),
+  userId: z.string().optional(),
+  tagId: z.string().optional(),
 });
 
 export const getUserPostsSchema = z.object({
