@@ -23,7 +23,9 @@ const CreatePostPage: React.FC = () => {
 
   const { errors } = formState;
 
-  const { data: tags } = trpc.useQuery(["posts.tags"]);
+  const { data: tags } = trpc.useQuery(["posts.tags"], {
+    refetchOnWindowFocus: false,
+  });
   const initialTags = tags?.map((tag) => tag.name);
 
   const {

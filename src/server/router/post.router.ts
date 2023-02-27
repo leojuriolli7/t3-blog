@@ -20,8 +20,7 @@ export const postRouter = createRouter()
         });
       }
 
-      const inputHasNoTags =
-        !input?.tags?.length || input.tags.map((tag) => isStringEmpty(tag));
+      const inputHasNoTags = !input?.tags?.length;
 
       if (
         isStringEmpty(input.body) ||

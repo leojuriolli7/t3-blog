@@ -5,6 +5,8 @@ import { MdOutlineAdd } from "react-icons/md";
 import { FieldType } from "@utils/types";
 import { Controller } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { toast } from "react-toastify";
 
 const { CheckableTag } = Tag;
 
@@ -16,6 +18,8 @@ type Props = {
 };
 
 const SelectTags: React.FC<Props> = ({ control, initialTags, name, error }) => {
+  const [parentRef] = useAutoAnimate();
+
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
 
@@ -75,9 +79,10 @@ const SelectTags: React.FC<Props> = ({ control, initialTags, name, error }) => {
   );
 
   useEffect(() => {
-    if (initialTags) {
+    if (initialTags && !tags?.length) {
       setTags(initialTags);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialTags]);
 
   return (
@@ -88,7 +93,7 @@ const SelectTags: React.FC<Props> = ({ control, initialTags, name, error }) => {
         <div>
           <h2 className="text-2xl">Tags</h2>
           <ErrorMessage error={error} />
-          <div className="flex flex-wrap gap-2 mb-4 mt-2">
+          <div ref={parentRef} className="flex flex-wrap gap-2 mb-4 mt-2">
             {tags.map((tag) => (
               <CheckableTag
                 className="flex items-center p-2 text-sm select-none border-neutral-300 dark:border-neutral-600 rounded-none dark:text-neutral-200 "
