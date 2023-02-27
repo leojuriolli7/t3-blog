@@ -21,16 +21,33 @@ export const postRouter = createRouter()
         });
       }
 
-      if (isStringEmpty(input.body) || isStringEmpty(input.title)) {
+      const inputHasNoTags =
+        !input?.tags?.length || input.tags.map((tag) => isStringEmpty(tag));
+
+      if (
+        isStringEmpty(input.body) ||
+        isStringEmpty(input.title) ||
+        inputHasNoTags
+      ) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
-          message: "Body and title are required",
+          message: "Body, title and tag are required",
         });
       }
 
       const post = await ctx.prisma.post.create({
         data: {
           ...input,
+          tags: {
+            connectOrCreate: input.tags.map((tag) => ({
+              create: {
+                name: tag,
+              },
+              where: {
+                name: tag,
+              },
+            })),
+          },
           user: {
             connect: {
               id: ctx?.session?.user?.id,
@@ -40,6 +57,13 @@ export const postRouter = createRouter()
       });
 
       return post;
+    },
+  })
+  .query("tags", {
+    resolve({ ctx }) {
+      const tags = ctx.prisma.tag.findMany();
+
+      return tags;
     },
   })
   .query("posts", {
@@ -57,6 +81,7 @@ export const postRouter = createRouter()
         include: {
           user: true,
           likes: true,
+          // tags: true
         },
       });
 
@@ -84,6 +109,7 @@ export const postRouter = createRouter()
         include: {
           user: true,
           likes: true,
+          // tags: true
         },
       });
 
@@ -110,6 +136,7 @@ export const postRouter = createRouter()
         include: {
           user: true,
           likes: true,
+          // tags: true
         },
       });
 

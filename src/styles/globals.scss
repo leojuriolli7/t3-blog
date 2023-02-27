@@ -27,6 +27,19 @@ button:disabled {
   --toastify-color-info: #059669 !important;
 }
 
+.ant-tag-checkable-checked {
+  background: #059669;
+
+  &:hover {
+    background: #059669;
+  }
+}
+
+.ant-tag-checkable:not(.ant-tag-checkable-checked):hover {
+  color: initial;
+  opacity: 0.6;
+}
+
 // Set MD Editor to 100%
 .rc-md-editor {
   width: 100%;
