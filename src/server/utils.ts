@@ -1,4 +1,4 @@
-import { Like, Post, User } from "@prisma/client";
+import { Like, Post, Tag, User } from "@prisma/client";
 import { Session } from "next-auth";
 
 export const getPostWithLikes = (
@@ -6,6 +6,7 @@ export const getPostWithLikes = (
     | (Post & {
         likes: Like[];
         user: User;
+        tags: Tag[];
       })
     | null,
   session?: Session | null
@@ -30,4 +31,24 @@ export const getPostWithLikes = (
     likes: likes?.length || 0,
     dislikes: dislikes?.length || 0,
   };
+};
+
+const filters: Record<string, object> = {
+  newest: {
+    createdAt: "desc",
+  },
+  oldest: {
+    createdAt: "asc",
+  },
+  liked: {
+    likes: {
+      _count: "desc",
+    },
+  },
+};
+
+export const getFiltersByInput = (filter?: string) => {
+  if (typeof filter === "string") {
+    return filters[filter];
+  }
 };

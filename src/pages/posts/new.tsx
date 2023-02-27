@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import Field from "@components/Field";
 import { isObjectEmpty } from "@utils/checkEmpty";
 import MetaTags from "@components/MetaTags";
+import SelectTags from "@components/SelectTags";
 
 const CreatePostPage: React.FC = () => {
   const { register, handleSubmit, control, formState } =
@@ -21,6 +22,11 @@ const CreatePostPage: React.FC = () => {
   const router = useRouter();
 
   const { errors } = formState;
+
+  const { data: tags } = trpc.useQuery(["posts.tags"], {
+    refetchOnWindowFocus: false,
+  });
+  const initialTags = tags?.map((tag) => tag.name);
 
   const {
     mutate: create,
@@ -69,6 +75,13 @@ const CreatePostPage: React.FC = () => {
               name="body"
             />
           </Field>
+
+          <SelectTags
+            control={control}
+            initialTags={initialTags}
+            name="tags"
+            error={errors.tags}
+          />
 
           <button
             className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"

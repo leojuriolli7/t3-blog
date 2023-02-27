@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
 import { Post } from "@utils/types";
+import TagList from "@components/TagList";
 
 type ReplyData = {
   parentId: string;
@@ -273,6 +274,14 @@ const SinglePostPage: React.FC = () => {
             />
           </div>
         </main>
+
+        <div className="w-full -mb-10">
+          <h2 className="text-lg font-medium">Tags</h2>
+
+          <ShouldRender if={data?.tags?.length || isLoading}>
+            <TagList tags={data?.tags} loading={isLoading} />
+          </ShouldRender>
+        </div>
 
         <CommentSection />
       </MainLayout>

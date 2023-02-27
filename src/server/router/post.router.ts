@@ -1,12 +1,11 @@
 import { createRouter } from "@server/createRouter";
-import { getPostWithLikes } from "@server/utils";
+import { getFiltersByInput, getPostWithLikes } from "@server/utils";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createPostSchema,
   getPostsSchema,
   getSinglePostSchema,
-  getUserPostsSchema,
   updatePostSchema,
 } from "src/schema/post.schema";
 
@@ -21,16 +20,40 @@ export const postRouter = createRouter()
         });
       }
 
-      if (isStringEmpty(input.body) || isStringEmpty(input.title)) {
+      const inputHasNoTags = !input?.tags?.length;
+
+      if (
+        isStringEmpty(input.body) ||
+        isStringEmpty(input.title) ||
+        inputHasNoTags
+      ) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
-          message: "Body and title are required",
+          message: "Body, title and tag are required",
+        });
+      }
+
+      const tooManyTags = input?.tags?.length > 5;
+      if (tooManyTags) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Maximum of 5 tags per post",
         });
       }
 
       const post = await ctx.prisma.post.create({
         data: {
           ...input,
+          tags: {
+            connectOrCreate: input.tags.map((tag) => ({
+              create: {
+                name: tag,
+              },
+              where: {
+                name: tag,
+              },
+            })),
+          },
           user: {
             connect: {
               id: ctx?.session?.user?.id,
@@ -42,22 +65,48 @@ export const postRouter = createRouter()
       return post;
     },
   })
+  .query("tags", {
+    resolve({ ctx }) {
+      const tags = ctx.prisma.tag.findMany();
+
+      return tags;
+    },
+  })
   .query("posts", {
     input: getPostsSchema,
     async resolve({ ctx, input }) {
-      const { limit, skip, cursor } = input;
+      const { limit, skip, cursor, filter } = input;
 
       const posts = await ctx.prisma.post.findMany({
         take: limit + 1,
         skip: skip,
         cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          createdAt: "desc",
-        },
+        ...(filter
+          ? { orderBy: getFiltersByInput(filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
         include: {
           user: true,
           likes: true,
+          tags: true,
         },
+        ...(input.userId && {
+          where: {
+            userId: input.userId,
+          },
+        }),
+        ...(input.tagId && {
+          where: {
+            tags: {
+              some: {
+                id: input.tagId,
+              },
+            },
+          },
+        }),
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
@@ -84,47 +133,13 @@ export const postRouter = createRouter()
         include: {
           user: true,
           likes: true,
+          tags: true,
         },
       });
 
       const postWithLikes = getPostWithLikes(post, ctx?.session);
 
       return postWithLikes;
-    },
-  })
-  .query("user.posts", {
-    input: getUserPostsSchema,
-    async resolve({ ctx, input }) {
-      const { limit, skip, cursor } = input;
-
-      const posts = await ctx.prisma.post.findMany({
-        where: {
-          userId: input.userId,
-        },
-        take: limit + 1,
-        skip: skip,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          user: true,
-          likes: true,
-        },
-      });
-
-      let nextCursor: typeof cursor | undefined = undefined;
-      if (posts.length > limit) {
-        const nextItem = posts.pop(); // return the last item from the array
-        nextCursor = nextItem?.id;
-      }
-
-      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
-
-      return {
-        posts: postsWithLikes,
-        nextCursor,
-      };
     },
   })
   .middleware(async ({ ctx, next }) => {

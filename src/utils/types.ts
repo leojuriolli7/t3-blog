@@ -1,5 +1,6 @@
 import { AppRouter } from "@server/router/app.router";
 import { inferProcedureOutput } from "@trpc/server";
+import { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 export type TQuery = keyof AppRouter["_def"]["queries"];
 
@@ -14,3 +15,6 @@ export type CommentWithChildren = Comment & {
 };
 
 export type Post = InferQueryOutput<"posts.single-post">;
+
+// React-hook-form Controller's 'field' type
+export type FieldType = ControllerRenderProps<FieldValues, string>;

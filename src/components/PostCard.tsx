@@ -3,6 +3,7 @@ import { Post } from "@utils/types";
 import Link from "next/link";
 import LikeCount from "./LikeCount";
 import ShouldRender from "./ShouldRender";
+import TagList from "./TagList";
 
 type Props = {
   loading: boolean;
@@ -36,10 +37,10 @@ const PostCard: React.FC<Props> = ({ loading, post }) => {
             {post?.body}
           </ReactMarkdown>
 
-          <div className="w-full flex justify-between items-center">
-            <p className="underline text-emerald-500">Read post </p>
+          <div className="w-full flex justify-between items-center mt-2">
+            <TagList compact loading={loading} tags={post?.tags} />
             <ShouldRender if={!loading}>
-              <p>by {post?.user?.name}</p>
+              <p className="min-w-min">by {post?.user?.name}</p>
             </ShouldRender>
           </div>
         </article>

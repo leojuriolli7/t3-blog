@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { Controller } from "react-hook-form";
 import MarkdownIt from "markdown-it";
 import dynamic from "next/dynamic";
+import { FieldType } from "@utils/types";
 import hljs from "highlight.js";
 import insert from "markdown-it-ins";
 import taskLists from "markdown-it-task-lists";
@@ -65,7 +66,7 @@ const MarkdownEditor: React.FC<Props> = ({
     .use(taskLists);
 
   const handleChange = useCallback(
-    (field: any) =>
+    (field: FieldType) =>
       ({ text }: { text: string; html: string }) => {
         if (typeof text === "string") {
           return field.onChange(text);
