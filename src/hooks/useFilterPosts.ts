@@ -4,7 +4,7 @@ export type FilterTypes = "newest" | "oldest" | "liked";
 
 const filters: FilterTypes[] = ["newest", "oldest", "liked"];
 const filterLabels: Record<FilterTypes, string> = {
-  liked: "Most liked",
+  liked: "Most interactions",
   oldest: "Oldest",
   newest: "Most recent",
 };
