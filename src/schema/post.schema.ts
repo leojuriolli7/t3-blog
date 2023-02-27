@@ -6,7 +6,11 @@ export const createPostSchema = z.object({
     .min(5, "Minimum title length is 5")
     .max(256, "Max title length is 256"),
   body: z.string().min(5, "Minimum body length is 5"),
-  tags: z.string().array().nonempty("Post must have atleast one tag"),
+  tags: z
+    .string()
+    .array()
+    .nonempty("Post must have atleast one tag")
+    .max(5, "Maximum of 5 tags per post"),
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;

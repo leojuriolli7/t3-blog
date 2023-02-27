@@ -35,6 +35,14 @@ export const postRouter = createRouter()
         });
       }
 
+      const tooManyTags = input?.tags?.length > 5;
+      if (tooManyTags) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Maximum of 5 tags per post",
+        });
+      }
+
       const post = await ctx.prisma.post.create({
         data: {
           ...input,
@@ -81,7 +89,7 @@ export const postRouter = createRouter()
         include: {
           user: true,
           likes: true,
-          // tags: true
+          tags: true,
         },
       });
 
@@ -109,7 +117,7 @@ export const postRouter = createRouter()
         include: {
           user: true,
           likes: true,
-          // tags: true
+          tags: true,
         },
       });
 
@@ -136,7 +144,7 @@ export const postRouter = createRouter()
         include: {
           user: true,
           likes: true,
-          // tags: true
+          tags: true,
         },
       });
 

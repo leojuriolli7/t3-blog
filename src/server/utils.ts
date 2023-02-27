@@ -1,4 +1,4 @@
-import { Like, Post, /*Tag,*/ User } from "@prisma/client";
+import { Like, Post, Tag, User } from "@prisma/client";
 import { Session } from "next-auth";
 
 export const getPostWithLikes = (
@@ -6,7 +6,7 @@ export const getPostWithLikes = (
     | (Post & {
         likes: Like[];
         user: User;
-        // tags: Tag[];
+        tags: Tag[];
       })
     | null,
   session?: Session | null
