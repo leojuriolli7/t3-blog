@@ -126,11 +126,11 @@ const UserPage: React.FC = () => {
               <div className="flex flex-col items-center">
                 <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
                 <p className="text-center">
-                  It seems you have not created any posts yet.
+                  Hmm. It seems that this user has not created any posts yet.
                 </p>
-                <Link href="/posts/new" passHref>
+                <Link href="/" passHref>
                   <a className="text-emerald-500 text-center underline mt-2">
-                    Get to it!
+                    Go back to home
                   </a>
                 </Link>
               </div>
