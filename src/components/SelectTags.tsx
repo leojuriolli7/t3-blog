@@ -3,10 +3,9 @@ import type { InputRef } from "antd";
 import { Input, Tag } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 import { FieldType } from "@utils/types";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { toast } from "react-toastify";
 
 const { CheckableTag } = Tag;
 
@@ -26,6 +25,7 @@ const SelectTags: React.FC<Props> = ({
   error,
 }) => {
   const [parentRef] = useAutoAnimate();
+  const methods = useFormContext();
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
@@ -95,6 +95,7 @@ const SelectTags: React.FC<Props> = ({
   useEffect(() => {
     if (initialSelectedTags && !selectedTags?.length) {
       setSelectedTags(initialSelectedTags);
+      methods.setValue("tags", initialSelectedTags);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialSelectedTags]);
