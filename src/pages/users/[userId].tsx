@@ -9,8 +9,13 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import useGetDate from "src/hooks/useGetDate";
+import useFilterPosts from "src/hooks/useFilterPosts";
+import Tab from "@components/Tab";
 
 const UserPage: React.FC = () => {
+  const { currentFilter, filterLabels, filters, toggleFilter } =
+    useFilterPosts();
+
   const router = useRouter();
   const userId = router.query.userId as string;
   const { data: session } = useSession();
@@ -34,6 +39,7 @@ const UserPage: React.FC = () => {
         {
           userId,
           limit: 4,
+          filter: currentFilter,
         },
       ],
       {
@@ -97,7 +103,22 @@ const UserPage: React.FC = () => {
         </section>
 
         <section className="w-full">
-          <h2 className="text-3xl mb-5">User posts</h2>
+          <div className="w-full flex flex-col sm:flex-row justify-between mb-5">
+            <h2 className="text-3xl">User posts</h2>
+
+            <div className="flex justify-start sm:justify-end sm:items-start mt-3 sm:mt-1 gap-3">
+              {filters.map((filter) => (
+                <Tab
+                  key={filter}
+                  active={currentFilter === filter}
+                  title={`Filter by ${filterLabels[filter]}`}
+                  label={filterLabels[filter]}
+                  onClick={toggleFilter(filter)}
+                />
+              ))}
+            </div>
+          </div>
+
           <div className="w-full flex flex-col gap-10">
             {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
               <PostCard

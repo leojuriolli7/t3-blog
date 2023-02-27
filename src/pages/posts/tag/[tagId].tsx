@@ -7,8 +7,13 @@ import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
 import { useRouter } from "next/router";
 import Skeleton from "@components/Skeleton";
+import useFilterPosts from "src/hooks/useFilterPosts";
+import Tab from "@components/Tab";
 
 const PostsByTagPage: React.FC = () => {
+  const { currentFilter, filterLabels, filters, toggleFilter } =
+    useFilterPosts();
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const router = useRouter();
@@ -21,6 +26,7 @@ const PostsByTagPage: React.FC = () => {
         {
           limit: 6,
           tagId,
+          filter: currentFilter,
         },
       ],
       {
@@ -47,13 +53,28 @@ const PostsByTagPage: React.FC = () => {
     <>
       <MetaTags title={`${tag?.name} Posts`} />
       <MainLayout>
-        <h1 className="text-3xl w-full text-left mt-5 -mb-5">
-          <ShouldRender if={!isLoading}>{tag?.name} Posts</ShouldRender>
+        <div className="w-full  mt-5 -mb-5">
+          <h1 className="text-3xl text-left">
+            <ShouldRender if={!isLoading}>{tag?.name} Posts</ShouldRender>
 
-          <ShouldRender if={isLoading}>
-            <Skeleton heading lines={1} width="w-40" />
-          </ShouldRender>
-        </h1>
+            <ShouldRender if={isLoading}>
+              <Skeleton heading lines={1} width="w-40" />
+            </ShouldRender>
+          </h1>
+
+          <div className="flex sm:items-start mt-3 gap-3">
+            {filters.map((filter) => (
+              <Tab
+                key={filter}
+                active={currentFilter === filter}
+                title={`Filter by ${filterLabels[filter]}`}
+                label={filterLabels[filter]}
+                onClick={toggleFilter(filter)}
+              />
+            ))}
+          </div>
+        </div>
+
         {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
           <PostCard
             key={isLoading ? i : post?.id}

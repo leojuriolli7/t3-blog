@@ -5,8 +5,13 @@ import PostCard from "@components/PostCard";
 import useOnScreen from "src/hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
+import useFilterPosts from "src/hooks/useFilterPosts";
+import Tab from "@components/Tab";
 
 const PostListingPage: React.FC = () => {
+  const { currentFilter, filterLabels, filters, toggleFilter } =
+    useFilterPosts();
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
@@ -16,6 +21,7 @@ const PostListingPage: React.FC = () => {
         "posts.posts",
         {
           limit: 6,
+          filter: currentFilter,
         },
       ],
       {
@@ -41,6 +47,17 @@ const PostListingPage: React.FC = () => {
     <>
       <MetaTags title="Home" />
       <MainLayout>
+        <div className="w-full flex justify-center items-start gap-5">
+          {filters.map((filter) => (
+            <Tab
+              key={filter}
+              active={currentFilter === filter}
+              title={`Filter by ${filterLabels[filter]}`}
+              label={filterLabels[filter]}
+              onClick={toggleFilter(filter)}
+            />
+          ))}
+        </div>
         {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
           <PostCard
             key={isLoading ? i : post?.id}

@@ -1,12 +1,11 @@
 import { createRouter } from "@server/createRouter";
-import { getPostWithLikes } from "@server/utils";
+import { getFiltersByInput, getPostWithLikes } from "@server/utils";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createPostSchema,
   getPostsSchema,
   getSinglePostSchema,
-  getUserPostsSchema,
   updatePostSchema,
 } from "src/schema/post.schema";
 
@@ -77,15 +76,19 @@ export const postRouter = createRouter()
   .query("posts", {
     input: getPostsSchema,
     async resolve({ ctx, input }) {
-      const { limit, skip, cursor } = input;
+      const { limit, skip, cursor, filter } = input;
 
       const posts = await ctx.prisma.post.findMany({
         take: limit + 1,
         skip: skip,
         cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          createdAt: "desc",
-        },
+        ...(filter
+          ? { orderBy: getFiltersByInput(filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
         include: {
           user: true,
           likes: true,
