@@ -179,6 +179,26 @@ export const postRouter = createRouter()
         });
       }
 
+      const previousPost = await ctx.prisma.post.findFirst({
+        where: {
+          id: input.postId,
+        },
+        include: {
+          tags: true,
+        },
+      });
+
+      // Find which tags were on the post previously, but are now removed.
+      const previousPostTags = previousPost?.tags.map((tag) => tag.name) || [];
+      const tagsToRemove = previousPostTags.filter(
+        (tag) => input.tags.indexOf(tag) === -1
+      );
+
+      // Filter for all new/existing tags who remain on the post.
+      const tagsToCreateOrConnect = input.tags.filter(
+        (tag) => tagsToRemove.indexOf(tag) < 0
+      );
+
       const post = await ctx.prisma.post.update({
         where: {
           id: input.postId,
@@ -190,6 +210,21 @@ export const postRouter = createRouter()
           ...(input.title && {
             title: input.title,
           }),
+          tags: {
+            ...(tagsToCreateOrConnect?.length && {
+              connectOrCreate: tagsToCreateOrConnect.map((tag) => ({
+                create: {
+                  name: tag,
+                },
+                where: {
+                  name: tag,
+                },
+              })),
+            }),
+            ...(tagsToRemove?.length && {
+              disconnect: tagsToRemove.map((tag) => ({ name: tag })),
+            }),
+          },
         },
       });
 

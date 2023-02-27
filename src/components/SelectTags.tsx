@@ -13,11 +13,18 @@ const { CheckableTag } = Tag;
 type Props = {
   control: any;
   initialTags?: string[];
+  initialSelectedTags?: string[];
   name: string;
   error?: any;
 };
 
-const SelectTags: React.FC<Props> = ({ control, initialTags, name, error }) => {
+const SelectTags: React.FC<Props> = ({
+  control,
+  initialTags,
+  initialSelectedTags,
+  name,
+  error,
+}) => {
   const [parentRef] = useAutoAnimate();
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -84,6 +91,13 @@ const SelectTags: React.FC<Props> = ({ control, initialTags, name, error }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialTags]);
+
+  useEffect(() => {
+    if (initialSelectedTags && !selectedTags?.length) {
+      setSelectedTags(initialSelectedTags);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialSelectedTags]);
 
   return (
     <Controller

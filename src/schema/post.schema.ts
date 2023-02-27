@@ -39,6 +39,11 @@ export const updatePostSchema = z.object({
   title: z.string().max(256, "Max title length is 256").optional(),
   body: z.string().min(10).optional(),
   postId: z.string().uuid(),
+  tags: z
+    .string()
+    .array()
+    .nonempty("Post must have atleast one tag")
+    .max(5, "Maximum of 5 tags per post"),
 });
 
 export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;

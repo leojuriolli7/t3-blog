@@ -9,6 +9,7 @@ import Field from "./Field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isObjectEmpty } from "@utils/checkEmpty";
 import { toast } from "react-toastify";
+import SelectTags from "./SelectTags";
 
 type Props = {
   post?: Post;
@@ -19,6 +20,10 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const utils = trpc.useContext();
   const router = useRouter();
   const postId = router.query.postId as string;
+  const { data: tags } = trpc.useQuery(["posts.tags"]);
+
+  const allTags = tags?.map((tag) => tag.name);
+  const currentTags = post?.tags?.map((tag) => tag.name);
 
   const { register, handleSubmit, setValue, control, formState } =
     useForm<UpdatePostInput>({
@@ -89,6 +94,16 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
       <Field error={errors.body}>
         <MarkdownEditor control={control} name="body" />
       </Field>
+
+      <div className="w-full">
+        <SelectTags
+          name="tags"
+          control={control}
+          error={errors.tags}
+          initialTags={allTags}
+          initialSelectedTags={currentTags}
+        />
+      </div>
 
       <button
         className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
