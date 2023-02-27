@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
+import NoPostsAnimation from "@public/static/ghost.json";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import useOnScreen from "src/hooks/useOnScreen";
+import Lottie from "react-lottie";
 import PostCard from "@components/PostCard";
 import Image from "next/image";
 import ShouldRender from "@components/ShouldRender";
@@ -11,6 +13,13 @@ import MetaTags from "@components/MetaTags";
 import useGetDate from "src/hooks/useGetDate";
 import useFilterPosts from "src/hooks/useFilterPosts";
 import Tab from "@components/Tab";
+import Link from "next/link";
+
+const LOTTIE_OPTIONS = {
+  loop: true,
+  autoplay: true,
+  animationData: NoPostsAnimation,
+};
 
 const UserPage: React.FC = () => {
   const { currentFilter, filterLabels, filters, toggleFilter } =
@@ -51,6 +60,8 @@ const UserPage: React.FC = () => {
     () => data?.pages.flatMap((page) => page.posts),
     [data]
   );
+
+  const noDataToShow = !isLoading && !dataToShow?.length && !hasNextPage;
 
   const loadingArray = Array.from<undefined>({ length: 4 });
 
@@ -104,7 +115,7 @@ const UserPage: React.FC = () => {
 
         <section className="w-full">
           <div className="w-full flex flex-col sm:flex-row justify-between mb-5">
-            <h2 className="text-3xl">User posts</h2>
+            <h2 className="sm:text-3xl text-2xl">User posts</h2>
 
             <div className="flex justify-start sm:justify-end sm:items-start mt-3 sm:mt-1 gap-3">
               {filters.map((filter) => (
@@ -130,6 +141,20 @@ const UserPage: React.FC = () => {
 
             <ShouldRender if={isFetchingNextPage}>
               <PostCard loading />
+            </ShouldRender>
+
+            <ShouldRender if={noDataToShow}>
+              <div className="flex flex-col items-center">
+                <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
+                <p className="text-center">
+                  Hmm. It seems that this user has not created any posts yet.
+                </p>
+                <Link href="/" passHref>
+                  <a className="text-emerald-500 text-center underline mt-2">
+                    Go back to home
+                  </a>
+                </Link>
+              </div>
             </ShouldRender>
           </div>
         </section>
