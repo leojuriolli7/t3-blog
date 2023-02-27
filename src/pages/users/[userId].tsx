@@ -129,7 +129,7 @@ const UserPage: React.FC = () => {
                   It seems you have not created any posts yet.
                 </p>
                 <Link href="/posts/new" passHref>
-                  <a className="text-emerald-500 text-center mt-2">
+                  <a className="text-emerald-500 text-center underline mt-2">
                     Get to it!
                   </a>
                 </Link>
