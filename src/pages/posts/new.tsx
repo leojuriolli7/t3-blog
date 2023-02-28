@@ -23,9 +23,12 @@ const CreatePostPage: React.FC = () => {
 
   const { errors } = formState;
 
-  const { data: tags } = trpc.useQuery(["posts.tags"], {
-    refetchOnWindowFocus: false,
-  });
+  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
+    ["posts.tags"],
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   const initialTags = tags?.map((tag) => tag.name);
 
   const {
@@ -86,7 +89,7 @@ const CreatePostPage: React.FC = () => {
           <button
             className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
             type="submit"
-            disabled={isLoading || !isObjectEmpty(errors)}
+            disabled={isLoading || fetchingTags || !isObjectEmpty(errors)}
           >
             Create
           </button>
