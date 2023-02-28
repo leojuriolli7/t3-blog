@@ -8,11 +8,16 @@ This is a fullstack blog application made with the [T3 Stack](https://create.t3.
 ### Features
 - Login with Google, Github or discord, or with a [Magic link](https://www.beyondidentity.com/glossary/magic-linkshttps://www.beyondidentity.com/glossary/magic-links) to your e-mail.
 - Create & edit posts.
+- Tag your posts.
+- Like or dislike posts.
 - Comment on posts.
 - Use [Markdown](https://www.markdownguide.org/basic-syntax/) to write down your posts & comments.
 - Reply to comments on posts (**Infinitely nested comment replies** like reddit)
+- Access yours or other users' profiles and see their posts.
+- Search for posts using different filters and by their tags.
 
-### The Stack
+
+### The stack
 - Next.js 
 - [Prisma](https://www.prisma.io/) for type-safe communication with the database.
 - [tRPC](https://trpc.io) for a type-safe API & data-fetching.
@@ -24,4 +29,7 @@ This is a fullstack blog application made with the [T3 Stack](https://create.t3.
 - [Next Themes](https://github.com/pacocoursey/next-themes) for easy dark mode support.
 - [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts.
 
+### Highlights - Improving the user experience
+- Used TanStack Query (formerly React Query) to implement [optimistic updates](https://tanstack.com/query/v4/docs/react/guides/optimistic-updates), allowing the UI to update without having to wait for a backend response, making for a blazing fast experience. - You can like/dislike posts and see the feedback immediately, or edit a post and see the edits applied instantaneously.
+- Implemented infinite scrolling with TanStack Query's `useInfiniteQuery`, tRPC and the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 
