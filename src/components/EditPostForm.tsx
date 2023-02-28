@@ -1,5 +1,6 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { createPostSchema, UpdatePostInput } from "src/schema/post.schema";
+import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";
 import { Post } from "@utils/types";
@@ -41,7 +42,33 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     isLoading: updating,
     error: updateError,
   } = trpc.useMutation(["posts.update-post"], {
-    onSuccess: () => {
+    onMutate: async ({ postId, tags, body, title }) => {
+      await utils.cancelQuery(["posts.single-post", { postId }]);
+
+      const prevData = utils.getQueryData(["posts.single-post", { postId }]);
+
+      const mappedTags = tags.map((tag) => ({
+        name: tag,
+        id: uuid(),
+      }));
+
+      utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+        ...old!,
+        ...(body && {
+          body,
+        }),
+        ...(title && {
+          title,
+        }),
+        tags: mappedTags,
+      }));
+
+      return { prevData };
+    },
+    onError: (err, newData, context) => {
+      utils.setQueryData(["posts.single-post"], context?.prevData as Post);
+    },
+    onSettled: () => {
       utils.invalidateQueries([
         "posts.single-post",
         {
