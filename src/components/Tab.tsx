@@ -12,7 +12,7 @@ const Tab: React.FC<Props> = (props) => {
     <button title={title}>
       <p
         className={`${
-          active ? "border-b-2 border-white" : ""
+          active ? "border-b-2 border-black dark:border-white" : ""
         } cursor-pointer hover:opacity-80`}
         onClick={onClick}
       >
