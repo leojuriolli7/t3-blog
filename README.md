@@ -6,7 +6,7 @@ Deployed to Vercel on https://t3-blog-pi.vercel.app/
 This is a fullstack blog application made with the [T3 Stack](https://create.t3.gg/). 
 
 ### Features
-- Login with Google, Github or discord, or with a [Magic link](https://www.beyondidentity.com/glossary/magic-linkshttps://www.beyondidentity.com/glossary/magic-links) to your e-mail.
+- Login with Google, Github or discord, or with a [Magic link](https://www.beyondidentity.com/glossary/magic-links) to your e-mail.
 - Create & edit posts.
 - Tag your posts.
 - Like or dislike posts.
