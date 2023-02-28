@@ -15,6 +15,7 @@ This is a fullstack blog application made with the [T3 Stack](https://create.t3.
 - Reply to comments on posts (**Infinitely nested comment replies** like reddit)
 - Access yours or other users' profiles and see their posts.
 - Search for posts using different filters and by their tags.
+- Search engine optimizations through meta-tags, server-side-rendering and semantic HTML.
 
 
 ### The stack
