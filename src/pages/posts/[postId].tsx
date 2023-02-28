@@ -275,13 +275,13 @@ const SinglePostPage: React.FC = () => {
           </div>
         </main>
 
-        <div className="w-full -mb-10">
-          <h2 className="text-lg font-medium">Tags</h2>
+        <ShouldRender if={data?.tags?.length || isLoading}>
+          <div className="w-full -mb-10">
+            <h2 className="text-lg font-medium">Tags</h2>
 
-          <ShouldRender if={data?.tags?.length || isLoading}>
             <TagList tags={data?.tags} loading={isLoading} />
-          </ShouldRender>
-        </div>
+          </div>
+        </ShouldRender>
 
         <CommentSection />
       </MainLayout>
