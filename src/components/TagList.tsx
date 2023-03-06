@@ -1,7 +1,7 @@
 import { Tag as TagType } from "@prisma/client";
-import { Tag } from "antd";
 import Link from "next/link";
 import React from "react";
+import Tag from "./Tag";
 
 type Props = {
   tags?: TagType[];
@@ -13,11 +13,10 @@ const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
   const loadingArray = Array.from<undefined>({ length: 3 });
 
   return (
-    <div className={`flex flex-wrap ${compact ? "gap-1" : "gap-2"} mt-2`}>
+    <div className={`flex flex-wrap gap-2 mt-2`}>
       {(loading ? loadingArray : tags)?.map((tag, i) => (
         <Link key={loading ? i : tag?.id} href={`/posts/tag/${tag?.id}`}>
           <Tag
-            aria-label={`Click to see all ${tag?.name} posts`}
             title={`Click to see all ${tag?.name} posts`}
             role="link"
             className={`rounded-none border-none text-white text-sm bg-emerald-500 dark:bg-teal-900 ${

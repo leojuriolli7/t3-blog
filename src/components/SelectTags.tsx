@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import type { InputRef } from "antd";
-import { Input, Tag } from "antd";
+import Tag from "@components/Tag";
 import { MdOutlineAdd } from "react-icons/md";
 import { FieldType } from "@utils/types";
 import { Controller, useFormContext } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
-const { CheckableTag } = Tag;
+const CheckableTag = Tag;
 
 type Props = {
   control: any;
@@ -32,7 +31,7 @@ const SelectTags: React.FC<Props> = ({
 
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<InputRef>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputVisible) {
@@ -111,7 +110,6 @@ const SelectTags: React.FC<Props> = ({
           <div ref={parentRef} className="flex flex-wrap gap-2 mb-4 mt-2">
             {tags.map((tag) => (
               <CheckableTag
-                className="flex items-center p-2 text-sm select-none border-neutral-300 dark:border-neutral-600 rounded-none dark:text-neutral-200 "
                 key={tag}
                 checked={selectedTags.includes(tag)}
                 onChange={handleChange(field, tag)}
@@ -122,21 +120,19 @@ const SelectTags: React.FC<Props> = ({
           </div>
           <div className="w-full relative">
             {inputVisible ? (
-              <Input
+              <input
                 className="bg-white border-zinc-300 h-[46px] dark:text-white dark:border-neutral-800 p-3 w-full dark:bg-neutral-900 rounded-none focus:border-emerald-500"
                 ref={inputRef}
                 type="text"
-                size="small"
                 maxLength={30}
                 value={inputValue}
                 onChange={handleInputChange}
                 onBlur={handleInputConfirm(field)}
-                onPressEnter={handleInputConfirm(field)}
               />
             ) : (
               <Tag
                 onClick={showInput}
-                className="bg-white text-neutral-500 h-[46px] text-sm border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full rounded-none dark:bg-neutral-900"
+                className="bg-white text-neutral-500 h-[46px] border-zinc-300 dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
               >
                 create new tag
               </Tag>
