@@ -227,7 +227,7 @@ const SinglePostPage: React.FC = () => {
               <ShouldRender if={!isLoading}>
                 <p className="w-fit">
                   By{" "}
-                  <Link href={`/users/${data?.user?.id}`} passHref>
+                  <Link href={`/users/${data?.user?.id}`} legacyBehavior>
                     <a
                       title="Go to user's profile"
                       className="underline text-emerald-700 dark:text-emerald-500 font-bold"

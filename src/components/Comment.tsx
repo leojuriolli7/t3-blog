@@ -82,7 +82,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
               <span className=" text-emerald-500"> (You)</span>
             </ShouldRender>
           </h3>
-          <Link href={`/users/${comment.userId}`} passHref>
+          <Link href={`/users/${comment.userId}`} legacyBehavior>
             <a title="Visit user profile" target="_blank" rel="noreferrer">
               <FiExternalLink
                 size={15}

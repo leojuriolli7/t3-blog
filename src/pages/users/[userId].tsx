@@ -149,7 +149,7 @@ const UserPage: React.FC = () => {
                 <p className="text-center">
                   Hmm. It seems that this user has not created any posts yet.
                 </p>
-                <Link href="/" passHref>
+                <Link href="/" legacyBehavior>
                   <a className="text-emerald-500 text-center underline mt-2">
                     Go back to home
                   </a>
