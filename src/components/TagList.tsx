@@ -12,6 +12,12 @@ type Props = {
 const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
   const loadingArray = Array.from<undefined>({ length: 3 });
 
+  const loadingClasses = `${
+    loading ? `w-16 ${compact ? "h-7" : "h-9"} opacity-60` : ""
+  }`;
+
+  const paddings = `${compact ? "px-2 py-1" : "p-2"}`;
+
   return (
     <div className={`flex flex-wrap gap-2 mt-2`}>
       {(loading ? loadingArray : tags)?.map((tag, i) => (
@@ -19,11 +25,7 @@ const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
           <Tag
             title={`Click to see all ${tag?.name} posts`}
             role="link"
-            className={`rounded-none border-none text-white text-sm bg-emerald-500 dark:bg-teal-900 ${
-              compact ? "px-2 py-1" : "p-2"
-            } hover:opacity-80 cursor-pointer select-none ${
-              loading ? `w-16 ${compact ? "h-7" : "h-9"} opacity-60` : ""
-            }`}
+            className={` border-none hover:opacity-80 cursor-pointer select-none ${paddings} ${loadingClasses}`}
           >
             {tag?.name}
           </Tag>
