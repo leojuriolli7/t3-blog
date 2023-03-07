@@ -41,6 +41,7 @@ const UserPage: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const userId = router.query.userId as string;
+  const userIsProfileOwner = userId === session?.user?.id;
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
@@ -143,7 +144,7 @@ const UserPage: React.FC = () => {
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
-        <section className="relative mx-auto w-full flex flex-col items-center gap-5 mt-10">
+        <section className="relative mx-auto flex flex-col items-center gap-5 mt-10">
           <Image
             src={user?.image || "/static/default-profile.jpg"}
             width={240}
@@ -178,21 +179,23 @@ const UserPage: React.FC = () => {
               </p>
             </ShouldRender>
           </div>
-          <button className="absolute bottom-0 right-0" type="button">
-            <Popup
-              icon={
-                <IoMdSettings
-                  size={20}
-                  className="hover:opacity-80 text-black dark:text-white"
+          <ShouldRender if={userIsProfileOwner}>
+            <button className="absolute bottom-0 right-0" type="button">
+              <Popup
+                icon={
+                  <IoMdSettings
+                    size={20}
+                    className="hover:opacity-80 text-black dark:text-white"
+                  />
+                }
+              >
+                <UserPopupContent
+                  onClickDeleteAccount={showDeleteConfirm}
+                  openEditAccountModal={toggleEditModal(true)}
                 />
-              }
-            >
-              <UserPopupContent
-                onClickDeleteAccount={showDeleteConfirm}
-                openEditAccountModal={toggleEditModal(true)}
-              />
-            </Popup>
-          </button>
+              </Popup>
+            </button>
+          </ShouldRender>
         </section>
 
         <section className="w-full">

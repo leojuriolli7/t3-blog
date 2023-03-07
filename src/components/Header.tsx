@@ -12,14 +12,14 @@ const Header: React.FC = () => {
     <header className="w-full relative flex justify-center items-center">
       <nav className="absolute left-0 flex sm:gap-5 gap-3">
         <ShouldRender if={session.status === "authenticated"}>
-          <Link href={`/users/${session.data?.user.id}`} legacyBehavior>
+          <Link href={`/users/${session.data?.user.id}`} passHref>
             <a className="hidden sm:block">Profile</a>
           </Link>
 
-          <Link href="/posts/new" legacyBehavior>
+          <Link href="/posts/new" passHref>
             <a className="hidden sm:block">Create post</a>
           </Link>
-          <Link href="/api/auth/signout" legacyBehavior>
+          <Link href="/api/auth/signout" passHref>
             <a className="hidden sm:block">Logout</a>
           </Link>
 
@@ -49,10 +49,10 @@ const Header: React.FC = () => {
           </Link>
         </ShouldRender>
         <ShouldRender if={session.status === "unauthenticated"}>
-          <Link href="/api/auth/signin" legacyBehavior>
+          <Link href="/api/auth/signin" passHref>
             <a className="hidden sm:block">Login</a>
           </Link>
-          <Link href="/api/auth/signin" legacyBehavior>
+          <Link href="/api/auth/signin" passHref>
             <a className="hidden sm:block">Register</a>
           </Link>
 

@@ -26,34 +26,33 @@ const EditAccountModal: React.FC<Props> = ({ onClose, openState }) => {
   const utils = trpc.useContext();
   const { errors } = formState;
 
-  const {
-    mutate: update,
-    error: updateError,
-    isLoading,
-  } = trpc.useMutation(["users.update-profile"], {
-    onSuccess: () => {
-      utils.invalidateQueries([
-        "users.single-user",
-        {
-          userId: userId as string,
-        },
-      ]);
+  const { mutate: update, isLoading } = trpc.useMutation(
+    ["users.update-profile"],
+    {
+      onSuccess: () => {
+        utils.invalidateQueries([
+          "users.single-user",
+          {
+            userId: userId as string,
+          },
+        ]);
 
-      utils.invalidateQueries([
-        "posts.posts",
-        {
-          limit: 4,
-          userId: userId as string,
-        },
-      ]);
+        utils.invalidateQueries([
+          "posts.posts",
+          {
+            limit: 4,
+            userId: userId as string,
+          },
+        ]);
 
-      toast.success("Profile updated successfully!");
-      onClose();
-    },
-    onError(error) {
-      toast.error(error?.message);
-    },
-  });
+        toast.success("Profile updated successfully!");
+        onClose();
+      },
+      onError(error) {
+        toast.error(error?.message);
+      },
+    }
+  );
 
   const onSubmit = useCallback(
     (values: UpdateUserInput) => {

@@ -11,7 +11,10 @@ const Popup: React.FC<Props> = ({ icon, children }) => {
   let [referenceElement, setReferenceElement] =
     useState<HTMLButtonElement | null>(null);
   let [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
-  let { styles, attributes } = usePopper(referenceElement, popperElement);
+  let { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: "bottom",
+    strategy: "fixed",
+  });
 
   return (
     <Popover className="relative">
