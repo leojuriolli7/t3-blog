@@ -144,14 +144,36 @@ const UserPage: React.FC = () => {
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
-        <section className="relative mx-auto flex flex-col items-center gap-5 mt-10">
-          <Image
-            src={user?.image || "/static/default-profile.jpg"}
-            width={240}
-            height={240}
-            className="rounded-full"
-            alt={user?.name as string}
-          />
+        <section className="mx-auto flex flex-col items-center gap-5 mt-10">
+          <div className="relative">
+            <Image
+              src={user?.image || "/static/default-profile.jpg"}
+              width={240}
+              height={240}
+              className="rounded-full"
+              alt={user?.name as string}
+            />
+            <ShouldRender if={userIsProfileOwner}>
+              <button
+                className="absolute bottom-0 right-10 bg-emerald-500 rounded-full flex justify-center items-center p-2 shadow-2xl"
+                type="button"
+              >
+                <Popup
+                  icon={
+                    <IoMdSettings
+                      size={23}
+                      className="text-white  hover:opacity-80 drop-shadow-lg"
+                    />
+                  }
+                >
+                  <UserPopupContent
+                    onClickDeleteAccount={showDeleteConfirm}
+                    openEditAccountModal={toggleEditModal(true)}
+                  />
+                </Popup>
+              </button>
+            </ShouldRender>
+          </div>
           <div className="text-center w-64">
             <ShouldRender if={!!user}>
               <p className="text-xl">
@@ -179,23 +201,6 @@ const UserPage: React.FC = () => {
               </p>
             </ShouldRender>
           </div>
-          <ShouldRender if={userIsProfileOwner}>
-            <button className="absolute bottom-0 right-0" type="button">
-              <Popup
-                icon={
-                  <IoMdSettings
-                    size={20}
-                    className="hover:opacity-80 text-black dark:text-white"
-                  />
-                }
-              >
-                <UserPopupContent
-                  onClickDeleteAccount={showDeleteConfirm}
-                  openEditAccountModal={toggleEditModal(true)}
-                />
-              </Popup>
-            </button>
-          </ShouldRender>
         </section>
 
         <section className="w-full">

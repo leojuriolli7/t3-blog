@@ -17,7 +17,7 @@ const Popup: React.FC<Props> = ({ icon, children }) => {
   });
 
   return (
-    <Popover className="relative">
+    <Popover className="relative flex items-center">
       <Popover.Button
         ref={(ref) => setReferenceElement(ref)}
         className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
