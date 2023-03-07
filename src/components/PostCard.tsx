@@ -1,4 +1,5 @@
 import ReactMarkdown from "@components/ReactMarkdown";
+import getUserDisplayName from "@utils/getUserDisplayName";
 import { Post } from "@utils/types";
 import Link from "next/link";
 import LikeCount from "./LikeCount";
@@ -39,7 +40,7 @@ const PostCard: React.FC<Props> = ({ loading, post }) => {
         <div className="w-full flex justify-between items-center mt-2">
           <TagList compact loading={loading} tags={post?.tags} />
           <ShouldRender if={!loading}>
-            <p className="min-w-min">by {post?.user?.name}</p>
+            <p className="min-w-min">by {getUserDisplayName(post?.user)}</p>
           </ShouldRender>
         </div>
       </article>

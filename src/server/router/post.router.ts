@@ -146,7 +146,7 @@ export const postRouter = createRouter()
     if (!ctx.session) {
       throw new trpc.TRPCError({
         code: "UNAUTHORIZED",
-        message: "Login to create a post",
+        message: "You need to be logged in to do this.",
       });
     }
 
