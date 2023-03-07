@@ -8,7 +8,7 @@ import {
 import { isStringEmpty } from "@utils/checkEmpty";
 
 export const userRouter = createRouter()
-  .query("single-post", {
+  .query("single-user", {
     input: getSingleUserSchema,
     resolve({ ctx, input }) {
       return ctx.prisma.user.findUnique({
@@ -62,13 +62,18 @@ export const userRouter = createRouter()
         });
       }
 
-      await ctx.prisma.user.update({
-        where: {
-          id: input.userId,
-        },
-        data: {
-          name: input.name,
-        },
-      });
+      if (input.userId === ctx?.session?.user?.id) {
+        const user = await ctx.prisma.user.update({
+          where: {
+            id: input.userId,
+          },
+          data: {
+            ...(input.name && {
+              name: input.name,
+            }),
+          },
+        });
+        return user;
+      }
     },
   });

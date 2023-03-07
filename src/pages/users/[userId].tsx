@@ -26,6 +26,7 @@ import { toast } from "react-toastify";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Popup from "@components/Popup";
 import UserPopupContent from "@components/UserPopupContent";
+import EditAccountModal from "@components/EditAccountModal";
 
 const LOTTIE_OPTIONS = {
   loop: true,
@@ -46,7 +47,7 @@ const UserPage: React.FC = () => {
 
   const { data: user } = trpc.useQuery(
     [
-      "users.single-post",
+      "users.single-user",
       {
         userId,
       },
@@ -84,12 +85,22 @@ const UserPage: React.FC = () => {
   const noDataToShow = !isLoading && !dataToShow?.length && !hasNextPage;
   const loadingArray = Array.from<undefined>({ length: 4 });
 
-  const isModalOpen = useState(false);
-  const [, setIsModalOpen] = isModalOpen;
+  const isDeleteAccountModalOpen = useState(false);
+  const [, setIsDeleteAccountModalOpen] = isDeleteAccountModalOpen;
 
   const showDeleteConfirm = useCallback(() => {
-    setIsModalOpen(true);
-  }, [setIsModalOpen]);
+    setIsDeleteAccountModalOpen(true);
+  }, [setIsDeleteAccountModalOpen]);
+
+  const isEditAccountModalOpen = useState(false);
+  const [, setIsEditAccountModalOpen] = isEditAccountModalOpen;
+
+  const toggleEditModal = useCallback(
+    (value: boolean) => () => {
+      setIsEditAccountModalOpen(value);
+    },
+    [setIsEditAccountModalOpen]
+  );
 
   const {
     mutate,
@@ -97,7 +108,7 @@ const UserPage: React.FC = () => {
     isLoading: deleting,
   } = trpc.useMutation(["users.delete-user"], {
     onSuccess: () => {
-      setIsModalOpen(false);
+      setIsDeleteAccountModalOpen(false);
       signOut({
         redirect: false,
       });
@@ -177,8 +188,8 @@ const UserPage: React.FC = () => {
               }
             >
               <UserPopupContent
-                userCanEditAccount={!!user && !user?.name}
                 onClickDeleteAccount={showDeleteConfirm}
+                openEditAccountModal={toggleEditModal(true)}
               />
             </Popup>
           </button>
@@ -237,9 +248,14 @@ const UserPage: React.FC = () => {
         description="This action is permanent and cannot be undone!"
         title="Are you sure you want to delete your account?"
         confirmationLabel="Delete my account"
-        openState={isModalOpen}
+        openState={isDeleteAccountModalOpen}
         loading={deleting}
         onConfirm={onConfirm}
+      />
+
+      <EditAccountModal
+        openState={isEditAccountModalOpen}
+        onClose={toggleEditModal(false)}
       />
     </>
   );

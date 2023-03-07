@@ -9,7 +9,7 @@ export const deleteUserSchema = z.object({
 });
 
 export const updateUserSchema = z.object({
-  name: z.string().max(50, "Max name length is 50"),
+  name: z.string().max(50, "Max name length is 50").optional(),
   userId: z.string(),
 });
 
