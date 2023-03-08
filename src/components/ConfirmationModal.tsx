@@ -35,7 +35,7 @@ const ConfirmationModal: React.FC<Props> = ({
 
   return (
     <Modal openState={openState}>
-      <div className="overflow-hidden bg-white dark:bg-neutral-800 px-4 pt-5 pb-4 shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+      <div className="overflow-hidden bg-white dark:bg-neutral-900 px-4 pt-5 pb-4 shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
           <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10">
             <ShouldRender if={!icon}>
