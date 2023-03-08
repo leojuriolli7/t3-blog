@@ -61,7 +61,7 @@ const ConfirmationModal: React.FC<Props> = ({
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:mt-4 sm:flex-row-reverse">
           <button
-            className="w-full justify-center sm:w-36 sm:text-sm border-2 dark:border-gray-200 border-neutral-500 text-neutral-600 dark:text-white p-2 hover:opacity-80 font-bold"
+            className="w-full justify-center sm:w-36 sm:text-sm border-2 dark:border-gray-200 border-black text-black dark:text-white p-2  hover:opacity-80 hover:bg-neutral-100 dark:hover:bg-transparent font-medium"
             onClick={onConfirm}
             disabled={loading}
           >
