@@ -25,7 +25,6 @@ This is a fullstack blog application made with the [T3 Stack](https://create.t3.
 - [Next Auth](https://next-auth.js.org/) for authorization. - Also using the [Prisma Adapter](https://next-auth.js.org/adapters/prisma) to store session info in my DB.
 - [Tailwind CSS](https://tailwindcss.com/) for styling.
 - [Headless UI](https://headlessui.com/) for unstyled components to use with Tailwind.
-- 
 - [Zod](https://github.com/colinhacks/zod) for validations.
 - [React Hook Form](https://react-hook-form.com) for forms.
 - [React Markdown](https://github.com/remarkjs/react-markdown) for reading markdown text & [react-markdown-editor-lite](https://github.com/HarryChen0506/react-markdown-editor-lite/) for a very quick and performant MD editor.
