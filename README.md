@@ -24,11 +24,13 @@ This is a fullstack blog application made with the [T3 Stack](https://create.t3.
 - [tRPC](https://trpc.io) for a type-safe API & data-fetching.
 - [Next Auth](https://next-auth.js.org/) for authorization. - Also using the [Prisma Adapter](https://next-auth.js.org/adapters/prisma) to store session info in my DB.
 - [Tailwind CSS](https://tailwindcss.com/) for styling.
+- [Headless UI](https://headlessui.com/) for unstyled components to use with Tailwind.
+- 
 - [Zod](https://github.com/colinhacks/zod) for validations.
 - [React Hook Form](https://react-hook-form.com) for forms.
 - [React Markdown](https://github.com/remarkjs/react-markdown) for reading markdown text & [react-markdown-editor-lite](https://github.com/HarryChen0506/react-markdown-editor-lite/) for a very quick and performant MD editor.
 - [Next Themes](https://github.com/pacocoursey/next-themes) for easy dark mode support.
-- [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts.
+- [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts, [React popper](https://popper.js.org/) for managing popup component.
 
 ### Highlights - Improving the user experience
 - Used TanStack Query (formerly React Query) to implement [optimistic updates](https://tanstack.com/query/v4/docs/react/guides/optimistic-updates), allowing the UI to update without having to wait for a backend response, making for a blazing fast experience. - You can like/dislike posts and see the feedback immediately, or edit a post and see the edits applied instantaneously.
