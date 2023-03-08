@@ -14,6 +14,7 @@ import ActionButton from "./ActionButton";
 import EditCommentForm from "./EditCommentForm";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import getUserDisplayName from "@utils/getUserDisplayName";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -77,7 +78,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       <div className="flex w-full justify-between gap-10 sm:gap-0">
         <div className="flex gap-1 items-center">
           <h3 className="font-medium">
-            {comment.user.name}{" "}
+            {getUserDisplayName(comment?.user)}{" "}
             <ShouldRender if={comment.userId === session?.user.id}>
               <span className=" text-emerald-500"> (You)</span>
             </ShouldRender>

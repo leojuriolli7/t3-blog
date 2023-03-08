@@ -4,8 +4,8 @@ import { Session } from "next-auth";
 export const getPostWithLikes = (
   post:
     | (Post & {
+        user: User | null;
         likes: Like[];
-        user: User;
         tags: Tag[];
       })
     | null,

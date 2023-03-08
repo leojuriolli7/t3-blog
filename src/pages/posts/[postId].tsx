@@ -16,6 +16,7 @@ import MetaTags from "@components/MetaTags";
 import Link from "next/link";
 import { Post } from "@utils/types";
 import TagList from "@components/TagList";
+import getUserDisplayName from "@utils/getUserDisplayName";
 
 type ReplyData = {
   parentId: string;
@@ -232,7 +233,7 @@ const SinglePostPage: React.FC = () => {
                       title="Go to user's profile"
                       className="underline text-emerald-700 dark:text-emerald-500 font-bold"
                     >
-                      {data?.user?.name}
+                      {getUserDisplayName(data?.user)}
                     </a>
                   </Link>
                   <ShouldRender if={data?.user?.id === session?.user.id}>
