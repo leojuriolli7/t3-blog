@@ -39,7 +39,7 @@ const PopupListItem: React.FC<ItemProps> = ({
   );
 };
 
-const UserPopupContent: React.FC<Props> = ({
+const UserPopoverContent: React.FC<Props> = ({
   onClickDeleteAccount,
   openEditAccountModal,
 }) => {
@@ -87,4 +87,4 @@ const UserPopupContent: React.FC<Props> = ({
   );
 };
 
-export default UserPopupContent;
+export default UserPopoverContent;
