@@ -178,7 +178,7 @@ const UserPage: React.FC = () => {
             <ShouldRender if={!!user}>
               <p className="text-xl">
                 {getUserDisplayName(user)}{" "}
-                <ShouldRender if={session?.user?.id === userId}>
+                <ShouldRender if={userIsProfileOwner}>
                   <span className="text-emerald-700 dark:text-emerald-500">
                     {" "}
                     (You)
