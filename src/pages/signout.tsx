@@ -5,13 +5,17 @@ import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { useRouter } from "next/router";
 
 const SignoutPage: React.FC = () => {
+  const router = useRouter();
+  const callbackUrl = router.query.callbackUrl as string;
+
   const handleSignout = useCallback(() => {
     signOut({
-      callbackUrl: "/",
+      callbackUrl: callbackUrl || "/",
     });
-  }, []);
+  }, [callbackUrl]);
 
   return (
     <MainLayout>

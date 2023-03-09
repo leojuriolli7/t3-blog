@@ -32,6 +32,7 @@ const errors: Record<SignInErrorTypes, string> = {
 const SigninPage: NextPage = () => {
   const router = useRouter();
   const errorType = router.query.error as SignInErrorTypes;
+  const callbackUrl = router.query.callbackUrl as string;
 
   const error = errorType && (errors[errorType] ?? errors.default);
 
@@ -40,13 +41,13 @@ const SigninPage: NextPage = () => {
   const handleSignin = useCallback(
     (type: SigninOptions) => () => {
       signIn(type, {
-        callbackUrl: "/",
+        callbackUrl: callbackUrl || "/",
         ...(type === "email" && {
           email,
         }),
       });
     },
-    [email]
+    [email, callbackUrl]
   );
 
   return (

@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { MdLogout, MdAddBox, MdLogin } from "react-icons/md";
-import { FaAppleAlt, FaUserPlus, FaUserCircle } from "react-icons/fa";
+import { FaAppleAlt, FaUserCircle } from "react-icons/fa";
 import ShouldRender from "./ShouldRender";
 import ThemeSwitch from "./ThemeSwitch";
+import { useRouter } from "next/router";
 
 const Header: React.FC = () => {
   const session = useSession();
+  const router = useRouter();
+
+  const callbackRoute = router.isReady && !!router.asPath ? router.asPath : "/";
+  const filteredRoute = callbackRoute.split("?")[0];
+  const callbackUrl = encodeURIComponent(filteredRoute);
 
   return (
     <header className="w-full relative flex justify-center items-center">
@@ -19,7 +25,7 @@ const Header: React.FC = () => {
           <Link href="/posts/new" legacyBehavior>
             <a className="hidden sm:block">Create post</a>
           </Link>
-          <Link href="/signout" legacyBehavior>
+          <Link href={`/signout?callbackUrl=${callbackUrl}`} legacyBehavior>
             <a className="hidden sm:block">Logout</a>
           </Link>
 
@@ -39,7 +45,7 @@ const Header: React.FC = () => {
               role="link"
             />
           </Link>
-          <Link href="/signout">
+          <Link href={`/signout?callbackUrl=${callbackUrl}`}>
             <MdLogout
               size={25}
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"
@@ -49,14 +55,14 @@ const Header: React.FC = () => {
           </Link>
         </ShouldRender>
         <ShouldRender if={session.status === "unauthenticated"}>
-          <Link href="/signin" legacyBehavior>
+          <Link href={`/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
             <a className="hidden sm:block">Login</a>
           </Link>
-          <Link href="/signin" legacyBehavior>
+          <Link href={`/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
             <a className="hidden sm:block">Register</a>
           </Link>
 
-          <Link href="/signin">
+          <Link href={`/signin?callbackUrl=${callbackUrl}`}>
             <MdLogin
               size={25}
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"
