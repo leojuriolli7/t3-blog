@@ -5,6 +5,7 @@ import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
+import MetaTags from "@components/MetaTags";
 
 export type ErrorType =
   | "default"
@@ -87,19 +88,22 @@ const ErrorPage = () => {
     errors[error?.toLowerCase() as ErrorType] ?? errors.default;
 
   return (
-    <MainLayout>
-      <div className="shadow dark:shadow-2xl dark:bg-neutral-800 pb-5 sm:pb-0">
-        <AuthFeedbackMessage message={`Error - ${status}`} />
-        <h1 className="mt-6 text-center text-2xl sm:text-3xl font-bold tracking-tight mx-2 text-gray-900 dark:text-white">
-          {heading}
-        </h1>
+    <>
+      <MetaTags title={`Error - ${status}`} />
+      <MainLayout>
+        <div className="shadow dark:shadow-2xl dark:bg-neutral-800 pb-5 sm:pb-0">
+          <AuthFeedbackMessage message={`Error - ${status}`} />
+          <h1 className="mt-6 text-center text-2xl sm:text-3xl font-bold tracking-tight mx-2 text-gray-900 dark:text-white">
+            {heading}
+          </h1>
 
-        <div className="sm:p-7 p-5 text-center">
-          <div>{message}</div>
-          {signin && <div className="mt-5">{signin}</div>}
+          <div className="sm:p-7 p-5 text-center">
+            <div>{message}</div>
+            {signin && <div className="mt-5">{signin}</div>}
+          </div>
         </div>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 };
 

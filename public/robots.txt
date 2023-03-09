@@ -1,7 +1,8 @@
 User-agent: Googlebot
-Disallow: /login/
-Disallow: /register/
-Disallow: /new/
+Disallow: /auth/signin/
+Disallow: /auth/signout/
+Disallow: /auth/verify-request/
+Disallow: /auth/error/
 
 User-agent: *
 Allow: /
