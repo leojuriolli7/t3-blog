@@ -41,6 +41,12 @@ export const authOptions: NextAuthOptions = {
   theme: {
     colorScheme: "dark",
   },
+  pages: {
+    signIn: "/signin",
+    signOut: "/signout",
+    verifyRequest: "/verify-request",
+    error: "/auth-error",
+  },
   callbacks: {
     session: async ({ session, user }) => {
       session.user.id = user.id;
