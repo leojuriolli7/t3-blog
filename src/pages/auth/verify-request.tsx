@@ -2,7 +2,7 @@ import React from "react";
 import MainLayout from "@components/MainLayout";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth]";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 
 const VerifyEmailPage: React.FC = () => {

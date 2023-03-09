@@ -25,7 +25,10 @@ const Header: React.FC = () => {
           <Link href="/posts/new" legacyBehavior>
             <a className="hidden sm:block">Create post</a>
           </Link>
-          <Link href={`/signout?callbackUrl=${callbackUrl}`} legacyBehavior>
+          <Link
+            href={`/auth/signout?callbackUrl=${callbackUrl}`}
+            legacyBehavior
+          >
             <a className="hidden sm:block">Logout</a>
           </Link>
 
@@ -45,7 +48,7 @@ const Header: React.FC = () => {
               role="link"
             />
           </Link>
-          <Link href={`/signout?callbackUrl=${callbackUrl}`}>
+          <Link href={`/auth/signout?callbackUrl=${callbackUrl}`}>
             <MdLogout
               size={25}
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"
@@ -55,14 +58,14 @@ const Header: React.FC = () => {
           </Link>
         </ShouldRender>
         <ShouldRender if={session.status === "unauthenticated"}>
-          <Link href={`/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
+          <Link href={`/auth/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
             <a className="hidden sm:block">Login</a>
           </Link>
-          <Link href={`/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
+          <Link href={`/auth/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
             <a className="hidden sm:block">Register</a>
           </Link>
 
-          <Link href={`/signin?callbackUrl=${callbackUrl}`}>
+          <Link href={`/auth/signin?callbackUrl=${callbackUrl}`}>
             <MdLogin
               size={25}
               className="sm:hidden block dark:text-emerald-500 text-emerald-700"

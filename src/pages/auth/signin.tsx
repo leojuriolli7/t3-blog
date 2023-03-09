@@ -8,7 +8,7 @@ import { MdEmail } from "react-icons/md";
 import { useRouter } from "next/router";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth]";
 import { GetServerSidePropsContext, NextPage } from "next";
 
 type SigninOptions = "github" | "google" | "discord" | "email";

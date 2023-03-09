@@ -42,10 +42,10 @@ export const authOptions: NextAuthOptions = {
     colorScheme: "dark",
   },
   pages: {
-    signIn: "/signin",
-    signOut: "/signout",
-    verifyRequest: "/verify-request",
-    error: "/auth-error",
+    signIn: "/auth/signin",
+    signOut: "/auth/signout",
+    verifyRequest: "/auth/verify-request",
+    error: "/auth/error",
   },
   callbacks: {
     session: async ({ session, user }) => {

@@ -2,6 +2,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import MainLayout from "@components/MainLayout";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
+import { GetServerSidePropsContext } from "next";
+import { authOptions } from "@pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 export type ErrorType =
   | "default"
@@ -53,7 +56,7 @@ const ErrorPage = () => {
       message: (
         <div>
           <p className="mb-4">You do not have permission to sign in.</p>
-          <Link passHref href="/signin">
+          <Link passHref href="/auth/signin">
             <a className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500">
               Sign in
             </a>
@@ -71,7 +74,7 @@ const ErrorPage = () => {
         </div>
       ),
       signin: (
-        <Link passHref className="button" href="/signin">
+        <Link passHref className="button" href="/auth/signin">
           <a className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500">
             Sign in
           </a>
@@ -101,3 +104,19 @@ const ErrorPage = () => {
 };
 
 export default ErrorPage;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  // If the user is already logged in, redirect.
+  if (session) {
+    return { redirect: { destination: "/" } };
+  }
+
+  // Could return the providers as an array if we wanted.
+  // const providers = await getProviders();
+
+  return {
+    props: {},
+  };
+}
