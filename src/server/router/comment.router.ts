@@ -6,7 +6,7 @@ import {
   deleteCommentSchema,
   getCommentsSchema,
   updateCommentSchema,
-} from "src/schema/comment.schema";
+} from "@schema/comment.schema";
 
 export const commentRouter = createRouter()
   .query("all-comments", {

@@ -2,12 +2,12 @@ import { useEffect, useMemo, useRef } from "react";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import PostCard from "@components/PostCard";
-import useOnScreen from "src/hooks/useOnScreen";
+import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
 import { useRouter } from "next/router";
 import Skeleton from "@components/Skeleton";
-import useFilterPosts from "src/hooks/useFilterPosts";
+import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
 
 const PostsByTagPage: React.FC = () => {

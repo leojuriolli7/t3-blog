@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import {
   CreateCommentInput,
   createCommentSchema,
-} from "src/schema/comment.schema";
+} from "@schema/comment.schema";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { isObjectEmpty } from "@utils/checkEmpty";

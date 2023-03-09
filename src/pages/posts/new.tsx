@@ -3,7 +3,7 @@ import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CreatePostInput, createPostSchema } from "src/schema/post.schema";
+import { CreatePostInput, createPostSchema } from "@schema/post.schema";
 import MainLayout from "@components/MainLayout";
 import MarkdownEditor from "@components/MarkdownEditor";
 import { toast } from "react-toastify";

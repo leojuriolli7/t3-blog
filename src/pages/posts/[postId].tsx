@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import CommentSection from "@components/CommentSection";
 import LikeButton from "@components/LikeButton";
-import useGetDate from "src/hooks/useGetDate";
+import useGetDate from "@hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
 import MainLayout from "@components/MainLayout";
 import Skeleton from "@components/Skeleton";

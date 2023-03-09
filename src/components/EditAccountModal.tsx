@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Field from "@components/Field";
 import { isObjectEmpty } from "@utils/checkEmpty";
-import { UpdateUserInput, updateUserSchema } from "src/schema/user.schema";
+import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
 import { Modal } from "./Modal";
 import { useRouter } from "next/router";
 import { User } from "@utils/types";

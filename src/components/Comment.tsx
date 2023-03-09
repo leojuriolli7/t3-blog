@@ -3,7 +3,7 @@ import { CommentWithChildren } from "@utils/types";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import useGetDate from "src/hooks/useGetDate";
+import useGetDate from "@hooks/useGetDate";
 import { toast } from "react-toastify";
 import { FiExternalLink } from "react-icons/fi";
 import CommentField from "./CommentField";

@@ -4,7 +4,7 @@ import {
   deleteUserSchema,
   getSingleUserSchema,
   updateUserSchema,
-} from "src/schema/user.schema";
+} from "@schema/user.schema";
 import { isStringEmpty } from "@utils/checkEmpty";
 
 export const userRouter = createRouter()

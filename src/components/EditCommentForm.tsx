@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import {
   UpdateCommentInput,
   updateCommentSchema,
-} from "src/schema/comment.schema";
+} from "@schema/comment.schema";
 import { CommentWithChildren } from "@utils/types";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-toastify";

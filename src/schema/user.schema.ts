@@ -4,6 +4,12 @@ export const getSingleUserSchema = z.object({
   userId: z.string(),
 });
 
+export const signInWithEmailSchema = z.object({
+  email: z.string().email(),
+});
+
+export type SignInWithEmailInput = z.TypeOf<typeof signInWithEmailSchema>;
+
 export const deleteUserSchema = z.object({
   userId: z.string(),
 });

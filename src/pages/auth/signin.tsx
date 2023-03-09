@@ -1,7 +1,7 @@
 import MainLayout from "@components/MainLayout";
 import { signIn } from "next-auth/react";
 import type { SignInErrorTypes } from "next-auth/core/pages/signin";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { BsDiscord, BsGithub } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { MdEmail } from "react-icons/md";
@@ -10,8 +10,14 @@ import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { GetServerSidePropsContext, NextPage } from "next";
+import { useForm } from "react-hook-form";
+import {
+  SignInWithEmailInput,
+  signInWithEmailSchema,
+} from "@schema/user.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type SigninOptions = "github" | "google" | "discord" | "email";
+type SigninOptions = "github" | "google" | "discord";
 
 const errors: Record<SignInErrorTypes, string> = {
   Signin: "Try signing in with a different account.",
@@ -34,20 +40,29 @@ const SigninPage: NextPage = () => {
   const errorType = router.query.error as SignInErrorTypes;
   const callbackUrl = router.query.callbackUrl as string;
 
+  const { handleSubmit, register } = useForm<SignInWithEmailInput>({
+    resolver: zodResolver(signInWithEmailSchema),
+  });
+
   const error = errorType && (errors[errorType] ?? errors.default);
 
-  const [email, setEmail] = useState<string | undefined>(undefined);
-
-  const handleSignin = useCallback(
+  const handleSignIn = useCallback(
     (type: SigninOptions) => () => {
       signIn(type, {
         callbackUrl: callbackUrl || "/",
-        ...(type === "email" && {
-          email,
-        }),
       });
     },
-    [email, callbackUrl]
+    [callbackUrl]
+  );
+
+  const onEmailSubmit = useCallback(
+    (values: SignInWithEmailInput) => {
+      signIn("email", {
+        callbackUrl: callbackUrl || "/",
+        email: values.email,
+      });
+    },
+    [callbackUrl]
   );
 
   return (
@@ -63,7 +78,7 @@ const SigninPage: NextPage = () => {
 
           <div className="flex w-full flex-col gap-3">
             <button
-              onClick={handleSignin("google")}
+              onClick={handleSignIn("google")}
               type="button"
               className="group relative flex w-full justify-center gap-2 bg-white py-2 px-3 text-sm font-semibold text-neutral-800 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
@@ -72,7 +87,7 @@ const SigninPage: NextPage = () => {
             </button>
 
             <button
-              onClick={handleSignin("discord")}
+              onClick={handleSignIn("discord")}
               type="button"
               className="group relative flex w-full justify-center gap-2 bg-indigo-500 py-2 px-3 text-sm font-semibold text-neutral-100 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 dark:ring-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
@@ -81,7 +96,7 @@ const SigninPage: NextPage = () => {
             </button>
 
             <button
-              onClick={handleSignin("github")}
+              onClick={handleSignIn("github")}
               type="button"
               className="group relative flex w-full justify-center gap-2 bg-zinc-800 py-2 px-3 text-sm font-semibold text-neutral-100 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 dark:ring-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
@@ -98,21 +113,15 @@ const SigninPage: NextPage = () => {
             </div>
 
             <div>
-              <form>
+              <form onSubmit={handleSubmit(onEmailSubmit)}>
                 <input
                   type="email"
                   placeholder="your e-mail"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   className="block w-full border-0 text-gray-900 mb-2 disabled:text-gray-400 dark:disabled:text-neutral-500 dark:disabled:bg-neutral-700 shadow-sm dark:text-neutral-200 ring-1 ring-inset ring-gray-300 dark:ring-neutral-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 disabled:cursor-not-allowed py-2 px-4"
                   required
+                  {...register("email")}
                 />
-                <button
-                  onClick={handleSignin("email")}
-                  type="button"
-                  disabled={!email}
-                  className="group relative flex w-full justify-center gap-2 bg-emerald-600 py-2 px-3 text-sm font-semibold text-neutral-100 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 dark:ring-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                >
+                <button className="group relative flex w-full justify-center gap-2 bg-emerald-600 py-2 px-3 text-sm font-semibold text-neutral-100 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 dark:ring-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
                   <MdEmail size={19} color="white" />
                   Sign in with e-mail
                 </button>

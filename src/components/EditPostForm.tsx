@@ -1,5 +1,5 @@
 import { useForm, FormProvider } from "react-hook-form";
-import { createPostSchema, UpdatePostInput } from "src/schema/post.schema";
+import { createPostSchema, UpdatePostInput } from "@schema/post.schema";
 import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";

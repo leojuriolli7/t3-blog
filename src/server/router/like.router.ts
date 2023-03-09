@@ -1,6 +1,6 @@
 import { createRouter } from "@server/createRouter";
 import * as trpc from "@trpc/server";
-import { likePostSchema } from "src/schema/like.schema";
+import { likePostSchema } from "@schema/like.schema";
 
 export const likeRouter = createRouter().mutation("like-post", {
   input: likePostSchema,

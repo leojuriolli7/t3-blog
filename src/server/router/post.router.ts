@@ -7,7 +7,7 @@ import {
   getPostsSchema,
   getSinglePostSchema,
   updatePostSchema,
-} from "src/schema/post.schema";
+} from "@schema/post.schema";
 
 export const postRouter = createRouter()
   .mutation("create-post", {

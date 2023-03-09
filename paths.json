@@ -8,7 +8,9 @@
       "@components/*": ["src/components/*"],
       "@server/*": ["src/server/*"],
       "@public/*": ["public/*"],
-      "@api/*": ["src/api/*"]
+      "@api/*": ["src/api/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@schema/*": ["src/schema/*"]
     }
   }
 }
