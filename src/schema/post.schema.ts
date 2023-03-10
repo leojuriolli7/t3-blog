@@ -12,11 +12,15 @@ export const createPostSchema = z.object({
     .nonempty("Post must have atleast one tag")
     .max(5, "Maximum of 5 tags per post"),
   files: z
-    .custom<FileList>((value) => {
-      const arr = Array.from(value as FileList);
+    .custom<File>((file) => {
+      const isFile = file instanceof File;
+      // TO-DO:
+      // const isAcceptedType =
 
-      return arr.length <= 4;
-    }, "Maximum of four files")
+      return isFile;
+    })
+    .array()
+    .max(4, "Maximum of 4 files")
     .optional(),
 });
 

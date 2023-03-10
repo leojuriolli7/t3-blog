@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { CreatePostInput, createPostSchema } from "@schema/post.schema";
 import MainLayout from "@components/MainLayout";
 import MarkdownEditor from "@components/MarkdownEditor";
@@ -14,15 +14,17 @@ import SelectTags from "@components/SelectTags";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
+import FileInput from "@components/FileInput";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
 
-  const { register, handleSubmit, control, formState, watch } =
-    useForm<CreatePostInput>({
-      resolver: zodResolver(createPostSchema),
-      shouldFocusError: false,
-    });
+  const methods = useForm<CreatePostInput>({
+    resolver: zodResolver(createPostSchema),
+    shouldFocusError: false,
+  });
+
+  const { register, handleSubmit, control, formState, watch } = methods;
 
   const files = watch("files");
   const { errors } = formState;
@@ -99,59 +101,48 @@ const CreatePostPage: React.FC = () => {
     <>
       <MetaTags title="New post" />
       <MainLayout>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-3xl mx-auto flex flex-col gap-10"
-        >
-          <h1 className="text-2xl font-medium text-center">Create a post</h1>
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-3xl mx-auto flex flex-col gap-10"
+          >
+            <h1 className="text-2xl font-medium text-center">Create a post</h1>
 
-          <Field error={errors.title}>
-            <input
-              type="text"
-              placeholder="your post title"
-              className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
-              {...register("title")}
-            />
-          </Field>
-
-          <Field error={errors.body}>
-            <MarkdownEditor
-              placeholder="your post content - you can use markdown!"
-              control={control}
-              name="body"
-            />
-          </Field>
-
-          <div>
-            <h2 className="text-2xl">Files & images</h2>
-            <Field error={errors.files}>
-              {/* TO-DO: Create custom file input component. */}
+            <Field error={errors.title}>
               <input
-                className="mt-2"
-                type="file"
-                multiple
-                max={4}
-                accept="image/*, .pdf, .docx, .txt, .msword, .doc"
-                {...register("files")}
+                type="text"
+                placeholder="your post title"
+                className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
+                {...register("title")}
               />
             </Field>
-          </div>
 
-          <SelectTags
-            control={control}
-            initialTags={initialTags}
-            name="tags"
-            error={errors.tags}
-          />
+            <Field error={errors.body}>
+              <MarkdownEditor
+                placeholder="your post content - you can use markdown!"
+                control={control}
+                name="body"
+              />
+            </Field>
 
-          <button
-            className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
-            type="submit"
-            disabled={isLoading || fetchingTags || !isObjectEmpty(errors)}
-          >
-            Create
-          </button>
-        </form>
+            <FileInput control={methods.control} name="files" />
+
+            <SelectTags
+              control={control}
+              initialTags={initialTags}
+              name="tags"
+              error={errors.tags}
+            />
+
+            <button
+              className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
+              type="submit"
+              disabled={isLoading || fetchingTags || !isObjectEmpty(errors)}
+            >
+              Create
+            </button>
+          </form>
+        </FormProvider>
       </MainLayout>
     </>
   );
