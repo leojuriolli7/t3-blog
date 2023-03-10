@@ -39,7 +39,7 @@ const Dropzone: React.FC = () => {
 
       setFiles(updatedFiles);
     },
-    [files]
+    [files, setFiles]
   );
 
   const { getRootProps, getInputProps, isDragAccept, isDragReject } =
@@ -57,6 +57,7 @@ const Dropzone: React.FC = () => {
 
   useEffect(() => {
     methods.register("files");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

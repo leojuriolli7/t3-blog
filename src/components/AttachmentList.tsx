@@ -140,6 +140,7 @@ const AttachmentList: React.FC<Props> = ({ fileState }) => {
 
       <Modal openState={isMediaPreviewModalOpen}>
         <div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={currentImage?.url || "/static/default.jpg"}
             alt={currentImage?.name}
