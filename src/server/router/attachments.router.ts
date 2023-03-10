@@ -100,7 +100,6 @@ export const attachmentsRouter = createRouter()
             key: `${postId}/${attachment.id}`,
           },
           Conditions: [
-            // TO-DO: Only allow specific Content types
             ["starts-with", "$Content-Type", ""],
             ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
           ],
