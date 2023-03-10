@@ -10,7 +10,7 @@ import { BUCKET_NAME, s3, UPLOAD_MAX_FILE_SIZE } from "src/config/aws";
 
 const UPLOADING_TIME_LIMIT = 30;
 
-interface AttachmentMetadata extends Attachment {
+export interface AttachmentMetadata extends Attachment {
   url: string;
 }
 
@@ -43,6 +43,7 @@ export const attachmentsRouter = createRouter()
             url: await s3.getSignedUrlPromise("getObject", {
               Bucket: BUCKET_NAME,
               Key: `${postId}/${file.id}`,
+              ResponseContentDisposition: `attachment; filename ="${file.name}"`,
             }),
           };
         })
@@ -99,7 +100,8 @@ export const attachmentsRouter = createRouter()
             key: `${postId}/${attachment.id}`,
           },
           Conditions: [
-            // ["starts-with", "$Content-Type", "image/"],
+            // TO-DO: Only allow specific Content types
+            ["starts-with", "$Content-Type", ""],
             ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
           ],
           Expires: UPLOADING_TIME_LIMIT,

@@ -38,8 +38,10 @@ const Dropzone: React.FC = () => {
         );
 
       setFiles(updatedFiles);
+
+      methods.setValue("files", updatedFiles);
     },
-    [files, setFiles]
+    [files, setFiles, methods]
   );
 
   const { getRootProps, getInputProps, isDragAccept, isDragReject } =
@@ -51,14 +53,11 @@ const Dropzone: React.FC = () => {
       maxSize: UPLOAD_MAX_FILE_SIZE,
       noKeyboard: true,
       accept: {
-        file: ["image/*, application/pdf, text/plain, application/msword"],
+        file: [
+          "image/*, application/pdf, text/plain, application/msword, audio/mpeg, video/mp4, audio/wav",
+        ],
       },
     });
-
-  useEffect(() => {
-    methods.register("files");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div>
@@ -109,7 +108,7 @@ const Dropzone: React.FC = () => {
                   </ShouldRender>
                 </p>
                 <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                  Images, .pdf, .txt, .msword, .doc
+                  Images, .pdf, .txt, .msword, .doc, .mp3, .wav, .mp4
                   <br />
                   <span>(Maximum of {maxSizeInMB}MB per file)</span>
                 </p>
@@ -117,7 +116,7 @@ const Dropzone: React.FC = () => {
             </div>
           </label>
 
-          <input name="files" {...getInputProps()} />
+          <input name="files" type="file" {...getInputProps()} />
         </div>
       </Field>
 

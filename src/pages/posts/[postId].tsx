@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "@utils/trpc";
 import ReactMarkdown from "@components/ReactMarkdown";
 import { useRouter } from "next/router";
@@ -18,6 +18,9 @@ import { Post } from "@utils/types";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Image from "next/image";
+import AttachmentPreview from "@components/AttachmentPreview";
+import { Modal } from "@components/Modal";
+import { AttachmentMetadata } from "@server/router/attachments.router";
 
 type ReplyData = {
   parentId: string;
@@ -31,6 +34,18 @@ const SinglePostPage: React.FC = () => {
   const postId = router.query.postId as string;
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
+
+  const isMediaPreviewModalOpen = useState(false);
+  const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
+  const [currentImage, setCurrentImage] = useState<AttachmentMetadata>();
+
+  const onClickImage = useCallback(
+    (image: AttachmentMetadata) => () => {
+      setCurrentImage(image);
+      setIsMediaPreviewModalOpen(true);
+    },
+    [setIsMediaPreviewModalOpen]
+  );
 
   const { data, isLoading } = trpc.useQuery(
     [
@@ -57,6 +72,13 @@ const SinglePostPage: React.FC = () => {
       refetchOnWindowFocus: false,
     }
   );
+
+  const filteredAttachments = useMemo(() => {
+    return {
+      images: attachments?.filter((file) => file.type.includes("image")),
+      documents: attachments?.filter((file) => !file.type.includes("image")),
+    };
+  }, [attachments]);
 
   const { mutate: likePost, error: likeError } = trpc.useMutation(
     ["likes.like-post"],
@@ -271,23 +293,6 @@ const SinglePostPage: React.FC = () => {
             </ReactMarkdown>
           </ShouldRender>
 
-          <ShouldRender if={attachments}>
-            {/* TO-DO: Create a component for
-             attachment view (Considering files & images)
-            */}
-            <div>
-              {attachments?.map((attachment) => (
-                <Image
-                  key={attachment.id}
-                  src={attachment.url}
-                  width={64}
-                  height={64}
-                  alt={attachment.name}
-                />
-              ))}
-            </div>
-          </ShouldRender>
-
           <div className="flex gap-3 absolute -bottom-4 left-4">
             <LikeButton
               disabled={isLoading}
@@ -306,6 +311,30 @@ const SinglePostPage: React.FC = () => {
           </div>
         </main>
 
+        <ShouldRender if={attachments?.length}>
+          <div className="w-full mt-3">
+            <h2 className="text-lg font-medium mb-2">Attachments</h2>
+            {filteredAttachments?.images?.map((image, key) => (
+              <AttachmentPreview
+                type="media"
+                onClickImage={onClickImage(image)}
+                file={image}
+                key={key}
+                downloadable
+              />
+            ))}
+
+            {filteredAttachments?.documents?.map((attachment, key) => (
+              <AttachmentPreview
+                type="document"
+                file={attachment}
+                key={key}
+                downloadable
+              />
+            ))}
+          </div>
+        </ShouldRender>
+
         <ShouldRender if={data?.tags?.length || isLoading}>
           <div className="w-full -mb-10">
             <h2 className="text-lg font-medium">Tags</h2>
@@ -315,6 +344,17 @@ const SinglePostPage: React.FC = () => {
         </ShouldRender>
 
         <CommentSection />
+
+        <Modal openState={isMediaPreviewModalOpen} alwaysCentered>
+          <div className="overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={currentImage?.url || "/static/default.jpg"}
+              alt={currentImage?.name}
+              className="w-auto h-auto max-w-[60vw] max-h-[80vh]"
+            />
+          </div>
+        </Modal>
       </MainLayout>
     </>
   );

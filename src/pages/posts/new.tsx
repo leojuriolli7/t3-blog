@@ -52,7 +52,7 @@ const CreatePostPage: React.FC = () => {
       formData.append(key, fields[key]);
     });
 
-    // formData.append("Content-Type", file.type);
+    formData.append("Content-Type", file.type);
     formData.append("file", file);
 
     await fetch(url, {
