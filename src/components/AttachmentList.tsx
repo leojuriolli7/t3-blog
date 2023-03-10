@@ -5,10 +5,10 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Modal } from "./Modal";
 import ShouldRender from "./ShouldRender";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import AttachmentPreview from "./AttachmentPreview";
+import AttachmentPreview, { MediaType } from "./AttachmentPreview";
+import PreviewMediaModal from "./PreviewMediaModal";
 
 type Props = {
   fileState: [File[], Dispatch<SetStateAction<File[]>>];
@@ -33,25 +33,35 @@ const AttachmentList: React.FC<Props> = ({ fileState }) => {
   const filteredAttachments = useMemo(() => {
     const filesArray = files || [];
 
+    const isMedia = (file: File) =>
+      file.type.includes("image") || file.type.includes("video");
+
+    const isAudio = (file: File) => file.type.includes("audio");
+
     return {
-      images: filesArray
-        .filter((file) => file.type.includes("image"))
+      medias: filesArray
+        .filter((file) => isMedia(file))
         .map((image) => ({
           name: image.name,
           url: URL.createObjectURL(image) || "/static/default.jpg",
           type: image.type,
         })),
-      documents: filesArray.filter((file) => !file.type.includes("image")),
+      audio: filesArray
+        .filter((file) => isAudio(file))
+        .map((audio) => ({
+          name: audio.name,
+          url: URL.createObjectURL(audio),
+          type: audio.type,
+        })),
+      documents: filesArray.filter((file) => !isMedia(file) && !isAudio(file)),
     };
   }, [files]);
 
-  type ImageType = typeof filteredAttachments.images[number];
-
-  const [currentImage, setCurrentImage] = useState<ImageType>();
+  const [currentMedia, setCurrentMedia] = useState<MediaType>();
 
   const onClickImage = useCallback(
-    (image: ImageType) => () => {
-      setCurrentImage(image);
+    (image: MediaType) => () => {
+      setCurrentMedia(image);
       setIsMediaPreviewModalOpen(true);
     },
     [setIsMediaPreviewModalOpen]
@@ -59,18 +69,32 @@ const AttachmentList: React.FC<Props> = ({ fileState }) => {
 
   return (
     <div className="w-full flex flex-col gap-4" ref={parentRef}>
-      <ShouldRender if={filteredAttachments?.images?.length}>
-        {filteredAttachments?.images?.map((image, key) => (
+      <ShouldRender if={filteredAttachments?.medias?.length}>
+        {filteredAttachments?.medias?.map((media, key) => (
           <AttachmentPreview
-            file={image}
+            file={media}
             type="media"
             key={key}
-            onClickImage={onClickImage(image)}
-            removeFile={removeFile(image.name)}
+            onClickImage={onClickImage(media)}
+            removeFile={removeFile(media.name)}
           />
         ))}
-        <p className="text-sm text-neutral-700 dark:text-neutral-400">
-          Tip: Click the image to expand it.
+        <p className="text-sm text-neutral-700 dark:text-neutral-400 -mt-2">
+          Tip: Click the video or image to expand it.
+        </p>
+      </ShouldRender>
+
+      <ShouldRender if={filteredAttachments?.audio?.length}>
+        {filteredAttachments?.audio?.map((audio, key) => (
+          <AttachmentPreview
+            file={audio}
+            type="audio"
+            key={key}
+            removeFile={removeFile(audio.name)}
+          />
+        ))}
+        <p className="text-sm text-neutral-700 dark:text-neutral-400 -mt-2">
+          Tip: Play the audio by clicking it.
         </p>
       </ShouldRender>
 
@@ -85,16 +109,10 @@ const AttachmentList: React.FC<Props> = ({ fileState }) => {
         ))}
       </ShouldRender>
 
-      <Modal openState={isMediaPreviewModalOpen} alwaysCentered>
-        <div className="overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={currentImage?.url || "/static/default.jpg"}
-            alt={currentImage?.name}
-            className="w-auto h-auto max-w-[60vw] max-h-[80vh]"
-          />
-        </div>
-      </Modal>
+      <PreviewMediaModal
+        media={currentMedia}
+        openState={isMediaPreviewModalOpen}
+      />
     </div>
   );
 };

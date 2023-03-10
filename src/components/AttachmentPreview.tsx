@@ -1,20 +1,21 @@
 import Image from "next/image";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { saveAs } from "file-saver";
 import { IoExpandOutline } from "react-icons/io5";
-import { MdClose, MdDownload } from "react-icons/md";
-import { RiFileTextFill } from "react-icons/ri";
+import { MdClose, MdDownload, MdPause } from "react-icons/md";
+import { RiFileTextFill, RiPlayMiniFill, RiVolumeUpFill } from "react-icons/ri";
 import ShouldRender from "./ShouldRender";
 
-type ImageType = {
+export type MediaType = {
   name: string;
   url?: string;
+  type: string;
 };
 
 type Props = {
-  type: "media" | "document";
+  type: "media" | "document" | "audio";
   onClickImage?: () => void;
-  file: ImageType;
+  file: MediaType;
   removeFile?: () => void;
   downloadable?: boolean;
 };
@@ -26,11 +27,35 @@ const AttachmentPreview: React.FC<Props> = ({
   downloadable = false,
   removeFile,
 }) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+
+  const onClickPlayAudio = useCallback(() => {
+    if (!isAudioPlaying) {
+      setIsAudioPlaying(true);
+      audioRef?.current?.play();
+    }
+
+    if (isAudioPlaying) {
+      setIsAudioPlaying(false);
+      audioRef?.current?.pause();
+    }
+  }, [isAudioPlaying, setIsAudioPlaying]);
+
   const handleClickDownload = useCallback(() => {
     if (file?.url) {
       saveAs(file.url, file.name);
     }
   }, [file]);
+
+  const isImage = file.type.includes("image");
+  const isVideo = file.type.includes("video");
+
+  const displayType = {
+    media: isImage ? "Image" : "Video",
+    document: "File",
+    audio: "Audio",
+  };
 
   return (
     <div className="relative flex gap-3 p-4 bg-white border first:mt-4 border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900">
@@ -40,7 +65,39 @@ const AttachmentPreview: React.FC<Props> = ({
             <RiFileTextFill className="text-white" size={27} />
           </div>
         </ShouldRender>
-        <ShouldRender if={type === "media"}>
+
+        <ShouldRender if={type === "audio"}>
+          <div className="bg-emerald-500 dark:bg-emerald-700 w-16 h-16 flex items-center justify-center group cursor-pointer">
+            <audio ref={audioRef} hidden src={file?.url} />
+            <RiVolumeUpFill
+              className="text-white  group-hover:hidden"
+              size={27}
+            />
+
+            <button
+              type="button"
+              title={`${isAudioPlaying ? "Pause" : "Play"} the audio file`}
+            >
+              <ShouldRender if={!isAudioPlaying}>
+                <RiPlayMiniFill
+                  className="text-white  group-hover:block hidden"
+                  size={27}
+                  onClick={onClickPlayAudio}
+                />
+              </ShouldRender>
+
+              <ShouldRender if={isAudioPlaying}>
+                <MdPause
+                  className="text-white  group-hover:block hidden"
+                  size={27}
+                  onClick={onClickPlayAudio}
+                />
+              </ShouldRender>
+            </button>
+          </div>
+        </ShouldRender>
+
+        <ShouldRender if={type === "media" && isImage}>
           <Image
             src={file?.url || "/static/default.jpg"}
             width={64}
@@ -49,6 +106,17 @@ const AttachmentPreview: React.FC<Props> = ({
             objectFit="cover"
             className="cursor-pointer transform group-hover:opacity-50 transition-all"
           />
+        </ShouldRender>
+
+        <ShouldRender if={type === "media" && isVideo}>
+          <div className="w-16 h-16">
+            <video
+              src={file?.url}
+              width="100%"
+              height="100%"
+              className="cursor-pointer w-full h-full transform object-cover group-hover:opacity-50 transition-all"
+            />
+          </div>
         </ShouldRender>
 
         <ShouldRender if={!!onClickImage}>
@@ -63,7 +131,7 @@ const AttachmentPreview: React.FC<Props> = ({
           {file.name}
         </p>
         <p className="text-sm text-neutral-500 dark:text-neutral-500">
-          {type === "media" ? "Image" : "File"}
+          {displayType[type] ?? "File"}
         </p>
       </div>
       <ShouldRender if={!!removeFile}>
@@ -84,7 +152,7 @@ const AttachmentPreview: React.FC<Props> = ({
           title="Download file"
           aria-label="Download file"
           className="absolute top-1/2 transform -translate-y-1/2
-          right-2 cursor-pointer text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400"
+          right-4 cursor-pointer text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400"
           onClick={handleClickDownload}
         />
       </ShouldRender>

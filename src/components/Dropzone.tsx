@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import ShouldRender from "./ShouldRender";
 import { HiOutlineCloudUpload } from "react-icons/hi";
 import AttachmentList from "./AttachmentList";
 import Field from "./Field";
@@ -19,9 +18,16 @@ const Dropzone: React.FC = () => {
   const [files, setFiles] = filesState;
 
   const onDropRejected = (rejectedFile: FileRejection[]) => {
-    if (rejectedFile[0]?.errors[0]?.code === "file-too-large") {
+    const firstFileCode = rejectedFile[0]?.errors[0]?.code;
+    if (firstFileCode === "file-too-large") {
       return toast.error(`Limit of ${maxSizeInMB}MB per file`);
     }
+
+    if (firstFileCode === "too-many-files")
+      return toast.error(
+        `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} files per post`
+      );
+
     return toast.error("File type not supported");
   };
 
@@ -53,9 +59,13 @@ const Dropzone: React.FC = () => {
       maxSize: UPLOAD_MAX_FILE_SIZE,
       noKeyboard: true,
       accept: {
-        file: [
-          "image/*, application/pdf, text/plain, application/msword, audio/mpeg, video/mp4, audio/wav",
-        ],
+        "image/*": [],
+        "application/pdf": [".pdf"],
+        "text/plain": [".txt"],
+        "application/msword": [".doc"],
+        "audio/wav": [".wav"],
+        "audio/mpeg": [".mp3"],
+        "video/mp4": [".mp4"],
       },
     });
 
@@ -96,16 +106,8 @@ const Dropzone: React.FC = () => {
                       : ""
                   }`}
                 >
-                  <ShouldRender if={!isDragReject}>
-                    <span className="font-semibold">Click to upload</span> or
-                    drag and drop
-                  </ShouldRender>
-
-                  <ShouldRender if={isDragReject}>
-                    <span className="font-semibold">
-                      File type not accepted
-                    </span>
-                  </ShouldRender>
+                  <span className="font-semibold">Click to upload</span> or drag
+                  and drop
                 </p>
                 <p className="text-xs text-center text-gray-500 dark:text-gray-400">
                   Images, .pdf, .txt, .msword, .doc, .mp3, .wav, .mp4

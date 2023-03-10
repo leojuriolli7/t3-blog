@@ -21,6 +21,7 @@ import Image from "next/image";
 import AttachmentPreview from "@components/AttachmentPreview";
 import { Modal } from "@components/Modal";
 import { AttachmentMetadata } from "@server/router/attachments.router";
+import PreviewMediaModal from "@components/PreviewMediaModal";
 
 type ReplyData = {
   parentId: string;
@@ -37,11 +38,11 @@ const SinglePostPage: React.FC = () => {
 
   const isMediaPreviewModalOpen = useState(false);
   const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
-  const [currentImage, setCurrentImage] = useState<AttachmentMetadata>();
+  const [currentMedia, setCurrentMedia] = useState<AttachmentMetadata>();
 
   const onClickImage = useCallback(
     (image: AttachmentMetadata) => () => {
-      setCurrentImage(image);
+      setCurrentMedia(image);
       setIsMediaPreviewModalOpen(true);
     },
     [setIsMediaPreviewModalOpen]
@@ -74,9 +75,17 @@ const SinglePostPage: React.FC = () => {
   );
 
   const filteredAttachments = useMemo(() => {
+    const isMedia = (file: AttachmentMetadata) =>
+      file.type.includes("image") || file.type.includes("video");
+
+    const isAudio = (file: AttachmentMetadata) => file.type.includes("audio");
+
     return {
-      images: attachments?.filter((file) => file.type.includes("image")),
-      documents: attachments?.filter((file) => !file.type.includes("image")),
+      medias: attachments?.filter((file) => isMedia(file)),
+      audio: attachments?.filter((file) => isAudio(file)),
+      documents: attachments?.filter((file) => {
+        return !isMedia(file) && !isAudio(file);
+      }),
     };
   }, [attachments]);
 
@@ -314,11 +323,20 @@ const SinglePostPage: React.FC = () => {
         <ShouldRender if={attachments?.length}>
           <div className="w-full mt-3">
             <h2 className="text-lg font-medium mb-2">Attachments</h2>
-            {filteredAttachments?.images?.map((image, key) => (
+            {filteredAttachments?.medias?.map((media, key) => (
               <AttachmentPreview
                 type="media"
-                onClickImage={onClickImage(image)}
-                file={image}
+                onClickImage={onClickImage(media)}
+                file={media}
+                key={key}
+                downloadable
+              />
+            ))}
+
+            {filteredAttachments?.audio?.map((audio, key) => (
+              <AttachmentPreview
+                file={audio}
+                type="audio"
                 key={key}
                 downloadable
               />
@@ -345,16 +363,10 @@ const SinglePostPage: React.FC = () => {
 
         <CommentSection />
 
-        <Modal openState={isMediaPreviewModalOpen} alwaysCentered>
-          <div className="overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={currentImage?.url || "/static/default.jpg"}
-              alt={currentImage?.name}
-              className="w-auto h-auto max-w-[60vw] max-h-[80vh]"
-            />
-          </div>
-        </Modal>
+        <PreviewMediaModal
+          media={currentMedia}
+          openState={isMediaPreviewModalOpen}
+        />
       </MainLayout>
     </>
   );
