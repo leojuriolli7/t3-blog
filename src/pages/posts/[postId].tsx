@@ -17,6 +17,7 @@ import Link from "next/link";
 import { Post } from "@utils/types";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
+import Image from "next/image";
 
 type ReplyData = {
   parentId: string;
@@ -44,6 +45,18 @@ const SinglePostPage: React.FC = () => {
   );
 
   const loggedUserCreatedPost = session?.user?.id === data?.userId;
+
+  const { data: attachments } = trpc.useQuery(
+    [
+      "attachments.get-post-attachments",
+      {
+        postId,
+      },
+    ],
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const { mutate: likePost, error: likeError } = trpc.useMutation(
     ["likes.like-post"],
@@ -256,6 +269,23 @@ const SinglePostPage: React.FC = () => {
             <ReactMarkdown className="prose" lines={5} loading={isLoading}>
               {data?.body}
             </ReactMarkdown>
+          </ShouldRender>
+
+          <ShouldRender if={attachments}>
+            {/* TO-DO: Create a component for
+             attachment view (Considering files & images)
+            */}
+            <div>
+              {attachments?.map((attachment) => (
+                <Image
+                  key={attachment.id}
+                  src={attachment.url}
+                  width={64}
+                  height={64}
+                  alt={attachment.name}
+                />
+              ))}
+            </div>
           </ShouldRender>
 
           <div className="flex gap-3 absolute -bottom-4 left-4">

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,13 +16,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 
 const CreatePostPage: React.FC = () => {
-  const { register, handleSubmit, control, formState } =
+  const router = useRouter();
+
+  const { register, handleSubmit, control, formState, watch } =
     useForm<CreatePostInput>({
       resolver: zodResolver(createPostSchema),
       shouldFocusError: false,
     });
-  const router = useRouter();
 
+  const files = watch("files");
   const { errors } = formState;
 
   const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
@@ -33,19 +35,58 @@ const CreatePostPage: React.FC = () => {
   );
   const initialTags = tags?.map((tag) => tag.name);
 
+  const { mutateAsync: createPresignedUrl } = trpc.useMutation(
+    "attachments.create-presigned-url"
+  );
+
+  const uploadAttachment = async (postId: string, file: File) => {
+    const name = file?.name || "Uploaded attachment";
+    const type = file?.type || "unknown";
+
+    const { url, fields } = await createPresignedUrl({ postId, name, type });
+    const formData = new FormData();
+
+    Object.keys(fields).forEach((key) => {
+      formData.append(key, fields[key]);
+    });
+
+    // formData.append("Content-Type", file.type);
+    formData.append("file", file);
+
+    await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+  };
+
   const {
     mutate: create,
     error: createError,
     isLoading,
   } = trpc.useMutation(["posts.create-post"], {
-    onSuccess: ({ id }) => {
+    onSuccess: async ({ id }) => {
+      if (files) {
+        const filesArray = Array.from(files);
+
+        // Wait for uploads to finish before redirecting.
+        await Promise.all(
+          filesArray.map(async (file) => {
+            await uploadAttachment(id, file);
+          })
+        );
+      }
+
       router.push(`/posts/${id}`);
     },
   });
 
   const onSubmit = useCallback(
     (values: CreatePostInput) => {
-      create(values);
+      create({
+        body: values.body,
+        tags: values.tags,
+        title: values.title,
+      });
     },
     [create]
   );
@@ -80,6 +121,21 @@ const CreatePostPage: React.FC = () => {
               name="body"
             />
           </Field>
+
+          <div>
+            <h2 className="text-2xl">Files & images</h2>
+            <Field error={errors.files}>
+              {/* TO-DO: Create custom file input component. */}
+              <input
+                className="mt-2"
+                type="file"
+                multiple
+                max={4}
+                accept="image/*, .pdf, .docx, .txt, .msword, .doc"
+                {...register("files")}
+              />
+            </Field>
+          </div>
 
           <SelectTags
             control={control}

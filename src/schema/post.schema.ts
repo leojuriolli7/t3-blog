@@ -11,6 +11,13 @@ export const createPostSchema = z.object({
     .array()
     .nonempty("Post must have atleast one tag")
     .max(5, "Maximum of 5 tags per post"),
+  files: z
+    .custom<FileList>((value) => {
+      const arr = Array.from(value as FileList);
+
+      return arr.length <= 4;
+    }, "Maximum of four files")
+    .optional(),
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;
