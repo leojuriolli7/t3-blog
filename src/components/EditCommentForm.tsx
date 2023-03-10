@@ -69,7 +69,6 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
       toast.error(updateError?.message);
     }
   }, [updateError]);
-  console.log("updateError:", updateError);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

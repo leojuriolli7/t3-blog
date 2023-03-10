@@ -1,3 +1,4 @@
+import { UPLOAD_MAX_NUMBER_OF_FILES } from "@config/aws";
 import z from "zod";
 
 export const createPostSchema = z.object({
@@ -15,12 +16,15 @@ export const createPostSchema = z.object({
     .custom<File>((file) => {
       const isFile = file instanceof File;
       // TO-DO:
-      // const isAcceptedType =
+      // const isAcceptedType
 
       return isFile;
     })
     .array()
-    .max(4, "Maximum of 4 files")
+    .max(
+      UPLOAD_MAX_NUMBER_OF_FILES,
+      `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} files`
+    )
     .optional(),
 });
 

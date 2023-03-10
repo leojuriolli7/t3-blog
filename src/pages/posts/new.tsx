@@ -14,7 +14,7 @@ import SelectTags from "@components/SelectTags";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
-import FileInput from "@components/FileInput";
+import Dropzone from "@components/Dropzone";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -125,7 +125,7 @@ const CreatePostPage: React.FC = () => {
               />
             </Field>
 
-            <FileInput control={methods.control} name="files" />
+            <Dropzone />
 
             <SelectTags
               control={control}

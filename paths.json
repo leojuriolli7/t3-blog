@@ -9,6 +9,7 @@
       "@server/*": ["src/server/*"],
       "@public/*": ["public/*"],
       "@api/*": ["src/api/*"],
+      "@config/*": ["src/config/*"],
       "@hooks/*": ["src/hooks/*"],
       "@schema/*": ["src/schema/*"]
     }

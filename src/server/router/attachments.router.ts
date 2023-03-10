@@ -6,10 +6,9 @@ import {
   deleteAttachmentsSchema,
   getPostAttachments,
 } from "@schema/attachment.schema";
-import { BUCKET_NAME, s3 } from "src/config/aws";
+import { BUCKET_NAME, s3, UPLOAD_MAX_FILE_SIZE } from "src/config/aws";
 
 const UPLOADING_TIME_LIMIT = 30;
-const UPLOAD_MAX_FILE_SIZE = 10485760; // 10MB
 
 interface AttachmentMetadata extends Attachment {
   url: string;

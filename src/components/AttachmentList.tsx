@@ -1,15 +1,37 @@
 import Image from "next/image";
-import React, { useCallback, useMemo, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { RiFileTextFill } from "react-icons/ri";
 import { IoExpandOutline } from "react-icons/io5";
+import { MdClose } from "react-icons/md";
 import { Modal } from "./Modal";
 import ShouldRender from "./ShouldRender";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 type Props = {
-  files?: File[];
+  fileState: [File[], Dispatch<SetStateAction<File[]>>];
 };
 
-const AttachmentList: React.FC<Props> = ({ files }) => {
+const AttachmentList: React.FC<Props> = ({ fileState }) => {
+  const [files, setFiles] = fileState;
+  const [parentRef] = useAutoAnimate();
+  const [imagesParentRef] = useAutoAnimate();
+  const [documentsParentRef] = useAutoAnimate();
+
+  const removeFile = useCallback(
+    (fileName: string) => () => {
+      const filteredFiles = files?.filter((file) => file.name !== fileName);
+
+      setFiles(filteredFiles);
+    },
+    [files, setFiles]
+  );
+
   const isMediaPreviewModalOpen = useState(false);
   const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
 
@@ -40,13 +62,16 @@ const AttachmentList: React.FC<Props> = ({ files }) => {
   );
 
   return (
-    <div className="w-full mt-4 flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4" ref={parentRef}>
       <ShouldRender if={filteredAttachments?.images?.length}>
-        <div className="w-full flex flex-col gap-2">
+        <div
+          className="w-full flex flex-col gap-2 first:mt-4"
+          ref={imagesParentRef}
+        >
           {filteredAttachments?.images?.map((image, key) => (
             <div
               key={key}
-              className="flex gap-3 p-4 bg-white border  border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900"
+              className="relative flex gap-3 p-4 bg-white border  border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900"
             >
               <div
                 onClick={onClickImage(image)}
@@ -73,6 +98,11 @@ const AttachmentList: React.FC<Props> = ({ files }) => {
                   Image
                 </p>
               </div>
+              <MdClose
+                size={20}
+                onClick={removeFile(image.name)}
+                className="absolute top-2 right-2 cursor-pointer text-neutral-700 dark:text-neutral-300 transition-transform hover:transform hover:scale-125"
+              />
             </div>
           ))}
           <p className="text-sm text-neutral-700 dark:text-neutral-400">
@@ -85,7 +115,8 @@ const AttachmentList: React.FC<Props> = ({ files }) => {
         {filteredAttachments?.documents?.map((document, key) => (
           <div
             key={key}
-            className="flex gap-3 p-4 bg-white border  border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900"
+            ref={documentsParentRef}
+            className="relative flex gap-3 p-4 bg-white border first:mt-4 border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900"
           >
             <div className="bg-emerald-500 dark:bg-emerald-700 w-16 h-16 flex items-center justify-center">
               <RiFileTextFill className="text-white" size={27} />
@@ -98,6 +129,11 @@ const AttachmentList: React.FC<Props> = ({ files }) => {
                 File
               </p>
             </div>
+            <MdClose
+              size={20}
+              onClick={removeFile(document.name)}
+              className="absolute top-2 right-2 cursor-pointer text-neutral-700 dark:text-neutral-300 transition-transform hover:transform hover:scale-125"
+            />
           </div>
         ))}
       </ShouldRender>
