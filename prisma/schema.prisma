@@ -53,6 +53,17 @@ model Like {
   @@index([postId])
 }
 
+model FavoritesOnUsers {
+  userId String
+  postId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([userId, postId])
+  @@index([postId])
+  @@index([userId])
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -62,8 +73,9 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  bio          String? @db.VarChar(160)
-  likes Like[]
+  bio       String?            @db.VarChar(160)
+  likes     Like[]
+  favorites FavoritesOnUsers[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -86,19 +98,20 @@ model Tag {
 }
 
 model Post {
-  id        String   @id @default(uuid())
-  title     String
-  body      String   @db.VarChar(10000)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String?
+  id          String             @id @default(uuid())
+  title       String
+  body        String             @db.VarChar(10000)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  favoritedBy FavoritesOnUsers[]
 
   tags Tag[]
 
-  attachments  Attachment[]
-  likes   Like[]
-  Comment Comment[]
+  attachments Attachment[]
+  likes       Like[]
+  Comment     Comment[]
 
   @@index([userId])
 }

@@ -1,4 +1,12 @@
-import { Like, Post, Prisma, PrismaClient, Tag, User } from "@prisma/client";
+import {
+  FavoritesOnUsers,
+  Like,
+  Post,
+  Prisma,
+  PrismaClient,
+  Tag,
+  User,
+} from "@prisma/client";
 import { Session } from "next-auth";
 
 export const getPostWithLikes = (
@@ -7,6 +15,7 @@ export const getPostWithLikes = (
         user: User | null;
         likes: Like[];
         tags: Tag[];
+        favoritedBy?: FavoritesOnUsers[] | undefined;
       })
     | null,
   session?: Session | null

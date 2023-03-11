@@ -3,7 +3,7 @@ import { createPostSchema, UpdatePostInput } from "@schema/post.schema";
 import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";
-import { Post } from "@utils/types";
+import { SinglePost } from "@utils/types";
 import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import SelectTags from "./SelectTags";
 
 type Props = {
-  post?: Post;
+  post?: SinglePost;
   onFinish: () => void;
 };
 
@@ -67,7 +67,10 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
       return { prevData };
     },
     onError: (err, newData, context) => {
-      utils.setQueryData(["posts.single-post"], context?.prevData as Post);
+      utils.setQueryData(
+        ["posts.single-post"],
+        context?.prevData as SinglePost
+      );
     },
     onSettled: () => {
       utils.invalidateQueries([

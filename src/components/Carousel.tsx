@@ -13,6 +13,7 @@ type ArrowProps = {
   prev?: boolean;
 };
 
+// Plugin for watching resize changes and adapting the slider
 const ResizePlugin: KeenSliderPlugin = (slider) => {
   const observer = new ResizeObserver(function () {
     slider.update();

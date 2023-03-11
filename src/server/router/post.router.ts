@@ -9,6 +9,8 @@ import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createPostSchema,
+  favoritePostSchema,
+  getFavoritesSchema,
   getPostsByTagsSchema,
   getPostsSchema,
   getSinglePostSchema,
@@ -189,12 +191,61 @@ export const postRouter = createRouter()
           user: true,
           likes: true,
           tags: true,
+          ...(ctx.session?.user?.id && {
+            favoritedBy: {
+              where: {
+                userId: ctx.session.user.id,
+              },
+            },
+          }),
         },
       });
 
       const postWithLikes = getPostWithLikes(post, ctx?.session);
+      const favoritedByUser = postWithLikes.favoritedBy?.some(
+        (favorite) => favorite.userId === ctx?.session?.user?.id
+      );
 
-      return postWithLikes;
+      return {
+        ...postWithLikes,
+        favoritedByMe: favoritedByUser,
+      };
+    },
+  })
+  .query("get-favorite-posts", {
+    input: getFavoritesSchema,
+    async resolve({ ctx, input }) {
+      const { userId, limit, skip, cursor } = input;
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
+        include: {
+          user: true,
+          likes: true,
+          tags: true,
+        },
+        where: {
+          favoritedBy: {
+            some: {
+              userId,
+            },
+          },
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
+      return {
+        posts: postsWithLikes,
+        nextCursor,
+      };
     },
   })
   .middleware(async ({ ctx, next }) => {
@@ -358,5 +409,43 @@ export const postRouter = createRouter()
       }
 
       return post;
+    },
+  })
+  .mutation("favorite-post", {
+    input: favoritePostSchema,
+    async resolve({ input, ctx }) {
+      const { postId, userId } = input;
+
+      const userHasAlreadyFavoritedPost =
+        await ctx.prisma.favoritesOnUsers.findUnique({
+          where: {
+            userId_postId: {
+              postId,
+              userId,
+            },
+          },
+        });
+
+      // User is unfavoriting post.
+      if (!!userHasAlreadyFavoritedPost) {
+        await ctx.prisma.favoritesOnUsers.delete({
+          where: {
+            userId_postId: {
+              postId,
+              userId,
+            },
+          },
+        });
+      }
+
+      // User is favoriting post.
+      if (!userHasAlreadyFavoritedPost) {
+        await ctx.prisma.favoritesOnUsers.create({
+          data: {
+            postId,
+            userId,
+          },
+        });
+      }
     },
   });

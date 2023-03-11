@@ -25,8 +25,9 @@ import ConfirmationModal from "@components/ConfirmationModal";
 import { toast } from "react-toastify";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Popover from "@components/Popover";
-import UserPopoverContent from "@components/UserPopoverContent";
 import EditAccountModal from "@components/EditAccountModal";
+import { MdDelete, MdEditNote, MdOutlineTextSnippet } from "react-icons/md";
+import EmptyMessage from "@components/EmptyMessage";
 
 const LOTTIE_OPTIONS = {
   loop: true,
@@ -158,7 +159,7 @@ const UserPage: React.FC = () => {
                 className="absolute bottom-0 right-10 bg-emerald-500 rounded-full flex justify-center items-center p-2 shadow-2xl"
                 type="button"
               >
-                <Popover
+                <Popover.Main
                   icon={
                     <IoMdSettings
                       size={23}
@@ -166,11 +167,49 @@ const UserPage: React.FC = () => {
                     />
                   }
                 >
-                  <UserPopoverContent
-                    onClickDeleteAccount={showDeleteConfirm}
-                    openEditAccountModal={toggleEditModal(true)}
+                  <Popover.Item
+                    title="Edit account"
+                    icon={<MdEditNote size={21} className="text-emerald-500" />}
+                    subtitle="Change your name and bio."
+                    onClick={toggleEditModal(true)}
                   />
-                </Popover>
+
+                  <Popover.Item
+                    title="Delete account"
+                    gap="1"
+                    icon={<MdDelete size={18} className="text-emerald-500" />}
+                    subtitle="Delete your account."
+                    onClick={showDeleteConfirm}
+                  />
+
+                  <Link href="/terms/conduct">
+                    <Popover.Item
+                      title="Code of conduct"
+                      gap="2"
+                      icon={
+                        <MdOutlineTextSnippet
+                          size={16}
+                          className="text-emerald-500"
+                        />
+                      }
+                      subtitle="Read our code of conduct."
+                    />
+                  </Link>
+
+                  <Link href="/terms/privacy">
+                    <Popover.Item
+                      title="Privacy Policy"
+                      gap="2"
+                      icon={
+                        <MdOutlineTextSnippet
+                          size={16}
+                          className="text-emerald-500"
+                        />
+                      }
+                      subtitle="Read our privacy terms."
+                    />
+                  </Link>
+                </Popover.Main>
               </button>
             </ShouldRender>
           </div>
@@ -239,17 +278,7 @@ const UserPage: React.FC = () => {
             </ShouldRender>
 
             <ShouldRender if={noDataToShow}>
-              <div className="flex flex-col items-center">
-                <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
-                <p className="text-center">
-                  Hmm. It seems that this user has not created any posts yet.
-                </p>
-                <Link href="/" legacyBehavior>
-                  <a className="text-emerald-500 text-center underline mt-2">
-                    Go back to home
-                  </a>
-                </Link>
-              </div>
+              <EmptyMessage message="Hmm. It seems that this user has not created any posts yet." />
             </ShouldRender>
           </div>
         </section>
