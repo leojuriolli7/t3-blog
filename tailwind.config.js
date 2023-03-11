@@ -11,7 +11,15 @@ module.exports = {
       xl: "1280px",
       "2xl": "1536px",
     },
-    extend: {},
+    extend: {
+      backgroundSize: {
+        "size-200": "200% 200%",
+      },
+      backgroundPosition: {
+        "pos-0": "0% 0%",
+        "pos-100": "100% 100%",
+      },
+    },
   },
   plugins: [
     require("@tailwindcss/line-clamp"),

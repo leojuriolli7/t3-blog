@@ -48,7 +48,9 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
           <ShouldRender if={!loading}>
             {" "}
             <div className="flex gap-3 min-w-min">
-              <p>By {post?.user?.name || post?.user?.email}</p>
+              <p className="text-sm line-clamp-2 ml-3 leading-4">
+                By {post?.user?.name || post?.user?.email}
+              </p>
             </div>
           </ShouldRender>
         </div>

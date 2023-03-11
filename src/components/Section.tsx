@@ -34,7 +34,7 @@ const Section: React.FC<Props> = ({
 
         <ShouldRender if={onClickSeeMore}>
           <button
-            className={`py-1 px-2 text-sm bg-emerald-500 dark:bg-teal-900 text-white hover:opacity-70 ${
+            className={`py-1 px-2 text-sm bg-gradient-to-tl from-green-400 via-emerald-400 dark:to-blue-800 to-blue-500 text-white bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500 ${
               loading ? "pointer-events-none" : ""
             }`}
             onClick={onClickSeeMore}

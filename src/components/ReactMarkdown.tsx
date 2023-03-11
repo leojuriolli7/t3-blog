@@ -26,7 +26,7 @@ const CustomReactMarkdown: React.FC<Props> = ({
 
       <ShouldRender if={!loading}>
         <ReactMarkdown
-          className={`${className} prose-emerald markdown__content dark:prose-invert break-words`}
+          className={`${className} prose-emerald markdown__content dark:prose-invert break-words dark:prose-hr:border-neutral-700`}
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw]}
           components={{
