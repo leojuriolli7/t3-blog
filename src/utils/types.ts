@@ -16,6 +16,7 @@ export type CommentWithChildren = Comment & {
 
 export type Post = InferQueryOutput<"posts.single-post">;
 export type User = InferQueryOutput<"users.single-user">;
+export type Attachment = InferQueryOutput<"attachments.get-post-attachments">;
 
 // React-hook-form Controller's 'field' type
 export type FieldType = ControllerRenderProps<FieldValues, string>;

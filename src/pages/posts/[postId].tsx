@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "@utils/trpc";
 import ReactMarkdown from "@components/ReactMarkdown";
 import { useRouter } from "next/router";
@@ -17,6 +17,11 @@ import Link from "next/link";
 import { Post } from "@utils/types";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
+import Image from "next/image";
+import AttachmentPreview from "@components/AttachmentPreview";
+import { Modal } from "@components/Modal";
+import { AttachmentMetadata } from "@server/router/attachments.router";
+import PreviewMediaModal from "@components/PreviewMediaModal";
 
 type ReplyData = {
   parentId: string;
@@ -31,6 +36,18 @@ const SinglePostPage: React.FC = () => {
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
 
+  const isMediaPreviewModalOpen = useState(false);
+  const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
+  const [currentMedia, setCurrentMedia] = useState<AttachmentMetadata>();
+
+  const onClickImage = useCallback(
+    (image: AttachmentMetadata) => () => {
+      setCurrentMedia(image);
+      setIsMediaPreviewModalOpen(true);
+    },
+    [setIsMediaPreviewModalOpen]
+  );
+
   const { data, isLoading } = trpc.useQuery(
     [
       "posts.single-post",
@@ -44,6 +61,33 @@ const SinglePostPage: React.FC = () => {
   );
 
   const loggedUserCreatedPost = session?.user?.id === data?.userId;
+
+  const { data: attachments } = trpc.useQuery(
+    [
+      "attachments.get-post-attachments",
+      {
+        postId,
+      },
+    ],
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const filteredAttachments = useMemo(() => {
+    const isMedia = (file: AttachmentMetadata) =>
+      file.type.includes("image") || file.type.includes("video");
+
+    const isAudio = (file: AttachmentMetadata) => file.type.includes("audio");
+
+    return {
+      medias: attachments?.filter((file) => isMedia(file)),
+      audio: attachments?.filter((file) => isAudio(file)),
+      documents: attachments?.filter((file) => {
+        return !isMedia(file) && !isAudio(file);
+      }),
+    };
+  }, [attachments]);
 
   const { mutate: likePost, error: likeError } = trpc.useMutation(
     ["likes.like-post"],
@@ -276,6 +320,39 @@ const SinglePostPage: React.FC = () => {
           </div>
         </main>
 
+        <ShouldRender if={attachments?.length}>
+          <div className="w-full mt-3">
+            <h2 className="text-lg font-medium mb-2">Attachments</h2>
+            {filteredAttachments?.medias?.map((media, key) => (
+              <AttachmentPreview
+                type="media"
+                onClickImage={onClickImage(media)}
+                file={media}
+                key={key}
+                downloadable
+              />
+            ))}
+
+            {filteredAttachments?.audio?.map((audio, key) => (
+              <AttachmentPreview
+                file={audio}
+                type="audio"
+                key={key}
+                downloadable
+              />
+            ))}
+
+            {filteredAttachments?.documents?.map((attachment, key) => (
+              <AttachmentPreview
+                type="document"
+                file={attachment}
+                key={key}
+                downloadable
+              />
+            ))}
+          </div>
+        </ShouldRender>
+
         <ShouldRender if={data?.tags?.length || isLoading}>
           <div className="w-full -mb-10">
             <h2 className="text-lg font-medium">Tags</h2>
@@ -285,6 +362,11 @@ const SinglePostPage: React.FC = () => {
         </ShouldRender>
 
         <CommentSection />
+
+        <PreviewMediaModal
+          media={currentMedia}
+          openState={isMediaPreviewModalOpen}
+        />
       </MainLayout>
     </>
   );

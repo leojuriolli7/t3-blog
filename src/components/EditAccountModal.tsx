@@ -85,8 +85,8 @@ const EditAccountModal: React.FC<Props> = ({
   }, [isOpen]);
 
   return (
-    <Modal openState={openState}>
-      <div className="relative dark:bg-neutral-900 bg-white sm:p-12 p-8 flex items-center">
+    <Modal openState={openState} alwaysCentered>
+      <div className="relative overflow-hidden dark:bg-neutral-900 bg-white sm:p-12 p-8 flex items-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full flex flex-col gap-5"

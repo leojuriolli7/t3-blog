@@ -1,5 +1,10 @@
 import { createRouter } from "@server/createRouter";
-import { getFiltersByInput, getPostWithLikes } from "@server/utils";
+import { BUCKET_NAME, s3 } from "src/config/aws";
+import {
+  deleteChildComments,
+  getFiltersByInput,
+  getPostWithLikes,
+} from "@server/utils";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
@@ -155,6 +160,37 @@ export const postRouter = createRouter()
   .mutation("delete-post", {
     input: getSinglePostSchema,
     async resolve({ ctx, input }) {
+      const post = await ctx.prisma.post.findFirst({
+        where: {
+          id: input.postId,
+        },
+        include: {
+          attachments: true,
+          Comment: true,
+        },
+      });
+
+      if (post?.attachments?.length) {
+        await Promise.all(
+          post.attachments.map(async (file) => {
+            await s3
+              .deleteObject({
+                Bucket: BUCKET_NAME,
+                Key: `${post.id}/${file.id}`,
+              })
+              .promise();
+          })
+        );
+      }
+
+      if (post?.Comment?.length) {
+        await Promise.all(
+          post.Comment.map(async (comment) => {
+            await deleteChildComments(comment.id, ctx.prisma);
+          })
+        );
+      }
+
       await ctx.prisma.post.delete({
         where: {
           id: input.postId,

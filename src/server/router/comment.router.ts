@@ -1,4 +1,5 @@
 import { createRouter } from "@server/createRouter";
+import { deleteChildComments } from "@server/utils";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
@@ -102,38 +103,7 @@ export const commentRouter = createRouter()
       try {
         const { commentId } = input;
 
-        const deleteChildComments = async (commentId: string) => {
-          const oneLevelDownReplies = await ctx.prisma.comment.findMany({
-            where: {
-              parentId: commentId,
-            },
-          });
-
-          // If no replies, delete comment.
-          if (!oneLevelDownReplies.length) {
-            return await ctx.prisma.comment.delete({
-              where: {
-                id: commentId,
-              },
-            });
-          }
-
-          // If has replies, check for other replies inside the replies.
-          if (oneLevelDownReplies.length > 0) {
-            for (const reply of oneLevelDownReplies) {
-              await deleteChildComments(reply.id);
-            }
-
-            // After checking all replies, delete comment.
-            await ctx.prisma.comment.delete({
-              where: {
-                id: commentId,
-              },
-            });
-          }
-        };
-
-        await deleteChildComments(commentId);
+        await deleteChildComments(commentId, ctx.prisma);
 
         return true;
       } catch (e) {

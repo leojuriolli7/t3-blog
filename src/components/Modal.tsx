@@ -5,10 +5,11 @@ export const Modal: React.FC<{
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
   initialFocus?: MutableRefObject<null>;
   children: React.ReactNode;
+  alwaysCentered?: boolean;
 }> & {
   Title: typeof Dialog.Title;
   Description: typeof Dialog.Description;
-} = ({ openState, initialFocus, children }) => {
+} = ({ openState, initialFocus, alwaysCentered = false, children }) => {
   const [open, setOpen] = openState;
 
   return (
@@ -19,7 +20,11 @@ export const Modal: React.FC<{
         initialFocus={initialFocus}
         onClose={setOpen}
       >
-        <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div
+          className={`flex min-h-screen ${
+            alwaysCentered ? "items-center" : "items-end"
+          } justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0`}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

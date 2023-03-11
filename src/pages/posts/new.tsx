@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { CreatePostInput, createPostSchema } from "@schema/post.schema";
 import MainLayout from "@components/MainLayout";
 import MarkdownEditor from "@components/MarkdownEditor";
@@ -14,15 +14,19 @@ import SelectTags from "@components/SelectTags";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
+import Dropzone from "@components/Dropzone";
 
 const CreatePostPage: React.FC = () => {
-  const { register, handleSubmit, control, formState } =
-    useForm<CreatePostInput>({
-      resolver: zodResolver(createPostSchema),
-      shouldFocusError: false,
-    });
   const router = useRouter();
 
+  const methods = useForm<CreatePostInput>({
+    resolver: zodResolver(createPostSchema),
+    shouldFocusError: false,
+  });
+
+  const { register, handleSubmit, control, formState, watch } = methods;
+
+  const files = watch("files");
   const { errors } = formState;
 
   const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
@@ -33,19 +37,58 @@ const CreatePostPage: React.FC = () => {
   );
   const initialTags = tags?.map((tag) => tag.name);
 
+  const { mutateAsync: createPresignedUrl } = trpc.useMutation(
+    "attachments.create-presigned-url"
+  );
+
+  const uploadAttachment = async (postId: string, file: File) => {
+    const name = file?.name || "Uploaded attachment";
+    const type = file?.type || "unknown";
+
+    const { url, fields } = await createPresignedUrl({ postId, name, type });
+    const formData = new FormData();
+
+    Object.keys(fields).forEach((key) => {
+      formData.append(key, fields[key]);
+    });
+
+    formData.append("Content-Type", file.type);
+    formData.append("file", file);
+
+    await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+  };
+
   const {
     mutate: create,
     error: createError,
     isLoading,
   } = trpc.useMutation(["posts.create-post"], {
-    onSuccess: ({ id }) => {
+    onSuccess: async ({ id }) => {
+      if (files) {
+        const filesArray = Array.from(files);
+
+        // Wait for uploads to finish before redirecting.
+        await Promise.all(
+          filesArray.map(async (file) => {
+            await uploadAttachment(id, file);
+          })
+        );
+      }
+
       router.push(`/posts/${id}`);
     },
   });
 
   const onSubmit = useCallback(
     (values: CreatePostInput) => {
-      create(values);
+      create({
+        body: values.body,
+        tags: values.tags,
+        title: values.title,
+      });
     },
     [create]
   );
@@ -58,44 +101,48 @@ const CreatePostPage: React.FC = () => {
     <>
       <MetaTags title="New post" />
       <MainLayout>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-3xl mx-auto flex flex-col gap-10"
-        >
-          <h1 className="text-2xl font-medium text-center">Create a post</h1>
-
-          <Field error={errors.title}>
-            <input
-              type="text"
-              placeholder="your post title"
-              className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
-              {...register("title")}
-            />
-          </Field>
-
-          <Field error={errors.body}>
-            <MarkdownEditor
-              placeholder="your post content - you can use markdown!"
-              control={control}
-              name="body"
-            />
-          </Field>
-
-          <SelectTags
-            control={control}
-            initialTags={initialTags}
-            name="tags"
-            error={errors.tags}
-          />
-
-          <button
-            className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
-            type="submit"
-            disabled={isLoading || fetchingTags || !isObjectEmpty(errors)}
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-3xl mx-auto flex flex-col gap-10"
           >
-            Create
-          </button>
-        </form>
+            <h1 className="text-2xl font-medium text-center">Create a post</h1>
+
+            <Field error={errors.title}>
+              <input
+                type="text"
+                placeholder="your post title"
+                className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
+                {...register("title")}
+              />
+            </Field>
+
+            <Field error={errors.body}>
+              <MarkdownEditor
+                placeholder="your post content - you can use markdown!"
+                control={control}
+                name="body"
+              />
+            </Field>
+
+            <Dropzone />
+
+            <SelectTags
+              control={control}
+              initialTags={initialTags}
+              name="tags"
+              error={errors.tags}
+            />
+
+            <button
+              className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
+              type="submit"
+              disabled={isLoading || fetchingTags || !isObjectEmpty(errors)}
+            >
+              Create
+            </button>
+          </form>
+        </FormProvider>
       </MainLayout>
     </>
   );

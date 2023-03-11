@@ -1,3 +1,4 @@
+import { UPLOAD_MAX_NUMBER_OF_FILES } from "@config/aws";
 import z from "zod";
 
 export const createPostSchema = z.object({
@@ -11,6 +12,18 @@ export const createPostSchema = z.object({
     .array()
     .nonempty("Post must have atleast one tag")
     .max(5, "Maximum of 5 tags per post"),
+  files: z
+    .custom<File>((file) => {
+      const isFile = file instanceof File;
+
+      return isFile;
+    })
+    .array()
+    .max(
+      UPLOAD_MAX_NUMBER_OF_FILES,
+      `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} files`
+    )
+    .optional(),
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;
