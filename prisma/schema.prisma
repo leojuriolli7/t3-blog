@@ -53,6 +53,17 @@ model Like {
   @@index([postId])
 }
 
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId String
+
+  @@id([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
 model FavoritesOnUsers {
   userId String
   postId String
@@ -76,6 +87,8 @@ model User {
   bio       String?            @db.VarChar(160)
   likes     Like[]
   favorites FavoritesOnUsers[]
+  followers Follows[]          @relation("following")
+  following Follows[]          @relation("follower")
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

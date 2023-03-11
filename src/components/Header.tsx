@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { MdLogout, MdAddBox, MdLogin } from "react-icons/md";
-import { FaAppleAlt, FaUser, FaUserCircle } from "react-icons/fa";
+import { MdAddBox, MdLogin } from "react-icons/md";
+import { FaAppleAlt, FaUser } from "react-icons/fa";
 import ShouldRender from "./ShouldRender";
 import ThemeSwitch from "./ThemeSwitch";
 import { useRouter } from "next/router";
