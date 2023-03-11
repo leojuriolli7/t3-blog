@@ -2,6 +2,7 @@ import * as aws from "aws-sdk";
 
 export const UPLOAD_MAX_FILE_SIZE = 10485760; // 10MB
 export const UPLOAD_MAX_NUMBER_OF_FILES = 4;
+export const UPLOADING_TIME_LIMIT = 30;
 
 aws.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,

@@ -3,12 +3,14 @@ import { createRouter } from "@server/createRouter";
 import { Attachment } from "@prisma/client";
 import {
   createPresignedUrlSchema,
-  deleteAttachmentsSchema,
   getPostAttachments,
 } from "@schema/attachment.schema";
-import { BUCKET_NAME, s3, UPLOAD_MAX_FILE_SIZE } from "src/config/aws";
-
-const UPLOADING_TIME_LIMIT = 30;
+import {
+  BUCKET_NAME,
+  s3,
+  UPLOAD_MAX_FILE_SIZE,
+  UPLOADING_TIME_LIMIT,
+} from "src/config/aws";
 
 export interface AttachmentMetadata extends Attachment {
   url: string;
@@ -50,35 +52,6 @@ export const attachmentsRouter = createRouter()
       );
 
       return extendedFiles;
-    },
-  })
-  .mutation("delete-attachment", {
-    input: deleteAttachmentsSchema,
-    async resolve({ ctx, input }) {
-      const { postId } = input;
-
-      const attachment = await ctx.prisma.attachment.findFirst({
-        where: {
-          id: input.attachmentId,
-        },
-      });
-
-      if (!attachment || attachment.postId !== postId) {
-        throw new Error("invalid access");
-      }
-
-      await ctx.prisma.attachment.delete({
-        where: {
-          id: input.attachmentId,
-        },
-      });
-
-      await s3
-        .deleteObject({
-          Bucket: BUCKET_NAME,
-          Key: `${postId}/${input.attachmentId}`,
-        })
-        .promise();
     },
   })
   .mutation("create-presigned-url", {

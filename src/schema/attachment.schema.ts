@@ -11,10 +11,3 @@ export const createPresignedUrlSchema = z.object({
   type: z.string(),
   name: z.string(),
 });
-
-export const deleteAttachmentsSchema = z.object({
-  postId: z.string(),
-  attachmentId: z.string(),
-});
-
-export type DeleteAttachmentInput = z.TypeOf<typeof deleteAttachmentsSchema>;
