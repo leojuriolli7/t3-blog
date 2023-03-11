@@ -10,16 +10,14 @@ type Props = {
 
 const Field: React.FC<Props> = ({ children, error, label }) => {
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="relative w-full flex flex-col">
+      <ShouldRender if={label}>
+        <label className="block text-sm font-semibold text-gray-900 dark:text-neutral-100">
+          {label}
+        </label>
+      </ShouldRender>
       <ErrorMessage error={error} />
-      <div>
-        <ShouldRender if={label}>
-          <label className="block text-sm font-semibold leading-6 text-gray-900 dark:text-neutral-100">
-            {label}
-          </label>
-        </ShouldRender>
-        {children}
-      </div>
+      <div className="mt-1">{children}</div>
     </div>
   );
 };

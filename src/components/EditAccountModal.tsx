@@ -27,12 +27,14 @@ const EditAccountModal: React.FC<Props> = ({
 
   const [isOpen] = openState;
 
-  const { register, handleSubmit, formState, setValue } =
+  const { register, handleSubmit, formState, setValue, watch } =
     useForm<UpdateUserInput>({
       resolver: zodResolver(updateUserSchema),
     });
 
   const utils = trpc.useContext();
+  const bio = watch("bio");
+  const bioLength = bio?.length || 0;
   const { errors } = formState;
 
   const { mutate: update, isLoading: updating } = trpc.useMutation(
@@ -66,7 +68,12 @@ const EditAccountModal: React.FC<Props> = ({
   const onSubmit = useCallback(
     (values: UpdateUserInput) => {
       update({
-        name: values.name,
+        ...(values.name && {
+          name: values.name,
+        }),
+        ...(values.bio && {
+          bio: values.bio,
+        }),
         userId: userId,
       });
     },
@@ -119,6 +126,19 @@ const EditAccountModal: React.FC<Props> = ({
               className="block w-full border-0 py-2 px-3.5 text-gray-900 dark:text-neutral-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:bg-neutral-900 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               {...register("name")}
             />
+          </Field>
+
+          <Field error={errors.bio} label="bio">
+            <textarea
+              defaultValue={userInformation?.bio || ""}
+              placeholder="your bio"
+              max={160}
+              className="block w-full border-0 py-2 px-3.5 h-24 text-gray-900 dark:text-neutral-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:bg-neutral-900 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+              {...register("bio")}
+            />
+            <p className="absolute w-full text-right text-sm dark:text-neutral-500">
+              {bioLength}/160
+            </p>
           </Field>
 
           <Field label="e-mail">

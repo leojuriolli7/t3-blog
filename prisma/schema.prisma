@@ -62,6 +62,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
+  bio          String? @db.VarChar(160)
   likes Like[]
 
   createdAt DateTime  @default(now())

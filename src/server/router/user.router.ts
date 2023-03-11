@@ -71,6 +71,9 @@ export const userRouter = createRouter()
             ...(input.name && {
               name: input.name,
             }),
+            ...(input.bio && {
+              bio: input.bio,
+            }),
           },
         });
         return user;

@@ -8,7 +8,9 @@ type Props = {
 const ErrorMessage: React.FC<Props> = ({ error }) => {
   return (
     <ShouldRender if={error}>
-      <p className="text-red-600 dark:text-red-500 text-sm">{error?.message}</p>
+      <p className="text-red-600 dark:text-red-500 text-sm mb-1">
+        {error?.message}
+      </p>
     </ShouldRender>
   );
 };

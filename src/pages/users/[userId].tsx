@@ -174,7 +174,7 @@ const UserPage: React.FC = () => {
               </button>
             </ShouldRender>
           </div>
-          <div className="text-center w-64">
+          <div className="text-center w-fit">
             <ShouldRender if={!!user}>
               <p className="text-xl">
                 {getUserDisplayName(user)}{" "}
@@ -185,6 +185,11 @@ const UserPage: React.FC = () => {
                   </span>
                 </ShouldRender>
               </p>
+            </ShouldRender>
+            <ShouldRender if={!!user?.bio}>
+              <blockquote className="w-full max-w-[356px] mt-2 text-left dark:text-neutral-400 prose border-l-4 border-gray-300 bg-gray-50 dark:border-gray-500 dark:bg-neutral-800 p-4">
+                {user?.bio}
+              </blockquote>
             </ShouldRender>
             <ShouldRender if={!!user?.createdAt}>
               <p className="mt-2 text-neutral-800 dark:text-neutral-400 dark:opacity-80">
