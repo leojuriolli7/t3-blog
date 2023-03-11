@@ -52,7 +52,6 @@ export const userRouter = createRouter()
   })
   .query("get-following", {
     input: getFollowingFromUserSchema,
-    // TO-DO: Add infinite scrolling
     async resolve({ ctx, input }) {
       const { limit, skip, cursor } = input;
 
@@ -85,7 +84,6 @@ export const userRouter = createRouter()
   })
   .query("get-followers", {
     input: getFollowersSchema,
-    // TO-DO: Add infinite scrolling
     async resolve({ ctx, input }) {
       const { limit, skip, cursor } = input;
 
