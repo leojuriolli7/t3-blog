@@ -9,6 +9,7 @@ import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createPostSchema,
+  getPostsByTagsSchema,
   getPostsSchema,
   getSinglePostSchema,
   updatePostSchema,
@@ -75,6 +76,55 @@ export const postRouter = createRouter()
       const tags = ctx.prisma.tag.findMany();
 
       return tags;
+    },
+  })
+  .query("posts-by-tags", {
+    input: getPostsByTagsSchema,
+    async resolve({ ctx, input }) {
+      const { tagLimit } = input;
+
+      const tags = await ctx.prisma.tag.findMany({
+        take: tagLimit,
+        include: {
+          _count: {
+            select: { posts: true },
+          },
+        },
+        orderBy: {
+          posts: {
+            _count: "desc",
+          },
+        },
+      });
+
+      const tagsWithPosts = await Promise.all(
+        tags.map(async (tag) => {
+          const posts = await ctx.prisma.post.findMany({
+            where: {
+              tags: {
+                some: {
+                  id: tag.id,
+                },
+              },
+            },
+            take: 5,
+            include: {
+              user: true,
+              likes: true,
+              tags: true,
+            },
+          });
+
+          const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
+          return {
+            ...tag,
+            posts: postsWithLikes,
+          };
+        })
+      );
+
+      return tagsWithPosts;
     },
   })
   .query("posts", {
@@ -167,6 +217,15 @@ export const postRouter = createRouter()
         include: {
           attachments: true,
           Comment: true,
+          tags: {
+            include: {
+              _count: {
+                select: {
+                  posts: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -196,6 +255,16 @@ export const postRouter = createRouter()
           id: input.postId,
         },
       });
+
+      const tagsToDelete = post?.tags.filter((tag) => tag._count.posts === 1);
+
+      await ctx.prisma.tag.deleteMany({
+        where: {
+          name: {
+            in: tagsToDelete?.map((tag) => tag.name),
+          },
+        },
+      });
     },
   })
   .mutation("update-post", {
@@ -220,12 +289,26 @@ export const postRouter = createRouter()
           id: input.postId,
         },
         include: {
-          tags: true,
+          tags: {
+            include: {
+              _count: {
+                select: {
+                  posts: true,
+                },
+              },
+            },
+          },
         },
       });
 
       // Find which tags were on the post previously, but are now removed.
       const previousPostTags = previousPost?.tags.map((tag) => tag.name) || [];
+
+      // Tags that will have no posts after current post is deleted must be deleted aswell.
+      const tagsToDelete = previousPost?.tags.filter(
+        (tag) => tag._count.posts === 1 && input.tags.indexOf(tag.name) === -1
+      );
+
       const tagsToRemove = previousPostTags.filter(
         (tag) => input.tags.indexOf(tag) === -1
       );
@@ -263,6 +346,16 @@ export const postRouter = createRouter()
           },
         },
       });
+
+      if (tagsToDelete?.length) {
+        await ctx.prisma.tag.deleteMany({
+          where: {
+            name: {
+              in: tagsToDelete.map((tag) => tag.name),
+            },
+          },
+        });
+      }
 
       return post;
     },

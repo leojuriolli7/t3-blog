@@ -23,6 +23,7 @@
     "date-fns": "^2.29.3",
     "file-saver": "^2.0.5",
     "highlight.js": "^11.7.0",
+    "keen-slider": "^6.8.5",
     "markdown-it": "^13.0.1",
     "markdown-it-ins": "^3.0.1",
     "markdown-it-task-lists": "^2.1.1",

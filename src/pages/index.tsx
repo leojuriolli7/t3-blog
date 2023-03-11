@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import PostCard from "@components/PostCard";
@@ -7,8 +7,25 @@ import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
 import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
+import Section from "@components/Section";
+import CompactCard from "@components/CompactCard";
+import { useRouter } from "next/router";
 
 const PostListingPage: React.FC = () => {
+  const router = useRouter();
+
+  const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery([
+    "posts.posts-by-tags",
+    {
+      tagLimit: 4,
+    },
+  ]);
+
+  const onSeeMoreTag = useCallback(
+    (tagId?: string) => () => router.push(`/posts/tag/${tagId}`),
+    [router]
+  );
+
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
 
@@ -47,16 +64,43 @@ const PostListingPage: React.FC = () => {
     <>
       <MetaTags title="Home" />
       <MainLayout>
-        <div className="w-full flex justify-center items-start gap-5">
-          {filters.map((filter) => (
-            <Tab
-              key={filter}
-              active={currentFilter === filter}
-              title={`Filter by ${filterLabels[filter]}`}
-              label={filterLabels[filter]}
-              onClick={toggleFilter(filter)}
-            />
-          ))}
+        <h2 className="w-full text-left -mb-5 text-3xl prose dark:prose-invert font-bold">
+          Featured tags
+        </h2>
+        {(loadingTags ? loadingArray : tagsWithPosts)?.map((tag, key) => (
+          <Section
+            loading={loadingTags}
+            title={tag?.name}
+            key={loadingTags ? key : tag?.id}
+            onClickSeeMore={onSeeMoreTag(tag?.id)}
+          >
+            {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
+              <CompactCard
+                loading={loadingTags}
+                key={loadingTags ? key : tag?.id}
+                post={post}
+                slide
+              />
+            ))}
+          </Section>
+        ))}
+        <hr className="w-full h-0.5 -mb-5 -mt-5 bg-gray-200 border-0 dark:bg-neutral-700" />
+
+        <div className="w-full flex sm:justify-between sm:items-center sm:flex-row flex-col gap-5 -mb-5">
+          <h2 className=" text-3xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
+            All posts
+          </h2>
+          <div className="flex gap-3">
+            {filters.map((filter) => (
+              <Tab
+                key={filter}
+                active={currentFilter === filter}
+                title={`Filter by ${filterLabels[filter]}`}
+                label={filterLabels[filter]}
+                onClick={toggleFilter(filter)}
+              />
+            ))}
+          </div>
         </div>
         {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
           <PostCard

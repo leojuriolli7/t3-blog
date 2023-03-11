@@ -14,6 +14,7 @@ import "@styles/globals.scss";
 import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
 import "nprogress/nprogress.css";
+import "keen-slider/keen-slider.min.css";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (

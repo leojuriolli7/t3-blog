@@ -37,6 +37,10 @@ export const getPostsSchema = z.object({
   filter: z.string().optional(),
 });
 
+export const getPostsByTagsSchema = z.object({
+  tagLimit: z.number(),
+});
+
 export const getUserPostsSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish(),

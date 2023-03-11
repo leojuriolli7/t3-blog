@@ -15,6 +15,8 @@ export type CommentWithChildren = Comment & {
 };
 
 export type Post = InferQueryOutput<"posts.single-post">;
+export type TaggedPosts =
+  InferQueryOutput<"posts.posts-by-tags">[number]["posts"][number];
 export type User = InferQueryOutput<"users.single-user">;
 export type Attachment = InferQueryOutput<"attachments.get-post-attachments">;
 
