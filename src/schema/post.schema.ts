@@ -15,8 +15,6 @@ export const createPostSchema = z.object({
   files: z
     .custom<File>((file) => {
       const isFile = file instanceof File;
-      // TO-DO:
-      // const isAcceptedType
 
       return isFile;
     })
