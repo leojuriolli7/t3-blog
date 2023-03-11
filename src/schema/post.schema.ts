@@ -37,6 +37,14 @@ export const getPostsSchema = z.object({
   filter: z.string().optional(),
 });
 
+export const getFavoritesSchema = z.object({
+  limit: z.number(),
+  cursor: z.string().nullish(),
+  skip: z.number().optional(),
+  userId: z.string().optional(),
+  filter: z.string().optional(),
+});
+
 export const getPostsByTagsSchema = z.object({
   tagLimit: z.number(),
 });
@@ -64,3 +72,10 @@ export const updatePostSchema = z.object({
 });
 
 export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;
+
+export const favoritePostSchema = z.object({
+  postId: z.string().uuid(),
+  userId: z.string().uuid(),
+});
+
+export type FavoritePostInput = z.TypeOf<typeof favoritePostSchema>;

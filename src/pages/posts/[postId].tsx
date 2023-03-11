@@ -14,14 +14,13 @@ import EditPostForm from "@components/EditPostForm";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
-import { Post } from "@utils/types";
+import { SinglePost } from "@utils/types";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
-import Image from "next/image";
 import AttachmentPreview from "@components/AttachmentPreview";
-import { Modal } from "@components/Modal";
 import { AttachmentMetadata } from "@server/router/attachments.router";
 import PreviewMediaModal from "@components/PreviewMediaModal";
+import FavoriteButton from "@components/FavoriteButton";
 
 type ReplyData = {
   parentId: string;
@@ -88,6 +87,55 @@ const SinglePostPage: React.FC = () => {
       }),
     };
   }, [attachments]);
+
+  const { mutate: favoritePost, error: favoriteError } = trpc.useMutation(
+    ["posts.favorite-post"],
+    {
+      async onMutate({ postId, userId }) {
+        await utils.cancelQuery(["posts.single-post", { postId }]);
+
+        const prevData = utils.getQueryData(["posts.single-post", { postId }]);
+
+        const userHadFavorited = !!prevData!.favoritedByMe;
+
+        // User is undoing favorite
+        if (userHadFavorited) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            favoritedByMe: false,
+          }));
+        }
+
+        // User is adding post to favorites
+        if (!userHadFavorited) {
+          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+            ...old!,
+            favoritedByMe: true,
+          }));
+        }
+
+        return { prevData };
+      },
+      // If the mutation fails,
+      // use the context returned from onMutate to roll back
+      onError: (err, newData, context) => {
+        utils.setQueryData(
+          ["posts.single-post"],
+          context?.prevData as SinglePost
+        );
+      },
+      // Always refetch after error or success
+      onSettled: () => {
+        // This will refetch the single-post query.
+        utils.invalidateQueries([
+          "posts.single-post",
+          {
+            postId,
+          },
+        ]);
+      },
+    }
+  );
 
   const { mutate: likePost, error: likeError } = trpc.useMutation(
     ["likes.like-post"],
@@ -166,7 +214,10 @@ const SinglePostPage: React.FC = () => {
       // If the mutation fails,
       // use the context returned from onMutate to roll back
       onError: (err, newData, context) => {
-        utils.setQueryData(["posts.single-post"], context?.prevData as Post);
+        utils.setQueryData(
+          ["posts.single-post"],
+          context?.prevData as SinglePost
+        );
       },
       // Always refetch after error or success
       onSettled: () => {
@@ -196,6 +247,19 @@ const SinglePostPage: React.FC = () => {
     },
     [postId, likePost, session]
   );
+
+  const handleFavoritePost = useCallback(() => {
+    if (!session?.user) {
+      return toast.info("Login to favorite posts");
+    }
+
+    if (session?.user) {
+      return favoritePost({
+        postId,
+        userId: session?.user?.id,
+      });
+    }
+  }, [postId, favoritePost, session]);
 
   const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -227,8 +291,12 @@ const SinglePostPage: React.FC = () => {
   }, [sessionStatus]);
 
   useEffect(() => {
-    if (likeError) toast.error(likeError?.message);
+    if (likeError) toast.error("Could not like post, please try again");
   }, [likeError]);
+
+  useEffect(() => {
+    if (favoriteError) toast.error("Could not favorite post, please try again");
+  }, [favoriteError]);
 
   return (
     <>
@@ -316,6 +384,14 @@ const SinglePostPage: React.FC = () => {
               onClick={handleLikeOrDislikePost(true)}
               dislike
               likedOrDislikedByMe={data?.dislikedByMe}
+            />
+          </div>
+
+          <div className="flex gap-3 absolute -bottom-4 right-4">
+            <FavoriteButton
+              disabled={isLoading}
+              onClick={handleFavoritePost}
+              favoritedByMe={data?.favoritedByMe}
             />
           </div>
         </main>
