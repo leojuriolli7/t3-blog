@@ -1,5 +1,5 @@
 import React from "react";
-import { useKeenSlider } from "keen-slider/react";
+import { KeenSliderPlugin, useKeenSlider } from "keen-slider/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import ShouldRender from "./ShouldRender";
 
@@ -11,6 +11,36 @@ type Props = {
 type ArrowProps = {
   onClick: () => void;
   prev?: boolean;
+};
+
+const ResizePlugin: KeenSliderPlugin = (slider) => {
+  const observer = new ResizeObserver(function () {
+    slider.update();
+  });
+
+  slider.on("created", () => {
+    observer.observe(slider.container);
+  });
+  slider.on("destroyed", () => {
+    observer.unobserve(slider.container);
+  });
+};
+
+// Plugin for watching new elements added to the slider
+const MutationPlugin: KeenSliderPlugin = (slider) => {
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      slider.update();
+    });
+  });
+  const config = { childList: true };
+
+  slider.on("created", () => {
+    observer.observe(slider.container, config);
+  });
+  slider.on("destroyed", () => {
+    observer.disconnect();
+  });
 };
 
 const arrowIconProps = {
@@ -40,17 +70,20 @@ const Arrow: React.FC<ArrowProps> = ({ onClick, prev }) => {
 const Carousel: React.FC<Props> = ({ children, onFinish }) => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
-  const [sliderRef, instanceRef] = useKeenSlider({
-    initial: 0,
-    mode: "free",
-    slides: {
-      perView: "auto",
-      spacing: 15,
+  const [sliderRef, instanceRef] = useKeenSlider(
+    {
+      initial: 0,
+      mode: "free",
+      slides: {
+        perView: "auto",
+        spacing: 15,
+      },
+      slideChanged: (instance) => {
+        setCurrentSlide(instance.track.details.abs);
+      },
     },
-    slideChanged: (instance) => {
-      setCurrentSlide(instance.track.details.abs);
-    },
-  });
+    [MutationPlugin, ResizePlugin]
+  );
 
   const isLastSlide =
     instanceRef?.current &&
