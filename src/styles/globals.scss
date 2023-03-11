@@ -18,13 +18,13 @@ button:disabled {
 }
 
 .markdown__content :not(pre) code {
-  background: #047857;
-  color: white;
+  background: theme("colors.emerald.700");
+  color: theme("colors.white");
 }
 
 // Change react-toastify info color
 :root {
-  --toastify-color-info: #059669 !important;
+  --toastify-color-info: theme("colors.emerald.600") !important;
 }
 
 // Set MD Editor to 100%
@@ -56,15 +56,15 @@ button:disabled {
 // Create new tailwind class for MD editor dark-mode styles.
 @layer utilities {
   .md-dark-mode {
-    background: #171717;
+    background: theme("colors.neutral.900");
 
     .editor-container {
       .sec-html {
-        background: #171717;
+        background: theme("colors.neutral.900");
         border: none;
 
         .custom-html-style {
-          color: #f4f4f5;
+          color: theme("colors.zinc.100");
         }
       }
 
@@ -72,35 +72,40 @@ button:disabled {
         border: none;
 
         @media (max-width: 425px) {
-          border-bottom: 1px solid #232323 !important;
+          border-bottom: 1px solid theme("colors.neutral.800") !important;
         }
       }
 
       .sec-md textarea {
-        background: #171717 !important;
-        color: #f4f4f5 !important;
-        border-right: 1px solid #232323;
+        background: theme("colors.neutral.900") !important;
+        color: theme("colors.zinc.100") !important;
+        border-right: 1px solid theme("colors.neutral.800");
       }
     }
 
     .rc-md-navigation {
-      background: #171717 !important;
-      color: #f4f4f5 !important;
+      background: theme("colors.neutral.900") !important;
+      color: theme("colors.zinc.100") !important;
     }
 
     .custom-html-style {
       table th {
-        background: #171717 !important;
+        background: theme("colors.neutral.900") !important;
       }
 
       blockquote p {
-        color: #f4f4f5 !important;
+        color: theme("colors.zinc.100") !important;
       }
 
       pre,
       code {
-        background-color: #0f172a;
+        background-color: theme("colors.slate.900");
       }
     }
   }
+}
+
+#nprogress .bar {
+  background: theme("colors.emerald.500") !important;
+  height: 3px !important;
 }

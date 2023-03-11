@@ -17,16 +17,6 @@ export interface AttachmentMetadata extends Attachment {
 }
 
 export const attachmentsRouter = createRouter()
-  .middleware(async ({ ctx, next }) => {
-    if (!ctx.session?.user) {
-      throw new trpc.TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You are not authorized to use this method.",
-      });
-    }
-
-    return next();
-  })
   .query("get-post-attachments", {
     input: getPostAttachments,
     async resolve({ ctx, input }) {
@@ -53,6 +43,16 @@ export const attachmentsRouter = createRouter()
 
       return extendedFiles;
     },
+  })
+  .middleware(async ({ ctx, next }) => {
+    if (!ctx.session?.user) {
+      throw new trpc.TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to use this method.",
+      });
+    }
+
+    return next();
   })
   .mutation("create-presigned-url", {
     input: createPresignedUrlSchema,

@@ -5,13 +5,15 @@ import { withTRPC } from "@trpc/next";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 import superjson from "superjson";
+import { url } from "@utils/constants";
+import RouterProgressBar from "@components/RouterProgressBar";
 import { AppRouter } from "@server/router/app.router";
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import "@styles/globals.scss";
 import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
-import { url } from "@utils/constants";
+import "nprogress/nprogress.css";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -21,6 +23,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           <title>T3 Blog</title>
           <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
         </Head>
+        <RouterProgressBar />
         <Component {...pageProps} />
         <ToastContainer
           closeButton={false}
