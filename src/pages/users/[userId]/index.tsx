@@ -231,7 +231,7 @@ const UserPage: React.FC = () => {
               className="rounded-full"
               alt={user?.name as string}
             />
-            <ShouldRender if={!userIsProfileOwner}>
+            <ShouldRender if={!userIsProfileOwner && session?.user?.id}>
               <button
                 onClick={handleClickFollowButton}
                 className="absolute -bottom-3 left-1/2 transform px-3 py-2 -translate-x-1/2 bg-gradient-to-tl from-green-400 via-emerald-400 dark:to-blue-800 to-blue-500 text-white bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500"

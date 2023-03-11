@@ -25,21 +25,28 @@ export const userRouter = createRouter()
         },
       });
 
-      const followerId = ctx.session!.user!.id;
-      const followingId = input.userId;
+      if (ctx.session?.user?.id) {
+        const followerId = ctx.session.user.id;
+        const followingId = input.userId;
 
-      const alreadyFollowing = await ctx.prisma.follows.findUnique({
-        where: {
-          followerId_followingId: {
-            followerId,
-            followingId,
+        const alreadyFollowing = await ctx.prisma.follows.findUnique({
+          where: {
+            followerId_followingId: {
+              followerId,
+              followingId,
+            },
           },
-        },
-      });
+        });
+
+        return {
+          ...user,
+          alreadyFollowing: !!alreadyFollowing,
+        };
+      }
 
       return {
         ...user,
-        alreadyFollowing: !!alreadyFollowing,
+        alreadyFollowing: false,
       };
     },
   })
