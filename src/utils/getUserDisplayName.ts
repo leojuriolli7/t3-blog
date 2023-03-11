@@ -1,4 +1,4 @@
-import { User } from "next-auth";
+import { User } from "./types";
 
 const getUserDisplayName = (user?: User | null) => {
   if (!!user?.name) return user?.name;

@@ -19,6 +19,10 @@ export type PostFromList = InferQueryOutput<"posts.posts">["posts"][number];
 export type TaggedPosts =
   InferQueryOutput<"posts.posts-by-tags">[number]["posts"][number];
 export type User = InferQueryOutput<"users.single-user">;
+
+export type FollowingUser =
+  InferQueryOutput<"users.get-following">["following"][number]["following"];
+
 export type Attachment = InferQueryOutput<"attachments.get-post-attachments">;
 
 // React-hook-form Controller's 'field' type

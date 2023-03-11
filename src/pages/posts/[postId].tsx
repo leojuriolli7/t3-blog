@@ -292,11 +292,8 @@ const SinglePostPage: React.FC = () => {
 
   useEffect(() => {
     if (likeError) toast.error("Could not like post, please try again");
-  }, [likeError]);
-
-  useEffect(() => {
     if (favoriteError) toast.error("Could not favorite post, please try again");
-  }, [favoriteError]);
+  }, [likeError, favoriteError]);
 
   return (
     <>

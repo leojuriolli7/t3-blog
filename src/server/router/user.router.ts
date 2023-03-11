@@ -2,6 +2,9 @@ import * as trpc from "@trpc/server";
 import { createRouter } from "@server/createRouter";
 import {
   deleteUserSchema,
+  followUserSchema,
+  getFollowingFromUserSchema,
+  getFollowersSchema,
   getSingleUserSchema,
   updateUserSchema,
 } from "@schema/user.schema";
@@ -10,12 +13,100 @@ import { isStringEmpty } from "@utils/checkEmpty";
 export const userRouter = createRouter()
   .query("single-user", {
     input: getSingleUserSchema,
-    resolve({ ctx, input }) {
-      return ctx.prisma.user.findUnique({
+    async resolve({ ctx, input }) {
+      const user = await ctx.prisma.user.findUnique({
         where: {
           id: input.userId,
         },
+        include: {
+          _count: {
+            select: { followers: true, following: true },
+          },
+        },
       });
+
+      const followerId = ctx.session!.user!.id;
+      const followingId = input.userId;
+
+      const alreadyFollowing = await ctx.prisma.follows.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId,
+            followingId,
+          },
+        },
+      });
+
+      return {
+        ...user,
+        alreadyFollowing: !!alreadyFollowing,
+      };
+    },
+  })
+  .query("get-following", {
+    input: getFollowingFromUserSchema,
+    // TO-DO: Add infinite scrolling
+    async resolve({ ctx, input }) {
+      const { limit, skip, cursor } = input;
+
+      const following = await ctx.prisma.follows.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { followerId_followingId: cursor } : undefined,
+        where: {
+          followerId: input.userId,
+        },
+        include: {
+          following: true,
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (following.length > limit) {
+        const nextItem = following.pop(); // return the last item from the array
+        nextCursor = {
+          followerId: nextItem!.followerId,
+          followingId: nextItem!.followingId,
+        };
+      }
+
+      return {
+        following,
+        nextCursor,
+      };
+    },
+  })
+  .query("get-followers", {
+    input: getFollowersSchema,
+    // TO-DO: Add infinite scrolling
+    async resolve({ ctx, input }) {
+      const { limit, skip, cursor } = input;
+
+      const followers = await ctx.prisma.follows.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { followerId_followingId: cursor } : undefined,
+        where: {
+          followingId: input.userId,
+        },
+        include: {
+          follower: true,
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (followers.length > limit) {
+        const nextItem = followers.pop(); // return the last item from the array
+        nextCursor = {
+          followerId: nextItem!.followerId,
+          followingId: nextItem!.followingId,
+        };
+      }
+
+      return {
+        followers,
+        nextCursor,
+      };
     },
   })
   .middleware(async ({ ctx, next }) => {
@@ -77,6 +168,42 @@ export const userRouter = createRouter()
           },
         });
         return user;
+      }
+    },
+  })
+  .mutation("follow-user", {
+    input: followUserSchema,
+    async resolve({ ctx, input }) {
+      const followerId = ctx.session!.user!.id;
+      const followingId = input.userId;
+
+      const isUserAlreadyFollowing = await ctx.prisma.follows.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId,
+            followingId,
+          },
+        },
+      });
+
+      if (!!isUserAlreadyFollowing) {
+        await ctx.prisma.follows.delete({
+          where: {
+            followerId_followingId: {
+              followerId,
+              followingId,
+            },
+          },
+        });
+      }
+
+      if (!isUserAlreadyFollowing) {
+        await ctx.prisma.follows.create({
+          data: {
+            followerId,
+            followingId,
+          },
+        });
       }
     },
   });

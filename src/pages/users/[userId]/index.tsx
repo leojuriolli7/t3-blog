@@ -5,11 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import NoPostsAnimation from "@public/static/ghost.json";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import useOnScreen from "@hooks/useOnScreen";
-import Lottie from "react-lottie";
 import PostCard from "@components/PostCard";
 import Image from "next/image";
 import ShouldRender from "@components/ShouldRender";
@@ -28,12 +26,10 @@ import Popover from "@components/Popover";
 import EditAccountModal from "@components/EditAccountModal";
 import { MdDelete, MdEditNote, MdOutlineTextSnippet } from "react-icons/md";
 import EmptyMessage from "@components/EmptyMessage";
-
-const LOTTIE_OPTIONS = {
-  loop: true,
-  autoplay: true,
-  animationData: NoPostsAnimation,
-};
+import { User } from "@utils/types";
+import FollowersModal from "@components/Follows/FollowersModal";
+import FollowingModal from "@components/Follows/FollowingModal";
+import Skeleton from "@components/Skeleton";
 
 const UserPage: React.FC = () => {
   const { currentFilter, filterLabels, filters, toggleFilter } =
@@ -121,6 +117,85 @@ const UserPage: React.FC = () => {
     },
   });
 
+  const utils = trpc.useContext();
+  const openFollowersModalState = useState(false);
+  const [, setOpenFollowersModal] = openFollowersModalState;
+
+  const openFollowingModalState = useState(false);
+  const [, setOpenFollowingModal] = openFollowingModalState;
+
+  const { mutate: follow, error: followError } = trpc.useMutation(
+    ["users.follow-user"],
+    {
+      async onMutate({ userId }) {
+        await utils.cancelQuery(["users.single-user", { userId }]);
+
+        const prevData = utils.getQueryData(["users.single-user", { userId }]);
+
+        const userWasFollowing = !!prevData!.alreadyFollowing;
+
+        // User is unfollowing
+        if (userWasFollowing) {
+          utils.setQueryData(["users.single-user", { userId }], (old) => ({
+            ...old!,
+            alreadyFollowing: false,
+            _count: {
+              followers: old!._count!.followers - 1,
+              following: old!._count!.following,
+            },
+          }));
+        }
+
+        // User is following
+        if (!userWasFollowing) {
+          utils.setQueryData(["users.single-user", { userId }], (old) => ({
+            ...old!,
+            alreadyFollowing: true,
+            _count: {
+              followers: old!._count!.followers + 1,
+              following: old!._count!.following,
+            },
+          }));
+        }
+
+        return { prevData };
+      },
+
+      onError: (err, newData, context) => {
+        utils.setQueryData(["users.single-user"], context?.prevData as User);
+      },
+      onSettled: () => {
+        utils.invalidateQueries([
+          "users.single-user",
+          {
+            userId,
+          },
+        ]);
+
+        utils.invalidateQueries([
+          "users.get-followers",
+          {
+            userId,
+            limit: 4,
+          },
+        ]);
+
+        utils.invalidateQueries([
+          "users.get-following",
+          {
+            userId,
+            limit: 4,
+          },
+        ]);
+      },
+    }
+  );
+
+  const handleClickFollowButton = useCallback(
+    () => follow({ userId }),
+    [userId, follow]
+  );
+
   const onConfirm = useCallback(() => {
     if (!!session?.user?.id) {
       mutate({ userId: session.user.id });
@@ -135,8 +210,10 @@ const UserPage: React.FC = () => {
   }, [reachedBottom]);
 
   useEffect(() => {
-    if (deleteError) toast.error(deleteError?.message);
-  }, [deleteError]);
+    if (deleteError) toast.error("Error deleting your account.");
+
+    if (followError) toast.error("Error on the follow/unfollow action.");
+  }, [deleteError, followError]);
 
   return (
     <>
@@ -154,6 +231,14 @@ const UserPage: React.FC = () => {
               className="rounded-full"
               alt={user?.name as string}
             />
+            <ShouldRender if={!userIsProfileOwner}>
+              <button
+                onClick={handleClickFollowButton}
+                className="absolute -bottom-3 left-1/2 transform px-3 py-2 -translate-x-1/2 bg-gradient-to-tl from-green-400 via-emerald-400 dark:to-blue-800 to-blue-500 text-white bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500"
+              >
+                {user?.alreadyFollowing ? "Unfollow" : "Follow"}
+              </button>
+            </ShouldRender>
             <ShouldRender if={userIsProfileOwner}>
               <button
                 className="absolute bottom-0 right-10 bg-emerald-500 rounded-full flex justify-center items-center p-2 shadow-2xl"
@@ -225,6 +310,38 @@ const UserPage: React.FC = () => {
                 </ShouldRender>
               </p>
             </ShouldRender>
+            <div className="w-full mt-3 mb-3 flex justify-center gap-2 items-center">
+              <div
+                className="cursor-pointer flex flex-col items-center"
+                onClick={() => setOpenFollowersModal(true)}
+              >
+                <p className="prose-base text-neutral-600 dark:text-neutral-400 hover:underline hover:brightness-125">
+                  Followers
+                </p>
+                <ShouldRender if={!isLoading}>
+                  <p>{user?._count?.followers}</p>
+                </ShouldRender>
+                <ShouldRender if={isLoading}>
+                  <Skeleton width="w-6" />
+                </ShouldRender>
+              </div>
+
+              <div
+                className="cursor-pointer flex flex-col items-center"
+                onClick={() => setOpenFollowingModal(true)}
+              >
+                <p className="prose-base text-neutral-600 dark:text-neutral-400 hover:underline hover:brightness-125">
+                  Following
+                </p>
+                <ShouldRender if={!isLoading}>
+                  <p>{user?._count?.following}</p>
+                </ShouldRender>
+
+                <ShouldRender if={isLoading}>
+                  <Skeleton width="w-6" />
+                </ShouldRender>
+              </div>
+            </div>
             <ShouldRender if={!!user?.bio}>
               <blockquote className="w-full max-w-[356px] mt-2 text-left dark:text-neutral-400 prose border-l-4 border-gray-300 bg-gray-50 dark:border-gray-500 dark:bg-neutral-800 p-4">
                 {user?.bio}
@@ -300,6 +417,9 @@ const UserPage: React.FC = () => {
         onClose={toggleEditModal(false)}
         user={user}
       />
+
+      <FollowersModal user={user} openState={openFollowersModalState} />
+      <FollowingModal user={user} openState={openFollowingModalState} />
     </>
   );
 };
