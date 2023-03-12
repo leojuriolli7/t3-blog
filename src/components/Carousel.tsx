@@ -45,15 +45,15 @@ const MutationPlugin: KeenSliderPlugin = (slider) => {
 };
 
 const arrowIconProps = {
-  size: 30,
-  className: "text-neutral-800 dark:text-white flex-shrink-0",
+  className:
+    "text-neutral-800 dark:text-white flex-shrink-0 sm:w-[30px] sm:h-[30px] h-[20px] w-[20px]",
 };
 
 const Arrow: React.FC<ArrowProps> = ({ onClick, prev }) => {
   return (
     <button
       className={`absolute top-0 ${
-        prev ? "-left-7" : "-right-7"
+        prev ? "sm:-left-7 -left-5" : "sm:-right-7 -right-5"
       } h-full w-5 flex justify-center items-center`}
       onClick={onClick}
     >

@@ -14,7 +14,7 @@ export const getPostWithLikes = (
     | (Post & {
         user: User | null;
         likes: Like[];
-        tags: Tag[];
+        tags?: Tag[];
         favoritedBy?: FavoritesOnUsers[] | undefined;
       })
     | null,

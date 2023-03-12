@@ -21,8 +21,15 @@ const PostListingPage: React.FC = () => {
     },
   ]);
 
+  const { data: followingPosts } = trpc.useQuery(["posts.following-posts"]);
+
   const onSeeMoreTag = useCallback(
     (tagId?: string) => () => router.push(`/posts/tag/${tagId}`),
+    [router]
+  );
+
+  const onSeeMoreFollowing = useCallback(
+    () => router.push(`/posts/following`),
     [router]
   );
 
@@ -64,6 +71,24 @@ const PostListingPage: React.FC = () => {
     <>
       <MetaTags title="Home" />
       <MainLayout>
+        <ShouldRender if={followingPosts?.length}>
+          <div className="w-full">
+            <h2 className="w-full text-left text-3xl prose dark:prose-invert font-bold">
+              Following
+            </h2>
+            <p className="mb-3 mt-1">Posts from all your following</p>
+            <Section onClickSeeMore={onSeeMoreFollowing}>
+              {followingPosts?.map((post) => (
+                <CompactCard
+                  key={post.id}
+                  loading={loadingTags}
+                  post={post}
+                  slide
+                />
+              ))}
+            </Section>
+          </div>
+        </ShouldRender>
         <h2 className="w-full text-left -mb-5 text-3xl prose dark:prose-invert font-bold">
           Featured tags
         </h2>

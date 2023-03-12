@@ -129,6 +129,38 @@ export const postRouter = createRouter()
       return tagsWithPosts;
     },
   })
+  .query("following-posts", {
+    async resolve({ ctx }) {
+      // No user logged in, so no following to get.
+      if (!ctx.session?.user) return null;
+
+      const following = await ctx.prisma.user.findFirst({
+        where: { id: ctx?.session?.user?.id },
+        select: { following: { select: { followingId: true } } },
+      });
+
+      // No posts from following.
+      if (!following?.following?.length) return null;
+
+      const posts = await ctx.prisma.post.findMany({
+        where: {
+          user: {
+            id: {
+              in: [...following.following.map((user) => user.followingId)],
+            },
+          },
+        },
+        include: {
+          likes: true,
+          user: true,
+        },
+        take: 10,
+      });
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+      return postsWithLikes;
+    },
+  })
   .query("posts", {
     input: getPostsSchema,
     async resolve({ ctx, input }) {

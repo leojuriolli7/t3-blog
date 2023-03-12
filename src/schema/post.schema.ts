@@ -75,7 +75,7 @@ export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;
 
 export const favoritePostSchema = z.object({
   postId: z.string().uuid(),
-  userId: z.string(),
+  userId: z.string().uuid(),
 });
 
 export type FavoritePostInput = z.TypeOf<typeof favoritePostSchema>;
