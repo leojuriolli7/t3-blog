@@ -15,9 +15,14 @@ export type CommentWithChildren = Comment & {
 };
 
 export type SinglePost = InferQueryOutput<"posts.single-post">;
+
 export type PostFromList = InferQueryOutput<"posts.posts">["posts"][number];
+
+export type FollowingPosts = InferQueryOutput<"posts.following-posts">;
+
 export type TaggedPosts =
   InferQueryOutput<"posts.posts-by-tags">[number]["posts"][number];
+
 export type User = InferQueryOutput<"users.single-user">;
 
 export type FollowingUser =

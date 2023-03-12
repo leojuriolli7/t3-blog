@@ -37,6 +37,15 @@ export const getPostsSchema = z.object({
   filter: z.string().optional(),
 });
 
+export const getFollowingPostsSchema = z.object({
+  limit: z.number(),
+  cursor: z.string().nullish().optional(),
+  skip: z.number().optional(),
+  userId: z.string().optional(),
+  tagId: z.string().optional(),
+  filter: z.string().optional(),
+});
+
 export const getFavoritesSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish(),

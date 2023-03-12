@@ -13,6 +13,7 @@ import {
   getFavoritesSchema,
   getPostsByTagsSchema,
   getPostsSchema,
+  getFollowingPostsSchema,
   getSinglePostSchema,
   updatePostSchema,
 } from "@schema/post.schema";
@@ -127,6 +128,58 @@ export const postRouter = createRouter()
       );
 
       return tagsWithPosts;
+    },
+  })
+  .query("following-posts", {
+    input: getFollowingPostsSchema,
+    async resolve({ ctx, input }) {
+      // No user logged in, so no following to get.
+      if (!ctx.session?.user) return null;
+
+      const following = await ctx.prisma.user.findFirst({
+        where: { id: ctx?.session?.user?.id },
+        select: { following: { select: { followingId: true } } },
+      });
+
+      // No posts from following.
+      if (!following?.following?.length) return null;
+
+      const posts = await ctx.prisma.post.findMany({
+        where: {
+          user: {
+            id: {
+              in: [...following.following.map((user) => user.followingId)],
+            },
+          },
+        },
+        include: {
+          likes: true,
+          user: true,
+        },
+        take: input.limit + 1,
+        skip: input.skip,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        ...(input?.filter
+          ? { orderBy: getFiltersByInput(input?.filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (posts.length > input.limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
+      return {
+        posts: postsWithLikes,
+        nextCursor,
+      };
     },
   })
   .query("posts", {

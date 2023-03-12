@@ -7,7 +7,7 @@ import Skeleton from "./Skeleton";
 type Props = {
   children: React.ReactNode;
   title?: string;
-  loading: boolean;
+  loading?: boolean;
   onClickSeeMore?: () => void;
 };
 
