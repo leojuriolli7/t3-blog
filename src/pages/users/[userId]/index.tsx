@@ -236,7 +236,7 @@ const UserPage: React.FC = () => {
               <GradientButton
                 disabled={isLoading}
                 onClick={handleClickFollowButton}
-                className="absolute disabled:opacity-80 disabled:cursor-not-allowed -bottom-3 left-1/2 transform px-3 py-2"
+                className="absolute disabled:opacity-80 disabled:cursor-not-allowed -bottom-3 left-1/2 transform -translate-x-1/2 px-3 py-2"
               >
                 {user?.alreadyFollowing ? "Unfollow" : "Follow"}
               </GradientButton>
