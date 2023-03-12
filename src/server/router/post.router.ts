@@ -13,6 +13,7 @@ import {
   getFavoritesSchema,
   getPostsByTagsSchema,
   getPostsSchema,
+  getFollowingPostsSchema,
   getSinglePostSchema,
   updatePostSchema,
 } from "@schema/post.schema";
@@ -130,7 +131,8 @@ export const postRouter = createRouter()
     },
   })
   .query("following-posts", {
-    async resolve({ ctx }) {
+    input: getFollowingPostsSchema,
+    async resolve({ ctx, input }) {
       // No user logged in, so no following to get.
       if (!ctx.session?.user) return null;
 
@@ -154,11 +156,30 @@ export const postRouter = createRouter()
           likes: true,
           user: true,
         },
-        take: 10,
+        take: input.limit + 1,
+        skip: input.skip,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        ...(input?.filter
+          ? { orderBy: getFiltersByInput(input?.filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
       });
 
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (posts.length > input.limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
       const postsWithLikes = posts.map((post) => getPostWithLikes(post));
-      return postsWithLikes;
+
+      return {
+        posts: postsWithLikes,
+        nextCursor,
+      };
     },
   })
   .query("posts", {

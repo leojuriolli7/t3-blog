@@ -21,7 +21,12 @@ const PostListingPage: React.FC = () => {
     },
   ]);
 
-  const { data: followingPosts } = trpc.useQuery(["posts.following-posts"]);
+  const { data: followingPosts } = trpc.useQuery([
+    "posts.following-posts",
+    { limit: 10 },
+  ]);
+
+  const followingPostsToShow = followingPosts?.posts;
 
   const onSeeMoreTag = useCallback(
     (tagId?: string) => () => router.push(`/posts/tag/${tagId}`),
@@ -71,14 +76,14 @@ const PostListingPage: React.FC = () => {
     <>
       <MetaTags title="Home" />
       <MainLayout>
-        <ShouldRender if={followingPosts?.length}>
+        <ShouldRender if={followingPostsToShow?.length}>
           <div className="w-full">
             <h2 className="w-full text-left text-3xl prose dark:prose-invert font-bold">
               Following
             </h2>
             <p className="mb-3 mt-1">Posts from all your following</p>
             <Section onClickSeeMore={onSeeMoreFollowing}>
-              {followingPosts?.map((post) => (
+              {followingPostsToShow?.map((post) => (
                 <CompactCard
                   key={post.id}
                   loading={loadingTags}
