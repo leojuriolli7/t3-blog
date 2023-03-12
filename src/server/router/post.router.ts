@@ -16,6 +16,7 @@ import {
   getFollowingPostsSchema,
   getSinglePostSchema,
   updatePostSchema,
+  searchPostsSchema,
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
@@ -128,6 +129,54 @@ export const postRouter = createRouter()
       );
 
       return tagsWithPosts;
+    },
+  })
+  .query("search-posts", {
+    input: searchPostsSchema,
+    async resolve({ ctx, input }) {
+      const { limit, skip, cursor } = input;
+      if (!input?.query) return null;
+
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
+        ...(input?.filter
+          ? { orderBy: getFiltersByInput(input?.filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
+        where: {
+          body: {
+            search: input.query,
+          },
+          OR: {
+            title: {
+              search: input.query,
+            },
+          },
+        },
+        include: {
+          user: true,
+          likes: true,
+          tags: true,
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
+      return {
+        posts: postsWithLikes,
+        nextCursor,
+      };
     },
   })
   .query("following-posts", {
