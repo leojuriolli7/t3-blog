@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { MdAddBox, MdLogin } from "react-icons/md";
@@ -8,7 +9,6 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Popover from "./Popover";
 import { AiFillHeart } from "react-icons/ai";
-import { useCallback } from "react";
 
 const Header: React.FC = () => {
   const session = useSession();
@@ -66,33 +66,24 @@ const Header: React.FC = () => {
           </Popover.Main>
 
           <Link href="/posts/new" legacyBehavior>
-            <a className="hidden sm:block">Create post</a>
-          </Link>
-
-          <Link href="/posts/new">
-            <MdAddBox
-              size={25}
-              className="sm:hidden block dark:text-emerald-500 text-emerald-700"
-              role="link"
-            />
+            <a className="block underline hover:opacity-80">Create post</a>
           </Link>
         </ShouldRender>
+
         <ShouldRender if={session.status === "unauthenticated"}>
           <Link href={`/auth/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
-            <a className="hidden sm:block">Login</a>
+            <a className="block underline">Login</a>
           </Link>
           <Link href={`/auth/signin?callbackUrl=${callbackUrl}`} legacyBehavior>
-            <a className="hidden sm:block">Register</a>
-          </Link>
-
-          <Link href={`/auth/signin?callbackUrl=${callbackUrl}`}>
-            <MdLogin
-              size={25}
-              className="sm:hidden block dark:text-emerald-500 text-emerald-700"
-              role="link"
-            />
+            <a className="block underline">Register</a>
           </Link>
         </ShouldRender>
+        <Link href="/posts/search" legacyBehavior>
+          <a className="block underline hover:opacity-80">Search</a>
+        </Link>
+        <Link href="/" legacyBehavior>
+          <a className="sm:hidden block underline hover:opacity-80">Home</a>
+        </Link>
       </nav>
       <Link href="/">
         <FaAppleAlt
@@ -100,7 +91,7 @@ const Header: React.FC = () => {
           title="Go to the homepage"
           role="link"
           size={40}
-          className="dark:text-emerald-500 text-emerald-700 cursor-pointer hover:opacity-75"
+          className="dark:text-emerald-500 text-emerald-700 cursor-pointer sm:block hidden hover:opacity-75"
         />
       </Link>
 

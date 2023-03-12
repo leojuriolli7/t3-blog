@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -126,6 +127,9 @@ model Post {
   likes       Like[]
   Comment     Comment[]
 
+  @@fulltext([body])
+  @@fulltext([title])
+  @@fulltext([body, title])
   @@index([userId])
 }
 
