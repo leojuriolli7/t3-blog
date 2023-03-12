@@ -1,4 +1,6 @@
+import EmptyMessage from "@components/EmptyMessage";
 import MainLayout from "@components/MainLayout";
+import MetaTags from "@components/MetaTags";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
 import Tab from "@components/Tab";
@@ -37,6 +39,7 @@ const Following = () => {
   );
 
   const loadingArray = Array.from<undefined>({ length: 4 });
+  const noDataToShow = !isLoading && !dataToShow?.length && !hasNextPage;
 
   useEffect(() => {
     if (reachedBottom && hasNextPage) {
@@ -46,50 +49,48 @@ const Following = () => {
   }, [reachedBottom]);
 
   return (
-    <MainLayout>
-      <div className="w-full">
-        <h2 className="text-3xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
-          Posts from your following
-        </h2>
-        <div className="flex mt-3 gap-3">
-          {filters.map((filter) => (
-            <Tab
-              key={filter}
-              active={currentFilter === filter}
-              title={`Filter by ${filterLabels[filter]}`}
-              label={filterLabels[filter]}
-              onClick={toggleFilter(filter)}
-            />
-          ))}
+    <>
+      <MetaTags title="Following" />
+      <MainLayout>
+        <div className="w-full">
+          <h2 className="text-3xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
+            Posts from your following
+          </h2>
+          <div className="flex mt-3 gap-3">
+            {filters.map((filter) => (
+              <Tab
+                key={filter}
+                active={currentFilter === filter}
+                title={`Filter by ${filterLabels[filter]}`}
+                label={filterLabels[filter]}
+                onClick={toggleFilter(filter)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-        <PostCard
-          key={isLoading ? i : post?.id}
-          post={post}
-          loading={isLoading}
-        />
-      ))}
+        {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
+          <PostCard
+            key={isLoading ? i : post?.id}
+            post={post}
+            loading={isLoading}
+          />
+        ))}
 
-      <ShouldRender if={isFetchingNextPage}>
-        <PostCard loading />
-      </ShouldRender>
+        <ShouldRender if={isFetchingNextPage}>
+          <PostCard loading />
+        </ShouldRender>
 
-      <div ref={bottomRef} />
-      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-        <PostCard
-          key={isLoading ? i : post?.id}
-          post={post}
-          loading={isLoading}
-        />
-      ))}
+        <ShouldRender if={noDataToShow}>
+          <EmptyMessage
+            message="Hmm. Could not find any posts from your following."
+            hideRedirect
+            small
+          />
+        </ShouldRender>
 
-      <ShouldRender if={isFetchingNextPage}>
-        <PostCard loading />
-      </ShouldRender>
-
-      <div ref={bottomRef} />
-    </MainLayout>
+        <div ref={bottomRef} />
+      </MainLayout>
+    </>
   );
 };
 
