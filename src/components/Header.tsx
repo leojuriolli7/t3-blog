@@ -131,15 +131,14 @@ const Header: React.FC = () => {
           <a className="sm:block hidden underline hover:opacity-80 ">Home</a>
         </Link>
       </nav>
-      <Link href="/">
-        <FaAppleAlt
-          aria-label="Go back to home"
-          title="Go to the homepage"
-          role="link"
-          size={40}
-          className="dark:text-emerald-500 text-emerald-700 cursor-pointer block sm:hidden hover:opacity-75"
-        />
-      </Link>
+      <FaAppleAlt
+        aria-label="Go back to home"
+        title="Go to the homepage"
+        role="link"
+        onClick={redirect("/")}
+        size={40}
+        className="dark:text-emerald-500 text-emerald-700 cursor-pointer block sm:hidden hover:opacity-75"
+      />
 
       <div className="absolute right-0">
         <ThemeSwitch />

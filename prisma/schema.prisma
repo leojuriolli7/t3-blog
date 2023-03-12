@@ -109,6 +109,8 @@ model Tag {
   id    String @id @default(uuid())
   name  String @unique
   posts Post[]
+
+    @@fulltext([name])
 }
 
 model Post {

@@ -87,6 +87,8 @@ export const postRouter = createRouter()
     async resolve({ ctx, input }) {
       const { tagLimit, cursor, skip } = input;
 
+      const query = input?.query;
+
       const tags = await ctx.prisma.tag.findMany({
         take: tagLimit + 1,
         skip: skip,
@@ -101,6 +103,13 @@ export const postRouter = createRouter()
             _count: "desc",
           },
         },
+        ...(query && {
+          where: {
+            name: {
+              search: query,
+            },
+          },
+        }),
       });
 
       let nextCursor: typeof cursor | undefined = undefined;

@@ -59,6 +59,7 @@ export const getPostsByTagsSchema = z.object({
   cursor: z.string().nullish(),
   skip: z.number().optional(),
   filter: z.string().optional(),
+  query: z.string().optional(),
 });
 
 export const getUserPostsSchema = z.object({

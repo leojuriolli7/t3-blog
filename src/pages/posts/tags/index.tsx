@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import useOnScreen from "@hooks/useOnScreen";
@@ -7,9 +7,14 @@ import MetaTags from "@components/MetaTags";
 import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
 import { useRouter } from "next/router";
+import SearchInput from "@components/SearchInput";
+import useDebounce from "@hooks/useDebounce";
+import EmptyMessage from "@components/EmptyMessage";
 
 const TagsListPage: React.FC = () => {
   const router = useRouter();
+  const [queryValue, setQueryValue] = useState("");
+  const query = useDebounce<string>(queryValue, 500);
 
   const onSeeMoreTag = useCallback(
     (tagId?: string) => () => router.push(`/posts/tags/${tagId}`),
@@ -30,10 +35,12 @@ const TagsListPage: React.FC = () => {
       "posts.posts-by-tags",
       {
         tagLimit: 6,
+        query,
       },
     ],
     {
       getNextPageParam: (lastPage) => lastPage?.nextCursor,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -41,6 +48,7 @@ const TagsListPage: React.FC = () => {
     () => tagsWithPosts?.pages.flatMap((page) => page.tags),
     [tagsWithPosts]
   );
+  const noDataToShow = !isLoading && !dataToShow?.length && !hasNextPage;
 
   const loadingArray = (length: number) => Array.from<undefined>({ length });
 
@@ -61,6 +69,10 @@ const TagsListPage: React.FC = () => {
           </h2>
           <p className="-mb-3">See all tags created on T3 blog.</p>
         </div>
+        <SearchInput
+          onChange={(e) => setQueryValue(e.target.value)}
+          placeholder="Search tags"
+        />
         {(isLoading ? loadingArray(4) : dataToShow)?.map((tag, key) => (
           <Section
             loading={isLoading}
@@ -71,7 +83,7 @@ const TagsListPage: React.FC = () => {
             {(isLoading ? loadingArray(1) : tag?.posts)?.map((post, key) => (
               <CompactCard
                 loading={isLoading}
-                key={isLoading ? key : tag?.id}
+                key={isLoading ? key : `${tag?.id}-${post?.id}`}
                 post={post}
                 slide
               />
@@ -85,6 +97,10 @@ const TagsListPage: React.FC = () => {
               <CompactCard key={i} loading slide />
             ))}
           </Section>
+        </ShouldRender>
+
+        <ShouldRender if={!!query && noDataToShow}>
+          <EmptyMessage message="Hmm. Couldn't find any tags." hideRedirect />
         </ShouldRender>
 
         <div ref={bottomRef} />

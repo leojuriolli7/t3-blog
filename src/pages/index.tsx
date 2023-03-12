@@ -15,29 +15,31 @@ import GradientButton from "@components/GradientButton";
 const PostListingPage: React.FC = () => {
   const router = useRouter();
 
-  const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery([
-    "posts.posts-by-tags",
+  const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
+    [
+      "posts.posts-by-tags",
+      {
+        tagLimit: 4,
+      },
+    ],
     {
-      tagLimit: 4,
-    },
-  ]);
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const taggedPosts = tagsWithPosts?.tags;
 
-  const { data: followingPosts } = trpc.useQuery([
-    "posts.following-posts",
-    { limit: 4 },
-  ]);
+  const { data: followingPosts } = trpc.useQuery(
+    ["posts.following-posts", { limit: 4 }],
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const followingPostsToShow = followingPosts?.posts;
 
-  const onSeeMoreTag = useCallback(
-    (tagId?: string) => () => router.push(`/posts/tags/${tagId}`),
-    [router]
-  );
-
-  const onSeeMoreTags = useCallback(
-    () => router.push(`/posts/tags/`),
+  const redirect = useCallback(
+    (value: string) => () => router.push(value),
     [router]
   );
 
@@ -62,6 +64,7 @@ const PostListingPage: React.FC = () => {
         },
       ],
       {
+        refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
@@ -106,7 +109,10 @@ const PostListingPage: React.FC = () => {
           <h2 className="text-3xl prose dark:prose-invert font-bold">
             Featured tags
           </h2>
-          <GradientButton className="p-2 text-sm" onClick={onSeeMoreTags}>
+          <GradientButton
+            className="p-2 text-sm"
+            onClick={redirect("/posts/tags")}
+          >
             All tags
           </GradientButton>
         </div>
@@ -116,12 +122,12 @@ const PostListingPage: React.FC = () => {
             loading={loadingTags}
             title={tag?.name}
             key={loadingTags ? key : tag?.id}
-            onClickSeeMore={onSeeMoreTag(tag?.id)}
+            onClickSeeMore={redirect(`/posts/tags/${tag?.id}`)}
           >
             {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
               <CompactCard
                 loading={loadingTags}
-                key={loadingTags ? key : tag?.id}
+                key={loadingTags ? key : `${tag?.id}-${post?.id}`}
                 post={post}
                 slide
               />
