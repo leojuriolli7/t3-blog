@@ -10,26 +10,36 @@ import Tab from "@components/Tab";
 import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
 import { useRouter } from "next/router";
+import GradientButton from "@components/GradientButton";
 
 const PostListingPage: React.FC = () => {
   const router = useRouter();
 
-  const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery([
-    "posts.posts-by-tags",
+  const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
+    [
+      "posts.posts-by-tags",
+      {
+        tagLimit: 4,
+      },
+    ],
     {
-      tagLimit: 4,
-    },
-  ]);
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  const { data: followingPosts } = trpc.useQuery([
-    "posts.following-posts",
-    { limit: 4 },
-  ]);
+  const taggedPosts = tagsWithPosts?.tags;
+
+  const { data: followingPosts } = trpc.useQuery(
+    ["posts.following-posts", { limit: 4 }],
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const followingPostsToShow = followingPosts?.posts;
 
-  const onSeeMoreTag = useCallback(
-    (tagId?: string) => () => router.push(`/posts/tag/${tagId}`),
+  const redirect = useCallback(
+    (value: string) => () => router.push(value),
     [router]
   );
 
@@ -54,6 +64,7 @@ const PostListingPage: React.FC = () => {
         },
       ],
       {
+        refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
@@ -81,7 +92,7 @@ const PostListingPage: React.FC = () => {
             <h2 className="w-full text-left text-3xl prose dark:prose-invert font-bold">
               Following
             </h2>
-            <p className="mb-3 mt-1">Posts from all your following</p>
+            <p className="mb-3">Posts from all your following</p>
             <Section onClickSeeMore={onSeeMoreFollowing}>
               {followingPostsToShow?.map((post) => (
                 <CompactCard
@@ -94,20 +105,29 @@ const PostListingPage: React.FC = () => {
             </Section>
           </div>
         </ShouldRender>
-        <h2 className="w-full text-left -mb-5 text-3xl prose dark:prose-invert font-bold">
-          Featured tags
-        </h2>
-        {(loadingTags ? loadingArray : tagsWithPosts)?.map((tag, key) => (
+        <div className="w-full flex justify-between items-center -mb-5">
+          <h2 className="text-3xl prose dark:prose-invert font-bold">
+            Featured tags
+          </h2>
+          <GradientButton
+            className="p-2 text-sm"
+            onClick={redirect("/posts/tags")}
+          >
+            All tags
+          </GradientButton>
+        </div>
+
+        {(loadingTags ? loadingArray : taggedPosts)?.map((tag, key) => (
           <Section
             loading={loadingTags}
             title={tag?.name}
             key={loadingTags ? key : tag?.id}
-            onClickSeeMore={onSeeMoreTag(tag?.id)}
+            onClickSeeMore={redirect(`/posts/tags/${tag?.id}`)}
           >
             {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
               <CompactCard
                 loading={loadingTags}
-                key={loadingTags ? key : tag?.id}
+                key={loadingTags ? key : `${tag?.id}-${post?.id}`}
                 post={post}
                 slide
               />

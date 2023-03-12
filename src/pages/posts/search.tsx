@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import MainLayout from "@components/MainLayout";
 import SearchAnimation from "@public/static/search.json";
-import { HiSearch } from "react-icons/hi";
-import useDebounce from "@hooks/useDebounce";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
@@ -12,6 +10,8 @@ import Lottie from "react-lottie";
 import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
 import MetaTags from "@components/MetaTags";
+import SearchInput from "@components/SearchInput";
+import debounce from "lodash.debounce";
 
 const LOTTIE_OPTIONS = {
   loop: true,
@@ -20,11 +20,16 @@ const LOTTIE_OPTIONS = {
 };
 
 const SearchPage = () => {
-  const [queryValue, setQueryValue] = useState("");
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
 
-  const query = useDebounce<string>(queryValue, 500);
+  const [queryValue, setQueryValue] = useState("");
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setQueryValue(e.target.value);
+
+  const onChange = debounce(handleChange, 500);
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const {
@@ -37,16 +42,16 @@ const SearchPage = () => {
     [
       "posts.search-posts",
       {
-        query,
-
+        query: queryValue,
         limit: 6,
         filter: currentFilter,
       },
     ],
     {
       ssr: false,
+      refetchOnWindowFocus: false,
       getNextPageParam: (lastPage) => lastPage?.nextCursor,
-      enabled: !!query,
+      enabled: !!queryValue,
     }
   );
 
@@ -81,21 +86,8 @@ const SearchPage = () => {
               />
             ))}
           </div>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <HiSearch
-                className="text-gray-500 dark:text-gray-400"
-                size={20}
-              />
-            </div>
-            <input
-              onChange={(e) => setQueryValue(e.target.value)}
-              type="text"
-              className="bg-gray-50 border border-gray-300 dark:border-neutral-600 text-gray-900 text-md rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full pl-10 p-3  dark:bg-neutral-800 dark:neutral-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500"
-              placeholder="search posts"
-              required
-              title="Search posts"
-            />
+          <div className="w-full">
+            <SearchInput onChange={onChange} placeholder="search posts" />
           </div>
         </div>
 
