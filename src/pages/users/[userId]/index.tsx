@@ -30,6 +30,7 @@ import { User } from "@utils/types";
 import FollowersModal from "@components/Follows/FollowersModal";
 import FollowingModal from "@components/Follows/FollowingModal";
 import Skeleton from "@components/Skeleton";
+import GradientButton from "@components/GradientButton";
 
 const UserPage: React.FC = () => {
   const { currentFilter, filterLabels, filters, toggleFilter } =
@@ -232,13 +233,13 @@ const UserPage: React.FC = () => {
               alt={user?.name as string}
             />
             <ShouldRender if={!userIsProfileOwner && session?.user?.id}>
-              <button
+              <GradientButton
                 disabled={isLoading}
                 onClick={handleClickFollowButton}
-                className="absolute disabled:opacity-80 disabled:cursor-not-allowed -bottom-3 left-1/2 transform px-3 py-2 -translate-x-1/2 bg-gradient-to-tl from-green-400 via-emerald-400 dark:to-blue-800 to-blue-500 text-white bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500"
+                className="absolute disabled:opacity-80 disabled:cursor-not-allowed -bottom-3 left-1/2 transform px-3 py-2"
               >
                 {user?.alreadyFollowing ? "Unfollow" : "Follow"}
-              </button>
+              </GradientButton>
             </ShouldRender>
             <ShouldRender if={userIsProfileOwner}>
               <button

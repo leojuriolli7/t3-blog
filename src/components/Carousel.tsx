@@ -88,7 +88,7 @@ const Carousel: React.FC<Props> = ({ children, onFinish }) => {
 
   const isLastSlide =
     instanceRef?.current &&
-    currentSlide === instanceRef.current.track.details.maxIdx;
+    currentSlide === instanceRef.current.track?.details?.maxIdx;
 
   const isFirstSlide = currentSlide === 0;
 

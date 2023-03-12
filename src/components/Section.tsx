@@ -1,6 +1,6 @@
 import React from "react";
-import { FiExternalLink } from "react-icons/fi";
 import Carousel from "./Carousel";
+import GradientButton from "./GradientButton";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 
@@ -33,14 +33,13 @@ const Section: React.FC<Props> = ({
         </div>
 
         <ShouldRender if={onClickSeeMore}>
-          <button
-            className={`py-1 px-2 text-sm bg-gradient-to-tl from-green-400 via-emerald-400 dark:to-blue-800 to-blue-500 text-white bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500 ${
-              loading ? "pointer-events-none" : ""
-            }`}
+          <GradientButton
+            disabled={loading}
+            className="py-1 px-2 text-sm"
             onClick={onClickSeeMore}
           >
             See more
-          </button>
+          </GradientButton>
         </ShouldRender>
       </div>
 

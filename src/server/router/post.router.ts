@@ -85,10 +85,12 @@ export const postRouter = createRouter()
   .query("posts-by-tags", {
     input: getPostsByTagsSchema,
     async resolve({ ctx, input }) {
-      const { tagLimit } = input;
+      const { tagLimit, cursor, skip } = input;
 
       const tags = await ctx.prisma.tag.findMany({
-        take: tagLimit,
+        take: tagLimit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
         include: {
           _count: {
             select: { posts: true },
@@ -100,6 +102,12 @@ export const postRouter = createRouter()
           },
         },
       });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (tags.length > tagLimit) {
+        const nextItem = tags.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
 
       const tagsWithPosts = await Promise.all(
         tags.map(async (tag) => {
@@ -120,7 +128,6 @@ export const postRouter = createRouter()
           });
 
           const postsWithLikes = posts.map((post) => getPostWithLikes(post));
-
           return {
             ...tag,
             posts: postsWithLikes,
@@ -128,7 +135,10 @@ export const postRouter = createRouter()
         })
       );
 
-      return tagsWithPosts;
+      return {
+        tags: tagsWithPosts,
+        nextCursor,
+      };
     },
   })
   .query("search-posts", {

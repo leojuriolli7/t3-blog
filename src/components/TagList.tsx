@@ -23,7 +23,7 @@ const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
   return (
     <div className={`flex flex-wrap gap-2 mt-2`}>
       {(loading ? loadingArray : tags)?.map((tag, i) => (
-        <Link key={loading ? i : tag?.id} href={`/posts/tag/${tag?.id}`}>
+        <Link key={loading ? i : tag?.id} href={`/posts/tags/${tag?.id}`}>
           <Tag
             title={`Click to see all ${tag?.name} posts`}
             role="link"
