@@ -23,7 +23,7 @@ const PostListingPage: React.FC = () => {
 
   const { data: followingPosts } = trpc.useQuery([
     "posts.following-posts",
-    { limit: 10 },
+    { limit: 4 },
   ]);
 
   const followingPostsToShow = followingPosts?.posts;
