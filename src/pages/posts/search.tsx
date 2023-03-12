@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import MainLayout from "@components/MainLayout";
 import SearchAnimation from "@public/static/search.json";
-import { HiSearch } from "react-icons/hi";
-import useDebounce from "@hooks/useDebounce";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
@@ -13,6 +11,7 @@ import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
 import MetaTags from "@components/MetaTags";
 import SearchInput from "@components/SearchInput";
+import debounce from "lodash.debounce";
 
 const LOTTIE_OPTIONS = {
   loop: true,
@@ -21,11 +20,16 @@ const LOTTIE_OPTIONS = {
 };
 
 const SearchPage = () => {
-  const [queryValue, setQueryValue] = useState("");
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
 
-  const query = useDebounce<string>(queryValue, 500);
+  const [queryValue, setQueryValue] = useState("");
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setQueryValue(e.target.value);
+
+  const onChange = debounce(handleChange, 500);
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const {
@@ -38,7 +42,7 @@ const SearchPage = () => {
     [
       "posts.search-posts",
       {
-        query,
+        query: queryValue,
         limit: 6,
         filter: currentFilter,
       },
@@ -47,7 +51,7 @@ const SearchPage = () => {
       ssr: false,
       refetchOnWindowFocus: false,
       getNextPageParam: (lastPage) => lastPage?.nextCursor,
-      enabled: !!query,
+      enabled: !!queryValue,
     }
   );
 
@@ -83,10 +87,7 @@ const SearchPage = () => {
             ))}
           </div>
           <div className="w-full">
-            <SearchInput
-              onChange={(e) => setQueryValue(e.target.value)}
-              placeholder="search posts"
-            />
+            <SearchInput onChange={onChange} placeholder="search posts" />
           </div>
         </div>
 

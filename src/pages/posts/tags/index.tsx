@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import useOnScreen from "@hooks/useOnScreen";
@@ -8,13 +15,17 @@ import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
 import { useRouter } from "next/router";
 import SearchInput from "@components/SearchInput";
-import useDebounce from "@hooks/useDebounce";
 import EmptyMessage from "@components/EmptyMessage";
+import debounce from "lodash.debounce";
 
 const TagsListPage: React.FC = () => {
   const router = useRouter();
   const [queryValue, setQueryValue] = useState("");
-  const query = useDebounce<string>(queryValue, 500);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setQueryValue(e.target.value);
+
+  const onChange = debounce(handleChange, 500);
 
   const onSeeMoreTag = useCallback(
     (tagId?: string) => () => router.push(`/posts/tags/${tagId}`),
@@ -35,7 +46,7 @@ const TagsListPage: React.FC = () => {
       "posts.posts-by-tags",
       {
         tagLimit: 6,
-        query,
+        query: queryValue,
       },
     ],
     {
@@ -69,10 +80,7 @@ const TagsListPage: React.FC = () => {
           </h2>
           <p className="-mb-3">See all tags created on T3 blog.</p>
         </div>
-        <SearchInput
-          onChange={(e) => setQueryValue(e.target.value)}
-          placeholder="Search tags"
-        />
+        <SearchInput onChange={onChange} placeholder="Search tags" />
         {(isLoading ? loadingArray(4) : dataToShow)?.map((tag, key) => (
           <Section
             loading={isLoading}
@@ -99,7 +107,7 @@ const TagsListPage: React.FC = () => {
           </Section>
         </ShouldRender>
 
-        <ShouldRender if={!!query && noDataToShow}>
+        <ShouldRender if={!!queryValue && noDataToShow}>
           <EmptyMessage message="Hmm. Couldn't find any tags." hideRedirect />
         </ShouldRender>
 
