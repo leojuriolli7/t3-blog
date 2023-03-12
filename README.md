@@ -20,7 +20,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - **Favorite posts** and browse through all your favorited posts.
 - **Follow users and be followed by other users**, see their and your followers/following.
 - See a **personalized "Following" timeline** with posts from your following.
-- Search posts with **full-text search**.
+- Search posts & tags with **full-text search**.
 - Access yours or other users' profiles and see their posts.
 - Search for posts using different filters and by their tags.
 - Search engine optimizations through meta-tags, server-side-rendering and semantic HTML.
