@@ -20,7 +20,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - **Favorite posts** and browse through all your favorited posts.
 - **Follow users and be followed by other users**, see their and your followers/following.
 - See a **personalized "Following" timeline** with posts from your following.
-- Search posts with **full-text search**.
+- Search posts & tags with **full-text search**.
 - Access yours or other users' profiles and see their posts.
 - Search for posts using different filters and by their tags.
 - Search engine optimizations through meta-tags, server-side-rendering and semantic HTML.
@@ -44,3 +44,4 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 
 - I used [TanStack Query](https://tanstack.com/query/latest) (formerly React Query) to implement [optimistic updates](https://tanstack.com/query/v4/docs/react/guides/optimistic-updates), allowing the UI to update without having to wait for a backend response, making for a blazing fast experience. - You can like/dislike posts and see the feedback immediately, or edit a post and see the changes applied instantaneously.
 - Implemented infinite scrolling on multiple screens with TanStack Query's `useInfiniteQuery`, tRPC and the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
+- I used [Lodash debounce](https://lodash.com/docs/#debounce) to debounce search results and improve the search input performance while keeping a good UX. (Typing and automatically receiving results) 
