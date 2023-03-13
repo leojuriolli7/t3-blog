@@ -11,6 +11,7 @@ import Popover from "./Popover";
 import { AiFillHeart, AiFillTag } from "react-icons/ai";
 import { HiMenu, HiSearch } from "react-icons/hi";
 import { MdAdd } from "react-icons/md";
+import Spinner from "./Spinner";
 
 const Header: React.FC = () => {
   const session = useSession();
@@ -28,57 +29,66 @@ const Header: React.FC = () => {
   return (
     <header className="w-full relative flex h-10 justify-center items-center">
       <nav className="absolute left-0 flex items-center gap-3">
-        <Popover.Main
-          icon={
-            <Image
-              src={session?.data?.user?.image || "/static/default-profile.jpg"}
-              width={36}
-              height={36}
-              alt="Your profile picture"
-              className="rounded-full cursor-pointer"
-            />
-          }
-        >
-          <ShouldRender if={session?.status === "authenticated"}>
-            <Popover.Item
-              icon={<FaUser size={14} className="text-emerald-500 mt-1" />}
-              title="Your profile"
-              gap="2"
-              subtitle="Go to your profile"
-              onClick={redirect(`/users/${session?.data?.user?.id}`)}
-            />
-            <Popover.Item
-              title="Favorite posts"
-              subtitle="Your favorited posts"
-              gap="1"
-              icon={<AiFillHeart size={16} className="text-emerald-500" />}
-              onClick={redirect(`/users/${session?.data?.user?.id}/favorites`)}
-            />
-            <Popover.Item
-              icon={
-                <FaUserFriends size={14} className="text-emerald-500 mt-1" />
-              }
-              title="Following"
-              gap="2"
-              subtitle="Posts from your following"
-              onClick={redirect("/posts/following")}
-            />
-            <Popover.Item
-              title="Logout"
-              onClick={redirect(`/auth/signout?callbackUrl=${callbackUrl}`)}
-            />
-          </ShouldRender>
+        <ShouldRender if={!!session.status && session.status !== "loading"}>
+          <Popover.Main
+            icon={
+              <Image
+                src={
+                  session?.data?.user?.image || "/static/default-profile.jpg"
+                }
+                width={36}
+                height={36}
+                alt="Your profile picture"
+                className="rounded-full cursor-pointer"
+              />
+            }
+          >
+            <ShouldRender if={session?.status === "authenticated"}>
+              <Popover.Item
+                icon={<FaUser size={14} className="text-emerald-500 mt-1" />}
+                title="Your profile"
+                gap="2"
+                subtitle="Go to your profile"
+                onClick={redirect(`/users/${session?.data?.user?.id}`)}
+              />
+              <Popover.Item
+                title="Favorite posts"
+                subtitle="Your favorited posts"
+                gap="1"
+                icon={<AiFillHeart size={16} className="text-emerald-500" />}
+                onClick={redirect(
+                  `/users/${session?.data?.user?.id}/favorites`
+                )}
+              />
+              <Popover.Item
+                icon={
+                  <FaUserFriends size={14} className="text-emerald-500 mt-1" />
+                }
+                title="Following"
+                gap="2"
+                subtitle="Posts from your following"
+                onClick={redirect("/posts/following")}
+              />
+              <Popover.Item
+                title="Logout"
+                onClick={redirect(`/auth/signout?callbackUrl=${callbackUrl}`)}
+              />
+            </ShouldRender>
 
-          <ShouldRender if={session?.status === "unauthenticated"}>
-            <Popover.Item
-              icon={<BiUserPlus size={20} className="text-emerald-500" />}
-              title="Sign in"
-              gap="1"
-              subtitle="Login or create your account"
-              onClick={redirect(`/auth/signin?callbackUrl=${callbackUrl}`)}
-            />
-          </ShouldRender>
-        </Popover.Main>
+            <ShouldRender if={session?.status === "unauthenticated"}>
+              <Popover.Item
+                icon={<BiUserPlus size={20} className="text-emerald-500" />}
+                title="Sign in"
+                gap="1"
+                subtitle="Login or create your account"
+                onClick={redirect(`/auth/signin?callbackUrl=${callbackUrl}`)}
+              />
+            </ShouldRender>
+          </Popover.Main>
+        </ShouldRender>
+        <ShouldRender if={!!session.status && session.status === "loading"}>
+          <Spinner />
+        </ShouldRender>
 
         <Popover.Main
           icon={
