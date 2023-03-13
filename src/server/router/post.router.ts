@@ -53,7 +53,11 @@ export const postRouter = createRouter()
 
       const post = await ctx.prisma.post.create({
         data: {
-          ...input,
+          title: input.title,
+          body: input.body,
+          ...(input?.link && {
+            link: input.link,
+          }),
           tags: {
             connectOrCreate: input.tags.map((tag) => ({
               create: {
