@@ -42,7 +42,7 @@ const LinkPreview: React.FC<Props> = ({ data, loading }) => {
             <div onClick={openModal} className="relative group flex-shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                alt={data?.title}
+                alt={data?.title || "Shared link"}
                 src={data?.image || "/static/default.jpg"}
                 className={`aspect-square ${
                   hasImageToShow ? "group-hover:opacity-50 cursor-pointer" : ""
@@ -67,10 +67,10 @@ const LinkPreview: React.FC<Props> = ({ data, loading }) => {
             <ShouldRender if={!loading}>
               <div className="w-full">
                 <p className="line-clamp-1 break-all font-bold">
-                  {data?.title}
+                  {data?.title || "Shared link"}
                 </p>
                 <p className="line-clamp-3 text-sm break-all">
-                  {data?.description}
+                  {data?.description || "Link shared on T3 Blog."}
                 </p>
               </div>
               <a
@@ -105,27 +105,25 @@ const Link = () => {
   const formError = formState.errors.link;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("changed");
     const newLink = e.target.value;
     const isValidLink = isURL(newLink);
 
     // User clearing up input: should clear form and link value.
     if (newLink === "") {
-      setLink(newLink);
-      return setValue("link", undefined, { shouldValidate: true });
+      setValue("link", undefined, { shouldValidate: true });
+      return setLink(newLink);
     }
 
     if (isValidLink) {
-      setLink(newLink);
-      return setValue("link", newLink, { shouldValidate: true });
+      return setLink(newLink);
     }
 
     // Invalid link: should clear input, form value & link value.
     if (!isValidLink) {
       toast.error("Invalid link");
+      setValue("link", undefined, { shouldValidate: true });
       setLink("");
       if (inputRef?.current) inputRef.current.value = "";
-      return setValue("link", undefined, { shouldValidate: true });
     }
   };
 
@@ -138,6 +136,26 @@ const Link = () => {
   } = trpc.useQuery(["scraper.scrape-link", { url: link }], {
     refetchOnWindowFocus: false,
     enabled: !!link,
+    onSettled: (data, error) => {
+      if (error || !data?.url) {
+        setValue("link", undefined, { shouldValidate: true });
+      }
+
+      if (data?.url) {
+        const dataToSend = {
+          image:
+            data?.image || "https://t3-blog-pi.vercel.app/static/default.jpg",
+          title: data?.title || "Shared link",
+          url: data.url,
+          description: data?.description || "Link shared on T3 blog.",
+          ...(data?.publisher && {
+            publisher: data?.publisher,
+          }),
+        };
+
+        setValue("link", dataToSend, { shouldValidate: true });
+      }
+    },
   });
 
   useEffect(() => {
@@ -149,7 +167,7 @@ const Link = () => {
       <Field
         label="Link"
         description="By adding a link to your post, the link will be highlighted on the post."
-        error={formError}
+        error={formError as any}
       >
         <input
           ref={inputRef}

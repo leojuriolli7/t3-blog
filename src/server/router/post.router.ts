@@ -55,9 +55,6 @@ export const postRouter = createRouter()
         data: {
           title: input.title,
           body: input.body,
-          ...(input?.link && {
-            link: input.link,
-          }),
           tags: {
             connectOrCreate: input.tags.map((tag) => ({
               create: {
@@ -75,6 +72,21 @@ export const postRouter = createRouter()
           },
         },
       });
+
+      if (!!input?.link) {
+        await ctx.prisma.link.create({
+          data: {
+            postId: post.id,
+            image: input.link?.image,
+            title: input.link?.title,
+            url: input.link.url,
+            description: input.link?.description,
+            ...(input.link?.publisher && {
+              publisher: input.link?.publisher,
+            }),
+          },
+        });
+      }
 
       return post;
     },
@@ -274,6 +286,7 @@ export const postRouter = createRouter()
           user: true,
           likes: true,
           tags: true,
+          link: true,
         },
         ...(input.userId && {
           where: {
@@ -316,6 +329,7 @@ export const postRouter = createRouter()
           user: true,
           likes: true,
           tags: true,
+          link: true,
           ...(ctx.session?.user?.id && {
             favoritedBy: {
               where: {
