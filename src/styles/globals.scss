@@ -31,6 +31,10 @@ button:disabled {
 .rc-md-editor {
   width: 100%;
 
+  .sec-html a {
+    @apply underline font-bold text-emerald-700 dark:text-emerald-500;
+  }
+
   .sec-md textarea {
     overflow-y: auto !important;
   }
