@@ -87,6 +87,7 @@ const EditAccountModal: React.FC<Props> = ({
   useEffect(() => {
     if (userInformation?.name && isOpen) {
       setValue("name", userInformation?.name);
+      setValue("bio", userInformation?.bio || undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
