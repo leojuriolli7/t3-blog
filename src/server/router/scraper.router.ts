@@ -5,6 +5,8 @@ import metascraperImage from "metascraper-image";
 import metascraperPublisher from "metascraper-publisher";
 import metascraperTitle from "metascraper-title";
 import metascraperUrl from "metascraper-url";
+import metascraperAmazon from "metascraper-amazon";
+import metascraperTwitter from "metascraper-twitter";
 import metascraperInstagram from "metascraper-instagram";
 import * as trpc from "@trpc/server";
 import axios from "axios";
@@ -33,6 +35,8 @@ export const scraperRouter = createRouter().query("scrape-link", {
       metascraperPublisher(),
       metascraperTitle(),
       metascraperUrl(),
+      metascraperAmazon(),
+      metascraperTwitter(),
       metascraperInstagram(),
     ]);
 

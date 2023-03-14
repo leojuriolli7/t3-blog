@@ -2907,6 +2907,13 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
+metascraper-amazon@^5.33.7:
+  version "5.33.7"
+  resolved "https://registry.yarnpkg.com/metascraper-amazon/-/metascraper-amazon-5.33.7.tgz#b223e96327b141ce2e8bdd4a1c56a4c32f460f83"
+  integrity sha512-HzgScqxe39hgXTFmg5bH29loZxszH6zIR0Bhd05sjyhHhDXzLVU5JCW/LRS5JIQACbH8GKK+S7+Od/VVrwlUJw==
+  dependencies:
+    "@metascraper/helpers" "^5.33.7"
+
 metascraper-description@^5.33.7:
   version "5.33.7"
   resolved "https://registry.yarnpkg.com/metascraper-description/-/metascraper-description-5.33.7.tgz#acf5de29e247eca914e96082b3fd0f6c43c4bda6"
@@ -2941,6 +2948,13 @@ metascraper-title@^5.33.7:
   version "5.33.7"
   resolved "https://registry.yarnpkg.com/metascraper-title/-/metascraper-title-5.33.7.tgz#4094e8420b17954f2cccf2d423fc505b11c3130e"
   integrity sha512-nRDBBlQSQYb6bqp032b93rLhkirflvMEPTqwTtMPQVD8BEY1+2Z6pXrkHs9+kQIruyg60Wg9TRUlh1qjLC/z/w==
+  dependencies:
+    "@metascraper/helpers" "^5.33.7"
+
+metascraper-twitter@^5.33.7:
+  version "5.33.7"
+  resolved "https://registry.yarnpkg.com/metascraper-twitter/-/metascraper-twitter-5.33.7.tgz#e90c5054a93df41c6a8136ab3e26c6606189a1ea"
+  integrity sha512-oDn0bL60eMKazUZ98JINcSqQMo+uPfyWUoQwUWAxxFDbGm35AtRAxxv7JxdPNwRJ3BpNEKQh8odGTcePh65PsQ==
   dependencies:
     "@metascraper/helpers" "^5.33.7"
 
