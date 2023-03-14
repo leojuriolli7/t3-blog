@@ -137,7 +137,11 @@ const EditAccountModal: React.FC<Props> = ({
               className="block w-full border-0 py-2 px-3.5 h-24 text-gray-900 dark:text-neutral-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:bg-neutral-900 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               {...register("bio")}
             />
-            <p className="absolute w-full text-right text-sm dark:text-neutral-500">
+            <p
+              className={`absolute w-full text-right text-sm ${
+                bioLength > 160 ? "text-red-500" : "dark:text-neutral-400"
+              }`}
+            >
               {bioLength}/160
             </p>
           </Field>
