@@ -21,6 +21,7 @@ import AttachmentPreview from "@components/AttachmentPreview";
 import { AttachmentMetadata } from "@server/router/attachments.router";
 import PreviewMediaModal from "@components/PreviewMediaModal";
 import FavoriteButton from "@components/FavoriteButton";
+import LinkPreview from "@components/LinkPreview";
 
 type ReplyData = {
   parentId: string;
@@ -361,6 +362,31 @@ const SinglePostPage: React.FC = () => {
                 </p>
               </ShouldRender>
             </div>
+
+            <ShouldRender if={!!data?.link}>
+              <div className="w-full -mt-4 -mb-4">
+                <LinkPreview
+                  loading={isLoading}
+                  data={data?.link}
+                />
+
+                <div className="w-full break-words bg-white shadow text-black dark:text-neutral-300 dark:bg-neutral-900 p-4 mt-2 border-l-4 border-gray-300 dark:border-neutral-500">
+                  <h3 className="text-xl font-bold">{data?.link?.title}</h3>
+                  <p className="mt-2 leading-7">{`"${data?.link?.description}"`}</p>
+                  <p className="font-bold text-sm">
+                    Read more on{" "}
+                    <a
+                      href={data?.link?.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline italic text-emerald-500"
+                    >
+                      {data?.link?.url}
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </ShouldRender>
 
             <ReactMarkdown className="prose" lines={5} loading={isLoading}>
               {data?.body}

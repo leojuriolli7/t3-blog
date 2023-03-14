@@ -15,6 +15,7 @@ import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import Dropzone from "@components/Dropzone";
+import Link from "@components/Link";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const CreatePostPage: React.FC = () => {
   const { register, handleSubmit, control, formState, watch } = methods;
 
   const files = watch("files");
+  const link = watch("link");
   const { errors } = formState;
 
   const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
@@ -88,6 +90,9 @@ const CreatePostPage: React.FC = () => {
         body: values.body,
         tags: values.tags,
         title: values.title,
+        ...(values?.link && {
+          link: values?.link,
+        }),
       });
     },
     [create]
@@ -124,6 +129,8 @@ const CreatePostPage: React.FC = () => {
                 name="body"
               />
             </Field>
+
+            <Link />
 
             <Dropzone />
 

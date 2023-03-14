@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -110,7 +110,7 @@ model Tag {
   name  String @unique
   posts Post[]
 
-    @@fulltext([name])
+  @@fulltext([name])
 }
 
 model Post {
@@ -121,6 +121,7 @@ model Post {
   updatedAt   DateTime           @updatedAt
   user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String?
+  link        Link?
   favoritedBy FavoritesOnUsers[]
 
   tags Tag[]
@@ -129,10 +130,23 @@ model Post {
   likes       Like[]
   Comment     Comment[]
 
+  @@index([userId])
   @@fulltext([body])
   @@fulltext([title])
   @@fulltext([body, title])
-  @@index([userId])
+}
+
+model Link {
+  id          String  @id @default(uuid())
+  postId      String  @unique
+  image       String
+  title       String
+  url         String
+  description String
+  publisher   String?
+  post        Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
 }
 
 model Attachment {

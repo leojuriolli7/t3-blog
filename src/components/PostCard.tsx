@@ -3,6 +3,7 @@ import getUserDisplayName from "@utils/getUserDisplayName";
 import { PostFromList } from "@utils/types";
 import Link from "next/link";
 import LikeCount from "./LikeCount";
+import LinkPreview from "./LinkPreview";
 import ShouldRender from "./ShouldRender";
 import TagList from "./TagList";
 
@@ -19,6 +20,13 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
           loading ? "pointer-events-none" : ""
         }`}
       >
+        <ShouldRender if={post?.link}>
+          <LinkPreview
+            data={post?.link}
+            loading={loading}
+            disableImagePreview
+          />
+        </ShouldRender>
         <div className="absolute flex flex-col gap-3 sm:-left-3 -left-1 top-3">
           <LikeCount label={post?.likes} />
 

@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isObjectEmpty } from "@utils/checkEmpty";
 import { toast } from "react-toastify";
 import SelectTags from "./SelectTags";
+import Link from "./Link";
 
 type Props = {
   post?: SinglePost;
@@ -43,7 +44,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     isLoading: updating,
     error: updateError,
   } = trpc.useMutation(["posts.update-post"], {
-    onMutate: async ({ postId, tags, body, title }) => {
+    onMutate: async ({ postId, tags, body, title, link }) => {
       await utils.cancelQuery(["posts.single-post", { postId }]);
 
       const prevData = utils.getQueryData(["posts.single-post", { postId }]);
@@ -53,6 +54,18 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
         id: uuid(),
       }));
 
+      const formattedLink = link?.url
+        ? {
+            image: link.image,
+            title: link.title,
+            description: link.description,
+            url: link.url,
+            publisher: link?.publisher || null,
+            postId,
+            id: uuid(),
+          }
+        : undefined;
+
       utils.setQueryData(["posts.single-post", { postId }], (old) => ({
         ...old!,
         ...(body && {
@@ -61,6 +74,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
         ...(title && {
           title,
         }),
+        link: formattedLink,
         tags: mappedTags,
       }));
 
@@ -125,6 +139,8 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
         <Field error={errors.body}>
           <MarkdownEditor control={methods.control} name="body" />
         </Field>
+
+        <Link initialLink={post?.link} />
 
         <div className="w-full">
           <SelectTags

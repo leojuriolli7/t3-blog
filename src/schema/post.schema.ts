@@ -1,12 +1,24 @@
 import { UPLOAD_MAX_NUMBER_OF_FILES } from "@config/aws";
 import z from "zod";
 
+const link = z
+  .object({
+    image: z.string(),
+    title: z.string(),
+    url: z.string().url(),
+    description: z.string(),
+    publisher: z.string().optional().nullable(),
+  })
+  .optional()
+  .nullable();
+
 export const createPostSchema = z.object({
   title: z
     .string()
     .min(5, "Minimum title length is 5")
     .max(256, "Max title length is 256"),
   body: z.string().min(5, "Minimum body length is 5"),
+  link,
   tags: z
     .string()
     .array()
@@ -77,6 +89,7 @@ export const updatePostSchema = z.object({
   title: z.string().max(256, "Max title length is 256").optional(),
   body: z.string().min(10).optional(),
   postId: z.string().uuid(),
+  link,
   tags: z
     .string()
     .array()

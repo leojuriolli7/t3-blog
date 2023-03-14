@@ -1,6 +1,7 @@
 import {
   FavoritesOnUsers,
   Like,
+  Link,
   Post,
   Prisma,
   PrismaClient,
@@ -15,6 +16,7 @@ export const getPostWithLikes = (
         user: User | null;
         likes: Like[];
         tags?: Tag[];
+        link?: Link | null;
         favoritedBy?: FavoritesOnUsers[] | undefined;
       })
     | null,

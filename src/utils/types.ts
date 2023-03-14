@@ -29,6 +29,7 @@ export type FollowingUser =
   InferQueryOutput<"users.get-following">["following"][number]["following"];
 
 export type Attachment = InferQueryOutput<"attachments.get-post-attachments">;
+export type Metadata = InferQueryOutput<"scraper.scrape-link">;
 
 // React-hook-form Controller's 'field' type
 export type FieldType = ControllerRenderProps<FieldValues, string>;
