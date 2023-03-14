@@ -149,6 +149,7 @@ export const postRouter = createRouter()
               user: true,
               likes: true,
               tags: true,
+              link: true,
             },
           });
 
@@ -197,6 +198,7 @@ export const postRouter = createRouter()
           user: true,
           likes: true,
           tags: true,
+          link: true,
         },
       });
 
@@ -239,6 +241,8 @@ export const postRouter = createRouter()
         include: {
           likes: true,
           user: true,
+          link: true,
+          tags: true,
         },
         take: input.limit + 1,
         skip: input.skip,
@@ -363,6 +367,7 @@ export const postRouter = createRouter()
           user: true,
           likes: true,
           tags: true,
+          link: true,
         },
         where: {
           favoritedBy: {
@@ -479,6 +484,7 @@ export const postRouter = createRouter()
           id: input.postId,
         },
         include: {
+          link: true,
           tags: {
             include: {
               _count: {
@@ -508,6 +514,19 @@ export const postRouter = createRouter()
         (tag) => tagsToRemove.indexOf(tag) < 0
       );
 
+      const previousLink = previousPost?.link?.url;
+      const userIsDeletingLink = !input?.link?.url && !!previousLink;
+      const userIsAddingNewLink = !!input?.link?.url && !!previousLink;
+      const userIsCreatingLink = !!input?.link?.url && !previousLink;
+
+      if (userIsDeletingLink || userIsAddingNewLink) {
+        await ctx.prisma.link.delete({
+          where: {
+            postId: input.postId,
+          },
+        });
+      }
+
       const post = await ctx.prisma.post.update({
         where: {
           id: input.postId,
@@ -519,6 +538,20 @@ export const postRouter = createRouter()
           ...(input.title && {
             title: input.title,
           }),
+          link: {
+            ...((userIsAddingNewLink || userIsCreatingLink) &&
+              !!input?.link?.url && {
+                create: {
+                  image: input.link?.image,
+                  title: input.link?.title,
+                  url: input.link.url,
+                  description: input.link?.description,
+                  ...(input.link?.publisher && {
+                    publisher: input.link?.publisher,
+                  }),
+                },
+              }),
+          },
           tags: {
             ...(tagsToCreateOrConnect?.length && {
               connectOrCreate: tagsToCreateOrConnect.map((tag) => ({

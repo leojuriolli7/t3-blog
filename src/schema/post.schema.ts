@@ -7,7 +7,7 @@ const link = z
     title: z.string(),
     url: z.string().url(),
     description: z.string(),
-    publisher: z.string().optional(),
+    publisher: z.string().optional().nullable(),
   })
   .optional()
   .nullable();
