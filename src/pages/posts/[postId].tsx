@@ -368,7 +368,6 @@ const SinglePostPage: React.FC = () => {
                 <LinkPreview
                   loading={isLoading}
                   data={data?.link}
-                  disableImagePreview
                 />
 
                 <div className="w-full break-words bg-white shadow text-black dark:text-neutral-300 dark:bg-neutral-900 p-4 mt-2 border-l-4 border-gray-300 dark:border-neutral-500">

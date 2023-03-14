@@ -2,7 +2,6 @@ import { createRouter } from "@server/createRouter";
 import _metascraper from "metascraper";
 import metascraperDescription from "metascraper-description";
 import metascraperImage from "metascraper-image";
-import metascraperLogoFavicon from "metascraper-logo-favicon";
 import metascraperPublisher from "metascraper-publisher";
 import metascraperTitle from "metascraper-title";
 import metascraperUrl from "metascraper-url";
@@ -31,7 +30,6 @@ export const scraperRouter = createRouter().query("scrape-link", {
     const metascraper = _metascraper([
       metascraperDescription(),
       metascraperImage(),
-      metascraperLogoFavicon(),
       metascraperPublisher(),
       metascraperTitle(),
       metascraperUrl(),
