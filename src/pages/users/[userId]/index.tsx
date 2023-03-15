@@ -39,7 +39,8 @@ const UserPage: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const userId = router.query.userId as string;
-  const userIsProfileOwner = userId === session?.user?.id;
+  const userIsProfileOwner =
+    !!session?.user?.id && userId === session?.user?.id;
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
@@ -242,9 +243,9 @@ const UserPage: React.FC = () => {
               </GradientButton>
             </ShouldRender>
             <ShouldRender if={userIsProfileOwner}>
-              <button
+              <div
                 className="absolute bottom-0 right-10 bg-emerald-500 rounded-full flex justify-center items-center p-2 shadow-2xl"
-                type="button"
+                role="button"
               >
                 <Popover.Main
                   icon={
@@ -297,7 +298,7 @@ const UserPage: React.FC = () => {
                     />
                   </Link>
                 </Popover.Main>
-              </button>
+              </div>
             </ShouldRender>
           </div>
           <div className="text-center w-fit">
@@ -313,9 +314,10 @@ const UserPage: React.FC = () => {
               </p>
             </ShouldRender>
             <div className="w-full mt-3 mb-3 flex justify-center gap-2 items-center">
-              <div
+              <button
                 className="cursor-pointer flex flex-col items-center"
                 onClick={() => setOpenFollowersModal(true)}
+                disabled={isLoading}
               >
                 <p className="prose-base text-neutral-600 dark:text-neutral-400 hover:underline hover:brightness-125">
                   Followers
@@ -326,9 +328,10 @@ const UserPage: React.FC = () => {
                 <ShouldRender if={isLoading}>
                   <Skeleton width="w-6" />
                 </ShouldRender>
-              </div>
+              </button>
 
-              <div
+              <button
+                disabled={isLoading}
                 className="cursor-pointer flex flex-col items-center"
                 onClick={() => setOpenFollowingModal(true)}
               >
@@ -342,7 +345,7 @@ const UserPage: React.FC = () => {
                 <ShouldRender if={isLoading}>
                   <Skeleton width="w-6" />
                 </ShouldRender>
-              </div>
+              </button>
             </div>
             <ShouldRender if={!!user?.bio}>
               <blockquote className="w-full max-w-[356px] mt-2 text-left dark:text-neutral-400 prose border-l-4 border-gray-300 bg-gray-50 dark:border-gray-500 dark:bg-neutral-800 p-4">
@@ -414,11 +417,7 @@ const UserPage: React.FC = () => {
         onConfirm={onConfirm}
       />
 
-      <EditAccountModal
-        openState={isEditAccountModalOpen}
-        onClose={toggleEditModal(false)}
-        user={user}
-      />
+      <EditAccountModal openState={isEditAccountModalOpen} user={user} />
 
       <FollowersModal user={user} openState={openFollowersModalState} />
       <FollowingModal user={user} openState={openFollowingModalState} />

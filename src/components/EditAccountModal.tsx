@@ -12,20 +12,18 @@ import { User } from "@utils/types";
 import Image from "next/image";
 
 type Props = {
-  onClose: () => void;
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
   user?: User;
 };
 
 const EditAccountModal: React.FC<Props> = ({
-  onClose,
   openState,
   user: userInformation,
 }) => {
   const router = useRouter();
   const userId = router.query.userId as string;
 
-  const [isOpen] = openState;
+  const [isOpen, setIsOpen] = openState;
 
   const { register, handleSubmit, formState, setValue, watch } =
     useForm<UpdateUserInput>({
@@ -57,7 +55,7 @@ const EditAccountModal: React.FC<Props> = ({
         ]);
 
         toast.success("Profile updated successfully!");
-        onClose();
+        setIsOpen(false);
       },
       onError(error) {
         toast.error(error?.message);
