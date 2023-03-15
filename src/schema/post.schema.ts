@@ -64,6 +64,7 @@ export const getFavoritesSchema = z.object({
   skip: z.number().optional(),
   userId: z.string().optional(),
   filter: z.string().optional(),
+  query: z.string().optional(),
 });
 
 export const getLikedPostsSchema = getFavoritesSchema;

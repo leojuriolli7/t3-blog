@@ -360,6 +360,8 @@ export const postRouter = createRouter()
     input: getFavoritesSchema,
     async resolve({ ctx, input }) {
       const { userId, limit, skip, cursor } = input;
+      const query = input?.query;
+
       const posts = await ctx.prisma.post.findMany({
         take: limit + 1,
         skip: skip,
@@ -376,6 +378,16 @@ export const postRouter = createRouter()
               userId,
             },
           },
+          ...(query && {
+            body: {
+              search: query,
+            },
+            OR: {
+              title: {
+                search: query,
+              },
+            },
+          }),
         },
       });
 
@@ -396,6 +408,8 @@ export const postRouter = createRouter()
   .query("get-liked-posts", {
     input: getLikedPostsSchema,
     async resolve({ ctx, input }) {
+      const query = input?.query;
+
       const { userId, limit, skip, cursor } = input;
       const posts = await ctx.prisma.post.findMany({
         take: limit + 1,
@@ -414,6 +428,16 @@ export const postRouter = createRouter()
               userId,
             },
           },
+          ...(query && {
+            body: {
+              search: query,
+            },
+            OR: {
+              title: {
+                search: query,
+              },
+            },
+          }),
         },
       });
 
