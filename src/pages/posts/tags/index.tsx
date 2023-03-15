@@ -16,16 +16,10 @@ import CompactCard from "@components/CompactCard";
 import { useRouter } from "next/router";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
-import debounce from "lodash.debounce";
 
 const TagsListPage: React.FC = () => {
   const router = useRouter();
   const [queryValue, setQueryValue] = useState("");
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setQueryValue(e.target.value);
-
-  const onChange = debounce(handleChange, 500);
 
   const onSeeMoreTag = useCallback(
     (tagId?: string) => () => router.push(`/posts/tags/${tagId}`),
@@ -80,7 +74,7 @@ const TagsListPage: React.FC = () => {
           </h2>
           <p className="-mb-3">See all tags created on T3 blog.</p>
         </div>
-        <SearchInput onChange={onChange} placeholder="Search tags" />
+        <SearchInput setQuery={setQueryValue} placeholder="Search tags" />
         {(isLoading ? loadingArray(4) : dataToShow)?.map((tag, key) => (
           <Section
             loading={isLoading}

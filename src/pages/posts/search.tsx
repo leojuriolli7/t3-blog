@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import MainLayout from "@components/MainLayout";
 import SearchAnimation from "@public/static/search.json";
 import { trpc } from "@utils/trpc";
@@ -11,7 +11,6 @@ import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
 import MetaTags from "@components/MetaTags";
 import SearchInput from "@components/SearchInput";
-import debounce from "lodash.debounce";
 
 const LOTTIE_OPTIONS = {
   loop: true,
@@ -24,11 +23,6 @@ const SearchPage = () => {
     useFilterPosts();
 
   const [queryValue, setQueryValue] = useState("");
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setQueryValue(e.target.value);
-
-  const onChange = debounce(handleChange, 500);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
@@ -87,7 +81,7 @@ const SearchPage = () => {
             ))}
           </div>
           <div className="w-full">
-            <SearchInput onChange={onChange} placeholder="search posts" />
+            <SearchInput setQuery={setQueryValue} placeholder="search posts" />
           </div>
         </div>
 
