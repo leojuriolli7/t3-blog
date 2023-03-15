@@ -44,7 +44,7 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
         <ReactMarkdown
           loading={loading}
           lines={3}
-          className={`prose-sm line-clamp-4 text-ellipsis prose-headings:text-base sm:max-h-none max-h-56`}
+          className={`prose-sm line-clamp-4 text-ellipsis prose-headings:text-base max-h-56`}
         >
           {post?.body}
         </ReactMarkdown>
