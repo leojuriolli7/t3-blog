@@ -2,20 +2,15 @@ import React, { useEffect, useMemo, useRef } from "react";
 import MainLayout from "@components/MainLayout";
 import MetaTags from "@components/MetaTags";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
-import getUserDisplayName from "@utils/getUserDisplayName";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
 import EmptyMessage from "@components/EmptyMessage";
 
-const UserFavoritesPage: React.FC = () => {
-  const { data: session } = useSession();
-  const user = session?.user;
-
+const UserLikedPage: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
@@ -27,7 +22,7 @@ const UserFavoritesPage: React.FC = () => {
     hasNextPage,
   } = trpc.useInfiniteQuery(
     [
-      "posts.get-favorite-posts",
+      "posts.get-liked-posts",
       {
         limit: 6,
       },
@@ -53,14 +48,11 @@ const UserFavoritesPage: React.FC = () => {
   }, [reachedBottom]);
   return (
     <>
-      <MetaTags
-        title={getUserDisplayName(user)}
-        image={user?.image || "/static/default-profile.jpg"}
-      />
+      <MetaTags title="Liked posts" />
       <MainLayout>
-        <h2 className="sm:text-3xl text-2xl w-full text-left -mb-5">
-          Your favorites
-        </h2>
+        <h1 className="sm:text-3xl text-2xl prose dark:prose-invert font-bold w-full text-left -mb-5">
+          Your likes
+        </h1>
         {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
           <PostCard
             key={isLoading ? i : post?.id}
@@ -77,9 +69,9 @@ const UserFavoritesPage: React.FC = () => {
 
         <ShouldRender if={noDataToShow}>
           <EmptyMessage
-            message="You have not favorited any posts yet."
-            redirect={`/users/${session?.user?.id}`}
-            redirectMessage="Back to your profile"
+            message="You have not liked any posts yet."
+            redirect="/"
+            redirectMessage="Back to home"
           />
         </ShouldRender>
       </MainLayout>
@@ -87,23 +79,13 @@ const UserFavoritesPage: React.FC = () => {
   );
 };
 
-export default UserFavoritesPage;
+export default UserLikedPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  const { query } = context;
-
   if (!session) {
     return { redirect: { destination: "/" } };
-  }
-
-  if (session.user.id !== query.userId) {
-    return {
-      redirect: {
-        destination: "/",
-      },
-    };
   }
 
   return {

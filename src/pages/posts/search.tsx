@@ -68,7 +68,9 @@ const SearchPage = () => {
       <MetaTags title="Search posts" />
       <MainLayout>
         <div className="w-full">
-          <h1 className="text-3xl mb-3">Search posts</h1>
+          <h1 className="text-3xl mb-3 font-bold prose dark:prose-invert">
+            Search posts
+          </h1>
           <div className="flex gap-3 mb-3">
             {filters.map((filter) => (
               <Tab

@@ -17,6 +17,7 @@ import {
   getSinglePostSchema,
   updatePostSchema,
   searchPostsSchema,
+  getLikedPostsSchema,
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
@@ -372,6 +373,44 @@ export const postRouter = createRouter()
         where: {
           favoritedBy: {
             some: {
+              userId,
+            },
+          },
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+
+      return {
+        posts: postsWithLikes,
+        nextCursor,
+      };
+    },
+  })
+  .query("get-liked-posts", {
+    input: getLikedPostsSchema,
+    async resolve({ ctx, input }) {
+      const { userId, limit, skip, cursor } = input;
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
+        include: {
+          user: true,
+          likes: true,
+          tags: true,
+          link: true,
+        },
+        where: {
+          likes: {
+            some: {
+              dislike: false,
               userId,
             },
           },

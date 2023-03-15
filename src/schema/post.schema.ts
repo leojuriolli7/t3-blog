@@ -66,6 +66,8 @@ export const getFavoritesSchema = z.object({
   filter: z.string().optional(),
 });
 
+export const getLikedPostsSchema = getFavoritesSchema;
+
 export const getPostsByTagsSchema = z.object({
   tagLimit: z.number(),
   cursor: z.string().nullish(),

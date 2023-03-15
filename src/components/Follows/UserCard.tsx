@@ -28,7 +28,7 @@ const UserCard: React.FC<Props> = ({ loading, user, onClickCard }) => {
         loading ? "pointer-events-none" : ""
       } sm:w-64 w-full cursor-pointer hover:opacity-80 bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700 p-6 flex justify-between items-center gap-2`}
     >
-      <div className="w-8 min-w-[32px]">
+      <div className="w-8 min-w-[32px] h-8">
         <Image
           width={32}
           height={32}

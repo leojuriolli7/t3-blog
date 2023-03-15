@@ -10,6 +10,7 @@ import Image from "next/image";
 import Popover from "./Popover";
 import { AiFillHeart, AiFillTag } from "react-icons/ai";
 import { HiMenu, HiSearch } from "react-icons/hi";
+import { AiFillLike } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import Spinner from "./Spinner";
 
@@ -52,15 +53,6 @@ const Header: React.FC = () => {
                 onClick={redirect(`/users/${session?.data?.user?.id}`)}
               />
               <Popover.Item
-                title="Favorite posts"
-                subtitle="Your favorited posts"
-                gap="1"
-                icon={<AiFillHeart size={16} className="text-emerald-500" />}
-                onClick={redirect(
-                  `/users/${session?.data?.user?.id}/favorites`
-                )}
-              />
-              <Popover.Item
                 icon={
                   <FaUserFriends size={14} className="text-emerald-500 mt-1" />
                 }
@@ -68,6 +60,22 @@ const Header: React.FC = () => {
                 gap="2"
                 subtitle="Posts from your following"
                 onClick={redirect("/posts/following")}
+              />
+              <Popover.Item
+                title="Favorite posts"
+                subtitle="Your favorited posts"
+                gap="1"
+                icon={<AiFillHeart size={16} className="text-emerald-500" />}
+                onClick={redirect(`/posts/favorited`)}
+              />
+              <Popover.Item
+                icon={
+                  <AiFillLike size={14} className="text-emerald-500 mt-1" />
+                }
+                title="Liked"
+                gap="1"
+                subtitle="Posts you liked"
+                onClick={redirect(`/posts/liked`)}
               />
               <Popover.Item
                 title="Logout"
