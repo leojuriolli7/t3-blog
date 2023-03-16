@@ -23,7 +23,7 @@ const Avatar: React.FC<Props> = ({ image }) => {
     }
   };
 
-  useEffect(() => setCurrentImage(image), [image]);
+  useEffect(() => setCurrentImage(image || undefined), [image]);
 
   return (
     <>
