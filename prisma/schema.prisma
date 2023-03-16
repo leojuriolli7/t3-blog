@@ -142,7 +142,7 @@ model Link {
   image       String
   title       String
   url         String
-  description String
+  description String  @db.VarChar(10000)
   publisher   String?
   post        Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
 

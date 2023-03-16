@@ -3,6 +3,7 @@ import debounce from "lodash.debounce";
 import { useFormContext } from "react-hook-form";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import unescape from "lodash.unescape";
 import Field from "./Field";
 import isURL from "validator/lib/isURL";
 import ShouldRender from "./ShouldRender";
@@ -65,7 +66,9 @@ const Link: React.FC<Props> = ({ initialLink }) => {
             data?.image || "https://t3-blog-pi.vercel.app/static/default.jpg",
           title: data?.title || "Shared link",
           url: data.url,
-          description: data?.description || "Link shared on T3 blog.",
+          description: data?.description
+            ? unescape(data?.description)
+            : "Link shared on T3 blog.",
           ...(data?.publisher && {
             publisher: data?.publisher,
           }),

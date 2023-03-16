@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import PreviewMediaModal from "./PreviewMediaModal";
 import { IoExpandOutline } from "react-icons/io5";
 import Skeleton from "./Skeleton";
+import unescape from "lodash.unescape";
 import ShouldRender from "./ShouldRender";
 import { Link } from "@prisma/client";
 type Props = {
@@ -71,7 +72,9 @@ const LinkPreview: React.FC<Props> = ({
                   {data?.title || "Shared link"}
                 </p>
                 <p className="sm:line-clamp-3 line-clamp-2 text-sm break-all">
-                  {data?.description || "Link shared on T3 Blog."}
+                  {data?.description
+                    ? unescape(data?.description)
+                    : "Link shared on T3 Blog."}
                 </p>
               </div>
               <a
