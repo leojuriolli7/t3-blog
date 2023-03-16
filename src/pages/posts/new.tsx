@@ -28,7 +28,6 @@ const CreatePostPage: React.FC = () => {
   const { register, handleSubmit, control, formState, watch } = methods;
 
   const files = watch("files");
-  const link = watch("link");
   const { errors } = formState;
 
   const { data: tags, isLoading: fetchingTags } = trpc.useQuery(

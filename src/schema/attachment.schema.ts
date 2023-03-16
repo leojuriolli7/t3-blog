@@ -11,3 +11,7 @@ export const createPresignedUrlSchema = z.object({
   type: z.string(),
   name: z.string(),
 });
+
+export const createPresignedAvatarUrlSchema = z.object({
+  userId: z.string(),
+});

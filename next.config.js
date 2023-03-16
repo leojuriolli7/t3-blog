@@ -7,6 +7,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "avatars.githubusercontent.com",
       "t3-images-bucket.s3.sa-east-1.amazonaws.com",
+      "t3-avatars-bucket.s3.amazonaws.com",
     ],
   },
 };

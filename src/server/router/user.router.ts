@@ -170,6 +170,9 @@ export const userRouter = createRouter()
             ...(input.bio && {
               bio: input.bio,
             }),
+            ...(input?.image && {
+              image: input.image,
+            }),
           },
         });
         return user;
