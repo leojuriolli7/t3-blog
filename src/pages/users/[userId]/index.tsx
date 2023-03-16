@@ -45,7 +45,7 @@ const UserPage: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
-  const { data: user } = trpc.useQuery(
+  const { data: user, isLoading: loadingUser } = trpc.useQuery(
     [
       "users.single-user",
       {
@@ -244,7 +244,9 @@ const UserPage: React.FC = () => {
             </ShouldRender>
             <ShouldRender if={userIsProfileOwner}>
               <div
-                className="absolute bottom-0 right-10 bg-emerald-500 rounded-full flex justify-center items-center p-2 shadow-2xl"
+                className={`${
+                  loadingUser ? "pointer-events-none opacity-80" : ""
+                } absolute bottom-0 right-10 bg-emerald-500 rounded-full flex justify-center items-center p-2 shadow-2xl`}
                 role="button"
               >
                 <Popover.Main
