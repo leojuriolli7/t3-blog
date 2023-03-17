@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +34,7 @@ const CreatePostPage: React.FC = () => {
     ["posts.tags"],
     {
       refetchOnWindowFocus: false,
+      ssr: false,
     }
   );
   const initialTags = tags?.map((tag) => tag.name);

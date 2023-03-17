@@ -9,6 +9,7 @@ import {
   updateUserSchema,
 } from "@schema/user.schema";
 import { isStringEmpty } from "@utils/checkEmpty";
+import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 
 export const userRouter = createRouter()
   .query("single-user", {
@@ -114,16 +115,7 @@ export const userRouter = createRouter()
       };
     },
   })
-  .middleware(async ({ ctx, next }) => {
-    if (!ctx.session) {
-      throw new trpc.TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You need to be logged in to access this method.",
-      });
-    }
-
-    return next();
-  })
+  .middleware(isLoggedInMiddleware)
   .mutation("delete-user", {
     input: deleteUserSchema,
     async resolve({ ctx, input }) {

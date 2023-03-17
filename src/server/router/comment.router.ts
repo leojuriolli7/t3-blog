@@ -1,5 +1,6 @@
 import { createRouter } from "@server/createRouter";
-import { deleteChildComments } from "@server/utils";
+import { deleteChildComments } from "@server/utils/deleteChildComments";
+import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
@@ -39,16 +40,7 @@ export const commentRouter = createRouter()
       }
     },
   })
-  .middleware(async ({ ctx, next }) => {
-    if (!ctx.session?.user) {
-      throw new trpc.TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Login to post a comment",
-      });
-    }
-
-    return next();
-  })
+  .middleware(isLoggedInMiddleware)
   .mutation("add-comment", {
     input: createCommentSchema,
     async resolve({ ctx, input }) {

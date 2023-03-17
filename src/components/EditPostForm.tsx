@@ -23,7 +23,13 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const utils = trpc.useContext();
   const router = useRouter();
   const postId = router.query.postId as string;
-  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(["posts.tags"]);
+  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
+    ["posts.tags"],
+    {
+      ssr: false,
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const allTags = tags?.map((tag) => tag.name);
   const currentTags = post?.tags?.map((tag) => tag.name);

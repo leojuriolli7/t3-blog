@@ -74,6 +74,9 @@ const UserPage: React.FC = () => {
       ],
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
+        // The initial focus of this page is the user, so the
+        // user's posts can load afterwards.
+        ssr: false,
       }
     );
 
@@ -220,7 +223,7 @@ const UserPage: React.FC = () => {
   return (
     <>
       <MetaTags
-        title={getUserDisplayName(user)}
+        title={getUserDisplayName(user) || "User"}
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>

@@ -10,7 +10,7 @@ import ShouldRender from "@components/ShouldRender";
 import MainLayout from "@components/MainLayout";
 import Skeleton from "@components/Skeleton";
 import ActionButton from "@components/ActionButton";
-import EditPostForm from "@components/EditPostForm";
+import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
@@ -29,6 +29,12 @@ type ReplyData = {
 };
 
 export type ReplyingTo = ReplyData | undefined;
+
+// By importing EditPostForm dynamically, we reduce the initial js.
+const EditPostForm = dynamic(() => import("@components/EditPostForm"), {
+  ssr: false,
+  loading: () => <Skeleton heading width="w-full" lines={2} />,
+});
 
 const SinglePostPage: React.FC = () => {
   const router = useRouter();
@@ -365,10 +371,7 @@ const SinglePostPage: React.FC = () => {
 
             <ShouldRender if={!!data?.link}>
               <div className="w-full -mt-4 -mb-4">
-                <LinkPreview
-                  loading={isLoading}
-                  data={data?.link}
-                />
+                <LinkPreview loading={isLoading} data={data?.link} />
 
                 <div className="w-full break-words bg-white shadow text-black dark:text-neutral-300 dark:bg-neutral-900 p-4 mt-2 border-l-4 border-gray-300 dark:border-neutral-500">
                   <h3 className="text-xl font-bold">{data?.link?.title}</h3>

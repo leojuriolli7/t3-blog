@@ -4,7 +4,8 @@ import {
   deleteChildComments,
   getFiltersByInput,
   getPostWithLikes,
-} from "@server/utils";
+  isLoggedInMiddleware,
+} from "@server/utils/index";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
@@ -21,77 +22,6 @@ import {
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
-  .mutation("create-post", {
-    input: createPostSchema,
-    async resolve({ ctx, input }) {
-      if (!ctx.session) {
-        new trpc.TRPCError({
-          code: "FORBIDDEN",
-          message: "Cannot create posts while not logged in",
-        });
-      }
-
-      const inputHasNoTags = !input?.tags?.length;
-
-      if (
-        isStringEmpty(input.body) ||
-        isStringEmpty(input.title) ||
-        inputHasNoTags
-      ) {
-        throw new trpc.TRPCError({
-          code: "BAD_REQUEST",
-          message: "Body, title and tag are required",
-        });
-      }
-
-      const tooManyTags = input?.tags?.length > 5;
-      if (tooManyTags) {
-        throw new trpc.TRPCError({
-          code: "BAD_REQUEST",
-          message: "Maximum of 5 tags per post",
-        });
-      }
-
-      const post = await ctx.prisma.post.create({
-        data: {
-          title: input.title,
-          body: input.body,
-          tags: {
-            connectOrCreate: input.tags.map((tag) => ({
-              create: {
-                name: tag,
-              },
-              where: {
-                name: tag,
-              },
-            })),
-          },
-          user: {
-            connect: {
-              id: ctx?.session?.user?.id,
-            },
-          },
-        },
-      });
-
-      if (!!input?.link) {
-        await ctx.prisma.link.create({
-          data: {
-            postId: post.id,
-            image: input.link?.image,
-            title: input.link?.title,
-            url: input.link.url,
-            description: input.link?.description,
-            ...(input.link?.publisher && {
-              publisher: input.link?.publisher,
-            }),
-          },
-        });
-      }
-
-      return post;
-    },
-  })
   .query("tags", {
     resolve({ ctx }) {
       const tags = ctx.prisma.tag.findMany();
@@ -114,6 +44,15 @@ export const postRouter = createRouter()
           _count: {
             select: { posts: true },
           },
+          posts: {
+            take: 5,
+            include: {
+              user: true,
+              likes: true,
+              tags: true,
+              link: true,
+            },
+          },
         },
         orderBy: {
           posts: {
@@ -135,32 +74,15 @@ export const postRouter = createRouter()
         nextCursor = nextItem?.id;
       }
 
-      const tagsWithPosts = await Promise.all(
-        tags.map(async (tag) => {
-          const posts = await ctx.prisma.post.findMany({
-            where: {
-              tags: {
-                some: {
-                  id: tag.id,
-                },
-              },
-            },
-            take: 5,
-            include: {
-              user: true,
-              likes: true,
-              tags: true,
-              link: true,
-            },
-          });
+      const tagsWithPosts = tags.map((tag) => {
+        const posts = tag.posts;
 
-          const postsWithLikes = posts.map((post) => getPostWithLikes(post));
-          return {
-            ...tag,
-            posts: postsWithLikes,
-          };
-        })
-      );
+        const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+        return {
+          ...tag,
+          posts: postsWithLikes,
+        };
+      });
 
       return {
         tags: tagsWithPosts,
@@ -455,15 +377,70 @@ export const postRouter = createRouter()
       };
     },
   })
-  .middleware(async ({ ctx, next }) => {
-    if (!ctx.session) {
-      throw new trpc.TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You need to be logged in to do this.",
-      });
-    }
+  .middleware(isLoggedInMiddleware)
+  .mutation("create-post", {
+    input: createPostSchema,
+    async resolve({ ctx, input }) {
+      const inputHasNoTags = !input?.tags?.length;
 
-    return next();
+      if (
+        isStringEmpty(input.body) ||
+        isStringEmpty(input.title) ||
+        inputHasNoTags
+      ) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Body, title and tag are required",
+        });
+      }
+
+      const tooManyTags = input?.tags?.length > 5;
+      if (tooManyTags) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Maximum of 5 tags per post",
+        });
+      }
+
+      const post = await ctx.prisma.post.create({
+        data: {
+          title: input.title,
+          body: input.body,
+          tags: {
+            connectOrCreate: input.tags.map((tag) => ({
+              create: {
+                name: tag,
+              },
+              where: {
+                name: tag,
+              },
+            })),
+          },
+          user: {
+            connect: {
+              id: ctx?.session?.user?.id,
+            },
+          },
+        },
+      });
+
+      if (!!input?.link) {
+        await ctx.prisma.link.create({
+          data: {
+            postId: post.id,
+            image: input.link?.image,
+            title: input.link?.title,
+            url: input.link.url,
+            description: input.link?.description,
+            ...(input.link?.publisher && {
+              publisher: input.link?.publisher,
+            }),
+          },
+        });
+      }
+
+      return post;
+    },
   })
   .mutation("delete-post", {
     input: getSinglePostSchema,

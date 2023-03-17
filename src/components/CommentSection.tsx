@@ -19,6 +19,9 @@ const CommentSection: React.FC = () => {
     ],
     {
       refetchOnWindowFocus: false,
+      // Disabling ssr here as the main focus of the
+      // page is the post itself, the comments can load afterwards.
+      ssr: false,
     }
   );
 

@@ -66,7 +66,7 @@ const TagsListPage: React.FC = () => {
 
   return (
     <>
-      <MetaTags title="Home" />
+      <MetaTags title="All tags" />
       <MainLayout>
         <div className="w-full">
           <h1 className="w-full text-left text-3xl prose dark:prose-invert font-bold">

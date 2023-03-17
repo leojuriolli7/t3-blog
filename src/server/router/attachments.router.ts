@@ -12,6 +12,7 @@ import {
   UPLOAD_MAX_FILE_SIZE,
   UPLOADING_TIME_LIMIT,
 } from "src/config/aws";
+import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 
 export interface AttachmentMetadata extends Attachment {
   url: string;
@@ -45,16 +46,7 @@ export const attachmentsRouter = createRouter()
       return extendedFiles;
     },
   })
-  .middleware(async ({ ctx, next }) => {
-    if (!ctx.session?.user) {
-      throw new trpc.TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You are not authorized to use this method.",
-      });
-    }
-
-    return next();
-  })
+  .middleware(isLoggedInMiddleware)
   .mutation("create-presigned-url", {
     input: createPresignedUrlSchema,
     async resolve({ ctx, input }) {
