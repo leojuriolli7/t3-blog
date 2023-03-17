@@ -17,12 +17,6 @@ button:disabled {
   box-sizing: border-box;
 }
 
-// Fix keen-slider layout shift.
-.keen-slider {
-  display: flex;
-  gap: 15px;
-}
-
 .markdown__content :not(pre) code {
   background: theme("colors.emerald.700");
   color: theme("colors.white");
