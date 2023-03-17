@@ -47,7 +47,8 @@ const EditAccountModal: React.FC<Props> = ({
     ["users.update-profile"],
     {
       onSuccess: (data) => {
-        if (!!data?.image) session!.user.image = data?.image;
+        // Overwrite auth session image to the newly uploaded image url.
+        if (!!data?.image) session!.user.image = data.image;
 
         utils.invalidateQueries([
           "users.single-user",
@@ -168,7 +169,15 @@ const EditAccountModal: React.FC<Props> = ({
               />
             </Field>
 
-            <Field error={errors.bio} label="bio">
+            <Field
+              error={errors.bio}
+              label="bio"
+              description={
+                !userInformation?.bio
+                  ? "you have no bio, add one so users can learn more about you."
+                  : undefined
+              }
+            >
               <textarea
                 defaultValue={userInformation?.bio || ""}
                 placeholder="your bio"
