@@ -46,7 +46,7 @@ const LinkPreview: React.FC<Props> = ({
                 src={data?.image || "/static/default.jpg"}
                 className={`aspect-square ${
                   shouldHaveImagePreview
-                    ? "group-hover:opacity-50 cursor-pointer"
+                    ? "group-hover:brightness-50 dark:group-hover:opacity-50 cursor-pointer"
                     : ""
                 } sm:w-36 w-28 flex-shrink-0 object-cover`}
               />
