@@ -169,15 +169,7 @@ const EditAccountModal: React.FC<Props> = ({
               />
             </Field>
 
-            <Field
-              error={errors.bio}
-              label="bio"
-              description={
-                !userInformation?.bio
-                  ? "you have no bio, add one so users can learn more about you."
-                  : undefined
-              }
-            >
+            <Field error={errors.bio} label="bio">
               <textarea
                 defaultValue={userInformation?.bio || ""}
                 placeholder="your bio"
