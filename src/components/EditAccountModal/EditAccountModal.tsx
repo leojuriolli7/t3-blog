@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { User } from "@utils/types";
 import Avatar from "./Avatar";
 import ShouldRender from "@components/ShouldRender";
+import { useSession } from "next-auth/react";
 
 type Props = {
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -22,6 +23,7 @@ const EditAccountModal: React.FC<Props> = ({
   user: userInformation,
 }) => {
   const router = useRouter();
+  const { data: session } = useSession();
   const userId = router.query.userId as string;
 
   const [isOpen, setIsOpen] = openState;
@@ -44,7 +46,9 @@ const EditAccountModal: React.FC<Props> = ({
   const { mutate: update, isLoading: updating } = trpc.useMutation(
     ["users.update-profile"],
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        if (!!data?.image) session!.user.image = data?.image;
+
         utils.invalidateQueries([
           "users.single-user",
           {

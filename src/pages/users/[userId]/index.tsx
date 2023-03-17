@@ -231,6 +231,7 @@ const UserPage: React.FC = () => {
               width={240}
               height={240}
               className="rounded-full"
+              objectFit="cover"
               alt={user?.name as string}
             />
             <ShouldRender if={!userIsProfileOwner && session?.user?.id}>

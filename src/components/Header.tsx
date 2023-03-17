@@ -41,6 +41,7 @@ const Header: React.FC = () => {
                 height={36}
                 alt="Your profile picture"
                 className="rounded-full cursor-pointer"
+                objectFit="cover"
               />
             }
           >

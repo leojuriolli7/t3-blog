@@ -33,6 +33,7 @@ const PostListingPage: React.FC = () => {
     ["posts.following-posts", { limit: 4 }],
     {
       refetchOnWindowFocus: false,
+      ssr: false,
     }
   );
 
