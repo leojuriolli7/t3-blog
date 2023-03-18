@@ -44,6 +44,13 @@ const MutationPlugin: KeenSliderPlugin = (slider) => {
   });
 };
 
+// Fix keen-slider initial layout shift.
+const InitializePlugin: KeenSliderPlugin = (slider) => {
+  slider.on("created", () => {
+    slider?.container?.classList?.add("initialized");
+  });
+};
+
 const arrowIconProps = {
   className:
     "text-neutral-800 dark:text-white flex-shrink-0 sm:w-[30px] sm:h-[30px] h-[20px] w-[20px]",
@@ -83,7 +90,7 @@ const Carousel: React.FC<Props> = ({ children, onFinish }) => {
         setCurrentSlide(instance.track.details.abs);
       },
     },
-    [MutationPlugin, ResizePlugin]
+    [MutationPlugin, ResizePlugin, InitializePlugin]
   );
 
   const isLastSlide =

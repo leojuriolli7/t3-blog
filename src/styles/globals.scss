@@ -17,6 +17,11 @@ button:disabled {
   box-sizing: border-box;
 }
 
+// Fix keen-slider initial layout shift.
+.keen-slider:not(.initialized) {
+  gap: 15px;
+}
+
 .markdown__content :not(pre) code {
   background: theme("colors.emerald.700");
   color: theme("colors.white");
