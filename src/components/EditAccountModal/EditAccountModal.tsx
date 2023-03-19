@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { toast } from "react-toastify";
 import Field from "@components/Field";
-import { isObjectEmpty } from "@utils/checkEmpty";
 import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
 import { Modal } from "../Modal";
 import { useRouter } from "next/router";
@@ -199,7 +198,7 @@ const EditAccountModal: React.FC<Props> = ({
             <button
               className="bg-emerald-500 text-white w-full min-w-fit px-8 py-2 mx-auto hover:opacity-80 mt-7"
               type="submit"
-              disabled={!userInformation || updating || !isObjectEmpty(errors)}
+              disabled={!userInformation || updating}
             >
               Update
             </button>

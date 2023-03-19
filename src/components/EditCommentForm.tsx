@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
-import { isObjectEmpty } from "@utils/checkEmpty";
 
 type Props = {
   comment: CommentWithChildren;
@@ -50,8 +49,6 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
     },
   });
 
-  const shouldBlockUserFromUpdating = !isObjectEmpty(errors);
-
   const onSubmit = useCallback(
     (values: UpdateCommentInput) => {
       update({
@@ -84,7 +81,7 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
       <button
         className="bg-emerald-500 text-white min-w-fit px-8 py-2 mt-2"
         type="submit"
-        disabled={updating || shouldBlockUserFromUpdating}
+        disabled={updating}
       >
         Update
       </button>

@@ -6,7 +6,6 @@ import {
 } from "@schema/comment.schema";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import { isObjectEmpty } from "@utils/checkEmpty";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import ShouldRender from "./ShouldRender";
@@ -102,7 +101,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
           <button
             className="px-5 py-2 mt-2 bg-emerald-500 text-white"
             type="submit"
-            disabled={isLoading || !isObjectEmpty(errors)}
+            disabled={isLoading}
           >
             Send comment
           </button>

@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isObjectEmpty } from "@utils/checkEmpty";
 import { toast } from "react-toastify";
 import SelectTags from "./SelectTags";
 import Link from "./Link";
@@ -102,8 +101,6 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     },
   });
 
-  const shouldBlockUserFromUpdating = !isObjectEmpty(errors);
-
   const onSubmit = useCallback(
     (values: UpdatePostInput) => {
       update({
@@ -161,7 +158,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
         <button
           className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
           type="submit"
-          disabled={updating || shouldBlockUserFromUpdating || fetchingTags}
+          disabled={updating || fetchingTags}
         >
           Update
         </button>

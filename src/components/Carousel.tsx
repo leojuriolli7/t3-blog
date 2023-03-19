@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { KeenSliderPlugin, useKeenSlider } from "keen-slider/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import ShouldRender from "./ShouldRender";
@@ -98,6 +98,11 @@ const Carousel: React.FC<Props> = ({ children, onFinish }) => {
     currentSlide === instanceRef.current.track?.details?.maxIdx;
 
   const isFirstSlide = currentSlide === 0;
+
+  useEffect(() => {
+    instanceRef?.current?.update?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [children]);
 
   return (
     <div className="relative">

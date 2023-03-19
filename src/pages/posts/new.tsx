@@ -8,7 +8,6 @@ import MainLayout from "@components/MainLayout";
 import MarkdownEditor from "@components/MarkdownEditor";
 import { toast } from "react-toastify";
 import Field from "@components/Field";
-import { isObjectEmpty } from "@utils/checkEmpty";
 import MetaTags from "@components/MetaTags";
 import SelectTags from "@components/SelectTags";
 import { GetServerSidePropsContext } from "next";
@@ -144,7 +143,7 @@ const CreatePostPage: React.FC = () => {
             <button
               className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
               type="submit"
-              disabled={isLoading || fetchingTags || !isObjectEmpty(errors)}
+              disabled={isLoading || fetchingTags}
             >
               Create
             </button>
