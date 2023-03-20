@@ -25,7 +25,7 @@ const FollowersModal: React.FC<Props> = ({ openState, user }) => {
       [
         "users.get-followers",
         {
-          limit: 4,
+          limit: 15,
           userId,
         },
       ],
