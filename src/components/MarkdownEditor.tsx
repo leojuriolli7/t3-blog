@@ -6,7 +6,7 @@ import { FieldType } from "@utils/types";
 import hljs from "highlight.js";
 import insert from "markdown-it-ins";
 import taskLists from "markdown-it-task-lists";
-import "highlight.js/styles/atom-one-light.css";
+import "highlight.js/styles/atom-one-dark.css";
 
 type Variants = "condensed" | "regular";
 

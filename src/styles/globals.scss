@@ -105,12 +105,14 @@ button:disabled {
       blockquote p {
         color: theme("colors.zinc.100") !important;
       }
-
-      pre,
-      code {
-        background-color: theme("colors.slate.900");
-      }
     }
+  }
+}
+
+.editor-container .custom-html-style {
+  pre,
+  code {
+    @apply prose-sm text-neutral-200 bg-[#333333];
   }
 }
 
