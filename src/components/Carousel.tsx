@@ -13,37 +13,6 @@ type ArrowProps = {
   prev?: boolean;
 };
 
-// Plugin for watching resize changes and adapting the slider
-const ResizePlugin: KeenSliderPlugin = (slider) => {
-  const observer = new ResizeObserver(function () {
-    slider.update();
-  });
-
-  slider.on("created", () => {
-    observer.observe(slider.container);
-  });
-  slider.on("destroyed", () => {
-    observer.unobserve(slider.container);
-  });
-};
-
-// Plugin for watching new elements added to the slider
-const MutationPlugin: KeenSliderPlugin = (slider) => {
-  const observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-      slider.update();
-    });
-  });
-  const config = { childList: true };
-
-  slider.on("created", () => {
-    observer.observe(slider.container, config);
-  });
-  slider.on("destroyed", () => {
-    observer.disconnect();
-  });
-};
-
 // Fix keen-slider initial layout shift.
 const InitializePlugin: KeenSliderPlugin = (slider) => {
   slider.on("created", () => {
@@ -90,7 +59,7 @@ const Carousel: React.FC<Props> = ({ children, onFinish }) => {
         setCurrentSlide(instance.track.details.abs);
       },
     },
-    [MutationPlugin, ResizePlugin, InitializePlugin]
+    [InitializePlugin]
   );
 
   const isLastSlide =

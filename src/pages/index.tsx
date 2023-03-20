@@ -44,11 +44,6 @@ const PostListingPage: React.FC = () => {
     [router]
   );
 
-  const onSeeMoreFollowing = useCallback(
-    () => router.push(`/posts/following`),
-    [router]
-  );
-
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
 
@@ -60,7 +55,7 @@ const PostListingPage: React.FC = () => {
       [
         "posts.posts",
         {
-          limit: 6,
+          limit: 4,
           filter: currentFilter,
         },
       ],
@@ -94,7 +89,7 @@ const PostListingPage: React.FC = () => {
               Following
             </h2>
             <p className="mb-3">Posts from all your following</p>
-            <Section onClickSeeMore={onSeeMoreFollowing}>
+            <Section onClickSeeMore={redirect("posts/following")}>
               {followingPostsToShow?.map((post) => (
                 <CompactCard
                   key={post.id}
