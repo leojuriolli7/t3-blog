@@ -145,19 +145,13 @@ export const postRouter = createRouter()
       // No user logged in, so no following to get.
       if (!ctx.session?.user) return null;
 
-      const following = await ctx.prisma.user.findFirst({
-        where: { id: ctx?.session?.user?.id },
-        select: { following: { select: { followingId: true } } },
-      });
-
-      // No posts from following.
-      if (!following?.following?.length) return null;
-
       const posts = await ctx.prisma.post.findMany({
         where: {
           user: {
-            id: {
-              in: [...following.following.map((user) => user.followingId)],
+            followers: {
+              some: {
+                followerId: ctx?.session?.user?.id,
+              },
             },
           },
         },
