@@ -1,6 +1,11 @@
-/** @type {import('next').NextConfig} */
+/**
+ * @template {import('next').NextConfig} T
+ * @param {T} config - A generic parameter that flows through to the return type
+ * @constraint {{import('next').NextConfig}}
+ */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   experimental: {
     scrollRestoration: true,
   },
