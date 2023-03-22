@@ -28,6 +28,7 @@ const arrowIconProps = {
 const Arrow: React.FC<ArrowProps> = ({ onClick, prev }) => {
   return (
     <button
+      aria-label={prev ? "Carousel back button" : "Carousel next button"}
       className={`absolute top-0 ${
         prev ? "sm:-left-7 -left-5" : "sm:-right-7 -right-5"
       } h-full w-5 flex justify-center items-center`}
