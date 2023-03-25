@@ -15,7 +15,7 @@ const ActionButton: React.FC<Props> = (props) => {
   return (
     <button
       {...props}
-      className=" bg-teal-100 dark:bg-teal-900 p-2 shadow-lg hover:opacity-70"
+      className=" bg-teal-100 p-2 shadow-lg hover:opacity-70 dark:bg-teal-900"
     >
       <ShouldRender if={action === "delete"}>
         <AiFillDelete className=" text-emerald-500" size={23} />

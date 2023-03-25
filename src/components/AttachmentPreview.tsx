@@ -54,17 +54,17 @@ const AttachmentPreview: React.FC<Props> = ({
   useEffect(() => setIsAudioPlaying(false), [file, setIsAudioPlaying]);
 
   return (
-    <div className="relative p-4 bg-white border first:mt-4 border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900">
+    <div className="relative border border-zinc-300 bg-white p-4 first:mt-4 dark:border-neutral-800 dark:bg-neutral-900">
       <div className="flex gap-3">
-        <div onClick={onClickImage} className="w-16 h-16 relative group">
+        <div onClick={onClickImage} className="group relative h-16 w-16">
           <ShouldRender if={type === "document"}>
-            <div className="bg-emerald-500 dark:bg-emerald-700 w-16 h-16 flex items-center justify-center">
+            <div className="flex h-16 w-16 items-center justify-center bg-emerald-500 dark:bg-emerald-700">
               <RiFileTextFill className="text-white" size={27} />
             </div>
           </ShouldRender>
 
           <ShouldRender if={type === "audio"}>
-            <div className="bg-emerald-500 dark:bg-emerald-700 w-16 h-16 flex items-center justify-center group cursor-pointer">
+            <div className="group flex h-16 w-16 cursor-pointer items-center justify-center bg-emerald-500 dark:bg-emerald-700">
               <audio ref={audioRef} hidden src={file?.url} />
               <MdAudiotrack
                 className="text-white  group-hover:hidden"
@@ -77,7 +77,7 @@ const AttachmentPreview: React.FC<Props> = ({
               >
                 <ShouldRender if={!isAudioPlaying}>
                   <RiPlayMiniFill
-                    className="text-white  group-hover:block hidden"
+                    className="hidden  text-white group-hover:block"
                     size={27}
                     onClick={onClickPlayAudio}
                   />
@@ -85,7 +85,7 @@ const AttachmentPreview: React.FC<Props> = ({
 
                 <ShouldRender if={isAudioPlaying}>
                   <MdPause
-                    className="text-white  group-hover:block hidden"
+                    className="hidden  text-white group-hover:block"
                     size={27}
                     onClick={onClickPlayAudio}
                   />
@@ -101,17 +101,17 @@ const AttachmentPreview: React.FC<Props> = ({
               height={64}
               alt={file.name || "Uploaded image"}
               objectFit="cover"
-              className="cursor-pointer transform group-hover:opacity-50 transition-all"
+              className="cursor-pointer transition-all group-hover:opacity-50"
             />
           </ShouldRender>
 
           <ShouldRender if={type === "media" && isVideo}>
-            <div className="w-16 h-16">
+            <div className="h-16 w-16">
               <video
                 src={file?.url}
                 width="100%"
                 height="100%"
-                className="cursor-pointer w-full h-full transform object-cover group-hover:opacity-50 transition-all"
+                className="h-full w-full cursor-pointer object-cover transition-all group-hover:opacity-50"
               />
             </div>
           </ShouldRender>
@@ -119,12 +119,12 @@ const AttachmentPreview: React.FC<Props> = ({
           <ShouldRender if={!!onClickImage}>
             <IoExpandOutline
               size={26}
-              className="text-white cursor-pointer hidden group-hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer text-white group-hover:block"
             />
           </ShouldRender>
         </div>
         <div>
-          <p className="text-sm text-neutral-700 dark:text-neutral-400 mt-2 line-clamp-2 text-ellipsis">
+          <p className="mt-2 text-ellipsis text-sm text-neutral-700 line-clamp-2 dark:text-neutral-400">
             {file.name}
           </p>
           <p className="text-sm text-neutral-500 dark:text-neutral-500">
@@ -138,7 +138,7 @@ const AttachmentPreview: React.FC<Props> = ({
             title="Remove file"
             aria-label="Remove file"
             onClick={removeFile}
-            className="absolute top-2 right-2 cursor-pointer text-neutral-700 dark:text-neutral-300 transition-transform hover:transform hover:scale-125"
+            className="absolute top-2 right-2 cursor-pointer text-neutral-700 transition-transform hover:scale-125 dark:text-neutral-300"
           />
         </ShouldRender>
 
@@ -148,8 +148,8 @@ const AttachmentPreview: React.FC<Props> = ({
             role="button"
             title="Download file"
             aria-label="Download file"
-            className="absolute top-1/2 transform -translate-y-1/2
-          right-4 cursor-pointer text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400"
+            className="absolute top-1/2 right-4 -translate-y-1/2
+          cursor-pointer text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-400"
             onClick={handleClickDownload}
           />
         </ShouldRender>

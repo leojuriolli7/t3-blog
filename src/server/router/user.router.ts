@@ -23,6 +23,7 @@ export const userRouter = createRouter()
           _count: {
             select: { followers: true, following: true },
           },
+          url: true,
         },
       });
 
@@ -151,6 +152,28 @@ export const userRouter = createRouter()
       }
 
       if (input.userId === ctx?.session?.user?.id) {
+        const prevUser = await ctx.prisma.user.findUnique({
+          where: {
+            id: input.userId,
+          },
+          include: {
+            url: true,
+          },
+        });
+
+        const previousLink = prevUser?.url?.url;
+        const userIsDeletingLink = !input?.url?.url && !!previousLink;
+        const userIsAddingNewLink = !!input?.url?.url && !!previousLink;
+        const userIsCreatingLink = !!input?.url?.url && !previousLink;
+
+        if (userIsDeletingLink || userIsAddingNewLink) {
+          await ctx.prisma.userLink.delete({
+            where: {
+              userId: input.userId,
+            },
+          });
+        }
+
         const user = await ctx.prisma.user.update({
           where: {
             id: input.userId,
@@ -165,6 +188,20 @@ export const userRouter = createRouter()
             ...(input?.image && {
               image: input.image,
             }),
+
+            url: {
+              ...((userIsAddingNewLink || userIsCreatingLink) &&
+                !!input?.url?.url && {
+                  create: {
+                    icon: input.url?.icon,
+                    title: input.url?.title,
+                    url: input.url?.url,
+                    ...(input.url?.publisher && {
+                      publisher: input.url?.publisher,
+                    }),
+                  },
+                }),
+            },
           },
         });
         return user;

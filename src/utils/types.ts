@@ -24,6 +24,7 @@ export type TaggedPosts =
   InferQueryOutput<"posts.posts-by-tags">["tags"][number]["posts"][number];
 
 export type User = InferQueryOutput<"users.single-user">;
+export type UserLink = InferQueryOutput<"users.single-user">["url"];
 
 export type FollowingUser =
   InferQueryOutput<"users.get-following">["following"][number]["following"];

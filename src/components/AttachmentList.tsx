@@ -68,7 +68,7 @@ const AttachmentList: React.FC<Props> = ({ fileState }) => {
   );
 
   return (
-    <div className="w-full flex flex-col gap-4" ref={parentRef}>
+    <div className="flex w-full flex-col gap-4" ref={parentRef}>
       <ShouldRender if={filteredAttachments?.medias?.length}>
         {filteredAttachments?.medias?.map((media, key) => (
           <AttachmentPreview
@@ -79,7 +79,7 @@ const AttachmentList: React.FC<Props> = ({ fileState }) => {
             removeFile={removeFile(media.name)}
           />
         ))}
-        <p className="text-sm text-neutral-700 dark:text-neutral-400 -mt-2">
+        <p className="-mt-2 text-sm text-neutral-700 dark:text-neutral-400">
           Tip: Click the video or image to expand it.
         </p>
       </ShouldRender>
@@ -93,7 +93,7 @@ const AttachmentList: React.FC<Props> = ({ fileState }) => {
             removeFile={removeFile(audio.name)}
           />
         ))}
-        <p className="text-sm text-neutral-700 dark:text-neutral-400 -mt-2">
+        <p className="-mt-2 text-sm text-neutral-700 dark:text-neutral-400">
           Tip: Play the audio by clicking it.
         </p>
       </ShouldRender>

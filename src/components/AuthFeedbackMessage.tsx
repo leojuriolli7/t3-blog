@@ -18,9 +18,9 @@ const AuthFeedbackMessage: React.FC<Props> = ({
   return (
     <ShouldRender if={message}>
       <div
-        className={`w-full flex gap-2 items-center ${
+        className={`flex w-full items-center gap-2 ${
           isError ? "bg-red-600" : "bg-green-500 dark:bg-green-600"
-        } text-white p-3 text-center`}
+        } p-3 text-center text-white`}
       >
         <ShouldRender if={icon && isError}>
           <BsExclamationCircleFill size={21} className="text-white" />

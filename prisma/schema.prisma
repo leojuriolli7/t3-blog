@@ -76,6 +76,18 @@ model FavoritesOnUsers {
   @@index([userId])
 }
 
+model UserLink {
+  id          String  @id @default(uuid())
+  userId      String  @unique
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  icon String
+  title String
+  publisher String?
+  url String
+
+  @@index([userId])
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -90,6 +102,7 @@ model User {
   favorites FavoritesOnUsers[]
   followers Follows[]          @relation("following")
   following Follows[]          @relation("follower")
+  url       UserLink? 
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

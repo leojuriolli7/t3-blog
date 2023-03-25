@@ -29,6 +29,16 @@ export const getFollowingFromUserSchema = z.object({
 });
 export const getFollowersSchema = getFollowingFromUserSchema;
 
+export const urlSchema = z
+  .object({
+    icon: z.string(),
+    title: z.string(),
+    url: z.string().url(),
+    publisher: z.string().optional().nullable(),
+  })
+  .optional()
+  .nullable();
+
 export const updateUserSchema = z.object({
   avatar: z
     .custom<File>((file) => {
@@ -39,6 +49,7 @@ export const updateUserSchema = z.object({
     .optional(),
   image: z.string().optional(),
   name: z.string().max(50, "Max name length is 50").optional(),
+  url: urlSchema,
   userId: z.string(),
   bio: z.string().max(160, "Max bio length is 160").optional(),
 });

@@ -116,7 +116,7 @@ const AudioPlayer: React.FC<Props> = ({ audioRef, src, playingState }) => {
           ref={progressBarRef}
           defaultValue="0"
           onChange={handleProgressChange}
-          className={`w-full h-1 accent-emerald-600`}
+          className={`h-1 w-full accent-emerald-600`}
         />
       </div>
 
@@ -156,7 +156,7 @@ const AudioPlayer: React.FC<Props> = ({ audioRef, src, playingState }) => {
             min={0}
             max={100}
             value={volume}
-            className="accent-emerald-600 h-1"
+            className="h-1 accent-emerald-600"
             onChange={(e) => setVolume(Number(e.target.value))}
           />
         </div>

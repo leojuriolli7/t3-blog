@@ -4,13 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { toast } from "react-toastify";
 import Field from "@components/Field";
-import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
-import { Modal } from "../Modal";
-import { useRouter } from "next/router";
-import { User } from "@utils/types";
-import Avatar from "./Avatar";
 import ShouldRender from "@components/ShouldRender";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { User } from "@utils/types";
+import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
+import { Modal } from "../Modal";
+import Avatar from "./Avatar";
+import UserLinkField from "./UserLink/UserLinkField";
 
 type Props = {
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -105,6 +106,8 @@ const EditAccountModal: React.FC<Props> = ({
         ...(values.avatar && {
           image: imageUrl,
         }),
+        url: values?.url || undefined,
+
         userId: userId,
       });
     },
@@ -119,6 +122,7 @@ const EditAccountModal: React.FC<Props> = ({
     if (userInformation?.name && isOpen) {
       setValue("name", userInformation?.name);
       setValue("bio", userInformation?.bio || undefined);
+      setValue("url", userInformation?.url || undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -184,6 +188,8 @@ const EditAccountModal: React.FC<Props> = ({
                 {bioLength}/160
               </p>
             </Field>
+
+            <UserLinkField initialLink={userInformation?.url} />
 
             <Field label="e-mail">
               <input

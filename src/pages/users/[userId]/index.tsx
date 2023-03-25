@@ -19,18 +19,41 @@ import { IoMdSettings } from "react-icons/io";
 import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
 import Link from "next/link";
-import ConfirmationModal from "@components/ConfirmationModal";
 import { toast } from "react-toastify";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Popover from "@components/Popover";
-import EditAccountModal from "@components/EditAccountModal";
+import dynamic from "next/dynamic";
 import { MdDelete, MdEditNote, MdOutlineTextSnippet } from "react-icons/md";
 import EmptyMessage from "@components/EmptyMessage";
 import { User } from "@utils/types";
-import FollowersModal from "@components/Follows/FollowersModal";
-import FollowingModal from "@components/Follows/FollowingModal";
 import Skeleton from "@components/Skeleton";
 import GradientButton from "@components/GradientButton";
+import UserLinkPreview from "@components/EditAccountModal/UserLink/UserLinkPreview";
+
+const FollowersModal = dynamic(
+  () => import("@components/Follows/FollowersModal"),
+  {
+    ssr: false,
+  }
+);
+
+const FollowingModal = dynamic(
+  () => import("@components/Follows/FollowingModal"),
+  {
+    ssr: false,
+  }
+);
+
+const EditAccountModal = dynamic(() => import("@components/EditAccountModal"), {
+  ssr: false,
+});
+
+const ConfirmationModal = dynamic(
+  () => import("@components/ConfirmationModal"),
+  {
+    ssr: false,
+  }
+);
 
 const UserPage: React.FC = () => {
   const { currentFilter, filterLabels, filters, toggleFilter } =
@@ -227,7 +250,7 @@ const UserPage: React.FC = () => {
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
-        <section className="mx-auto flex flex-col items-center gap-5 mt-10">
+        <section className="mx-auto mt-10 flex flex-col items-center gap-5">
           <div className="relative">
             <Image
               src={user?.image || "/static/default-profile.jpg"}
@@ -241,7 +264,7 @@ const UserPage: React.FC = () => {
               <GradientButton
                 disabled={isLoading}
                 onClick={handleClickFollowButton}
-                className="absolute disabled:opacity-80 disabled:cursor-not-allowed -bottom-3 left-1/2 transform -translate-x-1/2 px-3 py-2"
+                className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-3 py-2 disabled:cursor-not-allowed disabled:opacity-80"
               >
                 {user?.alreadyFollowing ? "Unfollow" : "Follow"}
               </GradientButton>
@@ -250,14 +273,14 @@ const UserPage: React.FC = () => {
               <div
                 className={`${
                   loadingUser ? "pointer-events-none opacity-80" : ""
-                } absolute bottom-0 right-10 bg-emerald-500 rounded-full flex justify-center items-center p-2 shadow-2xl`}
+                } absolute bottom-0 right-10 flex items-center justify-center rounded-full bg-emerald-500 p-2 shadow-2xl`}
                 role="button"
               >
                 <Popover.Main
                   icon={
                     <IoMdSettings
                       size={23}
-                      className="text-white  hover:opacity-80 drop-shadow-lg"
+                      className="text-white  drop-shadow-lg hover:opacity-80"
                     />
                   }
                 >
@@ -307,7 +330,7 @@ const UserPage: React.FC = () => {
               </div>
             </ShouldRender>
           </div>
-          <div className="text-center w-fit">
+          <div className="w-fit text-center">
             <ShouldRender if={!!user}>
               <p className="text-xl">
                 {getUserDisplayName(user)}{" "}
@@ -319,13 +342,13 @@ const UserPage: React.FC = () => {
                 </ShouldRender>
               </p>
             </ShouldRender>
-            <div className="w-full mt-3 mb-3 flex justify-center gap-2 items-center">
+            <div className="my-3 flex w-full items-center justify-center gap-2">
               <button
-                className="cursor-pointer flex flex-col items-center"
+                className="flex cursor-pointer flex-col items-center"
                 onClick={() => setOpenFollowersModal(true)}
                 disabled={isLoading}
               >
-                <p className="prose-base text-neutral-600 dark:text-neutral-400 hover:underline hover:brightness-125">
+                <p className="prose-base text-neutral-600 hover:underline hover:brightness-125 dark:text-neutral-400">
                   Followers
                 </p>
                 <ShouldRender if={!isLoading}>
@@ -338,10 +361,10 @@ const UserPage: React.FC = () => {
 
               <button
                 disabled={isLoading}
-                className="cursor-pointer flex flex-col items-center"
+                className="flex cursor-pointer flex-col items-center"
                 onClick={() => setOpenFollowingModal(true)}
               >
-                <p className="prose-base text-neutral-600 dark:text-neutral-400 hover:underline hover:brightness-125">
+                <p className="prose-base text-neutral-600 hover:underline hover:brightness-125 dark:text-neutral-400">
                   Following
                 </p>
                 <ShouldRender if={!isLoading}>
@@ -353,8 +376,12 @@ const UserPage: React.FC = () => {
                 </ShouldRender>
               </button>
             </div>
+            <ShouldRender if={!!user?.url}>
+              <UserLinkPreview data={user?.url} />
+            </ShouldRender>
+
             <ShouldRender if={!!user?.bio}>
-              <blockquote className="w-full max-w-[356px] mt-2 text-left dark:text-neutral-400 prose border-l-4 border-gray-300 bg-gray-50 dark:border-gray-500 dark:bg-neutral-800 p-4">
+              <blockquote className="prose mt-2 w-full max-w-[356px] border-l-4 border-gray-300 bg-gray-50 p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
                 {user?.bio}
               </blockquote>
             </ShouldRender>
@@ -376,10 +403,10 @@ const UserPage: React.FC = () => {
         </section>
 
         <section className="w-full">
-          <div className="w-full flex flex-col sm:flex-row justify-between mb-5">
-            <h2 className="sm:text-3xl text-2xl">User posts</h2>
+          <div className="mb-5 flex w-full flex-col justify-between sm:flex-row">
+            <h2 className="text-2xl sm:text-3xl">User posts</h2>
 
-            <div className="flex justify-start sm:justify-end sm:items-start mt-3 sm:mt-1 gap-3">
+            <div className="mt-3 flex justify-start gap-3 sm:mt-1 sm:items-start sm:justify-end">
               {filters.map((filter) => (
                 <Tab
                   key={filter}
@@ -392,7 +419,7 @@ const UserPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-col gap-10">
+          <div className="flex w-full flex-col gap-10">
             {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
               <PostCard
                 post={post}
