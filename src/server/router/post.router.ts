@@ -19,6 +19,7 @@ import {
   updatePostSchema,
   searchPostsSchema,
   getLikedPostsSchema,
+  voteOnPollSchema,
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
@@ -251,6 +252,15 @@ export const postRouter = createRouter()
           likes: true,
           tags: true,
           link: true,
+          poll: {
+            include: {
+              options: {
+                include: {
+                  voters: true,
+                },
+              },
+            },
+          },
           ...(ctx.session?.user?.id && {
             favoritedBy: {
               where: {
@@ -266,9 +276,32 @@ export const postRouter = createRouter()
         (favorite) => favorite.userId === ctx?.session?.user?.id
       );
 
+      const voters = post?.poll?.options.flatMap((option) => option.voters);
+
+      const alreadyVoted = voters?.some(
+        (voter) => voter.id === ctx?.session?.user.id
+      );
+
+      const poll = post?.poll
+        ? {
+            ...post?.poll,
+            alreadyVoted,
+            voters: voters?.length || 0,
+            options: post?.poll?.options.map((option) => ({
+              ...option,
+              ...(option.voters.some(
+                (voter) => voter.id === ctx?.session?.user?.id
+              ) && {
+                votedByMe: true,
+              }),
+            })),
+          }
+        : null;
+
       return {
         ...postWithLikes,
         favoritedByMe: favoritedByUser,
+        poll,
       };
     },
   })
@@ -429,6 +462,24 @@ export const postRouter = createRouter()
             ...(input.link?.publisher && {
               publisher: input.link?.publisher,
             }),
+          },
+        });
+      }
+
+      if (!!input?.poll?.title && !!input?.poll?.options) {
+        await ctx.prisma.poll.create({
+          data: {
+            postId: post.id,
+            title: input.poll.title,
+            options: {
+              createMany: {
+                data: input.poll.options.map((option) => ({
+                  color: option.color,
+                  title: option.title,
+                  postId: post.id,
+                })),
+              },
+            },
           },
         });
       }
@@ -653,5 +704,44 @@ export const postRouter = createRouter()
           },
         });
       }
+    },
+  })
+  .mutation("vote-on-poll", {
+    input: voteOnPollSchema,
+    async resolve({ ctx, input }) {
+      const poll = await ctx.prisma.poll.findUnique({
+        where: {
+          postId: input.postId,
+        },
+        include: {
+          options: {
+            include: {
+              voters: true,
+            },
+          },
+        },
+      });
+
+      const voters = poll?.options.flatMap((option) => option.voters);
+
+      if (voters?.find((voter) => voter.id === ctx.session.user.id)) {
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "You have already voted on this poll.",
+        });
+      }
+
+      return await ctx.prisma.pollOption.update({
+        data: {
+          voters: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+        where: {
+          id: input.optionId,
+        },
+      });
     },
   });

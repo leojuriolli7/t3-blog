@@ -31,6 +31,7 @@ export type FollowingUser =
 
 export type Attachment = InferQueryOutput<"attachments.get-post-attachments">;
 export type Metadata = InferQueryOutput<"scraper.scrape-link">;
+export type Poll = InferQueryOutput<"posts.single-post">["poll"];
 
 // React-hook-form Controller's 'field' type
 export type FieldType = ControllerRenderProps<FieldValues, string>;

@@ -1,4 +1,13 @@
-import { FavoritesOnUsers, Like, Link, Post, Tag, User } from "@prisma/client";
+import {
+  FavoritesOnUsers,
+  Like,
+  Link,
+  Poll,
+  PollOption,
+  Post,
+  Tag,
+  User,
+} from "@prisma/client";
 import { Session } from "next-auth";
 
 export const getPostWithLikes = (
@@ -9,6 +18,11 @@ export const getPostWithLikes = (
         tags?: Tag[];
         link?: Link | null;
         favoritedBy?: FavoritesOnUsers[] | undefined;
+        poll?:
+          | (Poll & {
+              options: PollOption[];
+            })
+          | null;
       })
     | null,
   session?: Session | null

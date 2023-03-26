@@ -12,6 +12,52 @@ const link = z
   .optional()
   .nullable();
 
+/* 
+  Conditional validation: 
+    If poll has title, at least 2 options are required.
+    If poll has no title, it is optional field.
+*/
+const pollSchema = z
+  .object({
+    title: z.string(),
+    options: z
+      .object({
+        title: z.string(),
+        color: z.string(),
+      })
+      .array()
+      .optional(),
+  })
+  .refine(
+    (input) => {
+      if (
+        !!input.title &&
+        (!input.options?.length || input.options?.length < 2)
+      )
+        return false;
+
+      return true;
+    },
+    {
+      message: "Poll must have at least 2 options.",
+    }
+  )
+  .refine(
+    (input) => {
+      if (!!input.options && input.options.length > 6) return false;
+
+      return true;
+    },
+    { message: "Maximum of 6 options." }
+  )
+  .optional();
+
+const tagsSchema = z
+  .string()
+  .array()
+  .nonempty("Post must have at least one tag")
+  .max(5, "Maximum of 5 tags per post");
+
 export const createPostSchema = z.object({
   title: z
     .string()
@@ -19,11 +65,7 @@ export const createPostSchema = z.object({
     .max(256, "Max title length is 256"),
   body: z.string().min(5, "Minimum body length is 5"),
   link,
-  tags: z
-    .string()
-    .array()
-    .nonempty("Post must have atleast one tag")
-    .max(5, "Maximum of 5 tags per post"),
+  tags: tagsSchema,
   files: z
     .custom<File>((file) => {
       const isFile = file instanceof File;
@@ -36,6 +78,7 @@ export const createPostSchema = z.object({
       `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} files`
     )
     .optional(),
+  poll: pollSchema,
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;
@@ -88,16 +131,17 @@ export const getSinglePostSchema = z.object({
   postId: z.string().uuid(),
 });
 
+export const voteOnPollSchema = z.object({
+  postId: z.string().uuid(),
+  optionId: z.string(),
+});
+
 export const updatePostSchema = z.object({
   title: z.string().max(256, "Max title length is 256").optional(),
   body: z.string().min(10).optional(),
   postId: z.string().uuid(),
   link,
-  tags: z
-    .string()
-    .array()
-    .nonempty("Post must have atleast one tag")
-    .max(5, "Maximum of 5 tags per post"),
+  tags: tagsSchema,
 });
 
 export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;
