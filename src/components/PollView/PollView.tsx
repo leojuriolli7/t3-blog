@@ -95,7 +95,7 @@ const PollView: React.FC<Props> = ({ poll }) => {
         });
       }
 
-      return toast.error("Please login to vote on a poll");
+      return toast.info("Please login to vote on a poll");
     },
     [postId, session?.user.id, voteOnPoll]
   );
