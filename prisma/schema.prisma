@@ -99,6 +99,7 @@ model User {
 
   bio       String?            @db.VarChar(160)
   likes     Like[]
+  votes     PollOption[]
   favorites FavoritesOnUsers[]
   followers Follows[]          @relation("following")
   following Follows[]          @relation("follower")
@@ -127,16 +128,18 @@ model Tag {
 }
 
 model PollOption {
-  id      String       @id @default(uuid())
+  id     String       @id @default(uuid())
   title  String
   color  String
   postId String
   pollId String
   poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
-
+  voters User[]  
 
   @@index([pollId])
 }
+
+
 
 model Poll {
   id      String       @id @default(uuid())

@@ -22,6 +22,7 @@ import { AttachmentMetadata } from "@server/router/attachments.router";
 import PreviewMediaModal from "@components/PreviewMediaModal";
 import FavoriteButton from "@components/FavoriteButton";
 import LinkPreview from "@components/LinkPreview";
+import PollView from "@components/PollView/PollView";
 
 type ReplyData = {
   parentId: string;
@@ -368,6 +369,10 @@ const SinglePostPage: React.FC = () => {
                 </p>
               </ShouldRender>
             </div>
+
+            <ShouldRender if={!!data?.poll}>
+              <PollView poll={data?.poll} />
+            </ShouldRender>
 
             <ShouldRender if={!!data?.link}>
               <div className="w-full -mt-4 -mb-4">

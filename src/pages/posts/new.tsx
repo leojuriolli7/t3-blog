@@ -93,9 +93,10 @@ const CreatePostPage: React.FC = () => {
         ...(values?.link && {
           link: values?.link,
         }),
-        ...(values?.poll && {
-          poll: values?.poll,
-        }),
+        ...(values?.poll?.title &&
+          values?.poll?.options && {
+            poll: values?.poll,
+          }),
       });
     },
     [create]

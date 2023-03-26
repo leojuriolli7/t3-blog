@@ -21,7 +21,7 @@ function getRandomColor() {
   return color;
 }
 
-const CreatePoll = () => {
+const CreatePoll: React.FC = () => {
   const [options, setOptions] = useState<Option[]>([]);
   const [title, setTitle] = useState<string>("");
   const [currentOption, setCurrentOption] = useState<Option | null>(null);
