@@ -15,6 +15,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import Dropzone from "@components/Dropzone";
 import Link from "@components/Link";
+import CreatePoll from "@components/CreatePoll";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -92,6 +93,9 @@ const CreatePostPage: React.FC = () => {
         ...(values?.link && {
           link: values?.link,
         }),
+        ...(values?.poll && {
+          poll: values?.poll,
+        }),
       });
     },
     [create]
@@ -130,6 +134,8 @@ const CreatePostPage: React.FC = () => {
             </Field>
 
             <Link />
+
+            <CreatePoll />
 
             <Dropzone />
 

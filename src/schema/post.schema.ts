@@ -12,6 +12,46 @@ const link = z
   .optional()
   .nullable();
 
+/* 
+  Conditional validation: 
+    If poll has title, at least 2 options are required to pass.
+    If poll has no title, it is optional.
+*/
+const pollSchema = z
+  .object({
+    title: z.string(),
+    options: z
+      .object({
+        title: z.string(),
+        color: z.string(),
+      })
+      .array()
+      .optional(),
+  })
+  .refine(
+    (input) => {
+      if (
+        !!input.title &&
+        (!input.options?.length || input.options?.length < 2)
+      )
+        return false;
+
+      return true;
+    },
+    {
+      message: "Poll must have at least 2 options.",
+    }
+  )
+  .refine(
+    (input) => {
+      if (!!input.options && input.options.length > 6) return false;
+
+      return true;
+    },
+    { message: "Maximum of 6 options." }
+  )
+  .optional();
+
 export const createPostSchema = z.object({
   title: z
     .string()
@@ -22,7 +62,7 @@ export const createPostSchema = z.object({
   tags: z
     .string()
     .array()
-    .nonempty("Post must have atleast one tag")
+    .nonempty("Post must have at least one tag")
     .max(5, "Maximum of 5 tags per post"),
   files: z
     .custom<File>((file) => {
@@ -36,6 +76,7 @@ export const createPostSchema = z.object({
       `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} files`
     )
     .optional(),
+  poll: pollSchema,
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;
@@ -96,7 +137,7 @@ export const updatePostSchema = z.object({
   tags: z
     .string()
     .array()
-    .nonempty("Post must have atleast one tag")
+    .nonempty("Post must have at least one tag")
     .max(5, "Maximum of 5 tags per post"),
 });
 

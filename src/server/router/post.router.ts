@@ -251,6 +251,11 @@ export const postRouter = createRouter()
           likes: true,
           tags: true,
           link: true,
+          poll: {
+            include: {
+              options: true,
+            },
+          },
           ...(ctx.session?.user?.id && {
             favoritedBy: {
               where: {
@@ -429,6 +434,24 @@ export const postRouter = createRouter()
             ...(input.link?.publisher && {
               publisher: input.link?.publisher,
             }),
+          },
+        });
+      }
+
+      if (!!input?.poll && !!input?.poll?.options) {
+        await ctx.prisma.poll.create({
+          data: {
+            postId: post.id,
+            title: input.poll.title,
+            options: {
+              createMany: {
+                data: input.poll.options.map((option) => ({
+                  color: option.color,
+                  title: option.title,
+                  postId: post.id,
+                })),
+              },
+            },
           },
         });
       }
