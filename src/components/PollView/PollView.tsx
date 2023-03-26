@@ -23,7 +23,9 @@ function getVoterPercentage(optionVoters?: number, totalVoters?: number) {
 }
 
 const PollView: React.FC<Props> = ({ poll }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const loadingSession = status === "loading";
+
   const router = useRouter();
   const postId = router.query.postId as string;
   const utils = trpc.useContext();
@@ -109,7 +111,7 @@ const PollView: React.FC<Props> = ({ poll }) => {
           <PollOption
             key={option.id}
             alreadyVoted={!!poll?.alreadyVoted}
-            disabled={voting}
+            disabled={voting || loadingSession}
             onClick={handleVote(option.id)}
             option={option}
             percentage={getVoterPercentage(option.voters?.length, poll?.voters)}
