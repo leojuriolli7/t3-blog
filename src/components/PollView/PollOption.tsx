@@ -43,13 +43,15 @@ const PollOption: React.FC<Props> = ({
         <button
           disabled={disabled}
           onClick={onClick}
-          className="p-2 cursor-pointer hover:opacity-80 border-2 text-ellipsis line-clamp-1 overflow-hidden break-all text-sm sm:text-base"
+          className="p-2 cursor-pointer hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75"
           style={{
             borderColor: option.color,
-            backgroundColor: `${option.color}50`,
+            backgroundColor: `${option.color}60`,
           }}
         >
-          {option.title}
+          <p className=" line-clamp-1 overflow-hidden break-all text-sm sm:text-base">
+            {option.title}
+          </p>
         </button>
       </ShouldRender>
 
@@ -61,8 +63,6 @@ const PollOption: React.FC<Props> = ({
             </p>
 
             <div className="flex items-center gap-1 relative z-10">
-              <p>{percentage}</p>
-
               <ShouldRender if={option.votedByMe}>
                 <MdOutlineCheckBox
                   className="text-black dark:text-white"
@@ -70,6 +70,8 @@ const PollOption: React.FC<Props> = ({
                   title="Your vote"
                 />
               </ShouldRender>
+
+              <p>{percentage}</p>
             </div>
           </div>
           <div
