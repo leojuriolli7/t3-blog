@@ -100,13 +100,11 @@ const EditAccountModal: React.FC<Props> = ({
         ...(values.name && {
           name: values.name,
         }),
-        ...(values.bio && {
-          bio: values.bio,
-        }),
+        bio: values?.bio,
         ...(values.avatar && {
           image: imageUrl,
         }),
-        url: values?.url || undefined,
+        url: values?.url || null,
 
         userId: userId,
       });

@@ -103,10 +103,15 @@ const PollView: React.FC<Props> = ({ poll }) => {
   );
 
   return (
-    <div className="w-full ring-1 ring-neutral-300 dark:ring-0 bg-white dark:bg-neutral-900 p-4">
-      <h2 className="text-lg font-bold">{poll?.title}</h2>
+    <div
+      className="w-full ring-1 ring-neutral-300 dark:ring-0 bg-white dark:bg-neutral-900 p-4"
+      aria-label="Poll"
+    >
+      <h2 className="text-lg font-bold" aria-label="Poll title">
+        {poll?.title}
+      </h2>
 
-      <div className="p-2 w-full flex flex-col gap-2">
+      <ul className="p-2 w-full flex flex-col gap-2">
         {poll?.options.map((option) => (
           <PollOption
             key={option.id}
@@ -117,10 +122,10 @@ const PollView: React.FC<Props> = ({ poll }) => {
             percentage={getVoterPercentage(option.voters?.length, poll?.voters)}
           />
         ))}
-        <p className="w-full text-right">
-          {poll?.voters} {poll!.voters !== 1 ? "Votes" : "Vote"}
-        </p>
-      </div>
+      </ul>
+      <p className="w-full text-right pr-2">
+        {poll?.voters} {poll!.voters !== 1 ? "Votes" : "Vote"}
+      </p>
     </div>
   );
 };

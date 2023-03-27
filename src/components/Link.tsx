@@ -10,6 +10,7 @@ import ShouldRender from "./ShouldRender";
 import { CreatePostInput, UpdatePostInput } from "@schema/post.schema";
 import LinkPreview from "./LinkPreview";
 import { Link as LinkType } from "@prisma/client";
+import { baseUrl } from "@utils/constants";
 
 type Props = {
   initialLink?: LinkType | null;
@@ -62,8 +63,7 @@ const Link: React.FC<Props> = ({ initialLink }) => {
 
       if (data?.url) {
         const dataToSend = {
-          image:
-            data?.image || "https://t3-blog-pi.vercel.app/static/default.jpg",
+          image: data?.image || `${baseUrl}/static/default.jpg`,
           title: data?.title || "Shared link",
           url: data.url,
           description: data?.description

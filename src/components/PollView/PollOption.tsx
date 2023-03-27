@@ -38,12 +38,13 @@ const PollOption: React.FC<Props> = ({
   }, [alreadyVoted]);
 
   return (
-    <Fragment key={option.id}>
+    <li key={option.id} className="w-full">
       <ShouldRender if={!alreadyVoted}>
         <button
+          aria-label={`Click to vote on this option.`}
           disabled={disabled}
           onClick={onClick}
-          className="p-2 cursor-pointer hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75"
+          className="w-full cursor-pointer h-[40px] hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75"
           style={{
             borderColor: option.color,
             backgroundColor: `${option.color}60`,
@@ -85,7 +86,7 @@ const PollOption: React.FC<Props> = ({
           />
         </div>
       </ShouldRender>
-    </Fragment>
+    </li>
   );
 };
 

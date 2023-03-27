@@ -5,6 +5,7 @@ import { FieldType } from "@utils/types";
 import { Controller, useFormContext } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { toast } from "react-toastify";
 
 const CheckableTag = Tag;
 

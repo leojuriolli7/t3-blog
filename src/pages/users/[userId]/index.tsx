@@ -204,7 +204,7 @@ const UserPage: React.FC = () => {
           "users.get-followers",
           {
             userId,
-            limit: 4,
+            limit: 15,
           },
         ]);
 
@@ -212,7 +212,7 @@ const UserPage: React.FC = () => {
           "users.get-following",
           {
             userId,
-            limit: 4,
+            limit: 15,
           },
         ]);
       },
@@ -376,29 +376,31 @@ const UserPage: React.FC = () => {
                 </ShouldRender>
               </button>
             </div>
-            <ShouldRender if={!!user?.url}>
-              <UserLinkPreview data={user?.url} />
-            </ShouldRender>
+            <div className="w-[356px]">
+              <ShouldRender if={!!user?.url}>
+                <UserLinkPreview data={user?.url} />
+              </ShouldRender>
 
-            <ShouldRender if={!!user?.bio}>
-              <blockquote className="prose mt-2 w-full max-w-[356px] border-l-4 border-gray-300 bg-gray-50 p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
-                {user?.bio}
-              </blockquote>
-            </ShouldRender>
-            <ShouldRender if={!!user?.createdAt}>
-              <p className="mt-2 text-neutral-800 dark:text-neutral-400 dark:opacity-80">
-                Member since{" "}
-                <span
-                  onClick={toggleDateType}
-                  className="cursor-pointer select-none"
-                  role="button"
-                  aria-label="Change date visualization type"
-                  title="Change date visualization type"
-                >
-                  {date}
-                </span>
-              </p>
-            </ShouldRender>
+              <ShouldRender if={!!user?.bio}>
+                <blockquote className="prose mt-2 w-full border-l-4 border-gray-300 bg-gray-50 p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
+                  {user?.bio}
+                </blockquote>
+              </ShouldRender>
+              <ShouldRender if={!!user?.createdAt}>
+                <p className="mt-2 text-neutral-800 dark:text-neutral-400 dark:opacity-80">
+                  Member since{" "}
+                  <span
+                    onClick={toggleDateType}
+                    className="cursor-pointer select-none"
+                    role="button"
+                    aria-label="Change date visualization type"
+                    title="Change date visualization type"
+                  >
+                    {date}
+                  </span>
+                </p>
+              </ShouldRender>
+            </div>
           </div>
         </section>
 

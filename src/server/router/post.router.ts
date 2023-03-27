@@ -582,6 +582,13 @@ export const postRouter = createRouter()
         },
       });
 
+      if (previousPost?.userId !== ctx.session.user.id) {
+        throw new trpc.TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You can only update posts created by you.",
+        });
+      }
+
       // Find which tags were on the post previously, but are now removed.
       const previousPostTags = previousPost?.tags.map((tag) => tag.name) || [];
 

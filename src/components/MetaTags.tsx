@@ -28,18 +28,19 @@ const MetaTags: React.FC<Props> = ({
   const favicon = `${baseUrl}/static/favicon.ico`;
 
   const currentDescription = description || DEFAULT_DESCRIPTION;
+  const formattedDescription = currentDescription.trim().slice(0, 250);
 
   return (
     <Head>
       <title>{formattedTitle}</title>
       <link rel="icon" href={favicon} />
       <meta name="title" content={formattedTitle} />
-      <meta name="description" content={currentDescription} />
+      <meta name="description" content={formattedDescription} />
 
       <meta property="og:type" content="website" />
       <meta property="og:url" content={url} />
       <meta property="og:title" content={formattedTitle} />
-      <meta property="og:description" content={currentDescription} />
+      <meta property="og:description" content={formattedDescription} />
       <meta property="og:image" content={LOGO_PATH || image} />
 
       <meta property="twitter:card" content="summary_large_image" />

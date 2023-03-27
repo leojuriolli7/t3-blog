@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import isURL from "validator/lib/isURL";
 import { Metadata, UserLink } from "@utils/types";
 import UserLinkPreview from "./UserLinkPreview";
+import { baseUrl } from "@utils/constants";
 
 type Url = Metadata & {
   logo?: string | null;
@@ -41,9 +42,7 @@ const UserLinkField: React.FC<Props> = ({ initialLink }) => {
 
           const dataToSend = {
             icon:
-              result?.logo ||
-              result?.image ||
-              "https://t3-blog-pi.vercel.app/static/default.jpg",
+              result?.logo || result?.image || `${baseUrl}/static/default.jpg`,
             title: result?.title || "Shared link",
             url: result.url,
             ...(result?.publisher && {
