@@ -17,9 +17,9 @@ function getVoterPercentage(optionVoters?: number, totalVoters?: number) {
   const opt = optionVoters || 0;
   const total = totalVoters || 0;
   const numberResult = (opt / total) * 100;
-  const formattedNumber = Math.floor(numberResult);
+  const roundedNumber = Math.round(numberResult * 10) / 10
 
-  return `${formattedNumber}%`;
+  return `${roundedNumber}%`;
 }
 
 const PollView: React.FC<Props> = ({ poll }) => {

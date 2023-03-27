@@ -14,6 +14,8 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - Upload files to your posts as attachments: You can upload videos, images, audio or documents (.pdf, .msword, etc.)
 - Every file uploaded can be interacted - You can listen to the audios using a custom-built audio-player, watch the videos, download any of the files, etc.)
 - **Like or dislike posts**.
+- **Create a poll on your post** and let users vote on it.
+- **Add a link to your post with link scraping** using [metascraper.](https://metascraper.js.org/) 
 - Comment on posts.
 - Use [Markdown](https://www.markdownguide.org/basic-syntax/) to write your posts & comments.
 - Reply to comments on posts (**Infinitely nested comment replies** like reddit)
@@ -22,6 +24,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - See a **personalized "Following" timeline** with posts from your following.
 - Search posts & tags with **full-text search**.
 - Access yours or other users' profiles and see their posts.
+- Personalize your profile - Upload an avatar, change your username, add a bio and a profile link.
 - Search for posts using different filters and by their tags.
 - Search engine optimizations through meta-tags, server-side-rendering and semantic HTML.
 
@@ -37,6 +40,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - [React Hook Form](https://react-hook-form.com) for forms.
 - [Keen Slider](https://keen-slider.io/) for a carousel component.
 - [React Markdown](https://github.com/remarkjs/react-markdown) for reading markdown text & [react-markdown-editor-lite](https://github.com/HarryChen0506/react-markdown-editor-lite/) for a very quick and performant MD editor.
+- [Metascraper](https://metascraper.js.org/) for scraping links.
 - [Next Themes](https://github.com/pacocoursey/next-themes) for easy dark mode support.
 - [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts, [React popper](https://popper.js.org/) for a custom popover component, [React dropzone](https://react-dropzone.js.org/) for a dropzone component.
 
