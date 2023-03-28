@@ -47,6 +47,11 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
           loading={loading}
           lines={3}
           className={`prose-sm line-clamp-4 overflow-hidden text-ellipsis prose-headings:text-base max-h-56`}
+          /* 
+           This is to avoid any elements not nested properly inside the DOM.
+           eg: <a> inside of <a>
+           Read more: https://deepscan.io/docs/rules/react-invalid-dom-nesting
+           */
           disallowedElements={["a"]}
           unwrapDisallowed
         >

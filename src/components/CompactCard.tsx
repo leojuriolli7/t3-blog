@@ -38,6 +38,11 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
           loading={loading}
           lines={3}
           className={`text-md line-clamp-2 text-ellipsis max-h-14`}
+          /* 
+           This is to avoid any elements not nested properly inside the DOM.
+           eg: <a> inside of <a>
+           Read more: https://deepscan.io/docs/rules/react-invalid-dom-nesting
+           */
           disallowedElements={["a"]}
           unwrapDisallowed
         >
