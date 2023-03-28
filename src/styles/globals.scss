@@ -22,12 +22,7 @@ button:disabled {
   gap: 15px;
 }
 
-.markdown__content :not(pre) code {
-  background: theme("colors.emerald.700");
-  color: theme("colors.white");
-}
-
-// Change react-toastify info color
+// Change react-toastify info color.
 :root {
   --toastify-color-info: theme("colors.emerald.600") !important;
 }
@@ -65,58 +60,38 @@ button:disabled {
 // Create new tailwind class for MD editor dark-mode styles.
 @layer utilities {
   .md-dark-mode {
-    background: theme("colors.neutral.900");
+    @apply bg-neutral-900;
 
     .editor-container {
       .sec-html {
-        background: theme("colors.neutral.900");
-        border: none;
-
-        .custom-html-style {
-          color: theme("colors.zinc.100");
-        }
+        @apply border-0;
       }
 
       .sec-md {
-        border: none;
+        @apply border-r border-neutral-800;
 
         @media (max-width: 425px) {
-          border-bottom: 1px solid theme("colors.neutral.800") !important;
+          @apply border-b border-neutral-800;
         }
       }
 
       .sec-md textarea {
-        background: theme("colors.neutral.900") !important;
-        color: theme("colors.zinc.100") !important;
-        border-right: 1px solid theme("colors.neutral.800");
+        @apply bg-neutral-900 text-neutral-100;
       }
     }
 
     .rc-md-navigation {
-      background: theme("colors.neutral.900") !important;
-      color: theme("colors.zinc.100") !important;
-    }
-
-    .custom-html-style {
-      table th {
-        background: theme("colors.neutral.900") !important;
-      }
-
-      blockquote p {
-        color: theme("colors.zinc.100") !important;
-      }
+      @apply bg-neutral-900 text-zinc-100;
     }
   }
 }
 
-.editor-container .custom-html-style {
-  pre,
-  code {
-    @apply prose-sm text-neutral-200 bg-[#333333];
-  }
+// Apply prose to MD editor html preview.
+.editor-container .html-section {
+  @apply prose dark:prose-invert;
 }
 
+// Apply styles to router progress bar.
 #nprogress .bar {
-  background: theme("colors.emerald.500") !important;
-  height: 3px !important;
+  @apply h-[3px] bg-emerald-500;
 }

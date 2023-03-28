@@ -1,0 +1,4 @@
+{
+  // Ignore @apply rule warning on globals.scss
+  "scss.lint.unknownAtRules": "ignore"
+}
