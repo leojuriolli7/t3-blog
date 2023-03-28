@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
+import Button from "./Button";
 
 type Props = {
   comment: CommentWithChildren;
@@ -78,13 +79,14 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
         />
       </Field>
 
-      <button
-        className="bg-emerald-500 text-white min-w-fit px-8 py-2 mt-2"
+      <Button
+        className="mt-2 px-6"
+        variant="secondary"
         type="submit"
-        disabled={updating}
+        loading={updating}
       >
         Update
-      </button>
+      </Button>
     </form>
   );
 };

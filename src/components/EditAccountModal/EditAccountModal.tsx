@@ -12,6 +12,7 @@ import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
 import { Modal } from "../Modal";
 import Avatar from "./Avatar";
 import UserLinkField from "./UserLink/UserLinkField";
+import Button from "@components/Button";
 
 type Props = {
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -199,13 +200,15 @@ const EditAccountModal: React.FC<Props> = ({
               />
             </Field>
 
-            <button
-              className="bg-emerald-500 text-white w-full min-w-fit px-8 py-2 mx-auto hover:opacity-80 mt-7"
+            <Button
+              className="w-full min-w-fit px-8 py-2 mx-auto hover:opacity-80 mt-7 flex justify-center"
+              variant="primary"
               type="submit"
-              disabled={!userInformation || updating}
+              disabled={!userInformation}
+              loading={updating}
             >
               Update
-            </button>
+            </Button>
           </form>
         </FormProvider>
       </div>

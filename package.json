@@ -21,6 +21,7 @@
     "@trpc/server": "^9.25.3",
     "aws-sdk": "^2.1332.0",
     "axios": "^1.3.4",
+    "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
     "file-saver": "^2.0.5",
     "highlight.js": "^11.7.0",

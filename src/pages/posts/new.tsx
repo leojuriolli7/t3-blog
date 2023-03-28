@@ -16,6 +16,7 @@ import { authOptions } from "@pages/api/auth/[...nextauth]";
 import Dropzone from "@components/Dropzone";
 import Link from "@components/Link";
 import CreatePoll from "@components/CreatePoll";
+import Button from "@components/Button";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -147,13 +148,15 @@ const CreatePostPage: React.FC = () => {
               error={errors.tags}
             />
 
-            <button
-              className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2 mx-auto"
+            <Button
+              className="sm:w-6/12 w-full min-w-fit mx-auto flex justify-center"
+              variant="primary"
               type="submit"
-              disabled={isLoading || fetchingTags}
+              loading={isLoading}
+              disabled={fetchingTags}
             >
               Create
-            </button>
+            </Button>
           </form>
         </FormProvider>
       </MainLayout>

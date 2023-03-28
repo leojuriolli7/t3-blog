@@ -101,7 +101,8 @@ button:disabled {
 
 // Apply styles to router progress bar.
 #nprogress .bar {
-  @apply h-[3px] bg-emerald-500;
+  background: theme("colors.emerald.500") !important;
+  height: 3px !important;
 }
 
 // Remove exaggerated margin from checklist.

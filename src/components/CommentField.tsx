@@ -12,6 +12,7 @@ import ShouldRender from "./ShouldRender";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
 import { useSession } from "next-auth/react";
+import Button from "./Button";
 
 type Props = {
   parentId?: string;
@@ -98,15 +99,13 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
           />
         </Field>
         <div className="sm:flex w-full sm:justify-between">
-          <button
-            className={`px-5 py-2 mt-2 bg-emerald-500 dark:bg-teal-900 text-white sm:w-auto hover:opacity-80 ${
-              !isReply ? "w-full" : ""
-            }`}
+          <Button
+            className="sm:w-auto mt-2 w-full flex justify-center"
             type="submit"
-            disabled={isLoading}
+            loading={isLoading}
           >
-            Send comment
-          </button>
+            {isReply ? "Send reply" : "Send comment"}
+          </Button>
 
           <ShouldRender if={!isReply}>
             <p className="prose dark:prose-invert sm:text-base text-sm text-right mt-1 sm:mt-0">

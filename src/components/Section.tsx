@@ -1,6 +1,6 @@
 import React from "react";
+import Button from "./Button";
 import Carousel from "./Carousel";
-import GradientButton from "./GradientButton";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 
@@ -33,13 +33,14 @@ const Section: React.FC<Props> = ({
         </div>
 
         <ShouldRender if={onClickSeeMore}>
-          <GradientButton
+          <Button
             disabled={loading}
-            className="py-1 px-2 text-sm"
+            variant="gradient"
+            size="sm"
             onClick={onClickSeeMore}
           >
             See more
-          </GradientButton>
+          </Button>
         </ShouldRender>
       </div>
 

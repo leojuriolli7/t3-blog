@@ -17,6 +17,7 @@ import {
 } from "@schema/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MetaTags from "@components/MetaTags";
+import Button from "@components/Button";
 
 type SigninOptions = "github" | "google" | "discord";
 
@@ -80,32 +81,35 @@ const SigninPage: NextPage = () => {
             </div>
 
             <div className="flex w-full flex-col gap-3">
-              <button
+              <Button
                 onClick={handleSignIn("google")}
-                type="button"
-                className="group relative flex w-full justify-center gap-2 bg-white py-2 px-3 text-sm font-semibold text-neutral-800 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                variant="transparent"
+                icon={<FcGoogle size={20} />}
+                textClass="text-neutral-800"
+                className="w-full bg-white ring-1 ring-inset ring-gray-300"
               >
-                <FcGoogle size={20} />
                 Sign in with Google
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={handleSignIn("discord")}
-                type="button"
-                className="group relative flex w-full justify-center gap-2 bg-indigo-500 py-2 px-3 text-sm font-semibold text-neutral-100 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 dark:ring-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                variant="transparent"
+                textClass="text-neutral-200"
+                icon={<BsDiscord size={19} color="white" />}
+                className="w-full bg-indigo-500"
               >
-                <BsDiscord size={19} color="white" />
                 Sign in with Discord
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={handleSignIn("github")}
-                type="button"
-                className="group relative flex w-full justify-center gap-2 bg-zinc-800 py-2 px-3 text-sm font-semibold text-neutral-100 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 dark:ring-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                variant="transparent"
+                textClass="text-neutral-200"
+                icon={<BsGithub size={19} color="white" />}
+                className="w-full bg-zinc-800"
               >
-                <BsGithub size={19} color="white" />
                 Sign in with Github
-              </button>
+              </Button>
 
               <div className="inline-flex items-center justify-between w-full">
                 <hr className="w-[42%] h-1 my-8 bg-gray-200 border-0 rounded dark:bg-neutral-700" />
@@ -124,10 +128,13 @@ const SigninPage: NextPage = () => {
                     required
                     {...register("email")}
                   />
-                  <button className="group relative flex w-full justify-center gap-2 bg-emerald-600 py-2 px-3 text-sm font-semibold text-neutral-100 shadow-sm hover:opacity-80 ring-1 ring-inset ring-gray-300 dark:ring-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
-                    <MdEmail size={19} color="white" />
+                  <Button
+                    variant="primary"
+                    className="w-full"
+                    icon={<MdEmail size={19} color="white" />}
+                  >
                     Sign in with e-mail
-                  </button>
+                  </Button>
                 </form>
               </div>
             </div>

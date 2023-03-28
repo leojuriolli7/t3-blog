@@ -7,6 +7,7 @@ import Link from "next/link";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import MetaTags from "@components/MetaTags";
+import Button from "@components/Button";
 
 const SignoutPage: React.FC = () => {
   const router = useRouter();
@@ -39,13 +40,14 @@ const SignoutPage: React.FC = () => {
             </div>
 
             <div>
-              <button
+              <Button
                 type="button"
+                variant="primary"
                 onClick={handleSignout}
-                className="group relative flex w-full justify-center bg-emerald-600 py-2 px-3 text-sm font-semibold text-white hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+                className="flex w-full justify-center h-[38px] font-bold"
               >
                 Sign out
-              </button>
+              </Button>
             </div>
           </div>
         </div>

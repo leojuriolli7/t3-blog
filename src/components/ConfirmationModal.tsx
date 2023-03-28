@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { BsExclamationCircleFill } from "react-icons/bs";
+import Button from "./Button";
 import { Modal } from "./Modal";
 import ShouldRender from "./ShouldRender";
 import Spinner from "./Spinner";
@@ -60,24 +61,20 @@ const ConfirmationModal: React.FC<Props> = ({
           </div>
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:mt-4 sm:flex-row-reverse">
-          <button
-            className="w-full justify-center sm:w-36 sm:text-sm border-2 dark:border-gray-200 border-black text-black dark:text-white p-2  hover:opacity-80 hover:bg-neutral-100 dark:hover:bg-transparent font-medium"
-            onClick={onConfirm}
-            disabled={loading}
-          >
+          <Button variant="text" onClick={onConfirm} loading={loading}>
             <ShouldRender if={!loading}>{confirmationLabel}</ShouldRender>
 
             <ShouldRender if={loading}>
               <Spinner />
             </ShouldRender>
-          </button>
-          <button
-            className="w-full justify-center sm:w-auto sm:text-sm font-bold border-red-500 bg-red-500 py-2 px-4 text-white hover:opacity-80"
+          </Button>
+          <Button
+            variant="danger"
             onClick={handleClickCancel}
-            disabled={loading}
+            loading={loading}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

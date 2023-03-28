@@ -10,7 +10,7 @@ import Tab from "@components/Tab";
 import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
 import { useRouter } from "next/router";
-import GradientButton from "@components/GradientButton";
+import Button from "@components/Button";
 
 const PostListingPage: React.FC = () => {
   const router = useRouter();
@@ -105,12 +105,13 @@ const PostListingPage: React.FC = () => {
           <h2 className="text-3xl prose dark:prose-invert font-bold">
             Featured tags
           </h2>
-          <GradientButton
-            className="p-2 text-sm"
+          <Button
+            variant="gradient"
+            size="sm"
             onClick={redirect("/posts/tags")}
           >
             All tags
-          </GradientButton>
+          </Button>
         </div>
 
         {(loadingTags ? loadingArray : taggedPosts)?.map((tag, key) => (

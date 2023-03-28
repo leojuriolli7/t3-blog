@@ -13,7 +13,15 @@ const Popover: React.FC<Props> = ({ icon, children }) => {
   let [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
   let { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: "bottom",
-    strategy: "fixed",
+    strategy: "absolute",
+    modifiers: [
+      {
+        name: "offset",
+        options: {
+          offset: [0, 10],
+        },
+      },
+    ],
   });
 
   return (
@@ -37,7 +45,7 @@ const Popover: React.FC<Props> = ({ icon, children }) => {
           ref={(ref) => setPopperElement(ref)}
           style={styles.popper}
           {...attributes.popper}
-          className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4"
+          className="absolute left-1/2 z-10 flex w-screen max-w-max -translate-x-1/2 px-4"
         >
           <div className="w-fit shadow dark:shadow-xl">
             <ul className="flex flex-col gap-1 bg-white border border-neutral-300 dark:border-none dark:bg-neutral-900">

@@ -27,8 +27,8 @@ import { MdDelete, MdEditNote, MdOutlineTextSnippet } from "react-icons/md";
 import EmptyMessage from "@components/EmptyMessage";
 import { User } from "@utils/types";
 import Skeleton from "@components/Skeleton";
-import GradientButton from "@components/GradientButton";
 import UserLinkPreview from "@components/EditAccountModal/UserLink/UserLinkPreview";
+import Button from "@components/Button";
 
 const FollowersModal = dynamic(
   () => import("@components/Follows/FollowersModal"),
@@ -261,13 +261,15 @@ const UserPage: React.FC = () => {
               alt={user?.name as string}
             />
             <ShouldRender if={!userIsProfileOwner && session?.user?.id}>
-              <GradientButton
+              <Button
                 disabled={isLoading}
+                variant="gradient"
                 onClick={handleClickFollowButton}
-                className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-3 py-2 disabled:cursor-not-allowed disabled:opacity-80"
+                absolute
+                className="-bottom-3 left-1/2 -translate-x-1/2 px-3 py-2"
               >
                 {user?.alreadyFollowing ? "Unfollow" : "Follow"}
-              </GradientButton>
+              </Button>
             </ShouldRender>
             <ShouldRender if={userIsProfileOwner}>
               <div

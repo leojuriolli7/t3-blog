@@ -1,5 +1,6 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { createPostSchema, UpdatePostInput } from "@schema/post.schema";
+import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";
@@ -8,9 +9,9 @@ import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
 import SelectTags from "./SelectTags";
 import Link from "./Link";
+import Button from "./Button";
 
 type Props = {
   post?: SinglePost;
@@ -155,13 +156,15 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
           />
         </div>
 
-        <button
-          className="bg-emerald-500 text-white w-6/12 min-w-fit px-8 py-2"
+        <Button
+          variant="primary"
+          className="sm:w-6/12 w-full min-w-fit flex justify-center"
           type="submit"
-          disabled={updating || fetchingTags}
+          loading={updating}
+          disabled={fetchingTags}
         >
           Update
-        </button>
+        </Button>
       </form>
     </FormProvider>
   );
