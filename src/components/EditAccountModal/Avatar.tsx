@@ -1,5 +1,5 @@
 import { UpdateUserInput } from "@schema/user.schema";
-import Image from "next/image";
+import Image from "next/future/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { MdAdd, MdOutlineAddAPhoto } from "react-icons/md";
@@ -36,8 +36,7 @@ const Avatar: React.FC<Props> = ({ image }) => {
                 width={128}
                 height={128}
                 alt="Your profile picture"
-                className="rounded-full group-hover:brightness-50 dark:group-hover:opacity-50"
-                objectFit="cover"
+                className="rounded-full group-hover:brightness-50 dark:group-hover:opacity-50 object-cover"
               />
 
               <MdAdd

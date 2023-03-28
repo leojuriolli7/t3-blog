@@ -9,7 +9,7 @@ import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import useOnScreen from "@hooks/useOnScreen";
 import PostCard from "@components/PostCard";
-import Image from "next/image";
+import Image from "next/future/image";
 import ShouldRender from "@components/ShouldRender";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
@@ -256,8 +256,7 @@ const UserPage: React.FC = () => {
               src={user?.image || "/static/default-profile.jpg"}
               width={240}
               height={240}
-              className="rounded-full"
-              objectFit="cover"
+              className="rounded-full object-cover"
               alt={user?.name as string}
             />
             <ShouldRender if={!userIsProfileOwner && session?.user?.id}>

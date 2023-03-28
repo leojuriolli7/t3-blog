@@ -1,5 +1,6 @@
+import Link from "next/link";
 import React from "react";
-import Button from "./Button";
+import Button, { ButtonLink } from "./Button";
 import Carousel from "./Carousel";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
@@ -8,14 +9,14 @@ type Props = {
   children: React.ReactNode;
   title?: string;
   loading?: boolean;
-  onClickSeeMore?: () => void;
+  seeMoreHref?: string;
 };
 
 const Section: React.FC<Props> = ({
   children,
   title,
   loading,
-  onClickSeeMore,
+  seeMoreHref,
 }) => {
   return (
     <div className="bg-slate-100 dark:bg-zinc-800 shadow-md w-full sm:px-10 px-5 py-5">
@@ -32,15 +33,12 @@ const Section: React.FC<Props> = ({
           </ShouldRender>
         </div>
 
-        <ShouldRender if={onClickSeeMore}>
-          <Button
-            disabled={loading}
-            variant="gradient"
-            size="sm"
-            onClick={onClickSeeMore}
-          >
-            See more
-          </Button>
+        <ShouldRender if={seeMoreHref}>
+          <Link href={seeMoreHref || ""} passHref legacyBehavior>
+            <ButtonLink disabled={loading} variant="gradient" size="sm">
+              See more
+            </ButtonLink>
+          </Link>
         </ShouldRender>
       </div>
 

@@ -10,7 +10,8 @@ import Tab from "@components/Tab";
 import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
 import { useRouter } from "next/router";
-import Button from "@components/Button";
+import Button, { ButtonLink } from "@components/Button";
+import Link from "next/link";
 
 const PostListingPage: React.FC = () => {
   const router = useRouter();
@@ -89,7 +90,7 @@ const PostListingPage: React.FC = () => {
               Following
             </h2>
             <p className="mb-3">Posts from all your following</p>
-            <Section onClickSeeMore={redirect("posts/following")}>
+            <Section seeMoreHref="posts/following">
               {followingPostsToShow?.map((post) => (
                 <CompactCard
                   key={post.id}
@@ -105,13 +106,11 @@ const PostListingPage: React.FC = () => {
           <h2 className="text-3xl prose dark:prose-invert font-bold">
             Featured tags
           </h2>
-          <Button
-            variant="gradient"
-            size="sm"
-            onClick={redirect("/posts/tags")}
-          >
-            All tags
-          </Button>
+          <Link prefetch={false} href="/posts/tags" passHref legacyBehavior>
+            <ButtonLink variant="gradient" size="sm">
+              All tags
+            </ButtonLink>
+          </Link>
         </div>
 
         {(loadingTags ? loadingArray : taggedPosts)?.map((tag, key) => (
@@ -119,7 +118,7 @@ const PostListingPage: React.FC = () => {
             loading={loadingTags}
             title={tag?.name}
             key={loadingTags ? key : tag?.id}
-            onClickSeeMore={redirect(`/posts/tags/${tag?.id}`)}
+            seeMoreHref={`/posts/tags/${tag?.id}`}
           >
             {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
               <CompactCard

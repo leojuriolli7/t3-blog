@@ -83,16 +83,19 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
               <span className=" text-emerald-500"> (You)</span>
             </ShouldRender>
           </h3>
-          <Link href={`/users/${comment.userId}`} legacyBehavior>
-            <a title="Visit user profile" target="_blank" rel="noreferrer">
-              <FiExternalLink
-                size={15}
-                className="text-emerald-500 mb-1 cursor-pointer hover:opacity-60"
-                aria-label="Click to go to this user's page"
-                title="Click to go to this user's page"
-                role="link"
-              />
-            </a>
+          <Link
+            href={`/users/${comment.userId}`}
+            title="Visit user profile"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FiExternalLink
+              size={15}
+              className="text-emerald-500 mb-1 cursor-pointer hover:opacity-60"
+              aria-label="Click to go to this user's page"
+              title="Click to go to this user's page"
+              role="link"
+            />
           </Link>
         </div>
 

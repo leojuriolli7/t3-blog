@@ -345,13 +345,12 @@ const SinglePostPage: React.FC = () => {
               <ShouldRender if={!isLoading}>
                 <p className="w-fit">
                   By{" "}
-                  <Link href={`/users/${data?.user?.id}`} legacyBehavior>
-                    <a
-                      title="Go to user's profile"
-                      className="underline text-emerald-700 dark:text-emerald-500 font-bold"
-                    >
-                      {getUserDisplayName(data?.user)}
-                    </a>
+                  <Link
+                    href={`/users/${data?.user?.id}`}
+                    title="Go to user's profile"
+                    className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+                  >
+                    {getUserDisplayName(data?.user)}
                   </Link>
                   <ShouldRender if={data?.user?.id === session?.user.id}>
                     <span className=" text-emerald-700 dark:text-emerald-500">

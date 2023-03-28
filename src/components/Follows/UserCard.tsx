@@ -34,7 +34,7 @@ const UserCard: React.FC<Props> = ({ loading, user, onClickCard }) => {
           height={32}
           alt={user?.name || "Follower"}
           src={user?.image || "/static/default-profile.jpg"}
-          className="rounded-full"
+          className="rounded-full object-cover"
         />
       </div>
       <div className="w-full">
