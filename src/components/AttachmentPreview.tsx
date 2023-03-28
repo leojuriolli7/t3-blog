@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/future/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { saveAs } from "file-saver";
 import { IoExpandOutline } from "react-icons/io5";
@@ -100,8 +100,7 @@ const AttachmentPreview: React.FC<Props> = ({
               width={64}
               height={64}
               alt={file.name || "Uploaded image"}
-              objectFit="cover"
-              className="cursor-pointer transition-all group-hover:opacity-50"
+              className="cursor-pointer transition-all group-hover:opacity-50 object-cover"
             />
           </ShouldRender>
 

@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import MetaTags from "@components/MetaTags";
+import Link from "next/link";
 
 const VerifyEmailPage: React.FC = () => {
   return (
@@ -27,9 +28,12 @@ const VerifyEmailPage: React.FC = () => {
             </p>
 
             <div className="mt-5">
-              <a className="text-center cursor-pointer text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 underline">
+              <Link
+                href="/"
+                className="text-center cursor-pointer text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 underline"
+              >
                 Go back to home
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -80,7 +80,7 @@ const TagsListPage: React.FC = () => {
             loading={isLoading}
             title={tag?.name}
             key={isLoading ? key : tag?.id}
-            onClickSeeMore={onSeeMoreTag(tag?.id)}
+            seeMoreHref={`/posts/tags/${tag?.id}`}
           >
             {(isLoading ? loadingArray(1) : tag?.posts)?.map((post, key) => (
               <CompactCard

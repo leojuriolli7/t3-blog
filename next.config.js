@@ -8,6 +8,10 @@ const nextConfig = {
   swcMinify: true,
   experimental: {
     scrollRestoration: true,
+    newNextLinkBehavior: true,
+    images: {
+      allowFutureImage: true,
+    },
   },
   images: {
     domains: [

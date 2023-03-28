@@ -31,10 +31,11 @@ const ErrorPage = () => {
       message: (
         <div className="min-w-[200px]">
           <p className="mb-3">An unindentified error has occured.</p>
-          <Link passHref href="/">
-            <a className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500">
-              Back to home
-            </a>
+          <Link
+            href="/"
+            className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500"
+          >
+            Back to home
           </Link>
         </div>
       ),
@@ -57,10 +58,11 @@ const ErrorPage = () => {
       message: (
         <div>
           <p className="mb-4">You do not have permission to sign in.</p>
-          <Link passHref href="/auth/signin">
-            <a className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500">
-              Sign in
-            </a>
+          <Link
+            href="/auth/signin"
+            className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500"
+          >
+            Sign in
           </Link>
         </div>
       ),
@@ -75,10 +77,11 @@ const ErrorPage = () => {
         </div>
       ),
       signin: (
-        <Link passHref className="button" href="/auth/signin">
-          <a className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500">
-            Sign in
-          </a>
+        <Link
+          className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500"
+          href="/auth/signin"
+        >
+          Sign in
         </Link>
       ),
     },

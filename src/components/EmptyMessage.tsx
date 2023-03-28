@@ -33,10 +33,11 @@ const EmptyMessage: React.FC<Props> = ({
       />
       <p className="text-center">{message}</p>
       <ShouldRender if={!hideRedirect}>
-        <Link href={redirect || "/"} legacyBehavior>
-          <a className="text-emerald-500 text-center underline mt-2">
-            {redirectMessage}
-          </a>
+        <Link
+          href={redirect || "/"}
+          className="text-emerald-500 text-center underline mt-2"
+        >
+          {redirectMessage}
         </Link>
       </ShouldRender>
     </div>

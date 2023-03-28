@@ -31,10 +31,11 @@ const SignoutPage: React.FC = () => {
               </h1>
               <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
                 Or{" "}
-                <Link href="/" passHref>
-                  <a className="font-medium underline text-emerald-600 dark:text-emerald-500 hover:text-emerald-500 dark:hover:text-emerald-400">
-                    go back to home
-                  </a>
+                <Link
+                  href="/"
+                  className="font-medium underline text-emerald-600 dark:text-emerald-500 hover:text-emerald-500 dark:hover:text-emerald-400"
+                >
+                  go back to home
                 </Link>
               </p>
             </div>

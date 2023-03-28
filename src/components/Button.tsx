@@ -8,6 +8,11 @@ type HTMLButtonProps = React.DetailedHTMLProps<
   HTMLButtonElement
 >;
 
+type HTMLAnchorProps = React.DetailedHTMLProps<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  HTMLAnchorElement
+>;
+
 const BUTTON_CLASSES = "inline-flex items-center font-base";
 
 type ButtonVariant =
@@ -128,6 +133,51 @@ const ButtonContent: React.FC<{
   );
 };
 
+/**
+ * Button component that renders an `<a>` element
+ *
+ * Wrap with next.js `<Link passHref legacyBehavior>` for client side routing.
+ *
+ * https://nextjs.org/docs/api-reference/next/link#if-the-child-is-a-custom-component-that-wraps-an-a-tag
+ */
+export const ButtonLink = React.forwardRef<
+  HTMLAnchorElement,
+  ButtonProps & HTMLAnchorProps
+>((props, ref) => {
+  const {
+    children,
+    className = "",
+    disabled,
+    size,
+    variant,
+    icon,
+    iconPosition,
+    loading,
+    textClass,
+    ...rest
+  } = props;
+  return (
+    <a
+      className={getButtonClasses(
+        { disabled, size, variant },
+        !!icon,
+        className
+      )}
+      ref={ref}
+      aria-disabled={disabled}
+      {...rest}
+    >
+      <ButtonContent {...props} textClass={textClass} />
+    </a>
+  );
+});
+ButtonLink.displayName = "ButtonLink";
+
+/**
+ * Button component that renders a `<button>` element
+ *
+ * @see {@link ButtonLink} for rendering an `<a>` element
+ */
 const Button = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & HTMLButtonProps

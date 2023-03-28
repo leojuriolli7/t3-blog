@@ -40,8 +40,7 @@ const Header: React.FC = () => {
                 width={36}
                 height={36}
                 alt="Your profile picture"
-                className="rounded-full cursor-pointer"
-                objectFit="cover"
+                className="rounded-full cursor-pointer object-cover"
               />
             }
           >
@@ -133,21 +132,28 @@ const Header: React.FC = () => {
         </Popover.Main>
 
         <ShouldRender if={session?.status === "authenticated"}>
-          <Link href="/posts/new" legacyBehavior>
-            <a className="sm:block hidden underline hover:opacity-80">
-              Create post
-            </a>
+          <Link
+            className="sm:block hidden underline hover:opacity-80"
+            href="/posts/new"
+          >
+            Create post
           </Link>
         </ShouldRender>
 
-        <Link href="/posts/tags" legacyBehavior>
-          <a className="sm:block hidden underline hover:opacity-80">All tags</a>
+        <Link
+          className="sm:block hidden underline hover:opacity-80"
+          href="/posts/tags"
+        >
+          All tags
         </Link>
-        <Link href="/posts/search" legacyBehavior>
-          <a className="sm:block hidden underline hover:opacity-80">Search</a>
+        <Link
+          className="sm:block hidden underline hover:opacity-80"
+          href="/posts/search"
+        >
+          Search
         </Link>
-        <Link href="/" legacyBehavior>
-          <a className="sm:block hidden underline hover:opacity-80 ">Home</a>
+        <Link className="sm:block hidden underline hover:opacity-80" href="/">
+          Home
         </Link>
       </nav>
       <FaAppleAlt
