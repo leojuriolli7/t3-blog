@@ -17,6 +17,7 @@ import Dropzone from "@components/Dropzone";
 import Link from "@components/Link";
 import CreatePoll from "@components/CreatePoll";
 import Button from "@components/Button";
+import TextInput from "@components/TextInput";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -119,10 +120,11 @@ const CreatePostPage: React.FC = () => {
             <h1 className="text-2xl font-medium text-center">Create a post</h1>
 
             <Field error={errors.title}>
-              <input
+              <TextInput
+                variant="primary"
+                sizeVariant="lg"
                 type="text"
                 placeholder="your post title"
-                className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
                 {...register("title")}
               />
             </Field>

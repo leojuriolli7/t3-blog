@@ -5,7 +5,7 @@ import { FieldType } from "@utils/types";
 import { Controller, useFormContext } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { toast } from "react-toastify";
+import TextInput from "./TextInput";
 
 const CheckableTag = Tag;
 
@@ -33,6 +33,7 @@ const SelectTags: React.FC<Props> = ({
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  console.log("inputRef:", inputRef);
 
   useEffect(() => {
     if (inputVisible) {
@@ -121,14 +122,17 @@ const SelectTags: React.FC<Props> = ({
           </div>
           <div className="w-full relative">
             {inputVisible ? (
-              <input
-                className="bg-white border-zinc-300 h-[46px] dark:text-white dark:border-neutral-800 p-3 w-full dark:bg-neutral-900 rounded-none focus:border-emerald-500"
+              <TextInput
                 ref={inputRef}
+                variant="primary"
+                sizeVariant="lg"
+                className="h-[46px]"
                 type="text"
                 maxLength={30}
                 value={inputValue}
                 onChange={handleInputChange}
                 onBlur={handleInputConfirm(field)}
+                onPressEnter={handleInputConfirm(field)}
               />
             ) : (
               <Tag

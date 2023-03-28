@@ -83,7 +83,7 @@ const SearchPage = () => {
             ))}
           </div>
           <div className="w-full">
-            <SearchInput setQuery={setQueryValue} placeholder="search posts" />
+            <SearchInput setQuery={setQueryValue} placeholder="Search posts" />
           </div>
         </div>
 

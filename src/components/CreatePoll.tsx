@@ -9,6 +9,7 @@ import { MdOutlineAdd } from "react-icons/md";
 import ActionButton from "./ActionButton";
 import Field from "./Field";
 import ShouldRender from "./ShouldRender";
+import TextInput from "./TextInput";
 
 type Option = Pick<PollOption, "title" | "color">;
 
@@ -40,7 +41,7 @@ const CreatePoll: React.FC = () => {
   const debouncedTitleChange = debounce(onTitleChange);
 
   const addNewOption = useCallback(() => {
-    if (!!currentOption) {
+    if (!!currentOption?.title) {
       if (options?.length > 6) {
         toast.error("Maximum of 6 options per poll.");
       } else {
@@ -94,7 +95,9 @@ const CreatePoll: React.FC = () => {
       error={errors?.poll as any}
     >
       <div ref={inputsParentRef}>
-        <input
+        <TextInput
+          variant="primary"
+          sizeVariant="lg"
           type="text"
           placeholder="poll title/question"
           className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
@@ -103,10 +106,13 @@ const CreatePoll: React.FC = () => {
 
         <ShouldRender if={!!title}>
           <div className="w-full relative mt-3">
-            <input
+            <TextInput
+              variant="primary"
+              sizeVariant="lg"
               type="text"
               placeholder="new option"
               className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
+              onPressEnter={addNewOption}
               onChange={onNewOptionChange}
               ref={optionInputRef}
             />
@@ -116,7 +122,7 @@ const CreatePoll: React.FC = () => {
               aria-label="Add poll option"
               title="Add poll option"
               onClick={addNewOption}
-              disabled={!currentOption}
+              disabled={!currentOption?.title}
             >
               <MdOutlineAdd size={22} className="text-white" />
             </button>

@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { HiOutlineCloudUpload } from "react-icons/hi";
-import AttachmentList from "./AttachmentList";
-import Field from "./Field";
-import { toast } from "react-toastify";
 import { FileRejection, useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 import { UPLOAD_MAX_FILE_SIZE, UPLOAD_MAX_NUMBER_OF_FILES } from "@config/aws";
 import convertToMegabytes from "@utils/convertToMB";
+import AttachmentList from "./AttachmentList";
+import Field from "./Field";
 
 const Dropzone: React.FC = () => {
   const methods = useFormContext();

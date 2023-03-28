@@ -13,6 +13,7 @@ import { Modal } from "../Modal";
 import Avatar from "./Avatar";
 import UserLinkField from "./UserLink/UserLinkField";
 import Button from "@components/Button";
+import TextInput from "@components/TextInput";
 
 type Props = {
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -162,11 +163,10 @@ const EditAccountModal: React.FC<Props> = ({
                   : undefined
               }
             >
-              <input
+              <TextInput
                 defaultValue={userInformation?.name || ""}
                 type="text"
                 placeholder="your username"
-                className="block w-full border-0 py-2 px-3.5 text-gray-900 dark:text-neutral-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:bg-neutral-900 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                 {...register("name")}
               />
             </Field>
@@ -191,12 +191,11 @@ const EditAccountModal: React.FC<Props> = ({
             <UserLinkField initialLink={userInformation?.url} />
 
             <Field label="e-mail">
-              <input
+              <TextInput
                 type="text"
                 disabled
                 placeholder="your email"
                 defaultValue={userInformation?.email || ""}
-                className="block w-full border-0 py-2 px-3.5 text-gray-900 disabled:text-gray-400 dark:disabled:text-neutral-500 dark:disabled:bg-neutral-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 disabled:cursor-not-allowed"
               />
             </Field>
 

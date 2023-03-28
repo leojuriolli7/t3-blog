@@ -8,6 +8,7 @@ import {
 } from "react";
 import { HiSearch } from "react-icons/hi";
 import debounce from "lodash.debounce";
+import TextInput from "./TextInput";
 
 type Props = {
   setQuery: Dispatch<SetStateAction<string>>;
@@ -46,20 +47,17 @@ const SearchInput: React.FC<Props> = ({ setQuery, placeholder }) => {
   }, [router.isReady]);
 
   return (
-    <div className="relative w-full">
-      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <HiSearch className="text-gray-500 dark:text-gray-400" size={20} />
-      </div>
-      <input
-        ref={inputRef}
-        onChange={(e) => handleChange(e.target.value)}
-        type="text"
-        className="bg-gray-50 border border-gray-300 dark:border-neutral-600 text-gray-900 text-md rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full pl-10 p-3  dark:bg-neutral-800 dark:neutral-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500"
-        placeholder={placeholder}
-        required
-        title={placeholder}
-      />
-    </div>
+    <TextInput
+      variant="primary"
+      sizeVariant="lg"
+      icon={<HiSearch className="text-gray-500 dark:text-gray-400" size={20} />}
+      ref={inputRef}
+      onChange={(e) => handleChange(e.target.value)}
+      type="text"
+      placeholder={placeholder}
+      required
+      title={placeholder}
+    />
   );
 };
 

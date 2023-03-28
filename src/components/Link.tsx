@@ -11,12 +11,15 @@ import { CreatePostInput, UpdatePostInput } from "@schema/post.schema";
 import LinkPreview from "./LinkPreview";
 import { Link as LinkType } from "@prisma/client";
 import { baseUrl } from "@utils/constants";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import TextInput from "./TextInput";
 
 type Props = {
   initialLink?: LinkType | null;
 };
 
 const Link: React.FC<Props> = ({ initialLink }) => {
+  const [animateRef] = useAutoAnimate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [link, setLink] = useState("");
   const { setValue, formState } = useFormContext<
@@ -93,19 +96,20 @@ const Link: React.FC<Props> = ({ initialLink }) => {
   }, [initialLink]);
 
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div ref={animateRef} className="flex flex-col w-full gap-3">
       <Field
         label="Link"
         description="By adding a link to your post, the link will be highlighted on the post."
         error={formError as any}
       >
-        <input
+        <TextInput
+          variant="primary"
+          sizeVariant="lg"
           ref={inputRef}
           type="text"
           disabled={isLoading}
           onChange={onChange}
           placeholder="Paste your link"
-          className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900 disabled:opacity-70"
         />
       </Field>
       <ShouldRender if={!!metadata || isLoading}>

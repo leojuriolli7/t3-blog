@@ -9,6 +9,7 @@ import isURL from "validator/lib/isURL";
 import { Metadata, UserLink } from "@utils/types";
 import UserLinkPreview from "./UserLinkPreview";
 import { baseUrl } from "@utils/constants";
+import TextInput from "@components/TextInput";
 
 type Url = Metadata & {
   logo?: string | null;
@@ -97,11 +98,10 @@ const UserLinkField: React.FC<Props> = ({ initialLink }) => {
   return (
     <div>
       <Field label="your link" error={formError as any}>
-        <input
+        <TextInput
           defaultValue=""
           type="text"
           placeholder="link will be highlighted on your profile"
-          className="block w-full border-0 py-2 px-3.5 text-gray-900 disabled:opacity-70 dark:text-neutral-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 dark:bg-neutral-900 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
           ref={inputRef}
           onChange={onChange}
           disabled={isLoading}

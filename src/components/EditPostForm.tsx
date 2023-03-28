@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import SelectTags from "./SelectTags";
 import Link from "./Link";
 import Button from "./Button";
+import TextInput from "./TextInput";
 
 type Props = {
   post?: SinglePost;
@@ -132,10 +133,11 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
         className="w-full mx-auto flex flex-col items-center gap-10"
       >
         <Field error={errors.title}>
-          <input
+          <TextInput
+            variant="primary"
+            sizeVariant="lg"
             type="text"
             placeholder="your post title"
-            className="bg-white border-zinc-300 border-[1px] dark:border-none p-3 w-full dark:bg-neutral-900"
             {...methods.register("title")}
           />
         </Field>

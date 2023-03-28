@@ -18,6 +18,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import MetaTags from "@components/MetaTags";
 import Button from "@components/Button";
+import TextInput from "@components/TextInput";
 
 type SigninOptions = "github" | "google" | "discord";
 
@@ -121,16 +122,16 @@ const SigninPage: NextPage = () => {
 
               <div>
                 <form onSubmit={handleSubmit(onEmailSubmit)}>
-                  <input
+                  <TextInput
+                    variant="primary"
                     type="email"
-                    placeholder="your e-mail"
-                    className="block w-full border-0 text-gray-900 mb-2 disabled:text-gray-400 dark:disabled:text-neutral-500 dark:disabled:bg-neutral-700 shadow-sm dark:text-neutral-200 ring-1 ring-inset ring-gray-300 dark:ring-neutral-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 disabled:cursor-not-allowed py-2 px-4"
+                    placeholder="type your e-mail"
                     required
                     {...register("email")}
                   />
                   <Button
                     variant="primary"
-                    className="w-full"
+                    className="w-full mt-2"
                     icon={<MdEmail size={19} color="white" />}
                   >
                     Sign in with e-mail
