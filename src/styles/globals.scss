@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+// Global styles.
 button {
   cursor: pointer;
 }
@@ -16,6 +17,13 @@ button:disabled {
   padding: 0;
   box-sizing: border-box;
 }
+
+/* 
+  From here forwards we have specific style adjustments being applied, like:
+    1. Changes to the default markdown editor styles. (Add dark mode, change text style)
+    2. Style fixes and adjustments for other libraries.
+
+*/
 
 // Fix keen-slider initial layout shift.
 .keen-slider:not(.initialized) {
@@ -94,4 +102,11 @@ button:disabled {
 // Apply styles to router progress bar.
 #nprogress .bar {
   @apply h-[3px] bg-emerald-500;
+}
+
+// Remove exaggerated margin from checklist.
+.prose {
+  input[type="checkbox"] {
+    @apply mt-0 mb-0;
+  }
 }

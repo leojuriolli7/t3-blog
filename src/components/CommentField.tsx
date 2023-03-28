@@ -99,7 +99,9 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
         </Field>
         <div className="sm:flex w-full sm:justify-between">
           <button
-            className="px-5 py-2 mt-2 bg-emerald-500 text-white"
+            className={`px-5 py-2 mt-2 bg-emerald-500 dark:bg-teal-900 text-white sm:w-auto hover:opacity-80 ${
+              !isReply ? "w-full" : ""
+            }`}
             type="submit"
             disabled={isLoading}
           >
@@ -107,7 +109,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
           </button>
 
           <ShouldRender if={!isReply}>
-            <p className="prose dark:prose-invert">
+            <p className="prose dark:prose-invert sm:text-base text-sm text-right mt-1 sm:mt-0">
               powered by{" "}
               <a
                 className="text-emerald-500"
