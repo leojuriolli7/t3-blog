@@ -1,6 +1,7 @@
 import { TaggedPosts } from "@utils/types";
 import React from "react";
 import ReactMarkdown from "@components/ReactMarkdown";
+import getUserDisplayName from "@utils/getUserDisplayName";
 import LikeCount from "./LikeCount";
 import Link from "next/link";
 import ShouldRender from "./ShouldRender";
@@ -59,7 +60,7 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
         <ShouldRender if={!loading}>
           <div className="flex gap-3 min-w-min">
             <p className="text-sm line-clamp-2 ml-3 leading-4">
-              By {post?.user?.name || post?.user?.email}
+              By {getUserDisplayName(post?.user)}
             </p>
           </div>
         </ShouldRender>
