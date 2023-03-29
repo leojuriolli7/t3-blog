@@ -100,7 +100,7 @@ const AttachmentPreview: React.FC<Props> = ({
               width={64}
               height={64}
               alt={file.name || "Uploaded image"}
-              className="cursor-pointer transition-all group-hover:opacity-50 object-cover"
+              className="cursor-pointer transition-all group-hover:opacity-50 object-cover h-full"
             />
           </ShouldRender>
 
