@@ -65,7 +65,7 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
           <p className="min-w-min ml-2 sm:text-sm text-xs mt-2">
             by{" "}
             <Link
-              href={`users/${post?.userId}`}
+              href={`/users/${post?.userId}`}
               className="underline text-emerald-700 dark:text-emerald-500 font-bold"
             >
               {getUserDisplayName(post?.user)}
