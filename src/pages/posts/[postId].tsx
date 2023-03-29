@@ -329,13 +329,15 @@ const SinglePostPage: React.FC = () => {
           </ShouldRender>
 
           <ShouldRender if={!isEditing}>
-            <ReactMarkdown
-              className="prose xs:text-4xl text-3xl font-bold"
-              heading
-              loading={isLoading}
-            >
-              {data?.title}
-            </ReactMarkdown>
+            <ShouldRender if={!isLoading}>
+              <h1 className="prose dark:prose-invert xs:text-4xl text-3xl font-bold">
+                {data?.title}
+              </h1>
+            </ShouldRender>
+
+            <ShouldRender if={isLoading}>
+              <Skeleton heading />
+            </ShouldRender>
 
             <div>
               <ShouldRender if={isLoading}>
