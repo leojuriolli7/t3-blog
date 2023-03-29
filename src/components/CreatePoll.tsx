@@ -42,7 +42,7 @@ const CreatePoll: React.FC = () => {
 
   const addNewOption = useCallback(() => {
     if (!!currentOption?.title) {
-      if (options?.length > 6) {
+      if (options?.length === 6) {
         toast.error("Maximum of 6 options per poll.");
       } else {
         setOptions((options) => [...options, currentOption]);

@@ -33,7 +33,6 @@ const SelectTags: React.FC<Props> = ({
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  console.log("inputRef:", inputRef);
 
   useEffect(() => {
     if (inputVisible) {
