@@ -39,8 +39,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - [Zod](https://github.com/colinhacks/zod) for validations.
 - [React Hook Form](https://react-hook-form.com) for forms.
 - [Keen Slider](https://keen-slider.io/) for a carousel component.
-- [rehype](https://github.com/rehypejs/rehype) & [remark](https://github.com/remarkjs/remark/) to parse the markdown on the server-side, and convert it to HTML before sending it to the client.
-- [turndown](https://github.com/mixmark-io/turndown) to convert HTML to markdown for editing posts/comments. (Also [DOMPurify](https://github.com/cure53/DOMPurify) to sanitize markdown)
+- [rehype](https://github.com/rehypejs/rehype) & [remark](https://github.com/remarkjs/remark/) to parse the markdown on the server-side, and convert it to HTML before sending it to the client. 
 - [react-markdown-editor-lite](https://github.com/HarryChen0506/react-markdown-editor-lite/) for a very quick and performant MD editor.
 - [Metascraper](https://metascraper.js.org/) for scraping links.
 - [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [Next Themes](https://github.com/pacocoursey/next-themes) - easy dark mode support, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts, [React popper](https://popper.js.org/) for a custom popover component, [React dropzone](https://react-dropzone.js.org/) for a dropzone component.
