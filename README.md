@@ -50,6 +50,11 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - Implemented infinite scrolling on multiple screens with TanStack Query's `useInfiniteQuery`, tRPC and the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 - I used [Lodash debounce](https://lodash.com/docs/#debounce) to debounce search results and improve the search input performance while keeping a good UX. (Typing and automatically receiving results) 
 
+## Overcoming T3 Stack limitations
+tRPC [does not support `multipart/form-data`](https://github.com/trpc/trpc/discussions/658#discussioncomment-998746), so file uploads could not be done reliably inside the tRPC router. For that reason, I decided to use the AWS SDK, S3 buckets and presigned URLs, a very safe and reliable method of uploading files. 
+
+In this case, the tRPC router is only responsible with creating presigned URLs for uploads on the client and getting/parsing the AWS objects before sending the JSON to the client on any queries. 
+
 ## Run the project
 ### Environment variables:
   - `DATABASE_URL`: Planetscale MySQL database URL.
