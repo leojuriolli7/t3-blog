@@ -29,6 +29,7 @@ const Popover: React.FC<Props> = ({ icon, children }) => {
       <HeadlessPopover.Button
         ref={(ref) => setReferenceElement(ref)}
         className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
+        aria-label="Open popover"
       >
         {icon}
       </HeadlessPopover.Button>

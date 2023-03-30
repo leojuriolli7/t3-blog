@@ -33,16 +33,6 @@ type PostType =
     })
   | null;
 
-/** 
- Rewrites any `<a>` to `<p>` to avoid any hydration or
- validate DOM nesting errors.
- */
-const rewriteFunc = (node: Root | RootContent) => {
-  if (node.type === "element" && node.tagName === "a") {
-    node.tagName = "p";
-  }
-};
-
 // Parse post body (markdown) to HTML.
 export async function markdownToHtml(markdown: string, rewriteLinks = true) {
   const result = await remark()
@@ -54,8 +44,26 @@ export async function markdownToHtml(markdown: string, rewriteLinks = true) {
       rehypeRewrite,
       rewriteLinks
         ? {
-            selector: "a",
-            rewrite: rewriteFunc,
+            rewrite: (node) => {
+              // Rewrites any `<a>` to `<p>` to avoid any hydration or
+              // validate DOM nesting errors.
+              if (
+                node.type === "element" &&
+                node.tagName === "a" &&
+                rewriteLinks
+              ) {
+                node.tagName = "p";
+              }
+
+              // Add aria-label to `<input type='checkbox'>`
+              if (
+                node.type === "element" &&
+                node.tagName === "input" &&
+                node?.properties?.type === "checkbox"
+              ) {
+                node.properties["aria-label"] = "Checkbox from checklist";
+              }
+            },
           }
         : false
     )

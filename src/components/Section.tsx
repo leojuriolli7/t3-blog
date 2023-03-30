@@ -34,7 +34,12 @@ const Section: React.FC<Props> = ({
         </div>
 
         <ShouldRender if={seeMoreHref}>
-          <Link href={seeMoreHref || ""} passHref legacyBehavior>
+          <Link
+            href={seeMoreHref || ""}
+            passHref
+            legacyBehavior
+            prefetch={false}
+          >
             <ButtonLink disabled={loading} variant="gradient" size="sm">
               See more
             </ButtonLink>
