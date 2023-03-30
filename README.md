@@ -51,11 +51,13 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - Implemented infinite scrolling on multiple screens with TanStack Query's `useInfiniteQuery`, tRPC and the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 - I used [Lodash debounce](https://lodash.com/docs/#debounce) to debounce search results and improve the search input performance while keeping a good UX. (Typing and automatically receiving results) 
 
+### Processing markdown on the server
+
 Another important UX improvement was when I switched from converting markdown to HTML on the client-side with [React Markdown](https://github.com/remarkjs/react-markdown) to converting MD to HTML on the server-side, and returning simple HTML to the client.
 
-I could notice whenever I scrolled down to load new posts, the site (client) would slow down/crash for a bit, to process the new markdown text it was receiving. This poor UX was also fixed with this change.  **This contributed to a huge boost in the performance scores of the website:**
+I could notice whenever I first loaded the site, or scrolled down to load new posts, the page would slow down/crash for a bit, presumably to process & convert the markdown text it was receiving. This poor UX was fixed with this change.  **This contributed to a huge boost in the performance scores of the website:**
 
-> The pull request: https://github.com/leojuriolli7/t3-blog/pull/21
+#### The pull request: [Refactor: Process markdown on the server](https://github.com/leojuriolli7/t3-blog/pull/21)
 
 | Parsing markdown on the client | After parsing markdown on the server |
 |--------|--------|
