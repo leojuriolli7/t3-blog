@@ -40,13 +40,13 @@ const MetaTags: React.FC<Props> = ({
       <meta property="og:url" content={url} />
       <meta property="og:title" content={formattedTitle} />
       <meta property="og:description" content={currentDescription} />
-      <meta property="og:image" content={LOGO_PATH || image} />
+      <meta property="og:image" content={image || LOGO_PATH} />
 
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="twitter:url" content={url} />
       <meta property="twitter:title" content={formattedTitle} />
       <meta property="twitter:description" content={currentDescription} />
-      <meta property="twitter:image" content={LOGO_PATH || image} />
+      <meta property="twitter:image" content={image || LOGO_PATH} />
     </Head>
   );
 };
