@@ -19,7 +19,6 @@ type Props = {
   onFinish: () => void;
 };
 
-// TO-DO: See if can add update attachments here. (Delete them or add more)
 const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const utils = trpc.useContext();
   const router = useRouter();

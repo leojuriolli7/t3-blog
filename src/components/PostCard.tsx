@@ -1,9 +1,9 @@
-import ReactMarkdown from "@components/ReactMarkdown";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import { PostFromList } from "@utils/types";
 import Link from "next/link";
 import LikeCount from "./LikeCount";
 import LinkPreview from "./LinkPreview";
+import HTMLBody from "./HTMLBody";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 import TagList from "./TagList";
@@ -43,20 +43,13 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
           <Skeleton heading />
         </ShouldRender>
 
-        <ReactMarkdown
+        <HTMLBody
           loading={loading}
           lines={3}
           className={`prose-sm line-clamp-4 overflow-hidden text-ellipsis prose-headings:text-base max-h-56`}
-          /* 
-           This is to avoid any elements not nested properly inside the DOM.
-           eg: <a> inside of <a>
-           Read more: https://deepscan.io/docs/rules/react-invalid-dom-nesting
-           */
-          disallowedElements={["a"]}
-          unwrapDisallowed
         >
           {post?.body}
-        </ReactMarkdown>
+        </HTMLBody>
       </Link>
 
       <div className="w-full flex justify-between items-center mt-2">

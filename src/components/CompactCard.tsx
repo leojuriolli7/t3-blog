@@ -1,11 +1,11 @@
 import { TaggedPosts } from "@utils/types";
 import React from "react";
-import ReactMarkdown from "@components/ReactMarkdown";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import LikeCount from "./LikeCount";
 import Link from "next/link";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
+import HTMLBody from "./HTMLBody";
 
 type Props = {
   slide?: boolean;
@@ -37,20 +37,13 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
           <Skeleton />
         </ShouldRender>
 
-        <ReactMarkdown
+        <HTMLBody
           loading={loading}
           lines={3}
           className={`text-md line-clamp-2 text-ellipsis max-h-14`}
-          /* 
-           This is to avoid any elements not nested properly inside the DOM.
-           eg: <a> inside of <a>
-           Read more: https://deepscan.io/docs/rules/react-invalid-dom-nesting
-           */
-          disallowedElements={["a"]}
-          unwrapDisallowed
         >
           {post?.body}
-        </ReactMarkdown>
+        </HTMLBody>
       </div>
 
       <div className="flex w-full justify-between items-center mt-4">

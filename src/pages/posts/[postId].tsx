@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "@utils/trpc";
-import ReactMarkdown from "@components/ReactMarkdown";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import CommentSection from "@components/CommentSection";
@@ -23,6 +22,7 @@ import PreviewMediaModal from "@components/PreviewMediaModal";
 import FavoriteButton from "@components/FavoriteButton";
 import LinkPreview from "@components/LinkPreview";
 import PollView from "@components/PollView/PollView";
+import HTMLBody from "@components/HTMLBody";
 
 type ReplyData = {
   parentId: string;
@@ -325,6 +325,7 @@ const SinglePostPage: React.FC = () => {
           </ShouldRender>
 
           <ShouldRender if={isEditing}>
+            {/* TO-DO: Parse HTML content into markdown before sending to MD Editor. */}
             <EditPostForm onFinish={toggleIsEditing} post={data} />
           </ShouldRender>
 
@@ -397,9 +398,9 @@ const SinglePostPage: React.FC = () => {
               </div>
             </ShouldRender>
 
-            <ReactMarkdown className="prose" lines={5} loading={isLoading}>
+            <HTMLBody className="prose" lines={5} loading={isLoading}>
               {data?.body}
-            </ReactMarkdown>
+            </HTMLBody>
           </ShouldRender>
 
           <div className="flex gap-3 absolute -bottom-4 left-4">

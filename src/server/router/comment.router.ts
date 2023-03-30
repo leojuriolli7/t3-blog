@@ -9,6 +9,7 @@ import {
   getCommentsSchema,
   updateCommentSchema,
 } from "@schema/comment.schema";
+import { markdownToHtml } from "@server/utils";
 
 export const commentRouter = createRouter()
   .query("all-comments", {
@@ -31,7 +32,21 @@ export const commentRouter = createRouter()
           },
         });
 
-        return comments;
+        const formattedComments = await Promise.all(
+          comments.map(async (comment) => {
+            const formattedBody = await markdownToHtml(
+              comment?.body || "",
+              false
+            );
+
+            return {
+              ...comment,
+              body: formattedBody,
+            };
+          })
+        );
+
+        return formattedComments;
       } catch (e) {
         console.log("e:", e);
         throw new trpc.TRPCError({
