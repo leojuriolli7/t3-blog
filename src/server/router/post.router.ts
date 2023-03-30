@@ -302,11 +302,12 @@ export const postRouter = createRouter()
           }
         : null;
 
-      const mdBody = await markdownToHtml(post?.body || "", false);
+      const htmlBody = await markdownToHtml(post?.body || "", false);
 
       return {
         ...postWithLikes,
-        body: mdBody,
+        body: htmlBody,
+        markdownBody: post?.body,
         favoritedByMe: favoritedByUser,
         poll,
       };

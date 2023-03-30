@@ -305,7 +305,11 @@ const SinglePostPage: React.FC = () => {
 
   return (
     <>
-      <MetaTags title={data?.title} description={data?.body} />
+      <MetaTags
+        title={data?.title}
+        image={data?.link?.image}
+        description={data?.markdownBody}
+      />
 
       <MainLayout>
         <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-8 xs:p-12 dark:bg-zinc-800">

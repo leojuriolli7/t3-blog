@@ -42,6 +42,7 @@ export const commentRouter = createRouter()
             return {
               ...comment,
               body: formattedBody,
+              markdownBody: comment?.body,
             };
           })
         );

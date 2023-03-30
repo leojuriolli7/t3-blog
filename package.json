@@ -63,8 +63,6 @@
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
     "superjson": "^1.9.1",
-    "turndown": "^7.1.2",
-    "turndown-plugin-gfm": "^1.0.2",
     "uuidv4": "^6.2.13",
     "validator": "^13.9.0",
     "zod": "^3.17.3"
