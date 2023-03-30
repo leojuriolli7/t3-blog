@@ -51,11 +51,13 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - Implemented infinite scrolling on multiple screens with TanStack Query's `useInfiniteQuery`, tRPC and the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 - I used [Lodash debounce](https://lodash.com/docs/#debounce) to debounce search results and improve the search input performance while keeping a good UX. (Typing and automatically receiving results) 
 
-Another important UX improvement was when I switched from the client receiving markdown on the post body (And converting it to HTML on the client with [React Markdown](https://github.com/remarkjs/react-markdown)) to converting MD to HTML on the server-side, and returning simple HTML to the client. This change, alongside others, contributed to this huge difference in the performance scores of the website:
+Another important UX improvement was when I switched from converting markdown to HTML on the client-side with [React Markdown](https://github.com/remarkjs/react-markdown) to converting MD to HTML on the server-side, and returning simple HTML to the client.
+
+I could notice whenever I scrolled down to load new posts, the site (client) would slow down/crash for a bit, to process the new markdown text it was receiving. This poor UX was also fixed with this change.  **This contributed to a huge boost in the performance scores of the website:**
 
 > The pull request: https://github.com/leojuriolli7/t3-blog/pull/21
 
-| Before changes | After changes |
+| Parsing markdown on the client | After parsing markdown on the server |
 |--------|--------|
 | ![Screenshot from 2023-03-29 23-46-02](https://user-images.githubusercontent.com/100495707/228715389-f1206b83-ae93-4e1f-b5af-d18bb1356e5d.png) | ![Screenshot from 2023-03-29 23-47-33](https://user-images.githubusercontent.com/100495707/228715384-b8cee082-a162-4d9e-a0f6-1a1f791242a1.png)  | 
 
