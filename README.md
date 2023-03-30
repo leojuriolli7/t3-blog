@@ -39,16 +39,25 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - [Zod](https://github.com/colinhacks/zod) for validations.
 - [React Hook Form](https://react-hook-form.com) for forms.
 - [Keen Slider](https://keen-slider.io/) for a carousel component.
-- [React Markdown](https://github.com/remarkjs/react-markdown) for reading markdown text & [react-markdown-editor-lite](https://github.com/HarryChen0506/react-markdown-editor-lite/) for a very quick and performant MD editor.
+- [rehype](https://github.com/rehypejs/rehype) & [remark](https://github.com/remarkjs/remark/) to parse the markdown on the server-side, and convert it to HTML before sending it to the client.
+- [turndown](https://github.com/mixmark-io/turndown) to convert HTML to markdown for editing posts/comments. (Also [DOMPurify](https://github.com/cure53/DOMPurify) to sanitize markdown)
+- [react-markdown-editor-lite](https://github.com/HarryChen0506/react-markdown-editor-lite/) for a very quick and performant MD editor.
 - [Metascraper](https://metascraper.js.org/) for scraping links.
-- [Next Themes](https://github.com/pacocoursey/next-themes) for easy dark mode support.
-- [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts, [React popper](https://popper.js.org/) for a custom popover component, [React dropzone](https://react-dropzone.js.org/) for a dropzone component.
+- [auto-animate](https://auto-animate.formkit.com/) - automatic animations, [Next Themes](https://github.com/pacocoursey/next-themes) - easy dark mode support, [React Icons](https://react-icons.github.io/) - icons, [React Toastify](https://fkhadra.github.io/react-toastify/) - toasts, [React popper](https://popper.js.org/) for a custom popover component, [React dropzone](https://react-dropzone.js.org/) for a dropzone component.
 
 ## Improving the user experience
 
 - I used [TanStack Query](https://tanstack.com/query/latest) (formerly React Query) to implement [optimistic updates](https://tanstack.com/query/v4/docs/react/guides/optimistic-updates), allowing the UI to update without having to wait for a backend response, making for a blazing fast experience. - You can like/dislike posts and see the feedback immediately, or edit a post and see the changes applied instantaneously.
 - Implemented infinite scrolling on multiple screens with TanStack Query's `useInfiniteQuery`, tRPC and the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 - I used [Lodash debounce](https://lodash.com/docs/#debounce) to debounce search results and improve the search input performance while keeping a good UX. (Typing and automatically receiving results) 
+
+Another important UX improvement was when I switched from the client receiving markdown on the post body (And converting it to HTML on the client with [React Markdown](https://github.com/remarkjs/react-markdown)) to converting MD to HTML on the server-side, and returning simple HTML to the client. This change, alongside others, contributed to this huge difference in the performance scores of the website:
+
+> The pull request: https://github.com/leojuriolli7/t3-blog/pull/21
+
+| Before changes | After changes |
+|--------|--------|
+| ![Screenshot from 2023-03-29 23-46-02](https://user-images.githubusercontent.com/100495707/228715389-f1206b83-ae93-4e1f-b5af-d18bb1356e5d.png) | ![Screenshot from 2023-03-29 23-47-33](https://user-images.githubusercontent.com/100495707/228715384-b8cee082-a162-4d9e-a0f6-1a1f791242a1.png)  | 
 
 ## Overcoming T3 Stack limitations
 tRPC [does not support `multipart/form-data`](https://github.com/trpc/trpc/discussions/658#discussioncomment-998746), so file uploads could not be done reliably inside the tRPC router. For that reason, I decided to use the AWS SDK, S3 buckets and presigned URLs, a very safe and reliable method of uploading files. 
