@@ -40,6 +40,8 @@ const Header: React.FC = () => {
                 width={36}
                 height={36}
                 alt="Your profile picture"
+                role="button"
+                aria-label="Open profile navigation menu"
                 className="rounded-full cursor-pointer object-cover"
               />
             }
@@ -103,6 +105,7 @@ const Header: React.FC = () => {
             <HiMenu
               size={27}
               className="dark:text-emerald-500 text-emerald-700 block sm:hidden"
+              aria-label="Open navigation menu"
             />
           }
         >

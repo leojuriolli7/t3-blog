@@ -7,6 +7,7 @@ import {
 import { CommentWithChildren } from "@utils/types";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-toastify";
+import htmlToMarkdown from "@utils/htmlToMarkdown";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MarkdownEditor from "./MarkdownEditor";
@@ -28,7 +29,7 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
     resolver: zodResolver(updateCommentSchema),
     shouldFocusError: false,
     defaultValues: {
-      body: comment?.body,
+      body: htmlToMarkdown(comment?.body),
       commentId: comment?.id,
     },
   });

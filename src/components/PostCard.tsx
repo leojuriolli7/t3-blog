@@ -1,9 +1,9 @@
-import ReactMarkdown from "@components/ReactMarkdown";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import { PostFromList } from "@utils/types";
 import Link from "next/link";
 import LikeCount from "./LikeCount";
 import LinkPreview from "./LinkPreview";
+import HTMLBody from "./HTMLBody";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 import TagList from "./TagList";
@@ -32,6 +32,7 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
       <Link
         href={`/posts/${post?.id}`}
         className="flex flex-col justify-center gap-5"
+        prefetch={false}
       >
         <ShouldRender if={!loading}>
           <h2 className="prose dark:prose-invert text-2xl font-bold">
@@ -43,20 +44,13 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
           <Skeleton heading />
         </ShouldRender>
 
-        <ReactMarkdown
+        <HTMLBody
           loading={loading}
           lines={3}
-          className={`prose-sm line-clamp-4 overflow-hidden text-ellipsis prose-headings:text-base max-h-56`}
-          /* 
-           This is to avoid any elements not nested properly inside the DOM.
-           eg: <a> inside of <a>
-           Read more: https://deepscan.io/docs/rules/react-invalid-dom-nesting
-           */
-          disallowedElements={["a"]}
-          unwrapDisallowed
+          className={`prose-sm prose-code:text-xs prose-pre:p-0 line-clamp-4 overflow-hidden text-ellipsis prose-headings:text-base max-h-56`}
         >
           {post?.body}
-        </ReactMarkdown>
+        </HTMLBody>
       </Link>
 
       <div className="w-full flex justify-between items-center mt-2">
@@ -67,6 +61,7 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
             <Link
               href={`/users/${post?.userId}`}
               className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+              prefetch={false}
             >
               {getUserDisplayName(post?.user)}
             </Link>

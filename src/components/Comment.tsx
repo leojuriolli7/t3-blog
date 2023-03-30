@@ -8,13 +8,13 @@ import { toast } from "react-toastify";
 import { FiExternalLink } from "react-icons/fi";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
-import ReactMarkdown from "./ReactMarkdown";
 import ShouldRender from "./ShouldRender";
 import ActionButton from "./ActionButton";
 import EditCommentForm from "./EditCommentForm";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import getUserDisplayName from "@utils/getUserDisplayName";
+import HTMLBody from "./HTMLBody";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -104,7 +104,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         </p>
       </div>
       <ShouldRender if={!isEditing}>
-        <ReactMarkdown className="prose">{comment.body}</ReactMarkdown>
+        <HTMLBody className="prose">{comment.body}</HTMLBody>
       </ShouldRender>
 
       <ShouldRender if={isEditing}>

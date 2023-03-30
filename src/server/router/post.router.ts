@@ -3,8 +3,10 @@ import { BUCKET_NAME, s3 } from "src/config/aws";
 import {
   deleteChildComments,
   getFiltersByInput,
-  getPostWithLikes,
   isLoggedInMiddleware,
+  formatPosts,
+  getPostWithLikes,
+  markdownToHtml,
 } from "@server/utils/index";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
@@ -75,15 +77,17 @@ export const postRouter = createRouter()
         nextCursor = nextItem?.id;
       }
 
-      const tagsWithPosts = tags.map((tag) => {
-        const posts = tag.posts;
+      const tagsWithPosts = await Promise.all(
+        tags.map(async (tag) => {
+          const posts = tag.posts;
+          const formattedPosts = await formatPosts(posts);
 
-        const postsWithLikes = posts.map((post) => getPostWithLikes(post));
-        return {
-          ...tag,
-          posts: postsWithLikes,
-        };
-      });
+          return {
+            ...tag,
+            posts: formattedPosts,
+          };
+        })
+      );
 
       return {
         tags: tagsWithPosts,
@@ -132,10 +136,10 @@ export const postRouter = createRouter()
         nextCursor = nextItem?.id;
       }
 
-      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+      const formattedPosts = await formatPosts(posts);
 
       return {
-        posts: postsWithLikes,
+        posts: formattedPosts,
         nextCursor,
       };
     },
@@ -180,10 +184,10 @@ export const postRouter = createRouter()
         nextCursor = nextItem?.id;
       }
 
-      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+      const formattedPosts = await formatPosts(posts);
 
       return {
-        posts: postsWithLikes,
+        posts: formattedPosts,
         nextCursor,
       };
     },
@@ -232,10 +236,10 @@ export const postRouter = createRouter()
         nextCursor = nextItem?.id;
       }
 
-      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+      const formattedPosts = await formatPosts(posts);
 
       return {
-        posts: postsWithLikes,
+        posts: formattedPosts,
         nextCursor,
       };
     },
@@ -298,8 +302,11 @@ export const postRouter = createRouter()
           }
         : null;
 
+      const mdBody = await markdownToHtml(post?.body || "", false);
+
       return {
         ...postWithLikes,
+        body: mdBody,
         favoritedByMe: favoritedByUser,
         poll,
       };
@@ -346,10 +353,10 @@ export const postRouter = createRouter()
         nextCursor = nextItem?.id;
       }
 
-      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+      const formattedPosts = await formatPosts(posts);
 
       return {
-        posts: postsWithLikes,
+        posts: formattedPosts,
         nextCursor,
       };
     },
@@ -396,10 +403,10 @@ export const postRouter = createRouter()
         nextCursor = nextItem?.id;
       }
 
-      const postsWithLikes = posts.map((post) => getPostWithLikes(post));
+      const formattedPosts = await formatPosts(posts);
 
       return {
-        posts: postsWithLikes,
+        posts: formattedPosts,
         nextCursor,
       };
     },

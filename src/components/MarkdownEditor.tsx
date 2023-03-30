@@ -1,11 +1,10 @@
 import { useCallback } from "react";
 import { Controller } from "react-hook-form";
-import MarkdownIt from "markdown-it";
+import { marked } from "marked";
 import dynamic from "next/dynamic";
 import { FieldType } from "@utils/types";
 import hljs from "highlight.js";
-import insert from "markdown-it-ins";
-import taskLists from "markdown-it-task-lists";
+import * as DOMPurify from "dompurify";
 import "highlight.js/styles/atom-one-dark.css";
 
 type Variants = "condensed" | "regular";
@@ -49,21 +48,19 @@ const MarkdownEditor: React.FC<Props> = ({
   placeholder,
   defaultValue,
 }) => {
-  const mdParser = new MarkdownIt({
-    html: true,
-    linkify: true,
-    typographer: true,
-    highlight: function (str, lang) {
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          return hljs.highlight(lang, str).value;
-        } catch (__) {}
-      }
-      return ""; // use external default escaping
+  const mdParser = marked.setOptions({
+    smartypants: true,
+    langPrefix: "hljs language-", // highlight.js css expects a top-level 'hljs' class.
+    renderer: new marked.Renderer(),
+    // purify html
+    sanitizer(html) {
+      return DOMPurify.sanitize(html);
     },
-  })
-    .use(insert)
-    .use(taskLists);
+    highlight: function (code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : "plaintext";
+      return hljs.highlight(code, { language }).value;
+    },
+  });
 
   const handleChange = useCallback(
     (field: FieldType) =>
@@ -89,7 +86,7 @@ const MarkdownEditor: React.FC<Props> = ({
           placeholder={placeholder}
           className="dark:md-dark-mode dark:border-0"
           htmlClass="html-section"
-          renderHTML={(text) => mdParser.render(text)}
+          renderHTML={(text) => mdParser.parse(text)}
           {...field}
           onChange={handleChange(field)}
         />
