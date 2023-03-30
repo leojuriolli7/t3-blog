@@ -1,4 +1,5 @@
 import { TaggedPosts } from "@utils/types";
+import clsx from "clsx";
 import React from "react";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import LikeCount from "./LikeCount";
@@ -19,9 +20,11 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
       href={`/posts/${post?.id}`}
       key={post?.id}
       prefetch={false}
-      className={`${
-        slide ? "keen-slider__slide" : ""
-      } p-3 cursor-pointer bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700 flex flex-col justify-between hover:opacity-70`}
+      className={clsx(
+        loading && "pointer-events-none",
+        slide && "keen-slider__slide",
+        "p-3 cursor-pointer bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700 flex flex-col justify-between hover:opacity-70"
+      )}
       style={{
         width: "275px",
         minWidth: "275px",
