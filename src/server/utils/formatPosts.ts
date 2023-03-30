@@ -33,6 +33,10 @@ type PostType =
     })
   | null;
 
+/** 
+ Rewrites any `<a>` to `<p>` to avoid any hydration or
+ validate DOM nesting errors.
+ */
 const rewriteFunc = (node: Root | RootContent) => {
   if (node.type === "element" && node.tagName === "a") {
     node.tagName = "p";

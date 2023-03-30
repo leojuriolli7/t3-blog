@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";
 import { SinglePost } from "@utils/types";
+import htmlToMarkdown from "@utils/htmlToMarkdown";
 import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
@@ -38,7 +39,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     resolver: zodResolver(createPostSchema),
     shouldFocusError: false,
     defaultValues: {
-      body: post?.body,
+      body: htmlToMarkdown(post?.body),
       title: post?.title,
     },
   });
@@ -74,12 +75,6 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
 
       utils.setQueryData(["posts.single-post", { postId }], (old) => ({
         ...old!,
-        ...(body && {
-          body,
-        }),
-        ...(title && {
-          title,
-        }),
         link: formattedLink,
         tags: mappedTags,
       }));
@@ -116,7 +111,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
 
   useEffect(() => {
     if (post) {
-      methods.setValue("body", post?.body);
+      methods.setValue("body", htmlToMarkdown(post?.body));
       methods.setValue("title", post?.title);
     }
   }, [post, methods]);
