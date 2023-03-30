@@ -108,7 +108,6 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       </ShouldRender>
 
       <ShouldRender if={isEditing}>
-        {/* TO-DO: Parse HTML content into markdown before sending to MD Editor. */}
         <EditCommentForm onFinish={toggleIsEditing} comment={comment} />
       </ShouldRender>
 

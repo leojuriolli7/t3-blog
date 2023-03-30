@@ -325,7 +325,6 @@ const SinglePostPage: React.FC = () => {
           </ShouldRender>
 
           <ShouldRender if={isEditing}>
-            {/* TO-DO: Parse HTML content into markdown before sending to MD Editor. */}
             <EditPostForm onFinish={toggleIsEditing} post={data} />
           </ShouldRender>
 
