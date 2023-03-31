@@ -250,7 +250,7 @@ const UserPage: React.FC = () => {
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
-        <section className="mx-auto mt-10 flex flex-col items-center gap-5">
+        <section className="mx-auto mt-10 flex flex-col items-center gap-5 h-[240px]">
           <div className="relative">
             <Image
               src={user?.image || "/static/default-profile.jpg"}

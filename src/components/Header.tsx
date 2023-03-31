@@ -42,7 +42,7 @@ const Header: React.FC = () => {
                 alt="Your profile picture"
                 role="button"
                 aria-label="Open profile navigation menu"
-                className="rounded-full cursor-pointer object-cover"
+                className="rounded-full cursor-pointer object-cover h-[36px]"
               />
             }
           >

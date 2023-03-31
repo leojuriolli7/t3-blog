@@ -36,7 +36,7 @@ const Avatar: React.FC<Props> = ({ image }) => {
                 width={128}
                 height={128}
                 alt="Your profile picture"
-                className="rounded-full group-hover:brightness-50 dark:group-hover:opacity-50 object-cover"
+                className="rounded-full group-hover:brightness-50 dark:group-hover:opacity-50 object-cover h-[128px]"
               />
 
               <MdAdd
