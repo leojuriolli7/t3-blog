@@ -256,7 +256,7 @@ const UserPage: React.FC = () => {
               src={user?.image || "/static/default-profile.jpg"}
               width={240}
               height={240}
-              className="rounded-full object-cover h-[240px]"
+              className="rounded-full object-cover w-[240px] h-[240px]"
               alt={user?.name as string}
             />
             <ShouldRender if={!userIsProfileOwner && session?.user?.id}>
