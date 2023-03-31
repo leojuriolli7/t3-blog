@@ -12,6 +12,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - Create & edit posts.
 - Tag your posts.
 - Upload files to your posts as attachments: You can upload videos, images, audio or documents (.pdf, .msword, etc.)
+- Upload images to your posts' body by dragging and dropping (or file system) like on Github!
 - Every file uploaded can be interacted - You can listen to the audios using a custom-built audio-player, watch the videos, download any of the files, etc.)
 - **Like or dislike posts**.
 - **Create a poll on your post** and let users vote on it.
@@ -61,6 +62,8 @@ I could notice whenever I first loaded the site, or scrolled down to load new po
 | Parsing markdown on the client | After parsing markdown on the server |
 |--------|--------|
 | ![Screenshot from 2023-03-29 23-46-02](https://user-images.githubusercontent.com/100495707/228715389-f1206b83-ae93-4e1f-b5af-d18bb1356e5d.png) | ![Screenshot from 2023-03-29 23-47-33](https://user-images.githubusercontent.com/100495707/228715384-b8cee082-a162-4d9e-a0f6-1a1f791242a1.png)  | 
+
+I truncate the HTML (Limit it to 250 characters) to reduce the size of the DOM and avoid sending unnecessary HTML to the client. It is also parsed before being sent to the client, adjusting for Search Engine Optimizations. [Read more here.](https://github.com/leojuriolli7/t3-blog/commit/2ce73b4df034c05180211aac07c70a4323a7cf1e#diff-1ee892b507c8886a683fe2e7011d58a1eb69dd233ceb47fc65ad62d8e97e1f9eR30-R56)
 
 ## Overcoming T3 Stack limitations
 tRPC [does not support `multipart/form-data`](https://github.com/trpc/trpc/discussions/658#discussioncomment-998746), so file uploads could not be done reliably inside the tRPC router. For that reason, I decided to use the AWS SDK, S3 buckets and presigned URLs, a very safe and reliable method of uploading files. 
