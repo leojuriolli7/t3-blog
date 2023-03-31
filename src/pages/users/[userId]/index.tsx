@@ -250,13 +250,13 @@ const UserPage: React.FC = () => {
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
-        <section className="mx-auto mt-10 flex flex-col items-center gap-5 h-[240px]">
+        <section className="mx-auto mt-10 flex flex-col items-center gap-5">
           <div className="relative">
             <Image
               src={user?.image || "/static/default-profile.jpg"}
               width={240}
               height={240}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover h-[240px]"
               alt={user?.name as string}
             />
             <ShouldRender if={!userIsProfileOwner && session?.user?.id}>
