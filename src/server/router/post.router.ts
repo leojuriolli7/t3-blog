@@ -307,6 +307,8 @@ export const postRouter = createRouter()
       return {
         ...postWithLikes,
         body: htmlBody,
+        // By also sendind the markdown body, we avoid having to
+        // parse html back to MD when needed.
         markdownBody: post?.body,
         favoritedByMe: favoritedByUser,
         poll,

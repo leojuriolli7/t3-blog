@@ -43,6 +43,8 @@ export const commentRouter = createRouter()
             return {
               ...comment,
               body: formattedBody,
+              // By also sendind the markdown body, we avoid having to
+              // parse html back to MD when needed.
               markdownBody: comment?.body,
             };
           })
