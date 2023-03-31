@@ -10,6 +10,9 @@ import { trpc } from "@utils/trpc";
 import { useSession } from "next-auth/react";
 import { MdInfoOutline } from "react-icons/md";
 import ShouldRender from "./ShouldRender";
+import { UPLOAD_MAX_FILE_SIZE } from "@config/aws";
+import { toast } from "react-toastify";
+import convertToMegabytes from "@utils/convertToMB";
 
 type Variants = "condensed" | "regular";
 
@@ -58,6 +61,7 @@ const MarkdownEditor: React.FC<Props> = ({
 }) => {
   const { data } = useSession();
   const userId = data?.user?.id as string;
+  const maxSizeInMB = convertToMegabytes(UPLOAD_MAX_FILE_SIZE);
 
   const { mutateAsync: createPresignedUrl } = trpc.useMutation(
     "attachments.create-presigned-post-body-url"
@@ -66,6 +70,16 @@ const MarkdownEditor: React.FC<Props> = ({
   const onImageUpload = async (file: File) => {
     const randomKey = crypto.randomUUID();
     const image = file;
+
+    const isImage = image.type.includes("image");
+
+    if (!isImage)
+      return toast.error(
+        "Only images are available for uploading. Please select an image."
+      );
+
+    if (image.size > UPLOAD_MAX_FILE_SIZE)
+      return toast.error(`Limit of ${maxSizeInMB}MB per file`);
 
     const { url, fields } = await createPresignedUrl({ userId, randomKey });
 
