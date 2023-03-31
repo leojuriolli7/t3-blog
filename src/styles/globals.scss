@@ -67,6 +67,11 @@ button:disabled {
 
 // Create new tailwind class for MD editor dark-mode styles.
 @layer utilities {
+  .content-mask {
+    -webkit-mask-image: linear-gradient(180deg, #000 71%, transparent);
+    mask-image: linear-gradient(180deg, #000 71%, transparent);
+  }
+
   .md-dark-mode {
     @apply bg-neutral-900;
 

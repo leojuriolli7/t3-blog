@@ -4713,6 +4713,11 @@ rehype-stringify@^9.0.3:
     hast-util-to-html "^8.0.0"
     unified "^10.0.0"
 
+rehype-truncate@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/rehype-truncate/-/rehype-truncate-1.2.2.tgz#fbb75bad4ad13d89d7dab2cf88c205fe48a4aa27"
+  integrity sha512-zj2FxxC3rm8bg6loesMdS/+BuGpp89mu+12VsJrBzN5kKgOxKwtawscQXElyt2BnxU2pG3hkoyb3Euc3Q7F38A==
+
 remark-gfm@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/remark-gfm/-/remark-gfm-3.0.1.tgz#0b180f095e3036545e9dddac0e8df3fa5cfee54f"

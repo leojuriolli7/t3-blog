@@ -47,7 +47,7 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
         <HTMLBody
           loading={loading}
           lines={3}
-          className={`prose-sm prose-code:text-xs prose-pre:p-0 line-clamp-4 overflow-hidden text-ellipsis prose-headings:text-base max-h-56`}
+          className={`prose prose-code:text-xs prose-pre:p-0 line-clamp-4 text-ellipsis prose-headings:text-base max-h-56 overflow-hidden content-mask`}
         >
           {post?.body}
         </HTMLBody>

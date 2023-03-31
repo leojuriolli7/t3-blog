@@ -1,6 +1,7 @@
 import { createRouter } from "@server/createRouter";
 import { deleteChildComments } from "@server/utils/deleteChildComments";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
+import { markdownToHtml } from "@server/utils/markdownToHtml";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
@@ -9,7 +10,6 @@ import {
   getCommentsSchema,
   updateCommentSchema,
 } from "@schema/comment.schema";
-import { markdownToHtml } from "@server/utils";
 
 export const commentRouter = createRouter()
   .query("all-comments", {
@@ -36,6 +36,7 @@ export const commentRouter = createRouter()
           comments.map(async (comment) => {
             const formattedBody = await markdownToHtml(
               comment?.body || "",
+              false,
               false
             );
 

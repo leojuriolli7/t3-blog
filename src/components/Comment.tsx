@@ -77,26 +77,17 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     >
       <div className="flex w-full justify-between gap-10 sm:gap-0">
         <div className="flex gap-1 items-center">
-          <h3 className="font-medium">
-            {getUserDisplayName(comment?.user)}{" "}
-            <ShouldRender if={comment.userId === session?.user.id}>
-              <span className=" text-emerald-500"> (You)</span>
-            </ShouldRender>
-          </h3>
           <Link
             href={`/users/${comment.userId}`}
+            className="font-medium hover:underline"
             title="Visit user profile"
-            target="_blank"
-            rel="noreferrer"
           >
-            <FiExternalLink
-              size={15}
-              className="text-emerald-500 mb-1 cursor-pointer hover:opacity-60"
-              aria-label="Click to go to this user's page"
-              title="Click to go to this user's page"
-              role="link"
-            />
+            {getUserDisplayName(comment?.user)}{" "}
           </Link>
+
+          <ShouldRender if={comment.userId === session?.user.id}>
+            <span className=" text-emerald-500"> (You)</span>
+          </ShouldRender>
         </div>
 
         <p className="cursor-pointer select-none" onClick={toggleDateType}>
