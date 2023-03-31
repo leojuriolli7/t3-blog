@@ -101,6 +101,8 @@ const AttachmentPreview: React.FC<Props> = ({
               height={64}
               alt={file.name || "Uploaded image"}
               className="cursor-pointer transition-all group-hover:opacity-50 object-cover h-full"
+              // Attachment images cannot be optimized because their URL is constantly changing.
+              unoptimized
             />
           </ShouldRender>
 
