@@ -6,12 +6,26 @@ import rehypeStringify from "rehype-stringify";
 import rehypeTruncate from "rehype-truncate";
 import rehypeCode from "rehype-highlight";
 import rehypeRewrite from "rehype-rewrite";
+import { Root, RootContent } from "hast";
 
 // Parse markdown to HTML. (Post/Comment body)
 export async function markdownToHtml(
+  /**
+   * The markdown content as string
+   */
   markdown: string,
-  rewriteLinks = true,
-  truncate = true
+  /**
+   * Remove any links (`<a>` will be rewritten into `<p>`) and images. (will be deleted from tree)
+   */
+  removeLinksAndImages = true,
+  /**
+   * Truncate the html (Limit it to 200 characters.)
+   */
+  truncate = true,
+  /**
+   * Wrap `<img>` with `<a target="_blank" rel="noopener noreferrer">`
+   */
+  linkifyImages = false
 ) {
   const result = await remark()
     .use(remarkParse)
@@ -25,26 +39,7 @@ export async function markdownToHtml(
       truncate ? { maxChars: 200, ignoreTags: ["ul", "code", "pre"] } : false
     )
     .use(rehypeRewrite, {
-      rewrite: (node) => {
-        if (rewriteLinks) {
-          // Rewrites any `<a>` to `<p>` to avoid any hydration or
-          // validate DOM nesting errors.
-          if (node.type === "element" && node.tagName === "a" && rewriteLinks) {
-            node.tagName = "p";
-          }
-
-          // Hide any images.
-          if (
-            node.type === "element" &&
-            node.tagName === "img" &&
-            node.properties
-          ) {
-            node.properties["width"] = "0";
-            node.properties["height"] = "0";
-            node.properties["style"] = "display: none; visibility: hidden;";
-          }
-        }
-
+      rewrite: (node, index, parent) => {
         // Add aria-label to `<input type='checkbox'>` for better SEO.
         if (
           node.type === "element" &&
@@ -52,6 +47,49 @@ export async function markdownToHtml(
           node?.properties?.type === "checkbox"
         ) {
           node.properties["aria-label"] = "Checkbox from checklist";
+        }
+
+        if (removeLinksAndImages) {
+          // Rewrites any `<a>` to `<p>` to avoid any hydration or
+          // validate DOM nesting errors.
+          if (
+            node.type === "element" &&
+            node.tagName === "a" &&
+            removeLinksAndImages
+          ) {
+            node.tagName = "p";
+          }
+
+          // Delete any images.
+          if (
+            node.type === "element" &&
+            node.tagName === "img" &&
+            node.properties
+          ) {
+            parent?.children.splice(index as number, 1);
+          }
+        }
+
+        if (linkifyImages) {
+          // Rewrite any images to have a link to open them on a new tab.
+          if (
+            node.type === "element" &&
+            node.tagName === "img" &&
+            !!node.properties
+          ) {
+            const newElement: Root | RootContent = {
+              children: [node],
+              tagName: "a",
+              type: "element",
+              properties: {
+                href: node.properties.src,
+                target: "_blank",
+                rel: "noopener noreferrer",
+              },
+            };
+
+            parent!.children[index as number] = newElement;
+          }
         }
       },
     })

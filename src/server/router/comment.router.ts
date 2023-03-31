@@ -37,7 +37,8 @@ export const commentRouter = createRouter()
             const formattedBody = await markdownToHtml(
               comment?.body || "",
               false,
-              false
+              false,
+              true
             );
 
             return {
