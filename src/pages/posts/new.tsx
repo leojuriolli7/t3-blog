@@ -134,6 +134,7 @@ const CreatePostPage: React.FC = () => {
                 placeholder="your post content - you can use markdown!"
                 control={control}
                 name="body"
+                imageUploadTip
               />
             </Field>
 

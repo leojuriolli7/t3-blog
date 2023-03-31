@@ -15,3 +15,8 @@ export const createPresignedUrlSchema = z.object({
 export const createPresignedAvatarUrlSchema = z.object({
   userId: z.string(),
 });
+
+export const createPresignedPostBodyUrlSchema = z.object({
+  userId: z.string(),
+  randomKey: z.string(),
+});

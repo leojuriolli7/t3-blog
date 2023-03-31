@@ -50,7 +50,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     isLoading: updating,
     error: updateError,
   } = trpc.useMutation(["posts.update-post"], {
-    onMutate: async ({ postId, tags, body, title, link }) => {
+    onMutate: async ({ postId, tags, link }) => {
       await utils.cancelQuery(["posts.single-post", { postId }]);
 
       const prevData = utils.getQueryData(["posts.single-post", { postId }]);
