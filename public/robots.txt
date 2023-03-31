@@ -3,6 +3,9 @@ Disallow: /auth/signin/
 Disallow: /auth/signout/
 Disallow: /auth/verify-request/
 Disallow: /auth/error/
+Disallow: /posts/new/
+Disallow: /posts/posts/liked/
+Disallow: /posts/posts/following/
 
 User-agent: *
 Allow: /

@@ -62,7 +62,7 @@ const TextInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   } = props;
 
   const handlePressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !!onPressEnter) {
       // Prevent form submission.
       e.preventDefault();
       onPressEnter?.();

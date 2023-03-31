@@ -22,6 +22,7 @@ import TextInput from "@components/TextInput";
 
 type SigninOptions = "github" | "google" | "discord";
 
+// default next-auth error messages mapped for each error type.
 const errors: Record<SignInErrorTypes, string> = {
   Signin: "Try signing in with a different account.",
   OAuthSignin: "Try signing in with a different account.",
@@ -131,6 +132,7 @@ const SigninPage: NextPage = () => {
                   />
                   <Button
                     variant="primary"
+                    type="submit"
                     className="w-full mt-2"
                     icon={<MdEmail size={19} color="white" />}
                   >
