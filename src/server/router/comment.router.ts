@@ -34,12 +34,11 @@ export const commentRouter = createRouter()
 
         const formattedComments = await Promise.all(
           comments.map(async (comment) => {
-            const formattedBody = await markdownToHtml(
-              comment?.body || "",
-              false,
-              false,
-              true
-            );
+            const formattedBody = await markdownToHtml(comment?.body || "", {
+              removeLinksAndImages: false,
+              truncate: false,
+              linkifyImages: true,
+            });
 
             return {
               ...comment,

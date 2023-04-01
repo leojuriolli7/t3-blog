@@ -302,12 +302,11 @@ export const postRouter = createRouter()
           }
         : null;
 
-      const htmlBody = await markdownToHtml(
-        post?.body || "",
-        false,
-        false,
-        true
-      );
+      const htmlBody = await markdownToHtml(post?.body || "", {
+        removeLinksAndImages: false,
+        truncate: false,
+        linkifyImages: true,
+      });
 
       return {
         ...postWithLikes,

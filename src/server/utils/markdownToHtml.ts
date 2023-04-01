@@ -8,25 +8,29 @@ import rehypeCode from "rehype-highlight";
 import rehypeRewrite from "rehype-rewrite";
 import { Root, RootContent } from "hast";
 
-// Parse markdown to HTML. (Post/Comment body)
-export async function markdownToHtml(
-  /**
-   * The markdown content as string
-   */
-  markdown: string,
+type Options = {
   /**
    * Remove any links (`<a>` will be rewritten into `<p>`) and images. (will be deleted from tree)
    */
-  removeLinksAndImages = true,
+  removeLinksAndImages?: boolean;
   /**
    * Truncate the html (Limit it to 200 characters.)
    */
-  truncate = true,
+  truncate?: boolean;
   /**
    * Wrap `<img>` with `<a target="_blank" rel="noopener noreferrer">`
    */
-  linkifyImages = false
-) {
+  linkifyImages?: boolean;
+};
+
+// Parse markdown to HTML. (Post/Comment body)
+export async function markdownToHtml(markdown: string, options?: Options) {
+  const {
+    removeLinksAndImages = true,
+    truncate = true,
+    linkifyImages = false,
+  } = options || {};
+
   const result = await remark()
     .use(remarkParse)
     .use(remarkGfm)
