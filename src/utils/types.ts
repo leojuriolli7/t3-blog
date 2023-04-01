@@ -1,6 +1,7 @@
 import { AppRouter } from "@server/router/app.router";
 import { inferProcedureOutput } from "@trpc/server";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
+import { Attachment as AttachmentType } from "@prisma/client";
 
 export type TQuery = keyof AppRouter["_def"]["queries"];
 
@@ -35,3 +36,7 @@ export type Poll = InferQueryOutput<"posts.single-post">["poll"];
 
 // React-hook-form Controller's 'field' type
 export type FieldType = ControllerRenderProps<FieldValues, string>;
+
+export interface AttachmentMetadata extends AttachmentType {
+  url: string;
+}

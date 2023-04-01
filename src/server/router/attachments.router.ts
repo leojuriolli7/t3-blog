@@ -1,6 +1,5 @@
 import * as trpc from "@trpc/server";
 import { createRouter } from "@server/createRouter";
-import { Attachment } from "@prisma/client";
 import {
   createPresignedUrlSchema,
   getPostAttachments,
@@ -14,10 +13,7 @@ import {
   UPLOADING_TIME_LIMIT,
 } from "src/config/aws";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
-
-export interface AttachmentMetadata extends Attachment {
-  url: string;
-}
+import { AttachmentMetadata } from "@utils/types";
 
 export const attachmentsRouter = createRouter()
   .query("get-post-attachments", {
