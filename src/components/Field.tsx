@@ -1,3 +1,4 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { FieldError } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import ShouldRender from "./ShouldRender";
@@ -10,8 +11,9 @@ type Props = {
 };
 
 const Field: React.FC<Props> = ({ children, error, label, description }) => {
+  const [parentRef] = useAutoAnimate();
   return (
-    <div className="relative w-full flex flex-col">
+    <div className="relative w-full flex flex-col" ref={parentRef}>
       <ShouldRender if={label}>
         <div>
           <label className="block text-sm font-semibold text-gray-900 dark:text-neutral-100">

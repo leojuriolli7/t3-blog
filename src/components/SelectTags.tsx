@@ -24,6 +24,7 @@ const SelectTags: React.FC<Props> = ({
   name,
   error,
 }) => {
+  const [containerRef] = useAutoAnimate();
   const [parentRef] = useAutoAnimate();
   const methods = useFormContext();
 
@@ -105,7 +106,7 @@ const SelectTags: React.FC<Props> = ({
       name={name}
       control={control}
       render={({ field }) => (
-        <div>
+        <div ref={containerRef}>
           <h2 className="text-2xl">Tags</h2>
           <ErrorMessage error={error} />
           <div ref={parentRef} className="flex flex-wrap gap-2 mb-4 mt-2">

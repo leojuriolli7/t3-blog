@@ -16,7 +16,7 @@ import { scrapePageSchema } from "@schema/scraper.schema";
 import { baseUrl } from "@utils/constants";
 
 /**
- * Check if a url contains a valid image by senind a HEAD request.
+ * Check if a url contains a valid image by sending a HEAD request.
  */
 async function isImgUrl(url: string) {
   return fetch(url, { method: "HEAD" })
@@ -70,6 +70,8 @@ export const scraperRouter = createRouter().query("scrape-link", {
 
     const isValidImage = await isImgUrl(metadata.image);
 
+    // If image is invalid, as to not break the client-side layouts, we
+    // replace the url with a default image.
     if (!isValidImage) metadata.image = `${baseUrl}/static/default.jpg`;
 
     return metadata;
