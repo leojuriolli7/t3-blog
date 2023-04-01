@@ -61,7 +61,7 @@ export async function markdownToHtml(markdown: string, options?: Options) {
             node.tagName === "a" &&
             removeLinksAndImages
           ) {
-            node.tagName = "p";
+            node.tagName = "span";
           }
 
           // Delete any images.
