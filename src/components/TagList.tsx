@@ -13,9 +13,7 @@ const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
   const loadingArray = Array.from<undefined>({ length: 3 });
 
   const loadingClasses = `${
-    loading
-      ? `w-16 ${compact ? "h-7" : "h-9"} opacity-60 pointer-events-none`
-      : ""
+    loading ? `w-16 ${compact ? "h-7" : "h-9"} opacity-60` : ""
   }`;
 
   const paddings = `${compact ? "px-2 py-1" : "p-2"}`;
@@ -27,6 +25,7 @@ const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
           key={loading ? i : tag?.id}
           href={`/posts/tags/${tag?.id}`}
           prefetch={false}
+          className={loading ? "pointer-events-none cursor-disabled" : ""}
         >
           <Tag
             title={`Click to see all ${tag?.name} posts`}

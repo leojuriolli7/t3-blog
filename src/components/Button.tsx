@@ -13,7 +13,8 @@ type HTMLAnchorProps = React.DetailedHTMLProps<
   HTMLAnchorElement
 >;
 
-const BUTTON_CLASSES = "inline-flex items-center font-base";
+const BUTTON_CLASSES =
+  "inline-flex items-center font-base disabled:cursor-not-allowed";
 
 type ButtonVariant =
   | "primary"
@@ -28,6 +29,7 @@ type ButtonSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
 type ButtonIconPosition = "start" | "end";
 
 type ButtonStyle = {
+  loading?: boolean;
   disabled?: boolean;
   absolute?: boolean;
   size?: ButtonSize;
@@ -37,7 +39,6 @@ type ButtonStyle = {
 type ButtonProps = {
   icon?: ReactElement;
   iconPosition?: ButtonIconPosition;
-  loading?: boolean;
   textClass?: string;
 } & ButtonStyle;
 
@@ -77,14 +78,14 @@ const getButtonClasses = (
   ...rest: string[]
 ) => {
   const {
-    disabled,
+    loading,
     size = "base",
     variant = "secondary",
     absolute = false,
   } = style;
   return clsx(
     BUTTON_CLASSES,
-    disabled && "pointer-events-none",
+    loading && "pointer-events-none",
     absolute ? "absolute" : "relative",
     BUTTON_SIZES[size],
     BUTTON_VARIANTS[variant],
@@ -159,7 +160,7 @@ export const ButtonLink = React.forwardRef<
   return (
     <a
       className={getButtonClasses(
-        { disabled, size, variant },
+        { size, variant, loading },
         !!icon,
         className
       )}
@@ -198,13 +199,14 @@ const Button = React.forwardRef<
   return (
     <button
       className={getButtonClasses(
-        { disabled, size, variant, absolute },
+        { size, variant, absolute, loading },
         !!icon,
         className
       )}
       ref={ref}
       type="button"
       aria-disabled={disabled}
+      disabled={disabled}
       {...rest}
     >
       <ButtonContent {...props} textClass={textClass} />
