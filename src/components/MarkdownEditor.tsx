@@ -6,6 +6,7 @@ import { FieldType } from "@utils/types";
 import hljs from "highlight.js";
 import * as DOMPurify from "dompurify";
 import "highlight.js/styles/atom-one-dark.css";
+import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
 import { useSession } from "next-auth/react";
 import { MdInfoOutline } from "react-icons/md";
@@ -68,7 +69,7 @@ const MarkdownEditor: React.FC<Props> = ({
   );
 
   const onImageUpload = async (file: File) => {
-    const randomKey = crypto.randomUUID();
+    const randomKey = uuid();
     const image = file;
 
     const isImage = image.type.includes("image");

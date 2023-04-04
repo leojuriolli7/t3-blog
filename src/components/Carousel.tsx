@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { KeenSliderPlugin, useKeenSlider } from "keen-slider/react";
+import { useKeenSlider } from "keen-slider/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import ShouldRender from "./ShouldRender";
+import { InitializePlugin } from "@utils/plugins";
 
 type Props = {
   children: React.ReactNode;
@@ -11,13 +12,6 @@ type Props = {
 type ArrowProps = {
   onClick: () => void;
   prev?: boolean;
-};
-
-// Fix keen-slider initial layout shift.
-const InitializePlugin: KeenSliderPlugin = (slider) => {
-  slider.on("created", () => {
-    slider?.container?.classList?.add("initialized");
-  });
 };
 
 const arrowIconProps = {

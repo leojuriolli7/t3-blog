@@ -8,6 +8,7 @@ import {
   Post,
   Tag,
   User,
+  Attachment,
 } from "@prisma/client";
 import { markdownToHtml } from "./markdownToHtml";
 
@@ -17,6 +18,7 @@ type PostType =
       likes: Like[];
       tags?: Tag[];
       link?: Link | null;
+      attachments?: Attachment[] | null;
       favoritedBy?: FavoritesOnUsers[] | undefined;
       poll?:
         | (Poll & {

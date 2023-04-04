@@ -152,7 +152,7 @@ model Poll {
 model Post {
   id          String             @id @default(uuid())
   title       String
-  body        String             @db.VarChar(10000)
+  body        String             @db.Text
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -179,7 +179,7 @@ model Link {
   image       String
   title       String
   url         String
-  description String  @db.VarChar(10000)
+  description String  @db.Text
   publisher   String?
   post        Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
 
@@ -191,6 +191,8 @@ model Attachment {
   name   String @default("Uploaded file")
   type   String @default("unknown")
   postId String
+  url    String @default("")
+  label    String? @db.VarChar(160)
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
@@ -199,7 +201,7 @@ model Attachment {
 
 model Comment {
   id   String @unique @default(uuid())
-  body String @db.VarChar(2000)
+  body String @db.Text
 
   user   User?   @relation(fields: [userId], references: [id])
   userId String?

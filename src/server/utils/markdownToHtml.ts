@@ -54,7 +54,7 @@ export async function markdownToHtml(markdown: string, options?: Options) {
         }
 
         if (removeLinksAndImages) {
-          // Rewrites any `<a>` to `<p>` to avoid any hydration or
+          // Rewrites any `<a>` to `<span>` to avoid any hydration or
           // validate DOM nesting errors.
           if (
             node.type === "element" &&

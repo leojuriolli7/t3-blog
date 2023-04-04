@@ -256,6 +256,7 @@ export const postRouter = createRouter()
           likes: true,
           tags: true,
           link: true,
+          attachments: true,
           poll: {
             include: {
               options: {
@@ -501,6 +502,7 @@ export const postRouter = createRouter()
       return post;
     },
   })
+
   .mutation("delete-post", {
     input: getSinglePostSchema,
     async resolve({ ctx, input }) {

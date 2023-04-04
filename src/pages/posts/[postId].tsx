@@ -13,15 +13,15 @@ import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
-import { AttachmentMetadata, SinglePost } from "@utils/types";
+import { SinglePost } from "@utils/types";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
-import AttachmentPreview from "@components/AttachmentPreview";
-import PreviewMediaModal from "@components/PreviewMediaModal";
 import FavoriteButton from "@components/FavoriteButton";
 import LinkPreview from "@components/LinkPreview";
 import PollView from "@components/PollView/PollView";
 import HTMLBody from "@components/HTMLBody";
+import AttachmentView from "@components/AttachmentView";
+import { isAttachmentType } from "@utils/isAttachmentType";
 
 type ReplyData = {
   parentId: string;
@@ -42,18 +42,6 @@ const SinglePostPage: React.FC = () => {
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
 
-  const isMediaPreviewModalOpen = useState(false);
-  const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
-  const [currentMedia, setCurrentMedia] = useState<AttachmentMetadata>();
-
-  const onClickImage = useCallback(
-    (image: AttachmentMetadata) => () => {
-      setCurrentMedia(image);
-      setIsMediaPreviewModalOpen(true);
-    },
-    [setIsMediaPreviewModalOpen]
-  );
-
   const { data, isLoading } = trpc.useQuery(
     [
       "posts.single-post",
@@ -66,33 +54,16 @@ const SinglePostPage: React.FC = () => {
     }
   );
 
+  const attachments = data?.attachments;
+
   const loggedUserCreatedPost = session?.user?.id === data?.userId;
 
-  const { data: attachments } = trpc.useQuery(
-    [
-      "attachments.get-post-attachments",
-      {
-        postId,
-      },
-    ],
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-
   const filteredAttachments = useMemo(() => {
-    const isMedia = (file: AttachmentMetadata) =>
-      file.type.includes("image") || file.type.includes("video");
-
-    const isAudio = (file: AttachmentMetadata) => file.type.includes("audio");
-
-    return {
-      medias: attachments?.filter((file) => isMedia(file)),
-      audio: attachments?.filter((file) => isAudio(file)),
-      documents: attachments?.filter((file) => {
-        return !isMedia(file) && !isAudio(file);
-      }),
-    };
+    return attachments?.filter(
+      (file) =>
+        isAttachmentType("video", file?.type) ||
+        isAttachmentType("image", file?.type)
+    );
   }, [attachments]);
 
   const { mutate: favoritePost, error: favoriteError } = trpc.useMutation(
@@ -400,6 +371,10 @@ const SinglePostPage: React.FC = () => {
               </div>
             </ShouldRender>
 
+            <ShouldRender if={filteredAttachments?.length}>
+              <AttachmentView medias={filteredAttachments} />
+            </ShouldRender>
+
             <HTMLBody className="prose" lines={5} loading={isLoading}>
               {data?.body}
             </HTMLBody>
@@ -431,39 +406,6 @@ const SinglePostPage: React.FC = () => {
           </div>
         </main>
 
-        <ShouldRender if={attachments?.length}>
-          <div className="w-full mt-3">
-            <h2 className="text-lg font-medium mb-2">Attachments</h2>
-            {filteredAttachments?.medias?.map((media, key) => (
-              <AttachmentPreview
-                type="media"
-                onClickImage={onClickImage(media)}
-                file={media}
-                key={key}
-                downloadable
-              />
-            ))}
-
-            {filteredAttachments?.audio?.map((audio, key) => (
-              <AttachmentPreview
-                file={audio}
-                type="audio"
-                key={key}
-                downloadable
-              />
-            ))}
-
-            {filteredAttachments?.documents?.map((attachment, key) => (
-              <AttachmentPreview
-                type="document"
-                file={attachment}
-                key={key}
-                downloadable
-              />
-            ))}
-          </div>
-        </ShouldRender>
-
         <ShouldRender if={data?.tags?.length || isLoading}>
           <div className="w-full -mb-10">
             <h2 className="text-lg font-medium">Tags</h2>
@@ -473,11 +415,6 @@ const SinglePostPage: React.FC = () => {
         </ShouldRender>
 
         <CommentSection />
-
-        <PreviewMediaModal
-          media={currentMedia}
-          openState={isMediaPreviewModalOpen}
-        />
       </MainLayout>
     </>
   );

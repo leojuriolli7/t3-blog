@@ -2,11 +2,9 @@ import { trpc } from "@utils/trpc";
 import { Poll } from "@utils/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Fragment, useCallback, useEffect } from "react";
-import { MdOutlineCheckBox } from "react-icons/md";
+import { useCallback } from "react";
 import { toast } from "react-toastify";
-import { uuid } from "uuidv4";
-import ShouldRender from "../ShouldRender";
+import { v4 as uuid } from "uuid";
 import PollOption from "./PollOption";
 
 type Props = {
@@ -17,7 +15,7 @@ function getVoterPercentage(optionVoters?: number, totalVoters?: number) {
   const opt = optionVoters || 0;
   const total = totalVoters || 0;
   const numberResult = (opt / total) * 100;
-  const roundedNumber = Math.round(numberResult * 10) / 10
+  const roundedNumber = Math.round(numberResult * 10) / 10;
 
   return `${roundedNumber}%`;
 }

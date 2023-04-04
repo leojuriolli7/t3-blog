@@ -8,6 +8,7 @@ export type GetPostAttachmentsInput = z.TypeOf<typeof getPostAttachments>;
 
 export const createPresignedUrlSchema = z.object({
   postId: z.string(),
+  randomKey: z.string(),
   type: z.string(),
   name: z.string(),
 });

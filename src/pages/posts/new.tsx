@@ -9,6 +9,7 @@ import MarkdownEditor from "@components/MarkdownEditor";
 import { toast } from "react-toastify";
 import Field from "@components/Field";
 import MetaTags from "@components/MetaTags";
+import { v4 as uuid } from "uuid";
 import SelectTags from "@components/SelectTags";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
@@ -48,8 +49,14 @@ const CreatePostPage: React.FC = () => {
   const uploadAttachment = async (postId: string, file: File) => {
     const name = file?.name || "Uploaded attachment";
     const type = file?.type || "unknown";
+    const randomKey = uuid();
 
-    const { url, fields } = await createPresignedUrl({ postId, name, type });
+    const { url, fields } = await createPresignedUrl({
+      postId,
+      name,
+      type,
+      randomKey,
+    });
     const formData = new FormData();
 
     Object.keys(fields).forEach((key) => {
