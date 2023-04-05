@@ -64,7 +64,7 @@
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
     "superjson": "^1.9.1",
-    "uuidv4": "^6.2.13",
+    "uuid": "^9.0.0",
     "validator": "^13.9.0",
     "zod": "^3.17.3"
   },
@@ -84,6 +84,7 @@
     "@types/react-dom": "18.0.5",
     "@types/react-lottie": "^1.2.6",
     "@types/turndown": "^5.0.1",
+    "@types/uuid": "^9.0.1",
     "@types/validator": "^13.7.13",
     "autoprefixer": "^10.4.13",
     "cssnano": "^5.1.15",
