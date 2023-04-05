@@ -373,6 +373,7 @@ const SinglePostPage: React.FC = () => {
                     href={`/users/${data?.user?.id}`}
                     title="Go to user's profile"
                     className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+                    prefetch={false}
                   >
                     {getUserDisplayName(data?.user)}
                   </Link>

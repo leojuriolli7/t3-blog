@@ -138,6 +138,7 @@ const Header: React.FC = () => {
           <Link
             className="sm:block hidden underline hover:opacity-80"
             href="/posts/new"
+            prefetch={false}
           >
             Create post
           </Link>
@@ -146,16 +147,22 @@ const Header: React.FC = () => {
         <Link
           className="sm:block hidden underline hover:opacity-80"
           href="/posts/tags"
+          prefetch={false}
         >
           All tags
         </Link>
         <Link
           className="sm:block hidden underline hover:opacity-80"
           href="/posts/search"
+          prefetch={false}
         >
           Search
         </Link>
-        <Link className="sm:block hidden underline hover:opacity-80" href="/">
+        <Link
+          className="sm:block hidden underline hover:opacity-80"
+          href="/"
+          prefetch={false}
+        >
           Home
         </Link>
       </nav>
