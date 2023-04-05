@@ -7,7 +7,7 @@ import Spinner from "./Spinner";
 
 type Props = {
   title: string;
-  description: string;
+  description?: string;
   confirmationLabel?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
@@ -18,7 +18,7 @@ type Props = {
 
 const ConfirmationModal: React.FC<Props> = ({
   title,
-  description,
+  description = "This action is permanent and cannot be undone!",
   confirmationLabel,
   onCancel,
   onConfirm,

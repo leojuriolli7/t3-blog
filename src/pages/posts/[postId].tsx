@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import CommentSection from "@components/CommentSection";
 import LikeButton from "@components/LikeButton";
 import useGetDate from "@hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
@@ -33,6 +32,10 @@ export type ReplyingTo = ReplyData | undefined;
 const EditPostForm = dynamic(() => import("@components/EditPostForm"), {
   ssr: false,
   loading: () => <Skeleton heading width="w-full" lines={2} />,
+});
+
+const CommentSection = dynamic(() => import("@components/CommentSection"), {
+  ssr: false,
 });
 
 const ConfirmationModal = dynamic(
@@ -496,7 +499,6 @@ const SinglePostPage: React.FC = () => {
         />
 
         <ConfirmationModal
-          description="This action is permanent and cannot be undone!"
           title="Are you sure you want to delete this post?"
           confirmationLabel="Delete post"
           openState={isDeleteModalOpen}
