@@ -17,7 +17,6 @@ import { AttachmentMetadata, SinglePost } from "@utils/types";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import AttachmentPreview from "@components/AttachmentPreview";
-import PreviewMediaModal from "@components/PreviewMediaModal";
 import FavoriteButton from "@components/FavoriteButton";
 import LinkPreview from "@components/LinkPreview";
 import PollView from "@components/PollView/PollView";
@@ -30,17 +29,34 @@ type ReplyData = {
 
 export type ReplyingTo = ReplyData | undefined;
 
-// By importing EditPostForm dynamically, we reduce the initial js.
+// By importing dynamically, we reduce the initial js.
 const EditPostForm = dynamic(() => import("@components/EditPostForm"), {
   ssr: false,
   loading: () => <Skeleton heading width="w-full" lines={2} />,
 });
+
+const ConfirmationModal = dynamic(
+  () => import("@components/ConfirmationModal"),
+  {
+    ssr: false,
+  }
+);
+
+const PreviewMediaModal = dynamic(
+  () => import("@components/PreviewMediaModal"),
+  {
+    ssr: false,
+  }
+);
 
 const SinglePostPage: React.FC = () => {
   const router = useRouter();
   const postId = router.query.postId as string;
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
+
+  const isDeleteModalOpen = useState(false);
+  const [, setIsDeleteModalOpen] = isDeleteModalOpen;
 
   const isMediaPreviewModalOpen = useState(false);
   const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
@@ -53,6 +69,10 @@ const SinglePostPage: React.FC = () => {
     },
     [setIsMediaPreviewModalOpen]
   );
+
+  const showDeleteConfirm = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, [setIsDeleteModalOpen]);
 
   const { data, isLoading } = trpc.useQuery(
     [
@@ -319,11 +339,7 @@ const SinglePostPage: React.FC = () => {
                 onClick={toggleIsEditing}
               />
 
-              <ActionButton
-                onClick={onClickDeletePost}
-                disabled={deleting}
-                action="delete"
-              />
+              <ActionButton onClick={showDeleteConfirm} action="delete" />
             </div>
           </ShouldRender>
 
@@ -477,6 +493,15 @@ const SinglePostPage: React.FC = () => {
         <PreviewMediaModal
           media={currentMedia}
           openState={isMediaPreviewModalOpen}
+        />
+
+        <ConfirmationModal
+          description="This action is permanent and cannot be undone!"
+          title="Are you sure you want to delete this post?"
+          confirmationLabel="Delete post"
+          openState={isDeleteModalOpen}
+          loading={deleting}
+          onConfirm={onClickDeletePost}
         />
       </MainLayout>
     </>
