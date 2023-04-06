@@ -1,6 +1,6 @@
 # T3 Blog
 
-Deployed to Vercel on https://www.t3blog.dev/
+Deployed to Vercel on https://t3-blog-pi.vercel.app/
 
 This is a fullstack blog application made with the [T3 Stack](https://create.t3.gg/). 
 
