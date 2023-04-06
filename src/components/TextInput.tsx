@@ -52,7 +52,7 @@ type Props = {
   InputStyle;
 
 const TextInput = React.forwardRef<
-  HTMLInputElement & HTMLTextAreaElement,
+  HTMLInputElement | HTMLTextAreaElement,
   Props
 >((props, ref) => {
   const {
@@ -90,7 +90,7 @@ const TextInput = React.forwardRef<
             { disabled, sizeVariant, variant, icon },
             className
           )}
-          ref={ref}
+          ref={ref as React.ForwardedRef<HTMLInputElement>}
           type="text"
           onKeyDown={handlePressEnter}
           {...rest}
@@ -104,7 +104,7 @@ const TextInput = React.forwardRef<
             { disabled, sizeVariant, variant, icon },
             className
           )}
-          ref={ref}
+          ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
           onKeyDown={handlePressEnter}
           {...rest}
         />
