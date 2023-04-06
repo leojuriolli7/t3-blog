@@ -1,4 +1,4 @@
-import { Comment, CommentWithChildren } from "@types/index";
+import { Comment, CommentWithChildren } from "@utils/types";
 
 function formatComments(comments: Array<Comment>) {
   const map = new Map();

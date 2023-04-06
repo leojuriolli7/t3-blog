@@ -4,7 +4,7 @@ import {
   UpdateCommentInput,
   updateCommentSchema,
 } from "@schema/comment.schema";
-import { CommentWithChildren } from "@types/index";
+import { CommentWithChildren } from "@utils/types";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";

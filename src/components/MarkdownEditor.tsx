@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { Controller } from "react-hook-form";
 import { marked } from "marked";
 import dynamic from "next/dynamic";
-import { FieldType } from "@types/index";
+import { FieldType } from "@utils/types";
 import hljs from "highlight.js";
 import * as DOMPurify from "dompurify";
 import { v4 as uuid } from "uuid";

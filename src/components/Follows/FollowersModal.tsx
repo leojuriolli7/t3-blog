@@ -1,6 +1,6 @@
 import useOnScreen from "@hooks/useOnScreen";
 import { trpc } from "@utils/trpc";
-import { User } from "@types/index";
+import { User } from "@utils/types";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from "react";
 import EmptyMessage from "../EmptyMessage";

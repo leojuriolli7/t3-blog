@@ -7,7 +7,7 @@ import Field from "@components/Field";
 import ShouldRender from "@components/ShouldRender";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { User } from "@types/index";
+import { User } from "@utils/types";
 import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
 import { Modal } from "../Modal";
 import Avatar from "./Avatar";
