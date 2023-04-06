@@ -1,6 +1,6 @@
 # T3 Blog
 
-Deployed to Vercel on https://t3-blog-pi.vercel.app/
+Deployed to Vercel on https://www.t3blog.dev/
 
 This is a fullstack blog application made with the [T3 Stack](https://create.t3.gg/). 
 
@@ -99,6 +99,7 @@ In this case, the tRPC router is only responsible with creating presigned URLs f
     AWS_S3_BUCKET_NAME=
     AWS_S3_AVATARS_BUCKET_NAME=
     NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME=
+    NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME=
     AWS_REGION=
     ```
 ### Commands
