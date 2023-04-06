@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
 import React, { useCallback, useEffect } from "react";
-import { SinglePost } from "@utils/types";
+import { SinglePost } from "@types/index";
 import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";

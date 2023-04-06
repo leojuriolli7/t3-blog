@@ -1,4 +1,4 @@
-import { FollowingUser } from "@utils/types";
+import { FollowingUser } from "@types/index";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";

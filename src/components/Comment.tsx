@@ -1,5 +1,5 @@
 import { trpc } from "@utils/trpc";
-import { CommentWithChildren } from "@utils/types";
+import { CommentWithChildren } from "@types/index";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";

@@ -1,5 +1,5 @@
 import getUserDisplayName from "@utils/getUserDisplayName";
-import { PostFromList } from "@utils/types";
+import { PostFromList } from "@types/index";
 import Link from "next/link";
 import LikeCount from "./LikeCount";
 import LinkPreview from "./LinkPreview";

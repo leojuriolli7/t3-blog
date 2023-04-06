@@ -5,6 +5,7 @@
       "@pages/*": ["src/pages/*"],
       "@styles/*": ["src/styles/*"],
       "@utils/*": ["src/utils/*"],
+      "@types/*": ["src/types/*"],
       "@components/*": ["src/components/*"],
       "@server/*": ["src/server/*"],
       "@public/*": ["public/*"],

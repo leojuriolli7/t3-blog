@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Tag from "@components/Tag";
 import { MdOutlineAdd } from "react-icons/md";
-import { FieldType } from "@utils/types";
+import { FieldType } from "@types/index";
 import { Controller, useFormContext } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import { useAutoAnimate } from "@formkit/auto-animate/react";

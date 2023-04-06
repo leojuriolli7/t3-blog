@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
-import { AttachmentMetadata, SinglePost } from "@utils/types";
+import { AttachmentMetadata, SinglePost } from "@types/index";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import AttachmentPreview from "@components/AttachmentPreview";

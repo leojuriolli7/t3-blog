@@ -13,7 +13,7 @@ import {
   UPLOADING_TIME_LIMIT,
 } from "src/config/aws";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
-import { AttachmentMetadata } from "@utils/types";
+import { AttachmentMetadata } from "@types/index";
 
 export const attachmentsRouter = createRouter()
   .query("get-post-attachments", {

@@ -1,4 +1,4 @@
-import { TaggedPosts } from "@utils/types";
+import { TaggedPosts } from "@types/index";
 import clsx from "clsx";
 import React from "react";
 import getUserDisplayName from "@utils/getUserDisplayName";
