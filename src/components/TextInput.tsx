@@ -27,8 +27,8 @@ type InputStyle = {
 };
 
 type InputProps = React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
+  React.InputHTMLAttributes<HTMLInputElement & HTMLTextAreaElement>,
+  HTMLInputElement & HTMLTextAreaElement
 >;
 
 const getInputClasses = (style: InputStyle = {}, ...rest: string[]) => {
@@ -47,10 +47,14 @@ const getInputClasses = (style: InputStyle = {}, ...rest: string[]) => {
 type Props = {
   className?: string;
   onPressEnter?: () => void;
+  textarea?: boolean;
 } & InputProps &
   InputStyle;
 
-const TextInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
+const TextInput = React.forwardRef<
+  HTMLInputElement & HTMLTextAreaElement,
+  Props
+>((props, ref) => {
   const {
     className = "",
     disabled,
@@ -58,10 +62,13 @@ const TextInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
     variant,
     onPressEnter,
     icon,
+    textarea,
     ...rest
   } = props;
 
-  const handlePressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handlePressEnter = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     if (e.key === "Enter" && !!onPressEnter) {
       // Prevent form submission.
       e.preventDefault();
@@ -76,17 +83,32 @@ const TextInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
           {icon}
         </div>
       </ShouldRender>
-      <input
-        disabled={disabled}
-        className={getInputClasses(
-          { disabled, sizeVariant, variant, icon },
-          className
-        )}
-        ref={ref}
-        type="text"
-        onKeyDown={handlePressEnter}
-        {...rest}
-      />
+      <ShouldRender if={!textarea}>
+        <input
+          disabled={disabled}
+          className={getInputClasses(
+            { disabled, sizeVariant, variant, icon },
+            className
+          )}
+          ref={ref}
+          type="text"
+          onKeyDown={handlePressEnter}
+          {...rest}
+        />
+      </ShouldRender>
+
+      <ShouldRender if={textarea}>
+        <textarea
+          disabled={disabled}
+          className={getInputClasses(
+            { disabled, sizeVariant, variant, icon },
+            className
+          )}
+          ref={ref}
+          onKeyDown={handlePressEnter}
+          {...rest}
+        />
+      </ShouldRender>
     </div>
   );
 });
