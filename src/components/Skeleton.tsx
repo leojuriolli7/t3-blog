@@ -4,6 +4,7 @@ export type SkeletonProps = {
   width?: string;
   height?: string;
   className?: string;
+  parentClass?: string;
 };
 
 const Skeleton: React.FC<SkeletonProps> = ({
@@ -12,9 +13,13 @@ const Skeleton: React.FC<SkeletonProps> = ({
   width,
   height,
   className,
+  parentClass,
 }) => {
   return (
-    <div role="status" className={`${width || "w-full"} animate-pulse`}>
+    <div
+      role="status"
+      className={`${width || "w-full"} animate-pulse ${parentClass}`}
+    >
       {Array.from({ length: lines }).map((_, i) => (
         <div
           key={i}

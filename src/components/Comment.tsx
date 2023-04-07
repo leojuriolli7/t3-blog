@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "@hooks/useGetDate";
 import { toast } from "react-toastify";
-import { FiExternalLink } from "react-icons/fi";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ShouldRender from "./ShouldRender";

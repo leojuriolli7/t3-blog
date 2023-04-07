@@ -28,6 +28,26 @@ type ReplyData = {
 
 export type ReplyingTo = ReplyData | undefined;
 
+const CommentSectionSkeleton = (
+  <>
+    <div className="w-full h-[39px] mt-2">
+      <Skeleton width="w-full" parentClass="h-full" height="h-full" />
+    </div>
+    <div className="w-full h-[159px] border border-neutral-200  dark:border-neutral-800">
+      <div className="w-1/2 h-full border-r border-r-neutral-200  dark:border-r-neutral-800"></div>
+      <div className="w-1/2 h-full"></div>
+    </div>
+
+    <div className="sm:w-[140px] w-full h-[40px] mt-2">
+      <Skeleton width="w-full" parentClass="h-full" height="h-full" />
+    </div>
+
+    <div className="w-full mt-10 flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800 h-[164px]">
+      <Skeleton lines={4} />
+    </div>
+  </>
+);
+
 // By importing dynamically, we reduce the initial js.
 const EditPostForm = dynamic(() => import("@components/EditPostForm"), {
   ssr: false,
@@ -36,6 +56,7 @@ const EditPostForm = dynamic(() => import("@components/EditPostForm"), {
 
 const CommentSection = dynamic(() => import("@components/CommentSection"), {
   ssr: false,
+  loading: () => CommentSectionSkeleton,
 });
 
 const ConfirmationModal = dynamic(
@@ -492,7 +513,11 @@ const SinglePostPage: React.FC = () => {
           </div>
         </ShouldRender>
 
-        <CommentSection />
+        <div className="w-full mt-6">
+          <h2 className="text-lg font-medium">Comments</h2>
+
+          <CommentSection />
+        </div>
 
         <PreviewMediaModal
           media={currentMedia}
