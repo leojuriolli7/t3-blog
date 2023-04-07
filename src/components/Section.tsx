@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import Button, { ButtonLink } from "./Button";
+import { ButtonLink } from "./Button";
 import Carousel from "./Carousel";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
@@ -19,7 +19,7 @@ const Section: React.FC<Props> = ({
   seeMoreHref,
 }) => {
   return (
-    <div className="bg-slate-100 dark:bg-zinc-800 shadow-md w-full sm:px-10 px-5 py-5">
+    <section className="bg-slate-100 dark:bg-zinc-800 shadow-md w-full sm:px-10 px-5 py-5">
       <div className="w-full flex justify-between">
         <div>
           <ShouldRender if={!loading}>
@@ -50,7 +50,7 @@ const Section: React.FC<Props> = ({
       <div className="mt-3">
         <Carousel>{children}</Carousel>
       </div>
-    </div>
+    </section>
   );
 };
 
