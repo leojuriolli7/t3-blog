@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import useOnScreen from "@hooks/useOnScreen";
@@ -20,11 +13,6 @@ import EmptyMessage from "@components/EmptyMessage";
 const TagsListPage: React.FC = () => {
   const router = useRouter();
   const [queryValue, setQueryValue] = useState("");
-
-  const onSeeMoreTag = useCallback(
-    (tagId?: string) => () => router.push(`/posts/tags/${tagId}`),
-    [router]
-  );
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);

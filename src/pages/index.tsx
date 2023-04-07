@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { trpc } from "@utils/trpc";
 import MainLayout from "@components/MainLayout";
 import PostCard from "@components/PostCard";
@@ -9,13 +9,10 @@ import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
 import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
-import { useRouter } from "next/router";
-import Button, { ButtonLink } from "@components/Button";
+import { ButtonLink } from "@components/Button";
 import Link from "next/link";
 
 const PostListingPage: React.FC = () => {
-  const router = useRouter();
-
   const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
     [
       "posts.posts-by-tags",
@@ -39,11 +36,6 @@ const PostListingPage: React.FC = () => {
   );
 
   const followingPostsToShow = followingPosts?.posts;
-
-  const redirect = useCallback(
-    (value: string) => () => router.push(value),
-    [router]
-  );
 
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
