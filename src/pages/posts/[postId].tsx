@@ -29,8 +29,8 @@ type ReplyData = {
 export type ReplyingTo = ReplyData | undefined;
 
 const CommentSectionSkeleton = (
-  <>
-    <div className="w-full h-[39px] mt-2">
+  <div role="status" className="w-full mt-2">
+    <div className="w-full h-[39px]">
       <Skeleton width="w-full" parentClass="h-full" height="h-full" />
     </div>
     <div className="w-full h-[159px] border border-neutral-200  dark:border-neutral-800">
@@ -45,7 +45,7 @@ const CommentSectionSkeleton = (
     <div className="w-full mt-10 flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800 h-[164px]">
       <Skeleton lines={4} />
     </div>
-  </>
+  </div>
 );
 
 // By importing dynamically, we reduce the initial js.
