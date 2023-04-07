@@ -50,7 +50,7 @@ const CommentSectionSkeleton = (
 // By importing dynamically, we reduce the initial js.
 const EditPostForm = dynamic(() => import("@components/EditPostForm"), {
   ssr: false,
-  loading: () => <Skeleton heading width="w-full" lines={2} />,
+  loading: () => <Skeleton heading width="w-full" lines={4} />,
 });
 
 const CommentSection = dynamic(() => import("@components/CommentSection"), {
