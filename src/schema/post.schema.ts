@@ -19,11 +19,11 @@ const link = z
 */
 const pollSchema = z
   .object({
-    title: z.string(),
+    title: z.string().trim(),
     options: z
       .object({
-        title: z.string(),
-        color: z.string(),
+        title: z.string().trim(),
+        color: z.string().trim(),
       })
       .array()
       .optional(),
@@ -61,9 +61,10 @@ const tagsSchema = z
 export const createPostSchema = z.object({
   title: z
     .string()
+    .trim()
     .min(5, "Minimum title length is 5")
     .max(256, "Max title length is 256"),
-  body: z.string().min(5, "Minimum body length is 5"),
+  body: z.string().trim().min(5, "Minimum body length is 5"),
   link,
   tags: tagsSchema,
   files: z
@@ -137,8 +138,8 @@ export const voteOnPollSchema = z.object({
 });
 
 export const updatePostSchema = z.object({
-  title: z.string().max(256, "Max title length is 256").optional(),
-  body: z.string().min(10).optional(),
+  title: z.string().trim().max(256, "Max title length is 256").optional(),
+  body: z.string().trim().min(10).optional(),
   postId: z.string().uuid(),
   link,
   tags: tagsSchema,

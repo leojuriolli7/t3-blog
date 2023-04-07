@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import CommentSection from "@components/CommentSection";
 import LikeButton from "@components/LikeButton";
 import useGetDate from "@hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
@@ -30,17 +29,62 @@ type ReplyData = {
 
 export type ReplyingTo = ReplyData | undefined;
 
-// By importing EditPostForm dynamically, we reduce the initial js.
+const CommentSectionSkeleton = (
+  <div role="status" className="w-full mt-2">
+    <div className="w-full h-[39px]">
+      <Skeleton width="w-full" parentClass="h-full" height="h-full" />
+    </div>
+    <div className="w-full h-[159px] border border-neutral-200  dark:border-neutral-800">
+      <div className="w-1/2 h-full border-r border-r-neutral-200  dark:border-r-neutral-800"></div>
+    </div>
+
+    <div className="sm:w-[140px] w-full h-[40px] mt-2">
+      <Skeleton width="w-full" parentClass="h-full" height="h-full" />
+    </div>
+
+    <div className="w-full mt-10 flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800 h-[164px]">
+      <Skeleton lines={4} />
+    </div>
+  </div>
+);
+
+// By importing dynamically, we reduce the initial js.
 const EditPostForm = dynamic(() => import("@components/EditPostForm"), {
   ssr: false,
-  loading: () => <Skeleton heading width="w-full" lines={2} />,
+  loading: () => <Skeleton heading width="w-full" lines={4} />,
 });
+
+const CommentSection = dynamic(() => import("@components/CommentSection"), {
+  ssr: false,
+  loading: () => CommentSectionSkeleton,
+});
+
+const ConfirmationModal = dynamic(
+  () => import("@components/ConfirmationModal"),
+  {
+    ssr: false,
+  }
+);
+
+const PreviewMediaModal = dynamic(
+  () => import("@components/PreviewMediaModal"),
+  {
+    ssr: false,
+  }
+);
 
 const SinglePostPage: React.FC = () => {
   const router = useRouter();
   const postId = router.query.postId as string;
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
+
+  const isDeleteModalOpen = useState(false);
+  const [, setIsDeleteModalOpen] = isDeleteModalOpen;
+
+  const showDeleteConfirm = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, [setIsDeleteModalOpen]);
 
   const { data, isLoading } = trpc.useQuery(
     [
@@ -290,11 +334,7 @@ const SinglePostPage: React.FC = () => {
                 onClick={toggleIsEditing}
               />
 
-              <ActionButton
-                onClick={onClickDeletePost}
-                disabled={deleting}
-                action="delete"
-              />
+              <ActionButton onClick={showDeleteConfirm} action="delete" />
             </div>
           </ShouldRender>
 
@@ -325,6 +365,7 @@ const SinglePostPage: React.FC = () => {
                     href={`/users/${data?.user?.id}`}
                     title="Go to user's profile"
                     className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+                    prefetch={false}
                   >
                     {getUserDisplayName(data?.user)}
                   </Link>
@@ -414,7 +455,19 @@ const SinglePostPage: React.FC = () => {
           </div>
         </ShouldRender>
 
-        <CommentSection />
+        <div className="w-full mt-6">
+          <h2 className="text-lg font-medium">Comments</h2>
+
+          <CommentSection />
+        </div>
+
+        <ConfirmationModal
+          title="Are you sure you want to delete this post?"
+          confirmationLabel="Delete post"
+          openState={isDeleteModalOpen}
+          loading={deleting}
+          onConfirm={onClickDeletePost}
+        />
       </MainLayout>
     </>
   );

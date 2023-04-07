@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "@hooks/useGetDate";
 import { toast } from "react-toastify";
-import { FiExternalLink } from "react-icons/fi";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ShouldRender from "./ShouldRender";
@@ -15,6 +14,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import HTMLBody from "./HTMLBody";
+import ConfirmationModal from "./ConfirmationModal";
 
 type CommentProps = {
   comment: CommentWithChildren;
@@ -28,6 +28,13 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
 
   const router = useRouter();
   const postId = router.query.postId as string;
+
+  const isDeleteModalOpen = useState(false);
+  const [, setIsDeleteModalOpen] = isDeleteModalOpen;
+
+  const showDeleteConfirm = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, [setIsDeleteModalOpen]);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const toggleIsEditing = useCallback(() => setIsEditing((prev) => !prev), []);
@@ -119,11 +126,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
               onClick={toggleIsEditing}
             />
 
-            <ActionButton
-              action="delete"
-              disabled={deleting}
-              onClick={onClickDeleteComment}
-            />
+            <ActionButton action="delete" onClick={showDeleteConfirm} />
           </div>
         </ShouldRender>
       </div>
@@ -133,6 +136,14 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       {comment.children && comment.children.length > 0 && (
         <ListComments comments={comment.children} />
       )}
+
+      <ConfirmationModal
+        title="Are you sure you want to delete this comment?"
+        confirmationLabel="Delete comment"
+        openState={isDeleteModalOpen}
+        loading={deleting}
+        onConfirm={onClickDeleteComment}
+      />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { FieldType } from "@utils/types";
 import hljs from "highlight.js";
 import * as DOMPurify from "dompurify";
+import { v4 as uuid } from "uuid";
 import "highlight.js/styles/atom-one-dark.css";
 import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";

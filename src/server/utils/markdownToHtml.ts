@@ -10,7 +10,7 @@ import { Root, RootContent } from "hast";
 
 type Options = {
   /**
-   * Remove any links (`<a>` will be rewritten into `<p>`) and images. (will be deleted from tree)
+   * Remove any links (`<a>` will be rewritten into `<span>`) and images. (will be deleted from tree)
    */
   removeLinksAndImages?: boolean;
   /**

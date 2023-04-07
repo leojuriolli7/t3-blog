@@ -99,6 +99,7 @@ In this case, the tRPC router is only responsible with creating presigned URLs f
     AWS_S3_BUCKET_NAME=
     AWS_S3_AVATARS_BUCKET_NAME=
     NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME=
+    NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME=
     AWS_REGION=
     ```
 ### Commands

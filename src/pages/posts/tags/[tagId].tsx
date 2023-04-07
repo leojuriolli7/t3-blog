@@ -51,7 +51,7 @@ const PostsByTagPage: React.FC = () => {
 
   return (
     <>
-      <MetaTags title={`${tag?.name} Posts`} />
+      <MetaTags title={`${tag?.name || ""} Posts`} />
       <MainLayout>
         <div className="w-full  mt-5 -mb-5">
           <h1 className="text-3xl text-left">

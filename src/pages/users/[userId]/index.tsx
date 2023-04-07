@@ -445,7 +445,6 @@ const UserPage: React.FC = () => {
       </MainLayout>
 
       <ConfirmationModal
-        description="This action is permanent and cannot be undone!"
         title="Are you sure you want to delete your account?"
         confirmationLabel="Delete my account"
         openState={isDeleteAccountModalOpen}

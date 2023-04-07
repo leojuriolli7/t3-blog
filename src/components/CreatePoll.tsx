@@ -35,13 +35,13 @@ const CreatePoll: React.FC = () => {
   const optionInputRef = useRef<HTMLInputElement>(null);
 
   const onTitleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    setTitle(e.target.value?.trim());
   }, []);
 
   const debouncedTitleChange = debounce(onTitleChange);
 
   const addNewOption = useCallback(() => {
-    if (!!currentOption?.title) {
+    if (!!currentOption?.title?.trim()) {
       if (options?.length === 6) {
         toast.error("Maximum of 6 options per poll.");
       } else {
@@ -122,7 +122,7 @@ const CreatePoll: React.FC = () => {
               aria-label="Add poll option"
               title="Add poll option"
               onClick={addNewOption}
-              disabled={!currentOption?.title}
+              disabled={!currentOption?.title?.trim()}
             >
               <MdOutlineAdd size={22} className="text-white" />
             </button>

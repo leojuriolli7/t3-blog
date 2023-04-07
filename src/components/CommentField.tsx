@@ -83,46 +83,40 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
   }, [createCommentError]);
 
   return (
-    <div className={isReply ? `` : "mt-6"}>
-      <ShouldRender if={!isReply}>
-        <h2 className="text-lg font-medium">Comments</h2>
-      </ShouldRender>
+    <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
+      <Field error={errors.body}>
+        <MarkdownEditor
+          variant="condensed"
+          name="body"
+          control={control}
+          defaultValue={undefined}
+          placeholder={isReply ? "Post reply" : "Post comment"}
+        />
+      </Field>
+      <div className="sm:flex w-full sm:justify-between">
+        <Button
+          className="sm:w-auto mt-2 w-full flex justify-center"
+          type="submit"
+          loading={isLoading}
+        >
+          {isReply ? "Send reply" : "Send comment"}
+        </Button>
 
-      <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
-        <Field error={errors.body}>
-          <MarkdownEditor
-            variant="condensed"
-            name="body"
-            control={control}
-            defaultValue={undefined}
-            placeholder={isReply ? "Post reply" : "Post comment"}
-          />
-        </Field>
-        <div className="sm:flex w-full sm:justify-between">
-          <Button
-            className="sm:w-auto mt-2 w-full flex justify-center"
-            type="submit"
-            loading={isLoading}
-          >
-            {isReply ? "Send reply" : "Send comment"}
-          </Button>
-
-          <ShouldRender if={!isReply}>
-            <p className="prose dark:prose-invert sm:text-base text-sm text-right mt-1 sm:mt-0">
-              powered by{" "}
-              <a
-                className="text-emerald-500"
-                href="https://www.markdownguide.org/basic-syntax/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                markdown
-              </a>
-            </p>
-          </ShouldRender>
-        </div>
-      </form>
-    </div>
+        <ShouldRender if={!isReply}>
+          <p className="prose dark:prose-invert sm:text-base text-sm text-right mt-1 sm:mt-0">
+            powered by{" "}
+            <a
+              className="text-emerald-500"
+              href="https://www.markdownguide.org/basic-syntax/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              markdown
+            </a>
+          </p>
+        </ShouldRender>
+      </div>
+    </form>
   );
 };
 
