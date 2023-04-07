@@ -35,7 +35,6 @@ const CommentSectionSkeleton = (
     </div>
     <div className="w-full h-[159px] border border-neutral-200  dark:border-neutral-800">
       <div className="w-1/2 h-full border-r border-r-neutral-200  dark:border-r-neutral-800"></div>
-      <div className="w-1/2 h-full"></div>
     </div>
 
     <div className="sm:w-[140px] w-full h-[40px] mt-2">
