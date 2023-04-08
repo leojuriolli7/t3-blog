@@ -462,6 +462,12 @@ export const postRouter = createRouter()
               id: ctx?.session?.user?.id,
             },
           },
+          likes: {
+            // Automatically like own post on creation.
+            create: {
+              userId: ctx?.session?.user?.id,
+            },
+          },
         },
       });
 

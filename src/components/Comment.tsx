@@ -84,17 +84,26 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     >
       <div className="flex w-full justify-between gap-10 sm:gap-0">
         <div className="flex gap-1 items-center">
-          <Link
-            href={`/users/${comment.userId}`}
-            className="font-medium hover:underline"
-            title="Visit user profile"
-          >
-            {getUserDisplayName(comment?.user)}{" "}
-          </Link>
-
-          <ShouldRender if={comment.userId === session?.user.id}>
-            <span className=" text-emerald-500"> (You)</span>
-          </ShouldRender>
+          <span className="font-medium">
+            <Link
+              href={`/users/${comment.userId}`}
+              title="Visit user profile"
+              className="hover:underline"
+            >
+              {getUserDisplayName(comment?.user)}
+            </Link>
+            <ShouldRender if={comment.userId === session?.user.id}>
+              <span className=" text-emerald-500 ml-1"> (You)</span>
+            </ShouldRender>
+            <ShouldRender if={comment.authorIsOP}>
+              <span
+                className="bg-emerald-500 dark:bg-emerald-600 ml-1 text-xs text-white font-bold p-[2px] px-1 shadow-sm select-none"
+                title="Post author"
+              >
+                OP
+              </span>
+            </ShouldRender>
+          </span>
         </div>
 
         <p className="cursor-pointer select-none" onClick={toggleDateType}>

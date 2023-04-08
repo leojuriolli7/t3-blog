@@ -29,6 +29,11 @@ export const commentRouter = createRouter()
           },
           include: {
             user: true,
+            Post: {
+              select: {
+                userId: true,
+              },
+            },
           },
           orderBy: {
             createdAt: "desc",
@@ -49,6 +54,7 @@ export const commentRouter = createRouter()
               // By also sendind the markdown body, we avoid having to
               // parse html back to MD when needed.
               markdownBody: comment?.body,
+              authorIsOP: comment?.Post?.userId === comment?.userId,
             };
           })
         );
