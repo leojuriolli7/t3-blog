@@ -1,7 +1,10 @@
 import { createRouter } from "@server/createRouter";
-import { deleteChildComments } from "@server/utils/deleteChildComments";
-import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
-import { markdownToHtml } from "@server/utils/markdownToHtml";
+import {
+  formatComments,
+  markdownToHtml,
+  isLoggedInMiddleware,
+  deleteChildComments,
+} from "@server/utils";
 import * as trpc from "@trpc/server";
 import { isStringEmpty } from "@utils/checkEmpty";
 import {
@@ -32,7 +35,7 @@ export const commentRouter = createRouter()
           },
         });
 
-        const formattedComments = await Promise.all(
+        const withFormattedBody = await Promise.all(
           comments.map(async (comment) => {
             const formattedBody = await markdownToHtml(comment?.body || "", {
               removeLinksAndImages: false,
@@ -50,7 +53,10 @@ export const commentRouter = createRouter()
           })
         );
 
-        return formattedComments;
+        type CommentType = typeof withFormattedBody[0];
+        const withChildren = formatComments<CommentType>(withFormattedBody);
+
+        return withChildren;
       } catch (e) {
         console.log("e:", e);
         throw new trpc.TRPCError({

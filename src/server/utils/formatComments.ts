@@ -1,13 +1,18 @@
-import { Comment, CommentWithChildren } from "@utils/types";
+import { Comment } from "@prisma/client";
 
-function formatComments(comments: Array<Comment>) {
+type WithChildren<T> = T & {
+  children: Array<WithChildren<T>>;
+};
+
+function formatComments<T extends Comment>(comments: Array<T>) {
   const map = new Map();
 
-  const commentsWithChildren: CommentWithChildren[] = comments?.map(
-    (comment) => ({ ...comment, children: [] })
-  );
+  const commentsWithChildren: WithChildren<T>[] = comments?.map((comment) => ({
+    ...comment,
+    children: [],
+  }));
 
-  const roots: Array<CommentWithChildren> = commentsWithChildren?.filter(
+  const roots: Array<WithChildren<T>> = commentsWithChildren?.filter(
     (comment) => comment.parentId === null
   );
 

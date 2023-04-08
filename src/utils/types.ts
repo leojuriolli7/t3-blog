@@ -9,11 +9,8 @@ export type InferQueryOutput<TRouteKey extends TQuery> = inferProcedureOutput<
   AppRouter["_def"]["queries"][TRouteKey]
 >;
 
-export type Comment = InferQueryOutput<"comments.all-comments">[number];
-
-export type CommentWithChildren = Comment & {
-  children: Array<CommentWithChildren>;
-};
+export type CommentWithChildren =
+  InferQueryOutput<"comments.all-comments">[number];
 
 export type SinglePost = InferQueryOutput<"posts.single-post">;
 

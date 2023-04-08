@@ -3,14 +3,13 @@ import { useRouter } from "next/router";
 import React from "react";
 import CommentField from "./CommentField";
 import Comments from "./Comments";
-import formatComments from "@utils/formatComments";
 import ShouldRender from "./ShouldRender";
 
 const CommentSection: React.FC = () => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { data } = trpc.useQuery(
+  const { data: comments } = trpc.useQuery(
     [
       "comments.all-comments",
       {
@@ -25,14 +24,12 @@ const CommentSection: React.FC = () => {
     }
   );
 
-  const formattedComments = formatComments(data || []);
-
   return (
     <div className="w-full">
       <CommentField />
-      <ShouldRender if={data}>
+      <ShouldRender if={comments}>
         <div className="w-full mt-10">
-          <Comments comments={formattedComments} />
+          <Comments comments={comments} />
         </div>
       </ShouldRender>
     </div>
