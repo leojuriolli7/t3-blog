@@ -30,18 +30,18 @@ const SearchInput: React.FC<Props> = ({
 
       if (onValueChange) onValueChange(value);
 
-      router.replace(
-        {
-          query: {
-            // Necessary to pass previous query's,
-            //  so this component can work on any page.
-            ...router.query,
-            q: value,
-          },
+      if (!value) delete router.query.q;
+
+      const queryObject = {
+        query: {
+          // Necessary to pass previous query's,
+          //  so this component can work on any page.
+          ...router.query,
+          ...(value && { q: value }),
         },
-        {},
-        { shallow: true }
-      );
+      };
+
+      router.replace(queryObject, queryObject, { shallow: true });
     },
     [setQuery, router, onValueChange]
   );

@@ -18,7 +18,7 @@ type Props = {
   initialLink?: LinkType | null;
 };
 
-const Link: React.FC<Props> = ({ initialLink }) => {
+const LinkInput: React.FC<Props> = ({ initialLink }) => {
   const [animateRef] = useAutoAnimate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [link, setLink] = useState("");
@@ -119,4 +119,4 @@ const Link: React.FC<Props> = ({ initialLink }) => {
   );
 };
 
-export default Link;
+export default LinkInput;

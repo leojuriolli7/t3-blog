@@ -14,7 +14,7 @@ import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import Dropzone from "@components/Dropzone";
-import Link from "@components/Link";
+import LinkInput from "@components/LinkInput";
 import CreatePoll from "@components/CreatePoll";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
@@ -138,7 +138,7 @@ const CreatePostPage: React.FC = () => {
               />
             </Field>
 
-            <Link />
+            <LinkInput />
 
             <CreatePoll />
 

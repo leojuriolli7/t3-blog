@@ -1,6 +1,6 @@
 import { searchSchema } from "@schema/search.schema";
 import { createRouter } from "@server/createRouter";
-import { formatComments, formatPosts } from "@server/utils";
+import { formatPosts } from "@server/utils";
 import { markdownToHtml } from "@server/utils/markdownToHtml";
 import * as trpc from "@trpc/server";
 

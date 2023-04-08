@@ -24,6 +24,7 @@ const CommentSection: React.FC = () => {
     }
   );
 
+  // Scroll down to highlighted comment if query parameter exists.
   const highlightedComment = router.query.highlightedComment as string;
   const commentElement = document.getElementById(highlightedComment);
 
@@ -34,6 +35,7 @@ const CommentSection: React.FC = () => {
 
       commentElement.className = `${commentElement.className} ${ringClasses}`;
 
+      // Remove highlight after 4 seconds.
       setTimeout(() => {
         commentElement.className = commentElement.className.replace(
           ringClasses,

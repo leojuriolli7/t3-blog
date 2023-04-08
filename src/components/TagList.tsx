@@ -7,9 +7,15 @@ type Props = {
   tags?: TagType[];
   loading: boolean;
   compact?: boolean;
+  full?: boolean;
 };
 
-const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
+const TagList: React.FC<Props> = ({
+  tags,
+  loading,
+  compact = false,
+  full = false,
+}) => {
   const loadingArray = Array.from<undefined>({ length: 3 });
 
   const loadingClasses = `${
@@ -19,7 +25,7 @@ const TagList: React.FC<Props> = ({ tags, loading, compact = false }) => {
   const paddings = `${compact ? "px-2 py-1" : "p-2"}`;
 
   return (
-    <div className={`flex flex-wrap gap-2 mt-2`}>
+    <div className={`flex flex-wrap gap-2 mt-2 ${full ? "w-full" : ""}`}>
       {(loading ? loadingArray : tags)?.map((tag, i) => (
         <Link
           key={loading ? i : tag?.id}
