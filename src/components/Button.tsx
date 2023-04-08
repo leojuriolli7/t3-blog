@@ -65,7 +65,7 @@ const BUTTON_VARIANTS = {
   gradient:
     "bg-gradient-to-tl from-green-400 via-emerald-400 dark:to-blue-800 to-blue-500 text-white bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500",
   secondary:
-    "bg-emerald-500 dark:bg-teal-900 text-white sm:w-auto hover:opacity-80 shadow-sm",
+    "bg-emerald-500 dark:bg-teal-900 text-white hover:opacity-80 shadow-sm",
   transparent: "border-transparent hover:opacity-80",
   danger:
     "text-white border-red-700 bg-red-500 hover:bg-red-600 hover:border-red-800",
