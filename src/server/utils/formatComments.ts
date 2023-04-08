@@ -4,6 +4,10 @@ type WithChildren<T> = T & {
   children: Array<WithChildren<T>>;
 };
 
+/**
+ * Format comments from the database and group them with their
+ * children/parents before sending to the client.
+ */
 function formatComments<T extends Comment>(comments: Array<T>) {
   const map = new Map();
 
