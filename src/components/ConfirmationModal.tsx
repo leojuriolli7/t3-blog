@@ -61,12 +61,13 @@ const ConfirmationModal: React.FC<Props> = ({
           </div>
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:mt-4 sm:flex-row-reverse">
-          <Button variant="text" onClick={onConfirm} disabled={loading}>
-            <ShouldRender if={!loading}>{confirmationLabel}</ShouldRender>
-
-            <ShouldRender if={loading}>
-              <Spinner />
-            </ShouldRender>
+          <Button
+            loading={loading}
+            variant="text"
+            onClick={onConfirm}
+            disabled={loading}
+          >
+            {confirmationLabel}
           </Button>
           <Button
             variant="danger"
