@@ -84,7 +84,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     >
       <div className="flex w-full justify-between gap-10 sm:gap-0">
         <div className="flex gap-1 items-center">
-          <span className="font-medium">
+          <span className="font-medium flex items-center">
             <Link
               href={`/users/${comment.userId}`}
               title="Visit user profile"
