@@ -13,9 +13,14 @@ import TextInput from "./TextInput";
 type Props = {
   setQuery: Dispatch<SetStateAction<string>>;
   placeholder: string;
+  onValueChange?: (value: string) => void;
 };
 
-const SearchInput: React.FC<Props> = ({ setQuery, placeholder }) => {
+const SearchInput: React.FC<Props> = ({
+  setQuery,
+  placeholder,
+  onValueChange,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -23,13 +28,22 @@ const SearchInput: React.FC<Props> = ({ setQuery, placeholder }) => {
     (value: string) => {
       setQuery(value);
 
-      router.replace({
-        query: {
-          q: value,
+      if (onValueChange) onValueChange(value);
+
+      router.replace(
+        {
+          query: {
+            // Necessary to pass previous query's,
+            //  so this component can work on any page.
+            ...router.query,
+            q: value,
+          },
         },
-      });
+        {},
+        { shallow: true }
+      );
     },
-    [setQuery, router]
+    [setQuery, router, onValueChange]
   );
 
   const handleChange = debounce(onChange, 500);

@@ -1,0 +1,168 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { SearchFilterTypes } from "@schema/search.schema";
+import { trpc } from "@utils/trpc";
+import Link from "next/link";
+import { ButtonLink } from "./Button";
+import Comment from "./Comment";
+import CompactCard from "./CompactCard";
+import BeatLoader from "./BeatLoader";
+import SearchInput from "./SearchInput";
+import TagList from "./TagList";
+import ShouldRender from "./ShouldRender";
+import Tab from "./Tab";
+import { useRouter } from "next/router";
+import UserPreview from "./UserPreview";
+
+const FILTERS: SearchFilterTypes[] = ["posts", "comments", "tags", "users"];
+
+// TO-DO: create `/search` page, delete `/posts/search`
+// PS: Implement `orderBy` filters on new page.
+
+// TO-DO: Responsiveness, new layouts.
+const SearchDropdown: React.FC = () => {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const router = useRouter();
+
+  const [currentFilter, setCurrentFilter] =
+    useState<SearchFilterTypes>("posts");
+
+  const [animateRef] = useAutoAnimate<HTMLDivElement>();
+  const [listRef] = useAutoAnimate<HTMLDivElement>();
+
+  const toggleFilter = useCallback(
+    (value: SearchFilterTypes) => () => setCurrentFilter(value),
+    []
+  );
+
+  const { data, isLoading } = trpc.useQuery(
+    [
+      "search.by-type",
+      {
+        query,
+        type: currentFilter,
+        limit: 4,
+      },
+    ],
+    {
+      enabled: !!query,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const noDataToShow = !data?.[currentFilter]?.length && !isLoading;
+
+  const hasDataToShow = !!data?.[currentFilter]?.length;
+  !isLoading;
+
+  const onValueChange = (value: string) => {
+    setOpen(!!value);
+  };
+
+  useEffect(() => {
+    const handleRouteChange = (
+      url: string,
+      { shallow }: { shallow: boolean }
+    ) => {
+      if (!shallow) setOpen(false);
+    };
+
+    router.events.on("routeChangeStart", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [router.events]);
+
+  useEffect(() => {
+    if (query) setOpen(true);
+  }, [query]);
+
+  return (
+    <div className="relative" ref={animateRef}>
+      <div className="w-[400px]">
+        <SearchInput
+          setQuery={setQuery}
+          onValueChange={onValueChange}
+          placeholder="Search posts, comments, users & tags"
+        />
+      </div>
+      <ShouldRender if={open}>
+        <div className="absolute z-50 top-16 shadow-2xl bg-white border-zinc-300 border-[1px] dark:border-neutral-800 dark:bg-neutral-900 p-8 w-full">
+          <div className="w-full flex gap-2 items-center mb-4">
+            {FILTERS.map((filter) => (
+              <Tab
+                key={filter}
+                onClick={toggleFilter(filter)}
+                active={currentFilter === filter}
+                label={filter}
+                className="capitalize"
+              />
+            ))}
+          </div>
+
+          <div
+            ref={listRef}
+            className="flex flex-col w-full items-center gap-3"
+          >
+            <ShouldRender if={data?.type === "posts" && !!data?.posts?.length}>
+              {data?.posts?.map((post) => (
+                <CompactCard loading={false} key={post?.id} post={post} />
+              ))}
+            </ShouldRender>
+
+            <ShouldRender
+              if={data?.type === "comments" && !!data?.comments?.length}
+            >
+              {data?.comments?.map((comment) => (
+                <Comment
+                  hideReplies
+                  outlined
+                  compact
+                  key={comment?.id}
+                  comment={comment}
+                />
+              ))}
+            </ShouldRender>
+
+            <ShouldRender if={data?.type === "tags" && !!data?.tags?.length}>
+              <TagList loading={false} tags={data?.tags} />
+            </ShouldRender>
+
+            <ShouldRender if={data?.type === "users" && !!data?.users?.length}>
+              {data?.users?.map((user) => (
+                <UserPreview key={user?.id} user={user} loading={false} />
+              ))}
+            </ShouldRender>
+          </div>
+
+          <div className="w-full flex flex-col items-center gap-2 mt-3">
+            <ShouldRender if={hasDataToShow}>
+              <Link
+                href={`/search?q=${query}&type=${currentFilter}`}
+                passHref
+                legacyBehavior
+              >
+                <ButtonLink variant="primary" className="w-full justify-center">
+                  See more
+                </ButtonLink>
+              </Link>
+            </ShouldRender>
+
+            <ShouldRender if={isLoading}>
+              <BeatLoader className="dark:fill-white" height={30} width={30} />
+            </ShouldRender>
+
+            <ShouldRender if={noDataToShow}>
+              <p className="w-full flex justify-center">No results to show</p>
+            </ShouldRender>
+          </div>
+        </div>
+      </ShouldRender>
+    </div>
+  );
+};
+
+export default SearchDropdown;

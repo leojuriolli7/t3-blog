@@ -25,10 +25,14 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
         slide && "keen-slider__slide",
         "p-3 cursor-pointer bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700 flex flex-col justify-between hover:opacity-70"
       )}
-      style={{
-        width: "275px",
-        minWidth: "275px",
-      }}
+      style={
+        slide
+          ? {
+              width: "275px",
+              minWidth: "275px",
+            }
+          : { width: "100%" }
+      }
     >
       <div>
         <ShouldRender if={!loading}>

@@ -9,10 +9,11 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Popover from "./Popover";
 import { AiFillHeart, AiFillTag } from "react-icons/ai";
-import { HiMenu, HiSearch } from "react-icons/hi";
+import { HiMenu } from "react-icons/hi";
 import { AiFillLike } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import Spinner from "./Spinner";
+import SearchDropdown from "./SearchDropdown";
 
 const Header: React.FC = () => {
   const session = useSession();
@@ -104,7 +105,7 @@ const Header: React.FC = () => {
           icon={
             <HiMenu
               size={27}
-              className="dark:text-emerald-500 text-emerald-700 block sm:hidden"
+              className="dark:text-emerald-500 text-emerald-700 block"
               aria-label="Open navigation menu"
             />
           }
@@ -125,55 +126,10 @@ const Header: React.FC = () => {
             icon={<AiFillTag size={16} className="text-emerald-500" />}
             onClick={redirect("/posts/tags")}
           />
-          <Popover.Item
-            icon={<HiSearch size={14} className="text-emerald-500 mt-1" />}
-            title="Search"
-            gap="2"
-            subtitle="Search posts"
-            onClick={redirect("/posts/search")}
-          />
         </Popover.Main>
-
-        <ShouldRender if={session?.status === "authenticated"}>
-          <Link
-            className="sm:block hidden underline hover:opacity-80"
-            href="/posts/new"
-            prefetch={false}
-          >
-            Create post
-          </Link>
-        </ShouldRender>
-
-        <Link
-          className="sm:block hidden underline hover:opacity-80"
-          href="/posts/tags"
-          prefetch={false}
-        >
-          All tags
-        </Link>
-        <Link
-          className="sm:block hidden underline hover:opacity-80"
-          href="/posts/search"
-          prefetch={false}
-        >
-          Search
-        </Link>
-        <Link
-          className="sm:block hidden underline hover:opacity-80"
-          href="/"
-          prefetch={false}
-        >
-          Home
-        </Link>
       </nav>
-      <FaAppleAlt
-        aria-label="Go back to home"
-        title="Go to the homepage"
-        role="link"
-        onClick={redirect("/")}
-        size={40}
-        className="dark:text-emerald-500 text-emerald-700 cursor-pointer block sm:hidden hover:opacity-75"
-      />
+
+      <SearchDropdown />
 
       <div className="absolute right-0">
         <ThemeSwitch />

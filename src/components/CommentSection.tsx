@@ -1,6 +1,6 @@
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import CommentField from "./CommentField";
 import Comments from "./Comments";
 import ShouldRender from "./ShouldRender";
@@ -23,6 +23,25 @@ const CommentSection: React.FC = () => {
       ssr: false,
     }
   );
+
+  const highlightedComment = router.query.highlightedComment as string;
+  const commentElement = document.getElementById(highlightedComment);
+
+  useEffect(() => {
+    if (!!commentElement) {
+      commentElement?.scrollIntoView({ behavior: "smooth" });
+      const ringClasses = "ring ring-gray-400 dark:ring-white";
+
+      commentElement.className = `${commentElement.className} ${ringClasses}`;
+
+      setTimeout(() => {
+        commentElement.className = commentElement.className.replace(
+          ringClasses,
+          ""
+        );
+      }, 4000);
+    }
+  }, [commentElement]);
 
   return (
     <div className="w-full">
