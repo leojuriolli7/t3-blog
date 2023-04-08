@@ -104,7 +104,7 @@ const UserLinkField: React.FC<Props> = ({ initialLink }) => {
           placeholder="link will be highlighted on your profile"
           ref={inputRef}
           onChange={onChange}
-          disabled={isLoading}
+          loading={isLoading}
         />
       </Field>
 

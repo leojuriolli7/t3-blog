@@ -107,7 +107,7 @@ const Link: React.FC<Props> = ({ initialLink }) => {
           sizeVariant="lg"
           ref={inputRef}
           type="text"
-          disabled={isLoading}
+          loading={isLoading}
           onChange={onChange}
           placeholder="Paste your link"
         />

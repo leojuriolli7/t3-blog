@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import React, { KeyboardEvent, ReactElement } from "react";
 import ShouldRender from "./ShouldRender";
+import Spinner from "./Spinner";
 
 type InputSize = "base" | "lg";
 type TextInputVariant = "outline" | "primary";
@@ -21,6 +22,7 @@ const INPUT_VARIANTS = {
 
 type InputStyle = {
   disabled?: boolean;
+  loading?: boolean;
   sizeVariant?: InputSize;
   variant?: TextInputVariant;
   icon?: ReactElement;
@@ -32,12 +34,19 @@ type InputProps = React.DetailedHTMLProps<
 >;
 
 const getInputClasses = (style: InputStyle = {}, ...rest: string[]) => {
-  const { disabled, sizeVariant = "base", variant = "outline", icon } = style;
+  const {
+    disabled,
+    sizeVariant = "base",
+    variant = "outline",
+    icon,
+    loading,
+  } = style;
   return clsx(
     INPUT_CLASS,
     INPUT_SIZES,
-    disabled && "opacity-70 cursor-not-allowed",
+    (disabled || loading) && "opacity-70 cursor-not-allowed",
     icon && "pl-10",
+    loading && "pr-10",
     INPUT_SIZES[sizeVariant],
     INPUT_VARIANTS[variant],
     ...rest
@@ -63,6 +72,7 @@ const TextInput = React.forwardRef<
     onPressEnter,
     icon,
     textarea,
+    loading,
     ...rest
   } = props;
 
@@ -85,9 +95,9 @@ const TextInput = React.forwardRef<
       </ShouldRender>
       <ShouldRender if={!textarea}>
         <input
-          disabled={disabled}
+          disabled={disabled || loading}
           className={getInputClasses(
-            { disabled, sizeVariant, variant, icon },
+            { disabled, sizeVariant, variant, icon, loading },
             className
           )}
           ref={ref as React.ForwardedRef<HTMLInputElement>}
@@ -99,15 +109,21 @@ const TextInput = React.forwardRef<
 
       <ShouldRender if={textarea}>
         <textarea
-          disabled={disabled}
+          disabled={disabled || loading}
           className={getInputClasses(
-            { disabled, sizeVariant, variant, icon },
+            { disabled, sizeVariant, variant, icon, loading },
             className
           )}
           ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
           onKeyDown={handlePressEnter}
           {...rest}
         />
+      </ShouldRender>
+
+      <ShouldRender if={loading}>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <Spinner />
+        </div>
       </ShouldRender>
     </div>
   );
