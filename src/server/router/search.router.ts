@@ -14,11 +14,32 @@ export const searchRouter = createRouter().query("by-type", {
         take: limit + 1,
         skip: skip,
         cursor: cursor ? { id: cursor } : undefined,
-        where: {
-          name: {
-            search: input.query,
+        include: {
+          _count: {
+            select: { posts: true },
+          },
+          posts: {
+            take: 5,
+            include: {
+              user: true,
+              likes: true,
+              tags: true,
+              link: true,
+            },
           },
         },
+        orderBy: {
+          posts: {
+            _count: "desc",
+          },
+        },
+        ...(query && {
+          where: {
+            name: {
+              search: query,
+            },
+          },
+        }),
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
@@ -27,8 +48,20 @@ export const searchRouter = createRouter().query("by-type", {
         nextCursor = nextItem?.id;
       }
 
+      const tagsWithPosts = await Promise.all(
+        tags.map(async (tag) => {
+          const posts = tag.posts;
+          const formattedPosts = await formatPosts(posts);
+
+          return {
+            ...tag,
+            posts: formattedPosts,
+          };
+        })
+      );
+
       return {
-        tags,
+        tags: tagsWithPosts,
         nextCursor,
       };
     };

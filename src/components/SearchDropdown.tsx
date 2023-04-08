@@ -10,10 +10,10 @@ import Comment from "./Comment";
 import CompactCard from "./CompactCard";
 import BeatLoader from "./BeatLoader";
 import SearchInput from "./SearchInput";
-import TagList from "./TagList";
 import ShouldRender from "./ShouldRender";
 import Tab from "./Tab";
 import UserPreview from "./UserPreview";
+import Section from "./Section";
 
 const FILTERS: SearchFilterTypes[] = ["posts", "comments", "tags", "users"];
 
@@ -89,7 +89,7 @@ const SearchDropdown: React.FC = () => {
   return (
     <div ref={clickAwayRef}>
       <div ref={animateRef} className="relative">
-        <div className="w-[400px]">
+        <div className="w-[500px]">
           <SearchInput
             setQuery={setQuery}
             onValueChange={onValueChange}
@@ -137,7 +137,24 @@ const SearchDropdown: React.FC = () => {
               </ShouldRender>
 
               <ShouldRender if={data?.type === "tags" && !!data?.tags?.length}>
-                <TagList full loading={false} tags={data?.tags} />
+                {data?.tags?.map((tag) => (
+                  <Section
+                    loading={isLoading}
+                    compact
+                    title={tag?.name}
+                    key={tag?.id}
+                    seeMoreHref={`/posts/tags/${tag?.id}`}
+                  >
+                    {tag?.posts?.map((post) => (
+                      <CompactCard
+                        loading={isLoading}
+                        key={`${tag?.id}-${post?.id}`}
+                        post={post}
+                        slide
+                      />
+                    ))}
+                  </Section>
+                ))}
               </ShouldRender>
 
               <ShouldRender

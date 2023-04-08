@@ -6,6 +6,7 @@ import ShouldRender from "./ShouldRender";
 type Props = {
   children: React.ReactNode;
   onFinish?: () => void;
+  arrows?: boolean;
 };
 
 type ArrowProps = {
@@ -45,7 +46,7 @@ const Arrow: React.FC<ArrowProps> = ({ onClick, prev }) => {
   );
 };
 
-const Carousel: React.FC<Props> = ({ children, onFinish }) => {
+const Carousel: React.FC<Props> = ({ children, onFinish, arrows = true }) => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
   const [sliderRef, instanceRef] = useKeenSlider(
@@ -80,17 +81,19 @@ const Carousel: React.FC<Props> = ({ children, onFinish }) => {
         {children}
       </div>
 
-      <ShouldRender if={!isFirstSlide}>
-        <Arrow
-          prev
-          onClick={() => instanceRef.current?.moveToIdx(currentSlide - 1)}
-        />
-      </ShouldRender>
+      <ShouldRender if={arrows}>
+        <ShouldRender if={!isFirstSlide}>
+          <Arrow
+            prev
+            onClick={() => instanceRef.current?.moveToIdx(currentSlide - 1)}
+          />
+        </ShouldRender>
 
-      <ShouldRender if={!isLastSlide}>
-        <Arrow
-          onClick={() => instanceRef.current?.moveToIdx(currentSlide + 1)}
-        />
+        <ShouldRender if={!isLastSlide}>
+          <Arrow
+            onClick={() => instanceRef.current?.moveToIdx(currentSlide + 1)}
+          />
+        </ShouldRender>
       </ShouldRender>
     </div>
   );
