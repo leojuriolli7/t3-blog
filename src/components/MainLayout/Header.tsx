@@ -5,6 +5,8 @@ import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import SlideOver from "@components/SlideOver";
 import { SidebarContent } from "./Sidebar/Sidebar";
+import Image from "next/future/image";
+import Link from "next/link";
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -13,7 +15,11 @@ const Header: React.FC = () => {
   const [, setOpen] = openAsideState;
 
   return (
-    <header className="w-full relative flex h-10 justify-between items-center">
+    <header className="w-full relative flex h-10 gap-2 items-center">
+      <Link href="/" className="xl:block hidden">
+        <Image src="/static/logo.png" width={60} height={60} alt="T3 logo" />
+      </Link>
+
       <GiHamburgerMenu
         className="xl:hidden block h-8 w-8 text-gray-500 dark:text-gray-400"
         onClick={() => setOpen(true)}

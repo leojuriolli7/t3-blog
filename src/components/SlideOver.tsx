@@ -1,6 +1,8 @@
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MdClose } from "react-icons/md";
+import Image from "next/future/image";
+import Link from "next/link";
 
 type Props = {
   children: React.ReactNode;
@@ -60,6 +62,14 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
                   </Transition.Child>
                   <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-neutral-900 py-6 shadow-xl">
                     <div className="relative flex-1 px-4 sm:px-6">
+                      <Image
+                        src="/static/logo.png"
+                        width={60}
+                        height={60}
+                        alt="T3 logo"
+                        className="absolute top-0 left-6"
+                      />
+
                       {children}
                     </div>
                   </div>

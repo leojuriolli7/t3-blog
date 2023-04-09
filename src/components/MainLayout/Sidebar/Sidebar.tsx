@@ -29,6 +29,7 @@ type ItemProps = {
   activeIcon: IconType;
   title: string;
   subtitle: string;
+  className?: string;
 };
 
 const iconProps = {
@@ -41,6 +42,7 @@ const Item: React.FC<ItemProps> = ({
   activeIcon,
   path,
   subtitle,
+  className = "",
   title,
 }) => {
   const router = useRouter();
@@ -57,7 +59,7 @@ const Item: React.FC<ItemProps> = ({
 
   return (
     <Link
-      className="w-auto flex gap-2 rounded-full p-3 hover:ring hover:ring-neutral-100 dark:hover:ring-0 hover:dark:bg-neutral-800 transition-all"
+      className={`w-auto flex gap-2 rounded-full p-3 hover:ring hover:ring-neutral-100 dark:hover:ring-0 hover:dark:bg-neutral-800 transition-all ${className}`}
       href={path}
       prefetch={false}
     >
@@ -81,13 +83,14 @@ export const SidebarContent = () => {
   const callbackUrl = encodeURIComponent(filteredRoute);
 
   return (
-    <nav className="py-6 px-3 mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
+    <nav className="py-6 px-3 xl:mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
       <Item
         defaultIcon={AiOutlineHome}
         activeIcon={AiFillHome}
         path="/"
         title="Home"
         subtitle="Go to homepage"
+        className="mt-4"
       />
       <Item
         activeIcon={AiFillTag}
@@ -129,14 +132,22 @@ export const SidebarContent = () => {
       </ShouldRender>
 
       <div className="w-full mt-auto flex flex-col gap-3">
-        <ShouldRender if={session?.status === "authenticated"}>
-          <Link passHref legacyBehavior href="/posts/new">
+        <ShouldRender if={session?.status !== "loading"}>
+          <Link
+            passHref
+            legacyBehavior
+            href={
+              session?.status === "authenticated"
+                ? "/posts/new"
+                : `/auth/signin?callbackUrl=${callbackUrl}`
+            }
+          >
             <ButtonLink
               variant="primary"
               size="lg"
               className="rounded-full flex justify-center shadow-md font-bold w-full"
             >
-              Create post
+              {session?.status === "authenticated" ? "Create post" : "Sign in"}
             </ButtonLink>
           </Link>
         </ShouldRender>
@@ -148,22 +159,18 @@ export const SidebarContent = () => {
             <BeatLoader className="dark:fill-white fill-neutral-900" />
           </ShouldRender>
 
-          <ShouldRender if={session.status !== "loading"}>
+          <ShouldRender if={session?.status === "authenticated"}>
             <Link
               passHref
               legacyBehavior
-              href={
-                session?.status === "authenticated"
-                  ? `/auth/signout?callbackUrl=${callbackUrl}`
-                  : `/auth/signin?callbackUrl=${callbackUrl}`
-              }
+              href={`/auth/signout?callbackUrl=${callbackUrl}`}
             >
               <ButtonLink
                 variant="text"
                 size="lg"
-                className="rounded-full w-full flex justify-center mt-5 pb-0"
+                className="rounded-full w-full xl:flex justify-center mt-5 pb-0"
               >
-                {session?.status === "authenticated" ? "Logout" : "Sign in"}
+                Logout
               </ButtonLink>
             </Link>
           </ShouldRender>
