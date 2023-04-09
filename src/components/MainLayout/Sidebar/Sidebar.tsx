@@ -21,7 +21,6 @@ import { HiOutlineUsers, HiUsers } from "react-icons/hi";
 import ThemeButton from "./ThemeButton";
 import packageJson from "@package";
 import { useMemo } from "react";
-import { MdAdd } from "react-icons/md";
 
 type ItemProps = {
   path: string;
@@ -58,22 +57,25 @@ const Item: React.FC<ItemProps> = ({
   const Icon = isActive ? activeIcon : defaultIcon;
 
   return (
-    <Link
-      className={`w-auto flex gap-2 rounded-full p-3 hover:ring hover:ring-neutral-100 dark:hover:ring-0 hover:dark:bg-neutral-800 transition-all ${className}`}
-      href={path}
-      prefetch={false}
-    >
-      <Icon {...iconProps} />
+    <li>
+      <Link
+        href={path}
+        prefetch={false}
+        className={`w-auto flex gap-2 rounded-full p-3 hover:ring hover:ring-neutral-100 dark:hover:ring-0 hover:dark:bg-neutral-800 transition-all ${className}`}
+      >
+        <Icon {...iconProps} />
 
-      <div>
-        <p className={clsx("text-lg", isActive && "font-bold")}>{title}</p>
-        <p className=" text-xs text-gray-600 dark:text-gray-400">{subtitle}</p>
-      </div>
-    </Link>
+        <div>
+          <p className={clsx("text-lg", isActive && "font-bold")}>{title}</p>
+          <p className=" text-xs text-gray-600 dark:text-gray-400">
+            {subtitle}
+          </p>
+        </div>
+      </Link>
+    </li>
   );
 };
 
-// TO-DO: Semantics (add <ul>, <li>, <aside>)
 export const SidebarContent = () => {
   const router = useRouter();
   const session = useSession();
@@ -83,53 +85,57 @@ export const SidebarContent = () => {
   const callbackUrl = encodeURIComponent(filteredRoute);
 
   return (
-    <nav className="py-6 px-3 xl:mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
-      <Item
-        defaultIcon={AiOutlineHome}
-        activeIcon={AiFillHome}
-        path="/"
-        title="Home"
-        subtitle="Go to homepage"
-        className="mt-4"
-      />
-      <Item
-        activeIcon={AiFillTag}
-        defaultIcon={AiOutlineTag}
-        path="/posts/tags"
-        title="All tags"
-        subtitle="Explore through all tags"
-      />
+    <div className="py-6 px-3 xl:mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
+      <nav>
+        <ul className="flex flex-col gap-3">
+          <Item
+            defaultIcon={AiOutlineHome}
+            activeIcon={AiFillHome}
+            path="/"
+            title="Home"
+            subtitle="Go to homepage"
+            className="mt-4"
+          />
+          <Item
+            activeIcon={AiFillTag}
+            defaultIcon={AiOutlineTag}
+            path="/posts/tags"
+            title="All tags"
+            subtitle="Explore through all tags"
+          />
 
-      <ShouldRender if={session?.status === "authenticated"}>
-        <Item
-          activeIcon={HiUsers}
-          defaultIcon={HiOutlineUsers}
-          path="/posts/following"
-          title="Following"
-          subtitle="Posts from users you follow"
-        />
-        <Item
-          activeIcon={AiFillLike}
-          defaultIcon={AiOutlineLike}
-          path="/posts/liked"
-          title="Liked"
-          subtitle="Your liked posts"
-        />
-        <Item
-          activeIcon={AiFillHeart}
-          defaultIcon={AiOutlineHeart}
-          path="/posts/favorited"
-          title="Favorites"
-          subtitle="Your favorited posts"
-        />
-        <Item
-          activeIcon={FaUser}
-          defaultIcon={FaRegUser}
-          path={`/users/${session?.data?.user?.id}`}
-          title="Profile"
-          subtitle="Go to your profile"
-        />
-      </ShouldRender>
+          <ShouldRender if={session?.status === "authenticated"}>
+            <Item
+              activeIcon={HiUsers}
+              defaultIcon={HiOutlineUsers}
+              path="/posts/following"
+              title="Following"
+              subtitle="Posts from users you follow"
+            />
+            <Item
+              activeIcon={AiFillLike}
+              defaultIcon={AiOutlineLike}
+              path="/posts/liked"
+              title="Liked"
+              subtitle="Your liked posts"
+            />
+            <Item
+              activeIcon={AiFillHeart}
+              defaultIcon={AiOutlineHeart}
+              path="/posts/favorited"
+              title="Favorites"
+              subtitle="Your favorited posts"
+            />
+            <Item
+              activeIcon={FaUser}
+              defaultIcon={FaRegUser}
+              path={`/users/${session?.data?.user?.id}`}
+              title="Profile"
+              subtitle="Go to your profile"
+            />
+          </ShouldRender>
+        </ul>
+      </nav>
 
       <div className="w-full mt-auto flex flex-col gap-3">
         <ShouldRender if={session?.status !== "loading"}>
@@ -179,15 +185,15 @@ export const SidebarContent = () => {
           </p>
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
 const Sidebar = () => {
   return (
-    <div className="fixed xl:block hidden left-0 w-[250px] h-screen bg-white border-zinc-300 border-x dark:border-neutral-800 dark:bg-neutral-900">
+    <aside className="fixed xl:block hidden left-0 w-[250px] h-screen bg-white border-zinc-300 border-x dark:border-neutral-800 dark:bg-neutral-900">
       <SidebarContent />
-    </div>
+    </aside>
   );
 };
 

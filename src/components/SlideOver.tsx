@@ -14,7 +14,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={setOpen}>
+      <Dialog as="aside" className="relative z-50" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -39,7 +39,10 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md">
+                <Dialog.Panel
+                  className="pointer-events-auto relative w-screen max-w-md"
+                  as="aside"
+                >
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-500"
