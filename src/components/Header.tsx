@@ -15,6 +15,7 @@ import { MdAdd } from "react-icons/md";
 import Spinner from "./Spinner";
 import SearchDropdown from "./SearchDropdown";
 
+// TO-DO: refactor navigation and layout.
 const Header: React.FC = () => {
   const session = useSession();
   const router = useRouter();

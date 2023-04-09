@@ -39,7 +39,7 @@ const getInputClasses = (style: InputStyle = {}, ...rest: string[]) => {
     variant = "outline",
     icon,
     loading,
-    full = true,
+    full,
   } = style;
   return clsx(
     full ? "w-full block" : "block",
@@ -72,6 +72,7 @@ const TextInput = React.forwardRef<
     onPressEnter,
     icon,
     textarea,
+    full = true,
     loading,
     ...rest
   } = props;
@@ -86,36 +87,35 @@ const TextInput = React.forwardRef<
     }
   };
 
+  const elementProps = {
+    disabled: disabled || loading,
+    className: getInputClasses(
+      { disabled, sizeVariant, variant, icon, loading, full },
+      className
+    ),
+    onKeyDown: handlePressEnter,
+  };
+
   return (
     <div className="relative w-full">
       <ShouldRender if={icon}>
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
           {icon}
         </div>
       </ShouldRender>
       <ShouldRender if={!textarea}>
         <input
-          disabled={disabled || loading}
-          className={getInputClasses(
-            { disabled, sizeVariant, variant, icon, loading },
-            className
-          )}
+          {...elementProps}
           ref={ref as React.ForwardedRef<HTMLInputElement>}
           type="text"
-          onKeyDown={handlePressEnter}
           {...rest}
         />
       </ShouldRender>
 
       <ShouldRender if={textarea}>
         <textarea
-          disabled={disabled || loading}
-          className={getInputClasses(
-            { disabled, sizeVariant, variant, icon, loading },
-            className
-          )}
+          {...elementProps}
           ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
-          onKeyDown={handlePressEnter}
           {...rest}
         />
       </ShouldRender>

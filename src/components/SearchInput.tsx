@@ -15,6 +15,8 @@ type Props = {
   placeholder: string;
   onValueChange?: (value: string) => void;
   replace?: boolean;
+  full?: boolean;
+  className?: string;
 };
 
 const SearchInput: React.FC<Props> = ({
@@ -22,6 +24,8 @@ const SearchInput: React.FC<Props> = ({
   placeholder,
   onValueChange,
   replace = true,
+  full = true,
+  className,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -75,6 +79,8 @@ const SearchInput: React.FC<Props> = ({
       placeholder={placeholder}
       required
       title={placeholder}
+      full={full}
+      className={className}
     />
   );
 };

@@ -13,7 +13,7 @@ type Props = {
   post?: PostFromList;
 };
 
-const PostCard: React.FC<Props> = ({ post, loading }) => {
+const PostCard: React.FC<Props> = ({ post, loading = false }) => {
   return (
     <article
       className={`relative bg-slate-100 dark:bg-zinc-800 shadow-md w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:opacity-80 dark:hover:brightness-105 dark:hover:opacity-100 transition-all ${
@@ -35,7 +35,7 @@ const PostCard: React.FC<Props> = ({ post, loading }) => {
         prefetch={false}
       >
         <ShouldRender if={!loading}>
-          <h2 className="prose dark:prose-invert text-2xl font-bold">
+          <h2 className="prose dark:prose-invert text-2xl font-bold break-words">
             {post?.title}
           </h2>
         </ShouldRender>
