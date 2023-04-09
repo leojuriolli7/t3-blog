@@ -24,9 +24,8 @@ const LOTTIE_OPTIONS = {
   animationData: SearchAnimation,
 };
 
-// TO-DO: Implement `orderBy` filters on new page.
 const SearchPage = () => {
-  const [queryValue, setQueryValue] = useState("");
+  const [query, setQuery] = useState("");
 
   const router = useRouter();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -52,7 +51,7 @@ const SearchPage = () => {
       [
         "search.by-type",
         {
-          query: queryValue,
+          query: query,
           limit: 6,
           type: currentFilter,
         },
@@ -61,12 +60,12 @@ const SearchPage = () => {
         ssr: false,
         refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
-        enabled: !!queryValue,
+        enabled: !!query,
       }
     );
 
   const dataToDisplay = useMemo(() => {
-    // TO-DO: Refactor (typescript issues)
+    // TO-DO: Refactor (typescript issues here)
     const comments = data?.pages
       .flatMap((page) => page?.comments)
       .filter((item) => item !== undefined);
@@ -92,7 +91,7 @@ const SearchPage = () => {
   }, [data]);
 
   const noDataToShow =
-    !!queryValue && !dataToDisplay?.[currentFilter]?.length && !isLoading;
+    !!query && !dataToDisplay?.[currentFilter]?.length && !isLoading;
 
   useEffect(() => {
     if (reachedBottom && hasNextPage) {
@@ -103,7 +102,7 @@ const SearchPage = () => {
 
   return (
     <>
-      <MetaTags title="Search posts" />
+      <MetaTags title="Search" />
       <MainLayout>
         <div className="w-full">
           <h1 className="text-3xl mb-3 font-bold prose dark:prose-invert">
@@ -122,11 +121,14 @@ const SearchPage = () => {
               ))}
             </div>
 
-            <SearchInput setQuery={setQueryValue} placeholder="Search posts" />
+            <SearchInput
+              setQuery={setQuery}
+              placeholder="What do you want to find?"
+            />
           </div>
         </div>
 
-        <ShouldRender if={!queryValue}>
+        <ShouldRender if={!query}>
           <div className="flex flex-col items-center">
             <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
             <p className="text-center">

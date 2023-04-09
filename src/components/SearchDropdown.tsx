@@ -26,7 +26,6 @@ export const FILTERS: SearchFilterTypes[] = [
 const SearchDropdown: React.FC = () => {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  console.log("open:", open);
   const [listRef] = useAutoAnimate<HTMLDivElement>();
   const [animateRef] = useAutoAnimate<HTMLDivElement>();
   const clickAwayRef = useRef<HTMLDivElement>(null);

@@ -22,7 +22,7 @@ const UserPreview: React.FC<Props> = ({ loading, user }) => {
           <Image
             width={32}
             height={32}
-            alt={user?.name || "Follower"}
+            alt={user?.name || "User"}
             src={user?.image || "/static/default-profile.jpg"}
             className="rounded-full object-cover h-[32px]"
           />
