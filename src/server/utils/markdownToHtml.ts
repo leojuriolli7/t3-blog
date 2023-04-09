@@ -40,7 +40,7 @@ export async function markdownToHtml(markdown: string, options?: Options) {
       // Truncate the HTML to reduce the size of the DOM and avoid
       // sending unnecessary HTML to the client.
       rehypeTruncate,
-      truncate ? { maxChars: 200, ignoreTags: ["ul", "code", "pre"] } : false
+      truncate ? { maxChars: 200 } : false
     )
     .use(rehypeRewrite, {
       rewrite: (node, index, parent) => {
