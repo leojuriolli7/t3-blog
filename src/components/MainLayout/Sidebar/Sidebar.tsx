@@ -18,9 +18,11 @@ import BeatLoader from "@components/BeatLoader";
 import { useSession } from "next-auth/react";
 import ShouldRender from "@components/ShouldRender";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi";
-import ThemeButton from "./ThemeButton";
 import packageJson from "@package";
 import { useMemo } from "react";
+import Image from "next/future/image";
+import getUserDisplayName from "@utils/getUserDisplayName";
+import ThemeButton from "./ThemeButton";
 
 type ItemProps = {
   path: string;
@@ -80,6 +82,9 @@ export const SidebarContent = () => {
   const router = useRouter();
   const session = useSession();
 
+  const user = session?.data?.user;
+  const sessionStatus = session?.status;
+
   const callbackRoute = router.isReady && !!router.asPath ? router.asPath : "/";
   const filteredRoute = callbackRoute.split("?")[0];
   const callbackUrl = encodeURIComponent(filteredRoute);
@@ -104,7 +109,7 @@ export const SidebarContent = () => {
             subtitle="Explore through all tags"
           />
 
-          <ShouldRender if={session?.status === "authenticated"}>
+          <ShouldRender if={sessionStatus === "authenticated"}>
             <Item
               activeIcon={HiUsers}
               defaultIcon={HiOutlineUsers}
@@ -129,7 +134,7 @@ export const SidebarContent = () => {
             <Item
               activeIcon={FaUser}
               defaultIcon={FaRegUser}
-              path={`/users/${session?.data?.user?.id}`}
+              path={`/users/${user?.id}`}
               title="Profile"
               subtitle="Go to your profile"
             />
@@ -138,12 +143,12 @@ export const SidebarContent = () => {
       </nav>
 
       <div className="w-full mt-auto flex flex-col gap-3">
-        <ShouldRender if={session?.status !== "loading"}>
+        <ShouldRender if={sessionStatus !== "loading"}>
           <Link
             passHref
             legacyBehavior
             href={
-              session?.status === "authenticated"
+              sessionStatus === "authenticated"
                 ? "/posts/new"
                 : `/auth/signin?callbackUrl=${callbackUrl}`
             }
@@ -153,7 +158,7 @@ export const SidebarContent = () => {
               size="lg"
               className="rounded-full flex justify-center shadow-md font-bold w-full"
             >
-              {session?.status === "authenticated" ? "Create post" : "Sign in"}
+              {sessionStatus === "authenticated" ? "Create post" : "Sign in"}
             </ButtonLink>
           </Link>
         </ShouldRender>
@@ -165,20 +170,31 @@ export const SidebarContent = () => {
             <BeatLoader className="dark:fill-white fill-neutral-900" />
           </ShouldRender>
 
-          <ShouldRender if={session?.status === "authenticated"}>
-            <Link
-              passHref
-              legacyBehavior
-              href={`/auth/signout?callbackUrl=${callbackUrl}`}
-            >
-              <ButtonLink
-                variant="text"
-                size="lg"
-                className="rounded-full w-full xl:flex justify-center mt-5 pb-0"
-              >
-                Logout
-              </ButtonLink>
-            </Link>
+          <ShouldRender if={sessionStatus === "authenticated"}>
+            <div className="flex gap-2 w-full py-2">
+              <Image
+                src={user?.image || "/static/default-profile.jpg"}
+                width={48}
+                height={48}
+                className="rounded-full w-11 h-11"
+                alt="Your profile picture"
+              />
+
+              <div>
+                <Link
+                  href={`/users/${user?.id}`}
+                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words"
+                >
+                  {getUserDisplayName(user)}
+                </Link>
+                <Link
+                  href={`/auth/signout?callbackUrl=${callbackUrl}`}
+                  className=" text-sm dark:text-neutral-500 hover:underline"
+                >
+                  Sign out
+                </Link>
+              </div>
+            </div>
           </ShouldRender>
           <p className="text-xs dark:text-neutral-600 text-neutral-500 text-center mt-2">
             {packageJson.version}
