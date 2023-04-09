@@ -1,12 +1,12 @@
-import ShouldRender from "../ShouldRender";
+import ShouldRender from "@components/ShouldRender";
+import SlideOver from "@components/SlideOver";
 import { useRouter } from "next/router";
-import SearchDropdown from "../SearchDropdown";
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import SlideOver from "@components/SlideOver";
-import { SidebarContent } from "./Sidebar/Sidebar";
 import Image from "next/future/image";
 import Link from "next/link";
+import SearchDropdown from "./SearchDropdown";
+import { SidebarContent } from "../Sidebar/Sidebar";
 
 const Header: React.FC = () => {
   const router = useRouter();

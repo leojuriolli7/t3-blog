@@ -11,7 +11,7 @@ import Tab from "@components/Tab";
 import MetaTags from "@components/MetaTags";
 import SearchInput from "@components/SearchInput";
 import { SearchFilterTypes } from "@schema/search.schema";
-import { FILTERS } from "@components/SearchDropdown";
+import { SEARCH_FILTERS } from "@utils/constants";
 import Comment from "@components/Comment";
 import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
@@ -110,7 +110,7 @@ const SearchPage = () => {
           </h1>
           <div className="w-full">
             <div className="w-full flex gap-2 items-center mb-4">
-              {FILTERS.map((filter) => (
+              {SEARCH_FILTERS.map((filter) => (
                 <Tab
                   key={filter}
                   onClick={toggleFilter(filter)}

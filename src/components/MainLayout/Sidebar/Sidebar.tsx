@@ -73,7 +73,7 @@ const Item: React.FC<ItemProps> = ({
   );
 };
 
-// TO-DO: Semantics (add <ul>, <li>)
+// TO-DO: Semantics (add <ul>, <li>, <aside>)
 export const SidebarContent = () => {
   const router = useRouter();
   const session = useSession();
