@@ -1,6 +1,8 @@
-# T3 Blog
+#  <img src="https://user-images.githubusercontent.com/100495707/230788216-88669c63-b0ef-4679-8d10-ed7555f29403.png" width="110" height="50" /> - T3 Blog
 
-Deployed to Vercel on https://t3-blog-pi.vercel.app/
+
+
+### Deployed to Vercel on https://t3-blog-pi.vercel.app/
 
 This is a fullstack blog application made with the [T3 Stack](https://create.t3.gg/). 
 
