@@ -90,7 +90,7 @@ export const SidebarContent = () => {
   const callbackUrl = encodeURIComponent(filteredRoute);
 
   return (
-    <div className="py-6 px-3 xl:mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
+    <div className="xl:py-6 pt-6 px-3 xl:mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
       <nav>
         <ul className="flex flex-col gap-3">
           <Item
@@ -142,7 +142,7 @@ export const SidebarContent = () => {
         </ul>
       </nav>
 
-      <div className="w-full mt-auto flex flex-col gap-3">
+      <div className="w-full xl:mt-auto flex flex-col gap-3">
         <ShouldRender if={sessionStatus !== "loading"}>
           <Link
             passHref
