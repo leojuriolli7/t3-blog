@@ -2,6 +2,7 @@ import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { RiMoonClearFill, RiSunFill } from "react-icons/ri";
 import ShouldRender from "./ShouldRender";
+import Popover from "./Popover";
 
 const ThemeSwitch: React.FC = () => {
   const [mounted, setMounted] = useState(false);
@@ -19,22 +20,17 @@ const ThemeSwitch: React.FC = () => {
     setMounted(true);
   }, []);
 
+  const Icon = isDarkMode ? RiMoonClearFill : RiSunFill;
+
   return (
     <ShouldRender if={mounted}>
-      <button
+      <Popover.Item
+        icon={<Icon size={14} className="text-emerald-500 mt-1" />}
+        title="Change theme"
+        subtitle={`Turn ${isDarkMode ? "on" : "off"} the lights`}
+        gap="1"
         onClick={toggleTheme}
-        type="button"
-        className="hover:opacity-75"
-        aria-label="Change theme"
-      >
-        <ShouldRender if={isDarkMode}>
-          <RiMoonClearFill className="text-emerald-500" size={27} />
-        </ShouldRender>
-
-        <ShouldRender if={!isDarkMode}>
-          <RiSunFill className="text-emerald-700" size={27} />
-        </ShouldRender>
-      </button>
+      />
     </ShouldRender>
   );
 };

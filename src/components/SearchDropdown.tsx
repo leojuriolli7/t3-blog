@@ -15,10 +15,12 @@ import Tab from "./Tab";
 import UserPreview from "./UserPreview";
 import Section from "./Section";
 
-const FILTERS: SearchFilterTypes[] = ["posts", "comments", "tags", "users"];
-
-// TO-DO: create `/search` page, delete `/posts/search`
-// PS: Implement `orderBy` filters on new page.
+export const FILTERS: SearchFilterTypes[] = [
+  "posts",
+  "comments",
+  "tags",
+  "users",
+];
 
 // TO-DO: Responsiveness, new layouts.
 const SearchDropdown: React.FC = () => {
@@ -59,9 +61,7 @@ const SearchDropdown: React.FC = () => {
   );
 
   const noDataToShow = !data?.[currentFilter]?.length && !isLoading;
-
-  const hasDataToShow = !!data?.[currentFilter]?.length;
-  !isLoading;
+  const hasDataToShow = !!data?.[currentFilter]?.length && !isLoading;
 
   const onValueChange = (value: string) => {
     setOpen(!!value);
@@ -94,6 +94,7 @@ const SearchDropdown: React.FC = () => {
             setQuery={setQuery}
             onValueChange={onValueChange}
             placeholder="Search posts, comments, users & tags"
+            replace={false}
           />
         </div>
         <ShouldRender if={open}>
@@ -118,7 +119,7 @@ const SearchDropdown: React.FC = () => {
                 if={data?.type === "posts" && !!data?.posts?.length}
               >
                 {data?.posts?.map((post) => (
-                  <CompactCard loading={false} key={post?.id} post={post} />
+                  <CompactCard key={post?.id} post={post} />
                 ))}
               </ShouldRender>
 
@@ -139,7 +140,6 @@ const SearchDropdown: React.FC = () => {
               <ShouldRender if={data?.type === "tags" && !!data?.tags?.length}>
                 {data?.tags?.map((tag) => (
                   <Section
-                    loading={isLoading}
                     compact
                     title={tag?.name}
                     key={tag?.id}
@@ -147,7 +147,6 @@ const SearchDropdown: React.FC = () => {
                   >
                     {tag?.posts?.map((post) => (
                       <CompactCard
-                        loading={isLoading}
                         key={`${tag?.id}-${post?.id}`}
                         post={post}
                         slide
@@ -161,7 +160,7 @@ const SearchDropdown: React.FC = () => {
                 if={data?.type === "users" && !!data?.users?.length}
               >
                 {data?.users?.map((user) => (
-                  <UserPreview key={user?.id} user={user} loading={false} />
+                  <UserPreview key={user?.id} user={user} />
                 ))}
               </ShouldRender>
             </div>
@@ -177,7 +176,7 @@ const SearchDropdown: React.FC = () => {
                     variant="primary"
                     className="w-full justify-center"
                   >
-                    See more
+                    {`See all results for "${query}"`}
                   </ButtonLink>
                 </Link>
               </ShouldRender>

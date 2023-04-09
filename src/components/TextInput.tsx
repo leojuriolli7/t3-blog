@@ -6,8 +6,6 @@ import Spinner from "./Spinner";
 type InputSize = "base" | "lg";
 type TextInputVariant = "outline" | "primary";
 
-const INPUT_CLASS = "w-full block";
-
 const INPUT_SIZES = {
   base: "sm:text-sm sm:leading-6 py-2 px-3.5",
   lg: "text-base p-3",
@@ -26,6 +24,7 @@ type InputStyle = {
   sizeVariant?: InputSize;
   variant?: TextInputVariant;
   icon?: ReactElement;
+  full?: boolean;
 };
 
 type InputProps = React.DetailedHTMLProps<
@@ -40,9 +39,10 @@ const getInputClasses = (style: InputStyle = {}, ...rest: string[]) => {
     variant = "outline",
     icon,
     loading,
+    full = true,
   } = style;
   return clsx(
-    INPUT_CLASS,
+    full ? "w-full block" : "block",
     INPUT_SIZES,
     (disabled || loading) && "opacity-70 cursor-not-allowed",
     icon && "pl-10",

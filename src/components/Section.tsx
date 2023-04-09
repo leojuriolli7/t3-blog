@@ -7,7 +7,7 @@ import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 
 type Props = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   title?: string;
   loading?: boolean;
   compact?: boolean;

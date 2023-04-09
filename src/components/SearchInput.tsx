@@ -14,12 +14,14 @@ type Props = {
   setQuery: Dispatch<SetStateAction<string>>;
   placeholder: string;
   onValueChange?: (value: string) => void;
+  replace?: boolean;
 };
 
 const SearchInput: React.FC<Props> = ({
   setQuery,
   placeholder,
   onValueChange,
+  replace = true,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -30,20 +32,22 @@ const SearchInput: React.FC<Props> = ({
 
       if (onValueChange) onValueChange(value);
 
-      if (!value) delete router.query.q;
+      if (replace) {
+        if (!value) delete router.query.q;
 
-      const queryObject = {
-        query: {
-          // Necessary to pass previous query's,
-          //  so this component can work on any page.
-          ...router.query,
-          ...(value && { q: value }),
-        },
-      };
+        const queryObject = {
+          query: {
+            // Necessary to pass previous query's,
+            //  so this component can work on any page.
+            ...router.query,
+            ...(value && { q: value }),
+          },
+        };
 
-      router.replace(queryObject, queryObject, { shallow: true });
+        router.replace(queryObject, queryObject, { shallow: true });
+      }
     },
-    [setQuery, router, onValueChange]
+    [setQuery, router, onValueChange, replace]
   );
 
   const handleChange = debounce(onChange, 500);

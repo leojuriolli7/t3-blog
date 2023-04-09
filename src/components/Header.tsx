@@ -126,13 +126,15 @@ const Header: React.FC = () => {
             icon={<AiFillTag size={16} className="text-emerald-500" />}
             onClick={redirect("/posts/tags")}
           />
+
+          <ThemeSwitch />
         </Popover.Main>
       </nav>
 
-      <SearchDropdown />
-
       <div className="absolute right-0">
-        <ThemeSwitch />
+        <ShouldRender if={!router.pathname.includes("/search")}>
+          <SearchDropdown />
+        </ShouldRender>
       </div>
     </header>
   );

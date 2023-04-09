@@ -11,7 +11,7 @@ import HTMLBody from "./HTMLBody";
 type Props = {
   slide?: boolean;
   post?: TaggedPosts;
-  loading: boolean;
+  loading?: boolean;
 };
 
 const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {

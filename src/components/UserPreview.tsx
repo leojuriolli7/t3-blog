@@ -7,7 +7,7 @@ import Skeleton from "./Skeleton";
 
 type Props = {
   user?: Omit<User, "alreadyFollowing" | "url">;
-  loading: boolean;
+  loading?: boolean;
 };
 
 const UserPreview: React.FC<Props> = ({ loading, user }) => {
@@ -28,14 +28,19 @@ const UserPreview: React.FC<Props> = ({ loading, user }) => {
           />
         </div>
         <div className="w-full">
-          <ShouldRender if={!loading}>
-            <p>{user?.name}</p>
-          </ShouldRender>
           <ShouldRender if={loading}>
-            <Skeleton lines={1} width="w-full" />
+            <Skeleton lines={1} width="w-full mb-3 max-w-[250px]" />
+
+            <Skeleton lines={2} width="w-full" />
           </ShouldRender>
 
-          <p className="text-sm text-ellipsis line-clamp-2">{user?.bio}</p>
+          <ShouldRender if={!loading}>
+            <p>{user?.name}</p>
+
+            <p className="text-sm text-ellipsis line-clamp-2 text-neutral-600 dark:text-neutral-400">
+              {user?.bio}
+            </p>
+          </ShouldRender>
         </div>
       </div>
     </Link>

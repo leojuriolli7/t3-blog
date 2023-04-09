@@ -192,7 +192,7 @@ export const searchRouter = createRouter().query("by-type", {
 
         return {
           type: "tags" as const,
-          tags: fetchedTags.tags,
+          tags: fetchedTags.tags || [],
           nextCursor: fetchedTags.nextCursor,
         };
       }
@@ -201,7 +201,7 @@ export const searchRouter = createRouter().query("by-type", {
         const fetchedComments = await fetchComments();
         return {
           type: "comments" as const,
-          comments: fetchedComments.comments,
+          comments: fetchedComments.comments || [],
           nextCursor: fetchedComments.nextCursor,
         };
       }
@@ -210,7 +210,7 @@ export const searchRouter = createRouter().query("by-type", {
         const fetchedPosts = await fetchPosts();
         return {
           type: "posts" as const,
-          posts: fetchedPosts.posts,
+          posts: fetchedPosts.posts || [],
           nextCursor: fetchedPosts.nextCursor,
         };
       }
@@ -220,7 +220,7 @@ export const searchRouter = createRouter().query("by-type", {
 
         return {
           type: "users" as const,
-          users: fetchedUsers.users,
+          users: fetchedUsers.users || [],
           nextCursor: fetchedUsers.nextCursor,
         };
       }

@@ -9,7 +9,7 @@ import Skeleton from "./Skeleton";
 import TagList from "./TagList";
 
 type Props = {
-  loading: boolean;
+  loading?: boolean;
   post?: PostFromList;
 };
 

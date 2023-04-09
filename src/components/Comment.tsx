@@ -16,13 +16,15 @@ import Link from "next/link";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import HTMLBody from "./HTMLBody";
 import ConfirmationModal from "./ConfirmationModal";
+import Skeleton from "./Skeleton";
 
 type CommentProps = {
-  comment: CommentWithChildren;
+  comment?: CommentWithChildren;
   compact?: boolean;
   outlined?: boolean;
   identifiable?: boolean;
   hideReplies?: boolean;
+  loading?: boolean;
 };
 
 const Comment: React.FC<CommentProps> = ({
@@ -30,6 +32,7 @@ const Comment: React.FC<CommentProps> = ({
   compact = false,
   identifiable = false,
   outlined = false,
+  loading,
   hideReplies = false,
 }) => {
   const [replying, setReplying] = useState(false);
@@ -69,7 +72,7 @@ const Comment: React.FC<CommentProps> = ({
   });
 
   const onClickDeleteComment = useCallback(
-    () => deleteComment({ commentId: comment?.id }),
+    () => deleteComment({ commentId: comment?.id as string }),
     [deleteComment, comment]
   );
 
@@ -98,7 +101,7 @@ const Comment: React.FC<CommentProps> = ({
           ? "bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700"
           : "bg-slate-100 shadow-md dark:bg-zinc-800"
       )}
-      id={identifiable ? comment.id : undefined}
+      id={identifiable ? comment?.id : undefined}
     >
       <div
         className={clsx(
@@ -106,6 +109,9 @@ const Comment: React.FC<CommentProps> = ({
           compact && "text-sm"
         )}
       >
+        <ShouldRender if={loading}>
+          <Skeleton width="w-full max-w-[250px]" height="h-4" />
+        </ShouldRender>
         <div className="flex gap-1 items-center">
           <span
             className={clsx(
@@ -114,16 +120,16 @@ const Comment: React.FC<CommentProps> = ({
             )}
           >
             <Link
-              href={`/users/${comment.userId}`}
+              href={`/users/${comment?.userId}`}
               title="Visit user profile"
               className="hover:underline"
             >
               {getUserDisplayName(comment?.user)}
             </Link>
-            <ShouldRender if={comment.userId === session?.user.id}>
+            <ShouldRender if={comment?.userId === session?.user.id}>
               <span className=" text-emerald-500 ml-1"> (You)</span>
             </ShouldRender>
-            <ShouldRender if={comment.authorIsOP}>
+            <ShouldRender if={comment?.authorIsOP}>
               <span
                 className="bg-emerald-500 dark:bg-emerald-600 ml-1 text-xs text-white font-bold p-[2px] px-1 shadow-sm select-none"
                 title="Post author"
@@ -142,8 +148,12 @@ const Comment: React.FC<CommentProps> = ({
       </div>
       <ShouldRender if={!isEditing}>
         <HTMLBody className={clsx(compact ? "prose-sm" : "prose")}>
-          {comment.body}
+          {comment?.body}
         </HTMLBody>
+      </ShouldRender>
+
+      <ShouldRender if={loading}>
+        <Skeleton width="w-full" lines={3} />
       </ShouldRender>
 
       <ShouldRender if={isEditing}>
@@ -161,13 +171,13 @@ const Comment: React.FC<CommentProps> = ({
             </button>
           </ShouldRender>
 
-          <ShouldRender if={compact}>
+          <ShouldRender if={compact && !loading}>
             <div>
               <span>on</span>{" "}
               <Link
                 className="w-auto underline text-emerald-500"
-                href={`/posts/${comment.postId}?highlightedComment=${comment.id}`}
-                as={`/posts/${comment.postId}`}
+                href={`/posts/${comment?.postId}?highlightedComment=${comment?.id}`}
+                as={`/posts/${comment?.postId}`}
               >
                 {comment?.Post?.title}
               </Link>
@@ -175,7 +185,7 @@ const Comment: React.FC<CommentProps> = ({
           </ShouldRender>
         </ShouldRender>
 
-        <ShouldRender if={!compact && session?.user?.id === comment.userId}>
+        <ShouldRender if={!compact && session?.user?.id === comment?.userId}>
           <div className="absolute -bottom-2 -right-2 flex gap-2 items-center">
             <ActionButton
               action={isEditing ? "close" : "edit"}
@@ -187,10 +197,10 @@ const Comment: React.FC<CommentProps> = ({
         </ShouldRender>
       </div>
 
-      {replying && <CommentField parentId={comment.id} />}
+      {replying && <CommentField parentId={comment?.id} />}
 
-      {comment.children && comment.children.length > 0 && !hideReplies && (
-        <ListComments comments={comment.children} />
+      {comment?.children && comment?.children.length > 0 && !hideReplies && (
+        <ListComments comments={comment?.children} />
       )}
 
       <ConfirmationModal
