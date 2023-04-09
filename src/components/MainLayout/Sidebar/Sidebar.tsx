@@ -189,7 +189,7 @@ export const SidebarContent = () => {
                 </Link>
                 <Link
                   href={`/auth/signout?callbackUrl=${callbackUrl}`}
-                  className=" text-sm dark:text-neutral-500 hover:underline"
+                  className=" text-sm text-neutral-600 dark:text-neutral-500 hover:underline"
                 >
                   Sign out
                 </Link>

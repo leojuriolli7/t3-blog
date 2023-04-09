@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { RiMoonClearFill, RiSunFill } from "react-icons/ri";
 import { Transition } from "@headlessui/react";
-import Button from "../../Button";
+import Button from "@components/Button";
+import ShouldRender from "@components/ShouldRender";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
-import ShouldRender from "../../ShouldRender";
 
 const iconProps = {
   size: 20,
