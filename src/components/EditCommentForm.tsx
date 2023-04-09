@@ -14,7 +14,7 @@ import Field from "./Field";
 import Button from "./Button";
 
 type Props = {
-  comment: CommentWithChildren;
+  comment?: CommentWithChildren;
   onFinish: () => void;
 };
 
@@ -53,7 +53,7 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
   const onSubmit = useCallback(
     (values: UpdateCommentInput) => {
       update({
-        commentId: comment.id,
+        commentId: comment?.id as string,
         body: values.body,
       });
 

@@ -32,6 +32,7 @@ export const commentRouter = createRouter()
             Post: {
               select: {
                 userId: true,
+                title: true,
               },
             },
           },

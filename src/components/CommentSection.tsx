@@ -1,6 +1,6 @@
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import CommentField from "./CommentField";
 import Comments from "./Comments";
 import ShouldRender from "./ShouldRender";
@@ -24,11 +24,32 @@ const CommentSection: React.FC = () => {
     }
   );
 
+  // Scroll down to highlighted comment if query parameter exists.
+  const highlightedComment = router.query.highlightedComment as string;
+  const commentElement = document.getElementById(highlightedComment);
+
+  useEffect(() => {
+    if (!!commentElement) {
+      commentElement?.scrollIntoView({ behavior: "smooth" });
+      const ringClasses = "ring ring-gray-400 dark:ring-white";
+
+      commentElement.className = `${commentElement.className} ${ringClasses}`;
+
+      // Remove highlight after 4 seconds.
+      setTimeout(() => {
+        commentElement.className = commentElement.className.replace(
+          ringClasses,
+          ""
+        );
+      }, 4000);
+    }
+  }, [commentElement]);
+
   return (
     <div className="w-full">
       <CommentField />
       <ShouldRender if={comments}>
-        <div className="w-full mt-10">
+        <div className="w-full xs:mt-10 mt-4">
           <Comments comments={comments} />
         </div>
       </ShouldRender>

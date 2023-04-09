@@ -11,7 +11,7 @@ const Comments: React.FC<Props> = ({ comments }) => {
   return (
     <div ref={parentRef} className="flex w-full flex-col gap-10">
       {comments?.map((comment) => {
-        return <Comment key={comment.id} comment={comment} />;
+        return <Comment identifiable key={comment.id} comment={comment} />;
       })}
     </div>
   );

@@ -6,8 +6,6 @@ import Spinner from "./Spinner";
 type InputSize = "base" | "lg";
 type TextInputVariant = "outline" | "primary";
 
-const INPUT_CLASS = "w-full block";
-
 const INPUT_SIZES = {
   base: "sm:text-sm sm:leading-6 py-2 px-3.5",
   lg: "text-base p-3",
@@ -26,6 +24,7 @@ type InputStyle = {
   sizeVariant?: InputSize;
   variant?: TextInputVariant;
   icon?: ReactElement;
+  full?: boolean;
 };
 
 type InputProps = React.DetailedHTMLProps<
@@ -40,9 +39,10 @@ const getInputClasses = (style: InputStyle = {}, ...rest: string[]) => {
     variant = "outline",
     icon,
     loading,
+    full,
   } = style;
   return clsx(
-    INPUT_CLASS,
+    full ? "w-full block" : "block",
     INPUT_SIZES,
     (disabled || loading) && "opacity-70 cursor-not-allowed",
     icon && "pl-10",
@@ -72,6 +72,7 @@ const TextInput = React.forwardRef<
     onPressEnter,
     icon,
     textarea,
+    full = true,
     loading,
     ...rest
   } = props;
@@ -86,36 +87,35 @@ const TextInput = React.forwardRef<
     }
   };
 
+  const elementProps = {
+    disabled: disabled || loading,
+    className: getInputClasses(
+      { disabled, sizeVariant, variant, icon, loading, full },
+      className
+    ),
+    onKeyDown: handlePressEnter,
+  };
+
   return (
     <div className="relative w-full">
       <ShouldRender if={icon}>
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
           {icon}
         </div>
       </ShouldRender>
       <ShouldRender if={!textarea}>
         <input
-          disabled={disabled || loading}
-          className={getInputClasses(
-            { disabled, sizeVariant, variant, icon, loading },
-            className
-          )}
+          {...elementProps}
           ref={ref as React.ForwardedRef<HTMLInputElement>}
           type="text"
-          onKeyDown={handlePressEnter}
           {...rest}
         />
       </ShouldRender>
 
       <ShouldRender if={textarea}>
         <textarea
-          disabled={disabled || loading}
-          className={getInputClasses(
-            { disabled, sizeVariant, variant, icon, loading },
-            className
-          )}
+          {...elementProps}
           ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
-          onKeyDown={handlePressEnter}
           {...rest}
         />
       </ShouldRender>

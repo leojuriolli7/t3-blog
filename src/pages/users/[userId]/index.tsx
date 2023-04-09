@@ -250,7 +250,7 @@ const UserPage: React.FC = () => {
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
-        <section className="mx-auto mt-10 flex flex-col items-center gap-5">
+        <section className="mx-auto xl:mt-10 mt-4 flex flex-col items-center gap-5">
           <div className="relative">
             <Image
               src={user?.image || "/static/default-profile.jpg"}
@@ -377,7 +377,7 @@ const UserPage: React.FC = () => {
                 </ShouldRender>
               </button>
             </div>
-            <div className="w-[356px]">
+            <div className="xl:w-[356px] w-full">
               <ShouldRender if={!!user?.url}>
                 <UserLinkPreview data={user?.url} />
               </ShouldRender>

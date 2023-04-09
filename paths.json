@@ -11,6 +11,7 @@
       "@api/*": ["src/api/*"],
       "@config/*": ["src/config/*"],
       "@hooks/*": ["src/hooks/*"],
+      "@package": ["package.json"],
       "@schema/*": ["src/schema/*"]
     }
   }

@@ -53,7 +53,7 @@ const Following = () => {
       <MetaTags title="Following" />
       <MainLayout>
         <div className="w-full">
-          <h2 className="text-3xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
+          <h2 className="xl:text-3xl text-xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
             Posts from your following
           </h2>
           <div className="flex mt-3 gap-3">

@@ -9,8 +9,7 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const iconProps = {
-  className: "text-emerald-500",
-  size: 23,
+  className: "text-emerald-500 xl:w-[23px] xl:h-[23px] w-5 h-5",
 };
 
 const icons: Record<Actions, React.ReactNode> = {
@@ -20,12 +19,12 @@ const icons: Record<Actions, React.ReactNode> = {
 };
 
 const ActionButton: React.FC<Props> = (props) => {
-  const { action } = props;
+  const { action, className = "" } = props;
 
   return (
     <button
       {...props}
-      className=" bg-teal-100 p-2 shadow-lg hover:opacity-70 dark:bg-teal-900"
+      className={`bg-teal-100 p-2 shadow-lg hover:opacity-70 dark:bg-teal-900 ${className}`}
     >
       {icons[action]}
     </button>

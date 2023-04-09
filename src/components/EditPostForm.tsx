@@ -10,7 +10,7 @@ import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectTags from "./SelectTags";
-import Link from "./Link";
+import LinkInput from "./LinkInput";
 import Button from "./Button";
 import TextInput from "./TextInput";
 
@@ -139,7 +139,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
           <MarkdownEditor control={methods.control} name="body" />
         </Field>
 
-        <Link initialLink={post?.link} />
+        <LinkInput initialLink={post?.link} />
 
         <div className="w-full">
           <SelectTags

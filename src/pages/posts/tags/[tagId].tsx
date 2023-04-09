@@ -54,8 +54,8 @@ const PostsByTagPage: React.FC = () => {
       <MetaTags title={`${tag?.name || ""} Posts`} />
       <MainLayout>
         <div className="w-full  mt-5 -mb-5">
-          <h1 className="text-3xl text-left">
-            <ShouldRender if={!isLoading}>{tag?.name} Posts</ShouldRender>
+          <h1 className="xl:text-3xl text-2xl text-left">
+            <ShouldRender if={!isLoading}>{tag?.name} posts</ShouldRender>
 
             <ShouldRender if={isLoading}>
               <Skeleton heading lines={1} width="w-40" />

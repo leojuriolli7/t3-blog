@@ -13,9 +13,20 @@ import TextInput from "./TextInput";
 type Props = {
   setQuery: Dispatch<SetStateAction<string>>;
   placeholder: string;
+  onValueChange?: (value: string) => void;
+  replace?: boolean;
+  full?: boolean;
+  className?: string;
 };
 
-const SearchInput: React.FC<Props> = ({ setQuery, placeholder }) => {
+const SearchInput: React.FC<Props> = ({
+  setQuery,
+  placeholder,
+  onValueChange,
+  replace = true,
+  full = true,
+  className,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -23,13 +34,24 @@ const SearchInput: React.FC<Props> = ({ setQuery, placeholder }) => {
     (value: string) => {
       setQuery(value);
 
-      router.replace({
-        query: {
-          q: value,
-        },
-      });
+      if (onValueChange) onValueChange(value);
+
+      if (replace) {
+        if (!value) delete router.query.q;
+
+        const queryObject = {
+          query: {
+            // Necessary to pass previous query's,
+            //  so this component can work on any page.
+            ...router.query,
+            ...(value && { q: value }),
+          },
+        };
+
+        router.replace(queryObject, queryObject, { shallow: true });
+      }
     },
-    [setQuery, router]
+    [setQuery, router, onValueChange, replace]
   );
 
   const handleChange = debounce(onChange, 500);
@@ -57,6 +79,8 @@ const SearchInput: React.FC<Props> = ({ setQuery, placeholder }) => {
       placeholder={placeholder}
       required
       title={placeholder}
+      full={full}
+      className={className}
     />
   );
 };
