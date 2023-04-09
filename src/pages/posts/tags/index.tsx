@@ -57,7 +57,7 @@ const TagsListPage: React.FC = () => {
       <MetaTags title="All tags" />
       <MainLayout>
         <div className="w-full">
-          <h1 className="w-full text-left text-3xl prose dark:prose-invert font-bold">
+          <h1 className="w-full text-left xl:text-3xl text-2xl prose dark:prose-invert font-bold">
             All tags
           </h1>
           <p className="-mb-3">See all tags created on T3 blog.</p>

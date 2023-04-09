@@ -372,7 +372,7 @@ const SinglePostPage: React.FC = () => {
 
           <ShouldRender if={!isEditing}>
             <ShouldRender if={!isLoading}>
-              <h1 className="prose dark:prose-invert xs:text-4xl text-3xl font-bold">
+              <h1 className="prose dark:prose-invert xs:text-4xl xl:text-3xl text-2xl font-bold">
                 {data?.title}
               </h1>
             </ShouldRender>

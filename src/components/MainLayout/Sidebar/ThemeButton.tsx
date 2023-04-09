@@ -11,6 +11,11 @@ const iconProps = {
   className: "text-white",
 };
 
+const icons = [
+  <RiSunFill key={1} {...iconProps} />,
+  <RiMoonClearFill key={2} {...iconProps} />,
+];
+
 const transitionConfig = {
   enter: "transform transition ease-in-out duration-200 delay-150",
   enterFrom: "translate-y-full opacity-0",
@@ -58,18 +63,11 @@ const ThemeButton = () => {
         <div className="w-full flex justify-center items-center gap-2 overflow-hidden">
           <div className="w-[20px] h-[20px]">
             <Transition {...transitionConfig} show={hovering}>
-              {isDarkMode ? (
-                <RiSunFill {...iconProps} />
-              ) : (
-                <RiMoonClearFill {...iconProps} />
-              )}
+              {icons[isDarkMode ? 0 : 1]}
             </Transition>
+
             <Transition {...transitionConfig} show={!hovering}>
-              {isDarkMode ? (
-                <RiMoonClearFill {...iconProps} />
-              ) : (
-                <RiSunFill {...iconProps} />
-              )}
+              {icons[isDarkMode ? 1 : 0]}
             </Transition>
           </div>
           Change theme

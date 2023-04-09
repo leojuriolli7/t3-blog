@@ -103,7 +103,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
         </Button>
 
         <ShouldRender if={!isReply}>
-          <p className="prose dark:prose-invert sm:text-base text-sm text-right mt-1 sm:mt-0">
+          <p className="prose dark:prose-invert sm:block hidden sm:text-base text-right mt-1 sm:mt-0">
             powered by{" "}
             <a
               className="text-emerald-500"

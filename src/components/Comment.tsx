@@ -122,12 +122,15 @@ const Comment: React.FC<CommentProps> = ({
             <Link
               href={`/users/${comment?.userId}`}
               title="Visit user profile"
-              className="hover:underline"
+              className="hover:underline text-ellipsis line-clamp-1"
             >
               {getUserDisplayName(comment?.user)}
             </Link>
             <ShouldRender if={comment?.userId === session?.user.id}>
-              <span className=" text-emerald-500 ml-1"> (You)</span>
+              <span className="xl:text-base text-xs text-emerald-500 ml-1">
+                {" "}
+                (You)
+              </span>
             </ShouldRender>
             <ShouldRender if={comment?.authorIsOP}>
               <span
@@ -141,13 +144,16 @@ const Comment: React.FC<CommentProps> = ({
         </div>
 
         <ShouldRender if={!compact}>
-          <p className="cursor-pointer select-none" onClick={toggleDateType}>
+          <p
+            className="cursor-pointer select-none xl:block hidden"
+            onClick={toggleDateType}
+          >
             {date}
           </p>
         </ShouldRender>
       </div>
       <ShouldRender if={!isEditing}>
-        <HTMLBody className={clsx(compact ? "prose-sm" : "prose")}>
+        <HTMLBody className={clsx(compact ? "prose-sm" : "xl:prose prose-sm")}>
           {comment?.body}
         </HTMLBody>
       </ShouldRender>

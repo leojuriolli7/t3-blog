@@ -19,7 +19,9 @@ import { useSession } from "next-auth/react";
 import ShouldRender from "@components/ShouldRender";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi";
 import ThemeButton from "./ThemeButton";
-import packageJson from "../../../../package.json";
+import packageJson from "@package";
+import { useMemo } from "react";
+import { MdAdd } from "react-icons/md";
 
 type ItemProps = {
   path: string;
@@ -44,7 +46,12 @@ const Item: React.FC<ItemProps> = ({
   const router = useRouter();
   const currentPath = router.asPath;
 
-  const isActive = currentPath === path;
+  const isActive = useMemo(() => {
+    if (path === "/") return path === currentPath;
+
+    // This is necessary so that path with query params is still is recognized.
+    return currentPath.includes(path);
+  }, [currentPath, path]);
 
   const Icon = isActive ? activeIcon : defaultIcon;
 
@@ -58,14 +65,14 @@ const Item: React.FC<ItemProps> = ({
 
       <div>
         <p className={clsx("text-lg", isActive && "font-bold")}>{title}</p>
-
-        <p className="text-xs text-gray-600 dark:text-gray-400">{subtitle}</p>
+        <p className=" text-xs text-gray-600 dark:text-gray-400">{subtitle}</p>
       </div>
     </Link>
   );
 };
 
-const Sidebar = () => {
+// TO-DO: Semantics (add <ul>, <li>)
+export const SidebarContent = () => {
   const router = useRouter();
   const session = useSession();
 
@@ -74,99 +81,105 @@ const Sidebar = () => {
   const callbackUrl = encodeURIComponent(filteredRoute);
 
   return (
-    <div className="fixed left-80 w-[250px] h-screen bg-white border-zinc-300 border-x dark:border-neutral-800 dark:bg-neutral-900">
-      <nav className="py-6 px-3 mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
-        <Item
-          defaultIcon={AiOutlineHome}
-          activeIcon={AiFillHome}
-          path="/"
-          title="Home"
-          subtitle="Go to homepage"
-        />
-        <Item
-          activeIcon={AiFillTag}
-          defaultIcon={AiOutlineTag}
-          path="/posts/tags"
-          title="All tags"
-          subtitle="Explore through all tags"
-        />
+    <nav className="py-6 px-3 mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
+      <Item
+        defaultIcon={AiOutlineHome}
+        activeIcon={AiFillHome}
+        path="/"
+        title="Home"
+        subtitle="Go to homepage"
+      />
+      <Item
+        activeIcon={AiFillTag}
+        defaultIcon={AiOutlineTag}
+        path="/posts/tags"
+        title="All tags"
+        subtitle="Explore through all tags"
+      />
 
+      <ShouldRender if={session?.status === "authenticated"}>
+        <Item
+          activeIcon={HiUsers}
+          defaultIcon={HiOutlineUsers}
+          path="/posts/following"
+          title="Following"
+          subtitle="Posts from users you follow"
+        />
+        <Item
+          activeIcon={AiFillLike}
+          defaultIcon={AiOutlineLike}
+          path="/posts/liked"
+          title="Liked"
+          subtitle="Your liked posts"
+        />
+        <Item
+          activeIcon={AiFillHeart}
+          defaultIcon={AiOutlineHeart}
+          path="/posts/favorited"
+          title="Favorites"
+          subtitle="Your favorited posts"
+        />
+        <Item
+          activeIcon={FaUser}
+          defaultIcon={FaRegUser}
+          path={`/users/${session?.data?.user?.id}`}
+          title="Profile"
+          subtitle="Go to your profile"
+        />
+      </ShouldRender>
+
+      <div className="w-full mt-auto flex flex-col gap-3">
         <ShouldRender if={session?.status === "authenticated"}>
-          <Item
-            activeIcon={HiUsers}
-            defaultIcon={HiOutlineUsers}
-            path="/posts/following"
-            title="Following"
-            subtitle="Posts from users you follow"
-          />
-          <Item
-            activeIcon={AiFillLike}
-            defaultIcon={AiOutlineLike}
-            path="/posts/liked"
-            title="Liked"
-            subtitle="Your liked posts"
-          />
-          <Item
-            activeIcon={AiFillHeart}
-            defaultIcon={AiOutlineHeart}
-            path="/posts/favorited"
-            title="Favorites"
-            subtitle="Your favorited posts"
-          />
-          <Item
-            activeIcon={FaUser}
-            defaultIcon={FaRegUser}
-            path={`/users/${session?.data?.user?.id}`}
-            title="Profile"
-            subtitle="Go to your profile"
-          />
+          <Link passHref legacyBehavior href="/posts/new">
+            <ButtonLink
+              variant="primary"
+              size="lg"
+              className="rounded-full flex justify-center shadow-md font-bold w-full"
+            >
+              Create post
+            </ButtonLink>
+          </Link>
         </ShouldRender>
 
-        <div className="w-full mt-auto flex flex-col gap-3">
-          <ShouldRender if={session?.status === "authenticated"}>
-            <Link passHref legacyBehavior href="/posts/new">
+        <ThemeButton />
+
+        <div className="w-full flex flex-col items-center">
+          <ShouldRender if={session.status === "loading"}>
+            <BeatLoader className="dark:fill-white fill-neutral-900" />
+          </ShouldRender>
+
+          <ShouldRender if={session.status !== "loading"}>
+            <Link
+              passHref
+              legacyBehavior
+              href={
+                session?.status === "authenticated"
+                  ? `/auth/signout?callbackUrl=${callbackUrl}`
+                  : `/auth/signin?callbackUrl=${callbackUrl}`
+              }
+            >
               <ButtonLink
-                variant="primary"
+                variant="text"
                 size="lg"
-                className="rounded-full flex justify-center shadow-md font-bold w-full"
+                className="rounded-full w-full flex justify-center mt-5 pb-0"
               >
-                Create post
+                {session?.status === "authenticated" ? "Logout" : "Sign in"}
               </ButtonLink>
             </Link>
           </ShouldRender>
-
-          <ThemeButton />
-
-          <div className="w-full flex flex-col items-center">
-            <ShouldRender if={session.status === "loading"}>
-              <BeatLoader className="dark:fill-white fill-neutral-900" />
-            </ShouldRender>
-
-            <ShouldRender if={session.status !== "loading"}>
-              <Link
-                passHref
-                legacyBehavior
-                href={
-                  session?.status === "authenticated"
-                    ? `/auth/signout?callbackUrl=${callbackUrl}`
-                    : `/auth/signin?callbackUrl=${callbackUrl}`
-                }
-              >
-                <ButtonLink
-                  variant="text"
-                  size="lg"
-                  className="rounded-full w-full flex justify-center mt-5 pb-0"
-                >
-                  {session?.status === "authenticated" ? "Logout" : "Sign in"}
-                </ButtonLink>
-              </Link>
-            </ShouldRender>
-            <p className="text-xs dark:text-neutral-600 text-neutral-500 text-center mt-2">
-              {packageJson.version}
-            </p>
-          </div>
+          <p className="text-xs dark:text-neutral-600 text-neutral-500 text-center mt-2">
+            {packageJson.version}
+          </p>
         </div>
-      </nav>
+      </div>
+    </nav>
+  );
+};
+
+const Sidebar = () => {
+  return (
+    <div className="fixed xl:block hidden left-0 w-[250px] h-screen bg-white border-zinc-300 border-x dark:border-neutral-800 dark:bg-neutral-900">
+      <SidebarContent />
     </div>
   );
 };

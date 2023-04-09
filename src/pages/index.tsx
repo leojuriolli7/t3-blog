@@ -78,10 +78,12 @@ const PostListingPage: React.FC = () => {
       <MainLayout>
         <ShouldRender if={followingPostsToShow?.length}>
           <div className="w-full">
-            <h2 className="w-full text-left text-3xl prose dark:prose-invert font-bold">
+            <h2 className="w-full text-left xl:text-3xl text-2xl prose dark:prose-invert font-bold">
               Following
             </h2>
-            <p className="mb-3">Posts from all your following</p>
+            <p className="mb-3 xl:text-base text-sm">
+              Posts from all your following
+            </p>
             <Section seeMoreHref="posts/following">
               {followingPostsToShow?.map((post) => (
                 <CompactCard
@@ -95,7 +97,7 @@ const PostListingPage: React.FC = () => {
           </div>
         </ShouldRender>
         <div className="w-full flex justify-between items-center -mb-5">
-          <h2 className="text-3xl prose dark:prose-invert font-bold">
+          <h2 className="xl:text-3xl text-2xl prose dark:prose-invert font-bold">
             Featured tags
           </h2>
           <Link prefetch={false} href="/posts/tags" passHref legacyBehavior>
@@ -125,7 +127,7 @@ const PostListingPage: React.FC = () => {
         <hr className="w-full h-0.5 -mb-5 -mt-5 bg-gray-200 border-0 dark:bg-neutral-700" />
 
         <div className="w-full flex sm:justify-between sm:items-center sm:flex-row flex-col gap-5 -mb-5">
-          <h2 className=" text-3xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
+          <h2 className=" xl:text-3xl text-2xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
             All posts
           </h2>
           <div className="flex gap-3">

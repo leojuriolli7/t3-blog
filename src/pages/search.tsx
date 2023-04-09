@@ -105,7 +105,7 @@ const SearchPage = () => {
       <MetaTags title="Search" />
       <MainLayout>
         <div className="w-full">
-          <h1 className="text-3xl mb-3 font-bold prose dark:prose-invert">
+          <h1 className="xl:text-3xl text-2xl mb-3 font-bold prose dark:prose-invert">
             Search
           </h1>
           <div className="w-full">

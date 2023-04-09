@@ -49,7 +49,7 @@ const CommentSection: React.FC = () => {
     <div className="w-full">
       <CommentField />
       <ShouldRender if={comments}>
-        <div className="w-full mt-10">
+        <div className="w-full xs:mt-10 mt-4">
           <Comments comments={comments} />
         </div>
       </ShouldRender>
