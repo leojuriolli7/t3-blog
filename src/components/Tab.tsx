@@ -14,7 +14,7 @@ const Tab: React.FC<Props> = (props) => {
       <p
         className={`${
           active ? "border-b-2 border-black dark:border-white" : ""
-        } cursor-pointer hover:opacity-80 xl:text-base text-sm ${className}`}
+        } cursor-pointer hover:opacity-80 ${className}`}
         onClick={onClick}
       >
         {label}

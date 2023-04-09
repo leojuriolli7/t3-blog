@@ -116,7 +116,10 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
             passHref
             legacyBehavior
           >
-            <ButtonLink variant="primary" className="w-full justify-center">
+            <ButtonLink
+              variant="primary"
+              className="w-full justify-center text-center"
+            >
               {`See all results for "${query}"`}
             </ButtonLink>
           </Link>
