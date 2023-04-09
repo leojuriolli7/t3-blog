@@ -11,16 +11,25 @@ const Header: React.FC = () => {
   const session = useSession();
   const router = useRouter();
 
+  const user = session?.data?.user;
+
+  const callbackRoute = router.isReady && !!router.asPath ? router.asPath : "/";
+  const filteredRoute = callbackRoute.split("?")[0];
+  const callbackUrl = encodeURIComponent(filteredRoute);
   return (
     <header className="w-full relative flex h-10 justify-between items-center">
       <Link
-        href={`/users/${session?.data?.user?.id}`}
+        href={
+          user
+            ? `/users/${user?.id}`
+            : `/auth/signin?callbackUrl=${callbackUrl}`
+        }
         className="flex items-center gap-2 group"
-        title="Go to your profile"
+        title={user ? "Go to your profile" : "Sign in"}
       >
         <ShouldRender if={!!session.status && session.status !== "loading"}>
           <Image
-            src={session?.data?.user?.image || "/static/default-profile.jpg"}
+            src={user?.image || "/static/default-profile.jpg"}
             width={36}
             height={36}
             alt="Your profile picture"
@@ -32,10 +41,10 @@ const Header: React.FC = () => {
 
         <div>
           <p className="dark:text-neutral-400 group-hover:underline">
-            {session?.data?.user?.name}
+            {user?.name}
           </p>
           <p className="text-neutral-600 dark:text-neutral-500 text-sm italic">
-            {session?.data?.user?.email}
+            {user?.email}
           </p>
         </div>
 
