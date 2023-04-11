@@ -15,7 +15,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="aside" className="relative z-50" onClose={setOpen}>
+      <Dialog as="aside" className="relative z-[101]" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
