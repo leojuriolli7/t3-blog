@@ -85,7 +85,7 @@ const getButtonClasses = (
   } = style;
   return clsx(
     BUTTON_CLASSES,
-    loading && "pointer-events-none",
+    loading && "pointer-events-none opacity-60",
     absolute ? "absolute" : "relative",
     BUTTON_SIZES[size],
     BUTTON_VARIANTS[variant],
