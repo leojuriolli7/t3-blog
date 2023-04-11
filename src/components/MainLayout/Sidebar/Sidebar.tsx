@@ -200,14 +200,14 @@ export const SidebarContent = () => {
           </ShouldRender>
           <p className="text-xs dark:text-neutral-600 text-neutral-500 text-center mt-2">
             {packageJson.version} ·{" "}
-            <Link
+            <a
               className="underline"
               href="https://github.com/leojuriolli7/t3-blog"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Github
-            </Link>
+            </a>
           </p>
         </div>
       </div>
