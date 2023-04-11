@@ -34,8 +34,8 @@ type ItemProps = {
 };
 
 const iconProps = {
-  size: 27,
-  className: "text-neutral-800 dark:text-white mt-1",
+  className:
+    "text-neutral-800 dark:text-white mt-1 xl:w-[27px] xl:h-[27px] w-[23px] h-[23pxa]",
 };
 
 const Item: React.FC<ItemProps> = ({
@@ -63,12 +63,14 @@ const Item: React.FC<ItemProps> = ({
       <Link
         href={path}
         prefetch={false}
-        className={`w-auto flex gap-2 rounded-full p-3 hover:ring hover:ring-neutral-100 dark:hover:ring-0 hover:dark:bg-neutral-800 transition-all ${className}`}
+        className={`w-auto flex gap-2 rounded-full xl:p-3 p-2 hover:ring hover:ring-neutral-100 dark:hover:ring-0 hover:dark:bg-neutral-800 transition-all ${className}`}
       >
         <Icon {...iconProps} />
 
         <div>
-          <p className={clsx("text-lg", isActive && "font-bold")}>{title}</p>
+          <p className={clsx("text-base xl:text-lg", isActive && "font-bold")}>
+            {title}
+          </p>
           <p className=" text-xs text-gray-600 dark:text-gray-400">
             {subtitle}
           </p>
@@ -92,7 +94,7 @@ export const SidebarContent = () => {
   return (
     <div className="xl:py-6 pt-6 px-3 xl:mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
       <nav>
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col xl:gap-3 gap-1">
           <Item
             defaultIcon={AiOutlineHome}
             activeIcon={AiFillHome}
@@ -176,20 +178,20 @@ export const SidebarContent = () => {
                 src={user?.image || "/static/default-profile.jpg"}
                 width={48}
                 height={48}
-                className="rounded-full w-11 h-11"
+                className="rounded-full xl:w-11 xl:h-11 w-10 h-10"
                 alt="Your profile picture"
               />
 
               <div>
                 <Link
                   href={`/users/${user?.id}`}
-                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words"
+                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words xl:text-base text-sm"
                 >
                   {getUserDisplayName(user)}
                 </Link>
                 <Link
                   href={`/auth/signout?callbackUrl=${callbackUrl}`}
-                  className=" text-sm text-neutral-600 dark:text-neutral-500 hover:underline"
+                  className="text-sm text-neutral-600 dark:text-neutral-500 hover:underline"
                 >
                   Sign out
                 </Link>
