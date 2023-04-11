@@ -32,6 +32,10 @@ const SearchPage = () => {
   const reachedBottom = useOnScreen(bottomRef);
   const currentFilter = (router.query.type as SearchFilterTypes) || "posts";
 
+  const pageTitle = query
+    ? `Searching for "${query}" in ${currentFilter}`
+    : "Search";
+
   const toggleFilter = useCallback(
     (value: SearchFilterTypes) => () => {
       const queryObject = {
@@ -102,11 +106,11 @@ const SearchPage = () => {
 
   return (
     <>
-      <MetaTags title="Search" />
+      <MetaTags title={pageTitle} />
       <MainLayout>
         <div className="w-full">
           <h1 className="xl:text-3xl text-2xl mb-3 font-bold prose dark:prose-invert">
-            Search
+            {pageTitle}
           </h1>
           <div className="w-full">
             <div className="w-full flex gap-2 items-center mb-4">
@@ -128,7 +132,7 @@ const SearchPage = () => {
           </div>
         </div>
 
-        <ShouldRender if={!query}>
+        <ShouldRender if={!query && !router.query}>
           <div className="flex flex-col items-center">
             <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
             <p className="text-center">

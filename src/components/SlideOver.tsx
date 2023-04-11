@@ -1,8 +1,8 @@
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MdClose } from "react-icons/md";
 import Image from "next/future/image";
-import Link from "next/link";
+import useGetWindowHeight from "@hooks/useWindowDimensions";
 
 type Props = {
   children: React.ReactNode;
@@ -11,6 +11,7 @@ type Props = {
 
 const SlideOver: React.FC<Props> = ({ children, openState }) => {
   const [open, setOpen] = openState;
+  const height = useGetWindowHeight();
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -29,7 +30,13 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div
+              // This is a necessary style for iOS Safari's browser address bar to not cut the slide-over menu.
+              style={{
+                height: height || "100%",
+              }}
+              className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
+            >
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"

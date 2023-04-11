@@ -27,7 +27,7 @@ const Header: React.FC = () => {
         <SidebarContent />
       </SlideOver>
 
-      <div className="absolute right-0">
+      <div className="absolute right-0 z-[100]">
         <ShouldRender if={!router.pathname.includes("/search")}>
           <SearchDropdown />
         </ShouldRender>
