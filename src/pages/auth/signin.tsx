@@ -1,7 +1,7 @@
+import React, { useCallback, useState } from "react";
 import MainLayout from "@components/MainLayout";
 import { signIn } from "next-auth/react";
 import type { SignInErrorTypes } from "next-auth/core/pages/signin";
-import React, { useCallback } from "react";
 import { BsDiscord, BsGithub } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { MdEmail } from "react-icons/md";
@@ -20,7 +20,7 @@ import MetaTags from "@components/MetaTags";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
 
-type SigninOptions = "github" | "google" | "discord";
+type SigninOptions = "github" | "google" | "discord" | "email";
 
 // default next-auth error messages mapped for each error type.
 const errors: Record<SignInErrorTypes, string> = {
@@ -39,10 +39,29 @@ const errors: Record<SignInErrorTypes, string> = {
   default: "Unable to sign in.",
 };
 
+type LoadingState = Record<SigninOptions, boolean>;
+
 const SigninPage: NextPage = () => {
   const router = useRouter();
   const errorType = router.query.error as SignInErrorTypes;
   const callbackUrl = router.query.callbackUrl as string;
+
+  const [isLoading, setIsLoading] = useState<LoadingState>({
+    github: false,
+    email: false,
+    discord: false,
+    google: false,
+  });
+
+  /**
+   * If one of the sign-in options is loading,
+   * the rest should be disabled.
+   */
+  const getDisabledState = (type: SigninOptions) => {
+    return Object.entries(isLoading).some(([key, value]) => {
+      return key !== type && value === true;
+    });
+  };
 
   const { handleSubmit, register } = useForm<SignInWithEmailInput>({
     resolver: zodResolver(signInWithEmailSchema),
@@ -51,20 +70,28 @@ const SigninPage: NextPage = () => {
   const error = errorType && (errors[errorType] ?? errors.default);
 
   const handleSignIn = useCallback(
-    (type: SigninOptions) => () => {
-      signIn(type, {
+    (type: Exclude<SigninOptions, "email">) => async () => {
+      setIsLoading((prev) => ({ ...prev, [type]: true }));
+
+      await signIn(type, {
         callbackUrl: callbackUrl || "/",
       });
+
+      setIsLoading((prev) => ({ ...prev, [type]: false }));
     },
     [callbackUrl]
   );
 
   const onEmailSubmit = useCallback(
-    (values: SignInWithEmailInput) => {
-      signIn("email", {
+    async (values: SignInWithEmailInput) => {
+      setIsLoading((prev) => ({ ...prev, email: true }));
+
+      await signIn("email", {
         callbackUrl: callbackUrl || "/",
         email: values.email,
       });
+
+      setIsLoading((prev) => ({ ...prev, email: false }));
     },
     [callbackUrl]
   );
@@ -84,6 +111,8 @@ const SigninPage: NextPage = () => {
 
             <div className="flex w-full flex-col gap-3">
               <Button
+                disabled={getDisabledState("google")}
+                loading={isLoading.google}
                 onClick={handleSignIn("google")}
                 variant="transparent"
                 icon={<FcGoogle size={20} />}
@@ -94,6 +123,8 @@ const SigninPage: NextPage = () => {
               </Button>
 
               <Button
+                disabled={getDisabledState("discord")}
+                loading={isLoading.discord}
                 onClick={handleSignIn("discord")}
                 variant="transparent"
                 textClass="text-neutral-200"
@@ -104,6 +135,8 @@ const SigninPage: NextPage = () => {
               </Button>
 
               <Button
+                disabled={getDisabledState("github")}
+                loading={isLoading.github}
                 onClick={handleSignIn("github")}
                 variant="transparent"
                 textClass="text-neutral-200"
@@ -127,10 +160,13 @@ const SigninPage: NextPage = () => {
                     variant="primary"
                     type="email"
                     placeholder="type your e-mail"
+                    disabled={isLoading.email}
                     required
                     {...register("email")}
                   />
                   <Button
+                    disabled={getDisabledState("email")}
+                    loading={isLoading.email}
                     variant="primary"
                     type="submit"
                     className="w-full mt-2"

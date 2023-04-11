@@ -7,7 +7,7 @@ import * as trpc from "@trpc/server";
 export const searchRouter = createRouter().query("by-type", {
   input: searchSchema,
   async resolve({ ctx, input }) {
-    const { limit, skip, cursor, query, type } = input;
+    const { limit, skip, cursor, query, type, truncateComments } = input;
 
     const fetchTags = async () => {
       const tags = await ctx.prisma.tag.findMany({
@@ -169,7 +169,7 @@ export const searchRouter = createRouter().query("by-type", {
         comments.map(async (comment) => {
           const formattedBody = await markdownToHtml(comment?.body || "", {
             removeLinksAndImages: false,
-            truncate: false,
+            truncate: truncateComments,
             linkifyImages: true,
           });
 

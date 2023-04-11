@@ -153,7 +153,11 @@ const Comment: React.FC<CommentProps> = ({
         </ShouldRender>
       </div>
       <ShouldRender if={!isEditing}>
-        <HTMLBody className={clsx(compact ? "prose-sm" : "xl:prose prose-sm")}>
+        <HTMLBody
+          className={clsx(
+            compact ? "prose prose-sm" : "xl:prose prose prose-sm"
+          )}
+        >
           {comment?.body}
         </HTMLBody>
       </ShouldRender>

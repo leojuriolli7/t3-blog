@@ -8,6 +8,7 @@ export const searchSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish(),
   skip: z.number().optional(),
+  truncateComments: z.boolean().optional(),
 });
 
 export type SearchFilterTypes = z.TypeOf<typeof type>;

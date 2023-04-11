@@ -36,6 +36,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
         query,
         type: currentFilter,
         limit: 4,
+        truncateComments: true,
       },
     ],
     {

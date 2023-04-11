@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import MainLayout from "@components/MainLayout";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
@@ -10,13 +10,18 @@ import MetaTags from "@components/MetaTags";
 import Button from "@components/Button";
 
 const SignoutPage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const router = useRouter();
   const callbackUrl = router.query.callbackUrl as string;
 
-  const handleSignout = useCallback(() => {
-    signOut({
+  const handleSignout = useCallback(async () => {
+    setIsLoading(true);
+    await signOut({
       callbackUrl: callbackUrl || "/",
     });
+
+    setIsLoading(false);
   }, [callbackUrl]);
 
   return (
@@ -42,6 +47,7 @@ const SignoutPage: React.FC = () => {
 
             <div>
               <Button
+                loading={isLoading}
                 type="button"
                 variant="primary"
                 onClick={handleSignout}

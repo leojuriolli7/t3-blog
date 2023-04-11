@@ -58,6 +58,7 @@ const SearchPage = () => {
           query: query,
           limit: 6,
           type: currentFilter,
+          truncateComments: false,
         },
       ],
       {
