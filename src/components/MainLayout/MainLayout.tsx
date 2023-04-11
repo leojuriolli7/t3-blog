@@ -7,7 +7,7 @@ type Props = {
 
 const MainLayout: React.FC<Props> = ({ children }) => {
   return (
-    <div className="relative">
+    <div>
       <Sidebar />
       <div className="flex flex-col items-center gap-10 py-12 w-11/12 max-w-2xl mx-auto">
         <Header />
