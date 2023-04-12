@@ -24,7 +24,7 @@ const MetaTags: React.FC<Props> = ({
   }, [title]);
 
   const DEFAULT_DESCRIPTION = "Blog built with the T3 Stack.";
-  const LOGO_PATH = `${baseUrl}/static/logo.png`;
+  const LOGO_PATH = `${baseUrl}/static/square-logo.png`;
   const favicon = `${baseUrl}/static/favicon.ico`;
 
   const currentDescription = description || DEFAULT_DESCRIPTION;
