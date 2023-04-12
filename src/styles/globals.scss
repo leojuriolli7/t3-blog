@@ -19,6 +19,10 @@ button:disabled {
   @apply font-inter;
 }
 
+code > * {
+  @apply font-mono;
+}
+
 /* 
   From here forwards we have specific style adjustments being applied, like:
     1. Changes to the default markdown editor styles. (Add dark mode, change text style)
