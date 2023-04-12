@@ -472,7 +472,7 @@ const SinglePostPage: React.FC = () => {
         </main>
 
         <ShouldRender if={attachments?.length}>
-          <div className="w-full mt-3">
+          <div className="w-full mt-3 flex flex-col gap-2">
             <h2 className="text-lg font-medium mb-2">Attachments</h2>
             {filteredAttachments?.medias?.map((media, key) => (
               <AttachmentPreview

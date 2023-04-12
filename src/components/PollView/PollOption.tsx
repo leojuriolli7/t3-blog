@@ -44,7 +44,7 @@ const PollOption: React.FC<Props> = ({
           aria-label={`Click to vote on this option.`}
           disabled={disabled}
           onClick={onClick}
-          className="w-full cursor-pointer h-[40px] hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75"
+          className="w-full cursor-pointer h-[40px] rounded-md hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75"
           style={{
             borderColor: option.color,
             backgroundColor: `${option.color}60`,
@@ -57,7 +57,7 @@ const PollOption: React.FC<Props> = ({
       </ShouldRender>
 
       <ShouldRender if={alreadyVoted}>
-        <div className="w-full relative p-2 select-none ring-1 dark:ring-neutral-700 ring-inset ring-gray-300">
+        <div className="w-full relative p-2 select-none ring-1 rounded-md dark:ring-neutral-700 ring-inset ring-gray-300">
           <div className="flex w-full justify-between gap-2">
             <p className="relative z-10 text-ellipsis line-clamp-1 overflow-hidden break-all text-sm sm:text-base">
               {option.title}
@@ -77,7 +77,7 @@ const PollOption: React.FC<Props> = ({
           </div>
           <div
             ref={optionRef}
-            className="absolute h-full top-0 left-0 vote-progress"
+            className="absolute h-full top-0 left-0 rounded-md"
             style={{
               backgroundColor: `${option.color}90`,
               width: 0,
