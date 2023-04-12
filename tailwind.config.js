@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   darkMode: "class",
   content: ["./src/**/*.tsx"],
@@ -14,6 +17,9 @@ module.exports = {
     extend: {
       transitionProperty: {
         borderAndShadow: "border, box-shadow",
+      },
+      fontFamily: {
+        inter: ["Inter", ...defaultTheme.fontFamily.sans],
       },
       boxShadow: {
         "3xl": "0 4px 6px rgba(0,0,0,.04)",

@@ -106,8 +106,8 @@ const Dropzone: React.FC = () => {
                       : ""
                   }`}
                 >
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
+                  <span className="font-bold">Click to upload</span> or drag and
+                  drop
                 </p>
                 <p className="text-xs text-center text-gray-500 dark:text-gray-400">
                   Images, .pdf, .txt, .msword, .doc, .mp3, .wav, .mp4

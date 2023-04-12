@@ -36,7 +36,7 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
     >
       <div>
         <ShouldRender if={!loading}>
-          <h2 className="text-lg prose dark:prose-invert font-semibold line-clamp-1">
+          <h2 className="text-lg prose dark:prose-invert font-bold line-clamp-1">
             {post?.title}
           </h2>
         </ShouldRender>
