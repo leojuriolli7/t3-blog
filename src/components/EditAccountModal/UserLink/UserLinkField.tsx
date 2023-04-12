@@ -105,6 +105,7 @@ const UserLinkField: React.FC<Props> = ({ initialLink }) => {
           ref={inputRef}
           onChange={onChange}
           loading={isLoading}
+          className="rounded-md"
         />
       </Field>
 

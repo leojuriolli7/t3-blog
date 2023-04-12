@@ -125,6 +125,7 @@ const CreatePostPage: React.FC = () => {
                 sizeVariant="lg"
                 type="text"
                 placeholder="your post title"
+                className="rounded-md"
                 {...register("title")}
               />
             </Field>
@@ -152,7 +153,7 @@ const CreatePostPage: React.FC = () => {
             />
 
             <Button
-              className="sm:w-6/12 w-full min-w-fit mx-auto flex justify-center"
+              className="sm:w-6/12 w-full min-w-fit mx-auto flex justify-center rounded-lg"
               variant="primary"
               type="submit"
               loading={isLoading}

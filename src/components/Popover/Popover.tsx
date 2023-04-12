@@ -49,7 +49,7 @@ const Popover: React.FC<Props> = ({ icon, children }) => {
           className="absolute left-1/2 z-10 flex w-screen max-w-max -translate-x-1/2 px-4"
         >
           <div className="w-fit shadow dark:shadow-xl">
-            <ul className="flex flex-col gap-1 bg-white border border-neutral-300 dark:border-none dark:bg-neutral-900">
+            <ul className="flex flex-col gap-1 bg-white border border-neutral-300 dark:border-zinc-800 dark:bg-neutral-900 rounded-md">
               {children}
             </ul>
           </div>

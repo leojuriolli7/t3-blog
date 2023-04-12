@@ -32,7 +32,7 @@ const LikeButton: React.FC<Props> = (props) => {
       aria-label={buttonDescription}
       className={`flex gap-2 ${
         vertical ? "flex-col items-center" : ""
-      } bg-emerald-500 dark:bg-teal-900 sm:p-2 px-2 py-1 hover:opacity-80 shadow-lg`}
+      } bg-emerald-500 dark:bg-teal-900 rounded-md sm:p-2 px-2 py-1 hover:opacity-80 shadow-lg`}
       onClick={onClick}
     >
       <ShouldRender if={dislike}>

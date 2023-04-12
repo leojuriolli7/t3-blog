@@ -129,7 +129,7 @@ const EditAccountModal: React.FC<Props> = ({
 
   return (
     <Modal openState={openState} alwaysCentered>
-      <div className="relative dark:bg-neutral-900 bg-white sm:p-12 p-8 flex items-center sm:w-[400px]">
+      <div className="relative dark:bg-neutral-900 bg-white sm:p-12 p-8 flex items-center sm:w-[400px] rounded-lg">
         <ShouldRender if={!userInformation?.image}>
           <div className="absolute bg-emerald-600 -top-2 -right-2 z-10">
             <p className="text-white p-1 px-2">
@@ -167,6 +167,7 @@ const EditAccountModal: React.FC<Props> = ({
                 defaultValue={userInformation?.name || ""}
                 type="text"
                 placeholder="your username"
+                className="rounded-md"
                 {...register("name")}
               />
             </Field>
@@ -175,7 +176,7 @@ const EditAccountModal: React.FC<Props> = ({
               <TextInput
                 defaultValue={userInformation?.bio || ""}
                 placeholder="your bio"
-                className="h-24"
+                className="h-24 rounded-md"
                 textarea
                 {...register("bio")}
               />
@@ -195,12 +196,13 @@ const EditAccountModal: React.FC<Props> = ({
                 type="text"
                 disabled
                 placeholder="your email"
+                className="rounded-md"
                 defaultValue={userInformation?.email || ""}
               />
             </Field>
 
             <Button
-              className="w-full min-w-fit px-8 py-2 mx-auto hover:opacity-80 mt-7 flex justify-center"
+              className="w-full min-w-fit px-8 py-2 mx-auto hover:opacity-80 mt-7 flex justify-center rounded-lg"
               variant="primary"
               type="submit"
               disabled={!userInformation}

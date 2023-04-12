@@ -16,7 +16,7 @@ const UserLinkPreview: React.FC<PreviewProps> = ({ data }) => {
         <div
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
-          className="flex w-full gap-2 items-center h-[40px] mt-2 ring-1 dark:ring-0 ring-inset ring-gray-300 bg-white hover:bg-gray-100 dark:hover:bg-zinc-600 dark:bg-zinc-700 p-2 cursor-pointer"
+          className="flex w-full gap-2 items-center h-[40px] mt-2 ring-1 dark:ring-0 rounded-md ring-inset ring-gray-300 bg-white hover:bg-gray-100 dark:hover:bg-zinc-600 dark:bg-zinc-700 p-2 cursor-pointer"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={data?.icon} alt={data?.title} width="16px" height="16px" />

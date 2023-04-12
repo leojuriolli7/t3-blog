@@ -51,7 +51,7 @@ const SignoutPage: React.FC = () => {
                 type="button"
                 variant="primary"
                 onClick={handleSignout}
-                className="flex w-full justify-center h-[38px] font-bold"
+                className="flex w-full justify-center h-[38px] font-bold rounded-lg"
               >
                 Sign out
               </Button>

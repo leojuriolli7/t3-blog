@@ -107,6 +107,7 @@ const LinkInput: React.FC<Props> = ({ initialLink }) => {
           sizeVariant="lg"
           ref={inputRef}
           type="text"
+          className="rounded-md"
           loading={isLoading}
           onChange={onChange}
           placeholder="Paste your link"

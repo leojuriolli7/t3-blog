@@ -117,7 +117,7 @@ const SigninPage: NextPage = () => {
                 variant="transparent"
                 icon={<FcGoogle size={20} />}
                 textClass="text-neutral-800"
-                className="w-full bg-white ring-1 ring-inset ring-gray-300"
+                className="w-full bg-white ring-1 ring-inset ring-gray-300 rounded-lg"
               >
                 Sign in with Google
               </Button>
@@ -129,7 +129,7 @@ const SigninPage: NextPage = () => {
                 variant="transparent"
                 textClass="text-neutral-200"
                 icon={<BsDiscord size={19} color="white" />}
-                className="w-full bg-indigo-500"
+                className="w-full bg-indigo-500 rounded-lg"
               >
                 Sign in with Discord
               </Button>
@@ -141,7 +141,7 @@ const SigninPage: NextPage = () => {
                 variant="transparent"
                 textClass="text-neutral-200"
                 icon={<BsGithub size={19} color="white" />}
-                className="w-full bg-zinc-800"
+                className="w-full bg-zinc-800 rounded-lg"
               >
                 Sign in with Github
               </Button>
@@ -162,6 +162,7 @@ const SigninPage: NextPage = () => {
                     placeholder="type your e-mail"
                     disabled={isLoading.email}
                     required
+                    className="rounded-md"
                     {...register("email")}
                   />
                   <Button
@@ -169,7 +170,7 @@ const SigninPage: NextPage = () => {
                     loading={isLoading.email}
                     variant="primary"
                     type="submit"
-                    className="w-full mt-2"
+                    className="w-full mt-2 rounded-lg"
                     icon={<MdEmail size={19} color="white" />}
                   >
                     Sign in with e-mail

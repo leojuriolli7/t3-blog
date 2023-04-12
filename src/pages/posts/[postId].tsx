@@ -354,7 +354,7 @@ const SinglePostPage: React.FC = () => {
       />
 
       <MainLayout>
-        <main className="relative w-full flex flex-col gap-10 bg-slate-100 shadow-md p-8 xs:p-12 dark:bg-zinc-800">
+        <main className="relative w-full flex flex-col gap-10 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700/90 bg-slate-100 p-8 xs:p-12 dark:bg-zinc-800">
           <ShouldRender if={data && loggedUserCreatedPost}>
             <div className="absolute -top-2 right-2 flex gap-3 align-center">
               <ActionButton

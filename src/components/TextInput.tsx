@@ -15,7 +15,7 @@ const INPUT_VARIANTS = {
   primary:
     "bg-white border-zinc-300 border-[1px] dark:border-neutral-800 dark:bg-neutral-900",
   outline:
-    "text-gray-900 dark:text-neutral-200 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-neutral-500 placeholder:text-gray-400 dark:bg-neutral-900 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+    "text-gray-900 dark:text-neutral-200 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-neutral-700 placeholder:text-gray-400 dark:bg-neutral-900 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
 };
 
 type InputStyle = {

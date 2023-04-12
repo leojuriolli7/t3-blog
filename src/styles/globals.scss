@@ -35,12 +35,20 @@ button:disabled {
   --toastify-color-info: theme("colors.emerald.600") !important;
 }
 
-// Set MD Editor to 100%
+.rc-md-navigation {
+  @apply rounded-t-[20px];
+}
+
+// MD Editor styling adjustments.
 .rc-md-editor {
   width: 100%;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 
-  .sec-html a {
-    @apply underline font-bold text-emerald-700 dark:text-emerald-500;
+  @apply dark:border-neutral-800;
+
+  .sec-html {
+    border: none !important;
   }
 
   .sec-md textarea {
@@ -52,16 +60,6 @@ button:disabled {
 @media (max-width: 425px) {
   .rc-md-editor .editor-container {
     flex-direction: column;
-  }
-
-  .editor-container .sec-md {
-    border-bottom: 1px solid #bcbcbc;
-  }
-
-  .editor-container .sec-md {
-    textarea {
-      border-right: none !important;
-    }
   }
 }
 
@@ -76,10 +74,6 @@ button:disabled {
     @apply bg-neutral-900;
 
     .editor-container {
-      .sec-html {
-        @apply border-0;
-      }
-
       .sec-md {
         @apply border-r border-neutral-800;
 
@@ -94,14 +88,18 @@ button:disabled {
     }
 
     .rc-md-navigation {
-      @apply bg-neutral-900 text-zinc-100;
+      @apply bg-neutral-800 text-zinc-100 border-none;
+
+      .button:hover {
+        color: theme("colors.neutral.300") !important;
+      }
     }
   }
 }
 
 // Apply prose to MD editor html preview.
 .editor-container .html-section {
-  @apply prose dark:prose-invert;
+  @apply prose prose-emerald dark:prose-invert;
 }
 
 // Apply styles to router progress bar.

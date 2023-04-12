@@ -95,7 +95,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
       </Field>
       <div className="sm:flex w-full sm:justify-between">
         <Button
-          className="sm:w-auto mt-2 w-full flex justify-center"
+          className="sm:w-auto mt-2 w-full flex justify-center rounded-md"
           type="submit"
           loading={isLoading}
         >

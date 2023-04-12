@@ -16,7 +16,7 @@ type Props = {
 const PostCard: React.FC<Props> = ({ post, loading = false }) => {
   return (
     <article
-      className={`relative bg-slate-100 dark:bg-zinc-800 shadow-md w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:opacity-80 dark:hover:brightness-105 dark:hover:opacity-100 transition-all ${
+      className={`relative bg-white border-2 rounded-lg border-zinc-200 dark:border-zinc-700/90 dark:bg-zinc-800 dark:hover:border-zinc-500 shadow-3xl w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:shadow-4xl transition-borderAndShadow ${
         loading ? "pointer-events-none" : ""
       }`}
     >
@@ -60,7 +60,7 @@ const PostCard: React.FC<Props> = ({ post, loading = false }) => {
             by{" "}
             <Link
               href={`/users/${post?.userId}`}
-              className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+              className="underline text-emerald-600 dark:text-emerald-500 font-bold"
               prefetch={false}
             >
               {getUserDisplayName(post?.user)}

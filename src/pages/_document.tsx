@@ -9,7 +9,7 @@ export default function Document() {
           content="Th1vj3qhx4-1_Yzg52ScWKjwSkc3QLje1wG5WAuM0rQ"
         />
       </Head>
-      <body>
+      <body className="bg-neutral-50 dark:bg-neutral-900">
         <Main />
         <NextScript />
       </body>

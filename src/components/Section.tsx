@@ -24,7 +24,7 @@ const Section: React.FC<Props> = ({
   return (
     <section
       className={clsx(
-        "bg-slate-100 dark:bg-zinc-800 shadow-md w-full",
+        "bg-white border-2 rounded-lg border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700/90 shadow-4xl w-full",
         compact ? "p-3" : "sm:px-10 px-5 py-5"
       )}
     >
@@ -57,6 +57,7 @@ const Section: React.FC<Props> = ({
               disabled={loading}
               variant="gradient"
               size={compact ? "xs" : "sm"}
+              className="rounded-full"
             >
               See more
             </ButtonLink>

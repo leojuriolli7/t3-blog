@@ -383,7 +383,7 @@ const UserPage: React.FC = () => {
               </ShouldRender>
 
               <ShouldRender if={!!user?.bio}>
-                <blockquote className="prose mt-2 w-full border-l-4 border-gray-300 bg-gray-50 p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
+                <blockquote className="prose mt-2 w-full border-l-4 rounded-r-md border-gray-300 bg-white p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
                   {user?.bio}
                 </blockquote>
               </ShouldRender>

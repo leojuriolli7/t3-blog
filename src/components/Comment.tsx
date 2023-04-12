@@ -99,7 +99,11 @@ const Comment: React.FC<CommentProps> = ({
         compact ? "gap-2 p-4" : "gap-5 p-6",
         outlined
           ? "bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700"
-          : "bg-slate-100 shadow-md dark:bg-zinc-800"
+          : "bg-slate-100 dark:bg-zinc-800",
+        !comment?.parentId &&
+          !hideReplies &&
+          "rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700/90",
+        outlined && hideReplies && "rounded-lg"
       )}
       id={identifiable ? comment?.id : undefined}
     >

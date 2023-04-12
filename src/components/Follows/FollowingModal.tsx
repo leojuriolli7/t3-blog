@@ -53,7 +53,7 @@ const FollowingModal: React.FC<Props> = ({ openState, user }) => {
 
   return (
     <Modal openState={openState} alwaysCentered>
-      <div className="relative sm:max-w-[352px] max-w-[90vw] max-h-[85vh] sm:p-12 p-8 dark:bg-neutral-900 bg-white">
+      <div className="relative sm:max-w-[352px] rounded-lg max-w-[90vw] max-h-[85vh] sm:p-12 p-8 dark:bg-neutral-900 bg-white">
         <h3 className="text-xl mb-5">{`${user?.name}'s following`}</h3>
         <div className="flex w-full sm:w-fit pr-3 items-center flex-col gap-3 overflow-y-auto overflow-x-hidden h-[300px]">
           {(isLoading ? loadingArray : dataToShow)?.map((following, key) => {

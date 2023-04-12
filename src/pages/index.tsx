@@ -101,7 +101,7 @@ const PostListingPage: React.FC = () => {
             Featured tags
           </h2>
           <Link prefetch={false} href="/posts/tags" passHref legacyBehavior>
-            <ButtonLink variant="gradient" size="sm">
+            <ButtonLink variant="gradient" size="sm" className="rounded-full">
               All tags
             </ButtonLink>
           </Link>

@@ -25,7 +25,7 @@ const SearchInput: React.FC<Props> = ({
   onValueChange,
   replace = true,
   full = true,
-  className,
+  className = "rounded-full",
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();

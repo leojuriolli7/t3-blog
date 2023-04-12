@@ -77,7 +77,7 @@ const Carousel: React.FC<Props> = ({ children, onFinish, arrows = true }) => {
 
   return (
     <div className="relative">
-      <div ref={sliderRef} className="keen-slider">
+      <div ref={sliderRef} className="keen-slider pb-4">
         {children}
       </div>
 

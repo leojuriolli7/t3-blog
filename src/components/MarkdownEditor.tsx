@@ -140,7 +140,7 @@ const MarkdownEditor: React.FC<Props> = ({
             }
             defaultValue={defaultValue}
             placeholder={placeholder}
-            className="dark:md-dark-mode dark:border-0"
+            className="dark:md-dark-mode"
             shortcuts
             htmlClass="html-section"
             onImageUpload={withImageUploads ? onImageUpload : undefined}
@@ -150,7 +150,7 @@ const MarkdownEditor: React.FC<Props> = ({
           />
 
           <ShouldRender if={imageUploadTip}>
-            <div className="flex w-full sm:items-center gap-1 select-none border-[1px] border-t-0 border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900 dark:border-0 p-2">
+            <div className="flex w-full sm:items-center gap-1 bg-white select-none border-[1px] border-t-0 border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900 p-2">
               <MdInfoOutline
                 size={18}
                 className="text-neutral-700 dark:text-neutral-400 flex-shrink-0"

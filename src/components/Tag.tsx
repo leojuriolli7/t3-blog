@@ -31,7 +31,7 @@ const Tag: React.FC<Props> = ({
   const checkableTagClasses = `${
     checked
       ? "bg-emerald-500 text-white"
-      : "bg-transparent dark:text-white hover:opacity-80"
+      : "bg-white dark:bg-neutral-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-neutral-800"
   }`;
 
   const regularTagClasses = "bg-emerald-500 dark:bg-teal-900 text-white";
@@ -40,7 +40,7 @@ const Tag: React.FC<Props> = ({
     <span
       title={title || undefined}
       role={role || undefined}
-      className={`cursor-pointer transition flex items-center p-2 text-sm select-none border-[1px] border-neutral-300 dark:border-neutral-600 rounded-none dark:text-neutral-200 whitespace-nowrap ${
+      className={`cursor-pointer rounded-md transition flex items-center p-2 text-sm select-none border-[1px] border-neutral-300 dark:border-neutral-800 dark:text-neutral-200 whitespace-nowrap ${
         notCheckableTag && !omitBgClass
           ? regularTagClasses
           : checkableTagClasses

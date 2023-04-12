@@ -12,6 +12,13 @@ module.exports = {
       "2xl": "1536px",
     },
     extend: {
+      transitionProperty: {
+        borderAndShadow: "border, box-shadow",
+      },
+      boxShadow: {
+        "3xl": "0 4px 6px rgba(0,0,0,.04)",
+        "4xl": "0 6px 14px rgba(0,0,0,.08)",
+      },
       backgroundSize: {
         "size-200": "200% 200%",
       },

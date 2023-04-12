@@ -131,6 +131,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
             sizeVariant="lg"
             type="text"
             placeholder="your post title"
+            className="rounded-md"
             {...methods.register("title")}
           />
         </Field>
@@ -153,7 +154,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
 
         <Button
           variant="primary"
-          className="sm:w-6/12 w-full min-w-fit flex justify-center"
+          className="sm:w-6/12 w-full min-w-fit flex justify-center rounded-lg"
           type="submit"
           loading={updating}
           disabled={fetchingTags}

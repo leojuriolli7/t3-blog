@@ -37,14 +37,14 @@ const LinkPreview: React.FC<Props> = ({
   return (
     <>
       <div>
-        <div className="flex gap-4 w-full bg-white dark:bg-neutral-900 shadow-sm border-2 border-zinc-300 dark:border-neutral-700">
+        <div className="flex gap-4 w-full rounded-lg bg-white dark:bg-neutral-900 shadow-sm border-2 border-zinc-300 dark:border-neutral-700">
           <ShouldRender if={!!data && !loading}>
             <div onClick={openModal} className="relative group flex-shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt={data?.title || "Shared link"}
                 src={data?.image || "/static/default.jpg"}
-                className={`aspect-square ${
+                className={`aspect-square rounded-l-lg ${
                   shouldHaveImagePreview
                     ? "group-hover:brightness-50 dark:group-hover:opacity-50 cursor-pointer"
                     : ""

@@ -147,7 +147,7 @@ const SelectTags: React.FC<Props> = ({
               type="button"
               disabled={!inputValue}
               onClick={handleInputConfirm(field)}
-              className="h-full px-5 absolute right-0 bg-emerald-500 flex items-center justify-center hover:opacity-80 top-1/2 -translate-y-1/2"
+              className="h-full px-5 absolute rounded-r-md right-0 bg-emerald-500 flex items-center justify-center hover:opacity-80 top-1/2 -translate-y-1/2"
               aria-label="Add new tag"
               title="Add new tag"
             >

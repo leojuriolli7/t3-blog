@@ -52,7 +52,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
   return (
     <div
       className={clsx(
-        `absolute z-50 top-16 shadow-2xl bg-white border-zinc-300 border-[1px] dark:border-neutral-800 dark:bg-neutral-900 p-8`,
+        `absolute z-50 top-16 shadow-2xl bg-white rounded-lg border-zinc-300 border-[1px] dark:border-neutral-800 dark:bg-neutral-900 p-8`,
         open ? "w-full" : "hidden"
       )}
     >
