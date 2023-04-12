@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   const [, setOpen] = openAsideState;
 
   return (
-    <header className="w-full relative flex h-10 gap-2 items-center">
+    <header className="xl:w-full w-screen xl:relative xl:h-10 h-16 xl:px-0 px-3 sticky top-0 z-[100] xl:bg-transparent bg-neutral-50 dark:bg-neutral-900 flex gap-2 items-center">
       <Link href="/" className="xl:block hidden">
         <Image src="/static/logo.png" width={60} height={60} alt="T3 logo" />
       </Link>
@@ -27,7 +27,7 @@ const Header: React.FC = () => {
         <SidebarContent />
       </SlideOver>
 
-      <div className="absolute right-0 z-[100]">
+      <div className="absolute xl:right-0 right-3 z-[100]">
         <ShouldRender if={!router.pathname.includes("/search")}>
           <SearchDropdown />
         </ShouldRender>
