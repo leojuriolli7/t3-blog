@@ -18,7 +18,6 @@ import useGetDate from "@hooks/useGetDate";
 import { IoMdSettings } from "react-icons/io";
 import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
-import Link from "next/link";
 import { toast } from "react-toastify";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Popover from "@components/Popover";
