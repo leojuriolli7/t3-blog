@@ -83,7 +83,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
   }, [createCommentError]);
 
   return (
-    <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
+    <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>
       <Field error={errors.body}>
         <MarkdownEditor
           variant="condensed"
@@ -103,7 +103,7 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
         </Button>
 
         <ShouldRender if={!isReply}>
-          <p className="prose dark:prose-invert sm:block hidden sm:text-base text-right mt-1 sm:mt-0">
+          <p className="prose dark:prose-invert sm:block hidden text-sm text-right mt-1">
             powered by{" "}
             <a
               className="text-emerald-500"
