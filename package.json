@@ -63,7 +63,6 @@
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
-    "stickybits": "^3.7.11",
     "superjson": "^1.9.1",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",
