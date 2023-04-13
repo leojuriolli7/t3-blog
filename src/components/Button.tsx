@@ -101,6 +101,7 @@ const ButtonContent: React.FC<{
   iconPosition?: ButtonIconPosition;
   children?: React.ReactNode;
   textClass?: string;
+  variant?: ButtonVariant;
 }> = ({
   loading,
   icon,
@@ -108,12 +109,16 @@ const ButtonContent: React.FC<{
   size = "base",
   children,
   textClass = "",
+  variant,
 }) => {
+  // If button has no background, the spinner should contrast with the theme.
+  const spinnerAlwaysWhite = variant !== "danger" && variant !== "text";
+
   return (
     <React.Fragment>
       <ShouldRender if={loading}>
-        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Spinner />
+        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-5">
+          <Spinner alwaysWhite={spinnerAlwaysWhite} />
         </span>
       </ShouldRender>
 
@@ -168,7 +173,7 @@ export const ButtonLink = React.forwardRef<
       aria-disabled={disabled}
       {...rest}
     >
-      <ButtonContent {...props} textClass={textClass} />
+      <ButtonContent {...props} textClass={textClass} variant={variant} />
     </a>
   );
 });
@@ -209,7 +214,7 @@ const Button = React.forwardRef<
       disabled={disabled}
       {...rest}
     >
-      <ButtonContent {...props} textClass={textClass} />
+      <ButtonContent {...props} textClass={textClass} variant={variant} />
     </button>
   );
 });

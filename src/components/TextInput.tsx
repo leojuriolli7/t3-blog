@@ -121,7 +121,7 @@ const TextInput = React.forwardRef<
       </ShouldRender>
 
       <ShouldRender if={loading}>
-        <div className="absolute transform -translate-y-1/2 top-1/2 right-0 flex items-center pr-3 pointer-events-none">
+        <div className="absolute transform -translate-y-1/2 top-1/2 right-0 flex items-center pr-3 pointer-events-none opacity-40">
           <Spinner />
         </div>
       </ShouldRender>
