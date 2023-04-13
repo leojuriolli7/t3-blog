@@ -146,7 +146,9 @@ const Comment: React.FC<CommentProps> = ({
             >
               {getUserDisplayName(comment?.user)}
             </Link>
-            <ShouldRender if={comment?.userId === session?.user.id}>
+            <ShouldRender
+              if={comment?.userId === session?.user.id && !!session?.user.id}
+            >
               <span className="xl:text-base text-xs text-emerald-500 ml-1">
                 {" "}
                 (You)
