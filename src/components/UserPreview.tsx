@@ -16,7 +16,7 @@ const UserPreview: React.FC<Props> = ({ loading, user }) => {
       <div
         className={`${
           loading ? "pointer-events-none" : ""
-        } w-full cursor-pointer rounded-lg hover:opacity-80 bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700 p-6 flex justify-between items-start gap-2`}
+        } w-full cursor-pointer rounded-lg hover:opacity-80 bg-white dark:bg-zinc-800 shadow-md border-2 border-zinc-300 dark:border-neutral-700 p-6 flex justify-between items-start gap-2`}
       >
         <div className="w-8 min-w-[32px] h-8">
           <Image

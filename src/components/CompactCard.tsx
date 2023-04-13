@@ -12,9 +12,10 @@ type Props = {
   slide?: boolean;
   post?: TaggedPosts;
   loading?: boolean;
+  bgClass?: string;
 };
 
-const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
+const CompactCard: React.FC<Props> = ({ slide, post, loading, bgClass }) => {
   return (
     <Link
       href={`/posts/${post?.id}`}
@@ -23,7 +24,8 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading }) => {
       className={clsx(
         loading && "pointer-events-none",
         slide && "keen-slider__slide",
-        "p-3 cursor-pointer bg-white dark:bg-neutral-900 shadow-md hover:shadow-lg transition-borderAndShadow border rounded-xl border-zinc-300 dark:border-neutral-700 dark:hover:border-neutral-500/80 flex flex-col justify-between"
+        bgClass || "bg-white dark:bg-neutral-900",
+        "p-3 cursor-pointer  shadow-md hover:shadow-lg transition-borderAndShadow border rounded-xl border-zinc-300 dark:border-neutral-700 dark:hover:border-neutral-500/80 flex flex-col justify-between"
       )}
       style={
         slide

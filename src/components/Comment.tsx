@@ -18,22 +18,44 @@ import HTMLBody from "./HTMLBody";
 import ConfirmationModal from "./ConfirmationModal";
 import Skeleton from "./Skeleton";
 
+type Variant = "outlined" | "primary";
+
+const VARIANT_CLASSES = {
+  outlined:
+    "bg-white dark:border-zinc-700/90 dark:bg-zinc-800 shadow-md border-2 border-zinc-300",
+  primary: "bg-slate-100 dark:bg-zinc-800",
+};
+
 type CommentProps = {
   comment?: CommentWithChildren;
+  /**
+   * Make the comment component dimensions smaller.
+   */
   compact?: boolean;
-  outlined?: boolean;
+  /**
+   * Turn comment footer into link to the post.
+   */
+  linkToPost?: boolean;
+  /**
+   * Comment id will be the <div>'s id.
+   */
   identifiable?: boolean;
+  /**
+   * Hides comment replies.
+   */
   hideReplies?: boolean;
   loading?: boolean;
+  variant?: Variant;
 };
 
 const Comment: React.FC<CommentProps> = ({
   comment,
   compact = false,
   identifiable = false,
-  outlined = false,
+  variant = "primary",
   loading,
   hideReplies = false,
+  linkToPost = false,
 }) => {
   const [replying, setReplying] = useState(false);
   const { data: session, status: sessionStatus } = useSession();
@@ -95,15 +117,9 @@ const Comment: React.FC<CommentProps> = ({
     <div
       ref={parentRef}
       className={clsx(
-        `w-full flex flex-col`,
-        compact ? "gap-2 p-4" : "gap-5 p-6",
-        outlined
-          ? "bg-white dark:bg-neutral-900 shadow-md border-2 border-zinc-300 dark:border-neutral-700"
-          : "bg-slate-100 dark:bg-zinc-800",
-        !comment?.parentId &&
-          !hideReplies &&
-          "rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700/90",
-        outlined && hideReplies && "rounded-lg"
+        VARIANT_CLASSES[variant],
+        `w-full flex flex-col rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700/90`,
+        compact ? "gap-2 p-4" : "gap-5 p-6"
       )}
       id={identifiable ? comment?.id : undefined}
     >
@@ -176,7 +192,7 @@ const Comment: React.FC<CommentProps> = ({
 
       <div className="relative w-full flex justify-between items-center">
         <ShouldRender if={!isEditing}>
-          <ShouldRender if={!compact}>
+          <ShouldRender if={!linkToPost}>
             <button
               onClick={toggleReplying}
               className="w-auto underline text-emerald-500"
@@ -185,7 +201,7 @@ const Comment: React.FC<CommentProps> = ({
             </button>
           </ShouldRender>
 
-          <ShouldRender if={compact && !loading}>
+          <ShouldRender if={(compact || linkToPost) && !loading}>
             <div>
               <span>on</span>{" "}
               <Link
@@ -199,7 +215,7 @@ const Comment: React.FC<CommentProps> = ({
           </ShouldRender>
         </ShouldRender>
 
-        <ShouldRender if={!compact && session?.user?.id === comment?.userId}>
+        <ShouldRender if={!linkToPost && session?.user?.id === comment?.userId}>
           <div className="absolute -bottom-2 -right-2 flex gap-2 items-center">
             <ActionButton
               action={isEditing ? "close" : "edit"}

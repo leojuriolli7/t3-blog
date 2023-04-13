@@ -71,7 +71,11 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
       <div ref={listRef} className="flex flex-col w-full items-center gap-3">
         <ShouldRender if={data?.type === "posts" && !!data?.posts?.length}>
           {data?.posts?.map((post) => (
-            <CompactCard key={post?.id} post={post} />
+            <CompactCard
+              key={post?.id}
+              post={post}
+              bgClass="bg-white dark:bg-zinc-800"
+            />
           ))}
         </ShouldRender>
 
@@ -81,8 +85,9 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
           {data?.comments?.map((comment) => (
             <Comment
               hideReplies
-              outlined
+              variant="outlined"
               compact
+              linkToPost
               key={comment?.id}
               comment={comment}
             />

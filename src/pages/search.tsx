@@ -152,8 +152,9 @@ const SearchPage = () => {
           {dataToDisplay?.comments?.map((comment) => (
             <Comment
               hideReplies
-              outlined
+              variant="outlined"
               compact
+              linkToPost
               key={comment?.id}
               comment={comment}
             />
@@ -190,7 +191,9 @@ const SearchPage = () => {
           )}
 
           {currentFilter === "posts" && <PostCard loading />}
-          {currentFilter === "comments" && <Comment outlined compact loading />}
+          {currentFilter === "comments" && (
+            <Comment variant="outlined" compact loading />
+          )}
         </ShouldRender>
 
         <ShouldRender if={noDataToShow}>

@@ -12,6 +12,14 @@ export const getCommentsSchema = z.object({
   postId: z.string().uuid(),
 });
 
+export const getUserCommentsSchema = z.object({
+  userId: z.string(),
+  limit: z.number(),
+  cursor: z.string().nullish(),
+  skip: z.number().optional(),
+  filter: z.string().optional(),
+});
+
 export const deleteCommentSchema = z.object({
   commentId: z.string(),
 });
