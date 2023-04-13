@@ -201,9 +201,9 @@ const Comment: React.FC<CommentProps> = ({
             </button>
           </ShouldRender>
 
-          <ShouldRender if={(compact || linkToPost) && !loading}>
-            <div>
-              <span>on</span>{" "}
+          <ShouldRender if={linkToPost && !loading}>
+            <div className="w-full pt-4 border-t font-bold border-zinc-300 dark:border-zinc-700 xs:text-base text-sm">
+              <span>commented on</span>{" "}
               <Link
                 className="w-auto underline text-emerald-500"
                 href={`/posts/${comment?.postId}?highlightedComment=${comment?.id}`}

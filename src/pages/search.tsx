@@ -153,7 +153,6 @@ const SearchPage = () => {
             <Comment
               hideReplies
               variant="outlined"
-              compact
               linkToPost
               key={comment?.id}
               comment={comment}
@@ -192,7 +191,7 @@ const SearchPage = () => {
 
           {currentFilter === "posts" && <PostCard loading />}
           {currentFilter === "comments" && (
-            <Comment variant="outlined" compact loading />
+            <Comment variant="outlined" loading />
           )}
         </ShouldRender>
 

@@ -54,7 +54,7 @@ const AttachmentPreview: React.FC<Props> = ({
   useEffect(() => setIsAudioPlaying(false), [file, setIsAudioPlaying]);
 
   return (
-    <div className="relative border rounded-md border-zinc-300 bg-white p-4 first:mt-4 dark:border-neutral-800 dark:bg-neutral-900">
+    <div className="relative border rounded-md border-zinc-300 bg-white p-4 first:mt-4 dark:border-zinc-700/90 dark:bg-zinc-800/90">
       <div className="flex gap-3">
         <div onClick={onClickImage} className="group relative h-16 w-16">
           <ShouldRender if={type === "document"}>
@@ -100,7 +100,7 @@ const AttachmentPreview: React.FC<Props> = ({
               width={64}
               height={64}
               alt={file.name || "Uploaded image"}
-              className="cursor-pointer transition-all group-hover:opacity-50 object-cover h-full"
+              className="cursor-pointer transition-all group-hover:brightness-50 dark:group-hover:opacity-50 object-cover h-full"
               // Attachment images cannot be optimized because their URL is constantly changing.
               unoptimized
             />

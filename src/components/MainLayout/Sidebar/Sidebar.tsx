@@ -158,7 +158,7 @@ export const SidebarContent = () => {
             <ButtonLink
               variant="primary"
               size="lg"
-              className="rounded-full flex justify-center shadow-md font-bold w-full"
+              className="rounded-full flex justify-center shadow-md font-bold w-full transition-opacity"
             >
               {sessionStatus === "authenticated" ? "Create post" : "Sign in"}
             </ButtonLink>
