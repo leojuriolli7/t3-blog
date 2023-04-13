@@ -13,6 +13,7 @@ module.exports = {
       lg: "1024px",
       xl: "1220px",
       "2xl": "1536px",
+      "-xl": { max: "1220px" },
     },
     extend: {
       transitionProperty: {
