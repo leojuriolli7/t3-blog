@@ -3,14 +3,19 @@ import React from "react";
 
 type Props = {
   alwaysWhite?: boolean;
+  alwaysDark?: boolean;
 };
 
-const Spinner: React.FC<Props> = ({ alwaysWhite }) => {
+const Spinner: React.FC<Props> = ({ alwaysWhite, alwaysDark }) => {
+  const hasDefaultColors = !alwaysWhite && !alwaysDark;
+
   return (
     <div
       className={clsx(
         "animate-spin inline-block w-5 h-5 border-[3px] border-current border-t-transparent rounded-full",
-        alwaysWhite ? "text-white" : "text-gray-800 dark:text-white"
+        alwaysWhite && "text-white",
+        alwaysDark && "text-gray-800",
+        hasDefaultColors && "text-gray-800 dark:text-white"
       )}
       role="status"
       aria-label="loading"

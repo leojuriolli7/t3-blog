@@ -24,6 +24,8 @@ type ButtonVariant =
   | "danger"
   | "text";
 
+type SpinnerVariants = "white" | "dark";
+
 type ButtonSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
 
 type ButtonIconPosition = "start" | "end";
@@ -34,6 +36,7 @@ type ButtonStyle = {
   absolute?: boolean;
   size?: ButtonSize;
   variant?: ButtonVariant;
+  spinnerVariant?: SpinnerVariants;
 };
 
 type ButtonProps = {
@@ -102,6 +105,7 @@ const ButtonContent: React.FC<{
   children?: React.ReactNode;
   textClass?: string;
   variant?: ButtonVariant;
+  spinnerVariant?: SpinnerVariants;
 }> = ({
   loading,
   icon,
@@ -110,15 +114,23 @@ const ButtonContent: React.FC<{
   children,
   textClass = "",
   variant,
+  spinnerVariant,
 }) => {
-  // If button has no background, the spinner should contrast with the theme.
-  const spinnerAlwaysWhite = variant !== "danger" && variant !== "text";
+  // If button has no background and no custom spinner color, the spinner should contrast with the theme.
+  const isTransparentButtonWithoutSpinnerVariant =
+    !spinnerVariant && variant !== "transparent" && variant !== "text";
 
   return (
     <React.Fragment>
       <ShouldRender if={loading}>
         <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-5">
-          <Spinner alwaysWhite={spinnerAlwaysWhite} />
+          <Spinner
+            alwaysWhite={
+              isTransparentButtonWithoutSpinnerVariant ||
+              spinnerVariant === "white"
+            }
+            alwaysDark={spinnerVariant === "dark"}
+          />
         </span>
       </ShouldRender>
 

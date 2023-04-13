@@ -118,6 +118,7 @@ const SigninPage: NextPage = () => {
                 icon={<FcGoogle size={20} />}
                 textClass="text-neutral-800"
                 className="w-full bg-white ring-1 ring-inset ring-gray-300 rounded-lg"
+                spinnerVariant="dark"
               >
                 Sign in with Google
               </Button>
@@ -130,6 +131,7 @@ const SigninPage: NextPage = () => {
                 textClass="text-neutral-200"
                 icon={<BsDiscord size={19} color="white" />}
                 className="w-full bg-indigo-500 rounded-lg"
+                spinnerVariant="white"
               >
                 Sign in with Discord
               </Button>
@@ -142,6 +144,7 @@ const SigninPage: NextPage = () => {
                 textClass="text-neutral-200"
                 icon={<BsGithub size={19} color="white" />}
                 className="w-full bg-zinc-800 rounded-lg"
+                spinnerVariant="white"
               >
                 Sign in with Github
               </Button>
