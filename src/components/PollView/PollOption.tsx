@@ -44,7 +44,7 @@ const PollOption: React.FC<Props> = ({
           aria-label={`Click to vote on this option.`}
           disabled={disabled}
           onClick={onClick}
-          className="w-full cursor-pointer h-[40px] rounded-md hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75"
+          className="w-full cursor-pointer h-[40px] rounded-md hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75 transition-opacity"
           style={{
             borderColor: option.color,
             backgroundColor: `${option.color}60`,
