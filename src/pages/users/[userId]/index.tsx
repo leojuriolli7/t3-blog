@@ -262,14 +262,6 @@ const UserPage: React.FC = () => {
                   />
 
                   <Popover.Item
-                    title="Delete account"
-                    gap="1"
-                    icon={<MdDelete size={18} className="text-emerald-500" />}
-                    subtitle="Delete your account"
-                    onClick={showDeleteConfirm}
-                  />
-
-                  <Popover.Item
                     title="Code of conduct"
                     gap="2"
                     icon={
@@ -293,6 +285,14 @@ const UserPage: React.FC = () => {
                     }
                     subtitle="Read our privacy terms"
                     onClick={redirectToTerms("privacy")}
+                  />
+
+                  <Popover.Item
+                    title="Delete account"
+                    gap="1"
+                    icon={<MdDelete size={18} className="text-emerald-500" />}
+                    subtitle="Delete your account"
+                    onClick={showDeleteConfirm}
                   />
                 </Popover.Main>
               </div>
