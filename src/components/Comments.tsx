@@ -12,7 +12,10 @@ const Comments: React.FC<Props> = ({ comments, collapsed }) => {
   return (
     <div
       ref={parentRef}
-      className={clsx("w-full flex-col gap-10", collapsed ? "hidden" : "flex")}
+      className={clsx(
+        "w-full flex-col sm:gap-6 gap-4",
+        collapsed ? "hidden" : "flex"
+      )}
     >
       {comments?.map((comment) => {
         return <Comment identifiable key={comment.id} comment={comment} />;

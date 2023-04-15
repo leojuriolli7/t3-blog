@@ -174,10 +174,9 @@ const Comment: React.FC<CommentProps> = ({
 
         {collapsed && (
           <HiOutlineDotsVertical
-            size={25}
             aria-label="Comments are collapsed"
             title="Comments are collapsed"
-            className="absolute bottom-2 left-0 text-neutral-400 dark:text-neutral-500/60"
+            className="absolute bottom-2 sm:left-0 -left-1 text-neutral-400 dark:text-neutral-500/60 sm:w-[25px] sm:h-[25px] h-5 w-5"
           />
         )}
       </ShouldRender>
