@@ -167,7 +167,7 @@ const Comment: React.FC<CommentProps> = ({
           }
           onClick={toggleCollapsed}
           className={clsx(
-            "absolute left-0 top-0 h-full bg-inherit hover:brightness-[98%] dark:hover:brightness-125 rounded-lg",
+            "absolute left-0 top-0 h-full bg-inherit hover:brightness-[98%] dark:hover:brightness-125 rounded-l-lg",
             compact ? "gap-2 sm:w-4 w-2" : "gap-5 sm:w-6 w-3"
           )}
         />
