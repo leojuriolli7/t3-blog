@@ -16,9 +16,10 @@ import Button from "./Button";
 
 type Props = {
   parentId?: string;
+  onCommented?: () => void;
 };
 
-const CommentField: React.FC<Props> = ({ parentId }) => {
+const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
@@ -48,6 +49,8 @@ const CommentField: React.FC<Props> = ({ parentId }) => {
     onSuccess: () => {
       // Reset markdown editor content.
       setValue("body", "");
+
+      if (onCommented) onCommented();
 
       // This will refetch the comments.
       utils.invalidateQueries([

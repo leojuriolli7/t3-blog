@@ -7,6 +7,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "@hooks/useGetDate";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import Link from "next/link";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import CommentField from "./CommentField";
@@ -79,9 +80,17 @@ const Comment: React.FC<CommentProps> = ({
   linkToPost = false,
 }) => {
   const [replying, setReplying] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapsed = () => setCollapsed((prev) => !prev);
+  const canCollapseComment = !!comment?.children?.length && !hideReplies;
+
+  const onCommented = () => {
+    if (collapsed) setCollapsed(false);
+  };
+
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
-  const [parentRef] = useAutoAnimate();
   const [commentContainerRef] = useAutoAnimate();
 
   const commentClasses = getCommentClasses(
@@ -142,20 +151,41 @@ const Comment: React.FC<CommentProps> = ({
 
   return (
     <div
-      ref={parentRef}
       className={clsx(
         VARIANT_CLASSES[variant],
-        `w-full flex flex-col rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700/90`,
+        `relative w-full flex flex-col rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700/90`,
         compact ? "gap-2 sm:pl-4 pl-2" : "gap-5 sm:pl-6 pl-3",
         !hideReplies && commentClasses
       )}
       id={identifiable ? comment?.id : undefined}
     >
+      <ShouldRender if={canCollapseComment}>
+        <button
+          type="button"
+          aria-label={
+            collapsed ? "Uncollapse comments" : "Collapse all child comments"
+          }
+          onClick={toggleCollapsed}
+          className={clsx(
+            "absolute left-0 top-0 h-full bg-inherit hover:brightness-[98%] dark:hover:brightness-125",
+            compact ? "gap-2 sm:w-4 w-2" : "gap-5 sm:w-6 w-3"
+          )}
+        />
+
+        {collapsed && (
+          <HiOutlineDotsVertical
+            size={25}
+            aria-label="Comments are collapsed"
+            title="Comments are collapsed"
+            className="absolute bottom-2 left-0 text-neutral-400 dark:text-neutral-500/60"
+          />
+        )}
+      </ShouldRender>
       <div
         className={clsx(
-          "flex w-full flex-col gap-2 pl-2",
+          "flex w-full flex-col gap-2 pl-2 relative",
           compact ? "p-4" : "p-6",
-          !hideReplies && "pb-0",
+          !hideReplies && !collapsed && "pb-0",
           hideReplies && (compact ? "pb-4" : "pb-6")
         )}
         ref={commentContainerRef}
@@ -271,11 +301,13 @@ const Comment: React.FC<CommentProps> = ({
           </ShouldRender>
         </div>
 
-        {replying && <CommentField parentId={comment?.id} />}
+        {replying && (
+          <CommentField parentId={comment?.id} onCommented={onCommented} />
+        )}
       </div>
 
       {comment?.children && comment?.children.length > 0 && !hideReplies && (
-        <ListComments comments={comment?.children} />
+        <ListComments comments={comment?.children} collapsed={collapsed} />
       )}
 
       <ConfirmationModal
