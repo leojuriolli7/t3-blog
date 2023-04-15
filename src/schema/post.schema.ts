@@ -129,18 +129,18 @@ export const getUserPostsSchema = z.object({
 });
 
 export const getSinglePostSchema = z.object({
-  postId: z.string().uuid(),
+  postId: z.string(),
 });
 
 export const voteOnPollSchema = z.object({
-  postId: z.string().uuid(),
+  postId: z.string(),
   optionId: z.string(),
 });
 
 export const updatePostSchema = z.object({
   title: z.string().trim().max(256, "Max title length is 256").optional(),
   body: z.string().trim().min(10).optional(),
-  postId: z.string().uuid(),
+  postId: z.string(),
   link,
   tags: tagsSchema,
 });
@@ -148,7 +148,7 @@ export const updatePostSchema = z.object({
 export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;
 
 export const favoritePostSchema = z.object({
-  postId: z.string().uuid(),
+  postId: z.string(),
   userId: z.string(),
 });
 
