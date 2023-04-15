@@ -472,6 +472,7 @@ const SinglePostPage: React.FC = () => {
                 file={media}
                 key={key}
                 downloadable
+                optimized
               />
             ))}
 
@@ -481,6 +482,7 @@ const SinglePostPage: React.FC = () => {
                 type="audio"
                 key={key}
                 downloadable
+                optimized
               />
             ))}
 
@@ -490,6 +492,7 @@ const SinglePostPage: React.FC = () => {
                 file={attachment}
                 key={key}
                 downloadable
+                optimized
               />
             ))}
           </div>

@@ -19,6 +19,7 @@ type Props = {
   file: MediaType;
   removeFile?: () => void;
   downloadable?: boolean;
+  optimized?: boolean;
 };
 
 const AttachmentPreview: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const AttachmentPreview: React.FC<Props> = ({
   onClickImage,
   downloadable = false,
   removeFile,
+  optimized = false,
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const audioPlayingState = useState<boolean>(false);
@@ -102,7 +104,7 @@ const AttachmentPreview: React.FC<Props> = ({
               alt={file.name || "Uploaded image"}
               className="cursor-pointer transition-all group-hover:brightness-50 dark:group-hover:opacity-50 object-cover h-full"
               // Attachment images cannot be optimized because their URL is constantly changing.
-              unoptimized
+              unoptimized={!optimized}
             />
           </ShouldRender>
 
