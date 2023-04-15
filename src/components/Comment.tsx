@@ -6,14 +6,14 @@ import clsx from "clsx";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "@hooks/useGetDate";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import getUserDisplayName from "@utils/getUserDisplayName";
 import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ShouldRender from "./ShouldRender";
 import ActionButton from "./ActionButton";
 import EditCommentForm from "./EditCommentForm";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import getUserDisplayName from "@utils/getUserDisplayName";
 import HTMLBody from "./HTMLBody";
 import ConfirmationModal from "./ConfirmationModal";
 import Skeleton from "./Skeleton";
@@ -48,6 +48,27 @@ type CommentProps = {
   variant?: Variant;
 };
 
+const getCommentClasses = (
+  hasParent: boolean,
+  hasChildren: boolean,
+  compact: boolean
+) => {
+  const commentWithParentClasses =
+    hasParent && "border-r-0 border-b-0 rounded-tr-none";
+
+  const lastChildCommentClasses =
+    hasParent && !hasChildren && (compact ? "pb-4" : "pb-6");
+
+  const loneCommentClasses =
+    !hasParent && !hasChildren && (compact ? "pb-4" : "pb-6");
+
+  return clsx(
+    commentWithParentClasses,
+    lastChildCommentClasses,
+    loneCommentClasses
+  );
+};
+
 const Comment: React.FC<CommentProps> = ({
   comment,
   compact = false,
@@ -61,7 +82,13 @@ const Comment: React.FC<CommentProps> = ({
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
   const [parentRef] = useAutoAnimate();
+  const [commentContainerRef] = useAutoAnimate();
 
+  const commentClasses = getCommentClasses(
+    !!comment?.parentId,
+    !!comment?.children?.length,
+    compact
+  );
   const router = useRouter();
   const postId = router.query.postId as string;
 
@@ -119,115 +146,133 @@ const Comment: React.FC<CommentProps> = ({
       className={clsx(
         VARIANT_CLASSES[variant],
         `w-full flex flex-col rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700/90`,
-        compact ? "gap-2 p-4" : "gap-5 p-6"
+        compact ? "gap-2 sm:pl-4 pl-2" : "gap-5 sm:pl-6 pl-3",
+        !hideReplies && commentClasses
       )}
       id={identifiable ? comment?.id : undefined}
     >
       <div
         className={clsx(
-          "flex w-full justify-between gap-10 sm:gap-0",
-          compact && "text-sm"
+          "flex w-full flex-col gap-2 pl-2",
+          compact ? "p-4" : "p-6",
+          !hideReplies && "pb-0",
+          hideReplies && (compact ? "pb-4" : "pb-6")
         )}
+        ref={commentContainerRef}
       >
-        <ShouldRender if={loading}>
-          <Skeleton width="w-full max-w-[250px]" height="h-4" />
-        </ShouldRender>
-        <div className="flex gap-1 items-center">
-          <span
-            className={clsx(
-              "font-medium flex items-center",
-              compact && "text-base"
-            )}
-          >
-            <Link
-              href={`/users/${comment?.userId}`}
-              title="Visit user profile"
-              className="hover:underline text-ellipsis line-clamp-1"
-            >
-              {getUserDisplayName(comment?.user)}
-            </Link>
-            <ShouldRender
-              if={comment?.userId === session?.user.id && !!session?.user.id}
-            >
-              <span className="xl:text-base text-xs text-emerald-500 ml-1">
-                {" "}
-                (You)
-              </span>
-            </ShouldRender>
-            <ShouldRender if={comment?.authorIsOP}>
-              <span
-                className="bg-emerald-500 dark:bg-emerald-600 ml-1 text-xs text-white font-bold p-[2px] px-1 shadow-sm select-none"
-                title="Post author"
-              >
-                OP
-              </span>
-            </ShouldRender>
-          </span>
-        </div>
-
-        <ShouldRender if={!compact}>
-          <p
-            className="cursor-pointer select-none xl:block hidden"
-            onClick={toggleDateType}
-          >
-            {date}
-          </p>
-        </ShouldRender>
-      </div>
-      <ShouldRender if={!isEditing}>
-        <HTMLBody
-          className={clsx(compact ? "prose prose-sm" : "prose -xl:prose-sm")}
+        <div
+          className={clsx(
+            "flex w-full justify-between gap-10 sm:gap-0",
+            compact && "text-sm"
+          )}
         >
-          {comment?.body}
-        </HTMLBody>
-      </ShouldRender>
-
-      <ShouldRender if={loading}>
-        <Skeleton width="w-full" lines={3} />
-      </ShouldRender>
-
-      <ShouldRender if={isEditing}>
-        <EditCommentForm onFinish={toggleIsEditing} comment={comment} />
-      </ShouldRender>
-
-      <div className="relative w-full flex justify-between items-center">
-        <ShouldRender if={!isEditing}>
-          <ShouldRender if={!linkToPost}>
-            <button
-              onClick={toggleReplying}
-              className="w-auto underline text-emerald-500"
+          <ShouldRender if={loading}>
+            <Skeleton width="w-full max-w-[250px]" height="h-4" />
+          </ShouldRender>
+          <div className="flex gap-1 items-center">
+            <span
+              className={clsx(
+                "font-medium flex items-center",
+                compact && "text-base"
+              )}
             >
-              {replying ? "Stop replying" : "Reply"}
-            </button>
+              <Link
+                href={`/users/${comment?.userId}`}
+                title="Visit user profile"
+                className="hover:underline text-ellipsis line-clamp-1"
+              >
+                {getUserDisplayName(comment?.user)}
+              </Link>
+              <ShouldRender
+                if={comment?.userId === session?.user.id && !!session?.user.id}
+              >
+                <span className="xl:text-base text-xs text-emerald-500 ml-1">
+                  {" "}
+                  (You)
+                </span>
+              </ShouldRender>
+              <ShouldRender if={comment?.authorIsOP}>
+                <span
+                  className="bg-emerald-500 dark:bg-emerald-600 ml-1 text-xs text-white font-bold p-[2px] px-1 shadow-sm select-none"
+                  title="Post author"
+                >
+                  OP
+                </span>
+              </ShouldRender>
+            </span>
+          </div>
+
+          <ShouldRender if={!compact}>
+            <p
+              className="cursor-pointer select-none xl:block hidden"
+              onClick={toggleDateType}
+            >
+              {date}
+            </p>
+          </ShouldRender>
+        </div>
+        <ShouldRender if={!isEditing}>
+          <HTMLBody
+            className={clsx(compact ? "prose prose-sm" : "prose -xl:prose-sm")}
+          >
+            {comment?.body}
+          </HTMLBody>
+        </ShouldRender>
+
+        <ShouldRender if={loading}>
+          <Skeleton width="w-full" lines={3} />
+        </ShouldRender>
+
+        <ShouldRender if={isEditing}>
+          <EditCommentForm onFinish={toggleIsEditing} comment={comment} />
+        </ShouldRender>
+
+        <div className="relative w-full flex justify-between items-center">
+          <ShouldRender if={!isEditing}>
+            <ShouldRender if={!linkToPost && !loading}>
+              <button
+                onClick={toggleReplying}
+                className="w-auto underline text-emerald-500 xl:text-base text-sm"
+              >
+                {replying ? "Stop replying" : "Reply"}
+              </button>
+            </ShouldRender>
+
+            <ShouldRender if={linkToPost && !loading}>
+              <p
+                className={clsx(
+                  "w-full pt-4 border-t font-bold border-zinc-300 dark:border-zinc-700 line-clamp-2 text-ellipsis",
+                  compact ? "sm:text-sm text-xs" : "xl:text-base text-sm"
+                )}
+              >
+                <span>commented on</span>{" "}
+                <Link
+                  className="w-auto underline text-emerald-500"
+                  href={`/posts/${comment?.postId}?highlightedComment=${comment?.id}`}
+                  as={`/posts/${comment?.postId}`}
+                >
+                  {comment?.Post?.title}
+                </Link>
+              </p>
+            </ShouldRender>
           </ShouldRender>
 
-          <ShouldRender if={linkToPost && !loading}>
-            <div className="w-full pt-4 border-t font-bold border-zinc-300 dark:border-zinc-700 xs:text-base text-sm">
-              <span>commented on</span>{" "}
-              <Link
-                className="w-auto underline text-emerald-500"
-                href={`/posts/${comment?.postId}?highlightedComment=${comment?.id}`}
-                as={`/posts/${comment?.postId}`}
-              >
-                {comment?.Post?.title}
-              </Link>
+          <ShouldRender
+            if={!linkToPost && session?.user?.id === comment?.userId}
+          >
+            <div className="absolute -bottom-2 -right-2 flex gap-2 items-center">
+              <ActionButton
+                action={isEditing ? "close" : "edit"}
+                onClick={toggleIsEditing}
+              />
+
+              <ActionButton action="delete" onClick={showDeleteConfirm} />
             </div>
           </ShouldRender>
-        </ShouldRender>
+        </div>
 
-        <ShouldRender if={!linkToPost && session?.user?.id === comment?.userId}>
-          <div className="absolute -bottom-2 -right-2 flex gap-2 items-center">
-            <ActionButton
-              action={isEditing ? "close" : "edit"}
-              onClick={toggleIsEditing}
-            />
-
-            <ActionButton action="delete" onClick={showDeleteConfirm} />
-          </div>
-        </ShouldRender>
+        {replying && <CommentField parentId={comment?.id} />}
       </div>
-
-      {replying && <CommentField parentId={comment?.id} />}
 
       {comment?.children && comment?.children.length > 0 && !hideReplies && (
         <ListComments comments={comment?.children} />
