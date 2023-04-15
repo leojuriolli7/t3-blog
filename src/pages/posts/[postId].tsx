@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
-import { AttachmentMetadata, SinglePost } from "@utils/types";
+import { SinglePost } from "@utils/types";
 import TagList from "@components/TagList";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import AttachmentPreview from "@components/AttachmentPreview";
@@ -20,6 +20,7 @@ import FavoriteButton from "@components/FavoriteButton";
 import LinkPreview from "@components/LinkPreview";
 import PollView from "@components/PollView/PollView";
 import HTMLBody from "@components/HTMLBody";
+import { Attachment } from "@prisma/client";
 
 type ReplyData = {
   parentId: string;
@@ -83,10 +84,10 @@ const SinglePostPage: React.FC = () => {
 
   const isMediaPreviewModalOpen = useState(false);
   const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
-  const [currentMedia, setCurrentMedia] = useState<AttachmentMetadata>();
+  const [currentMedia, setCurrentMedia] = useState<Attachment>();
 
   const onClickImage = useCallback(
-    (image: AttachmentMetadata) => () => {
+    (image: Attachment) => () => {
       setCurrentMedia(image);
       setIsMediaPreviewModalOpen(true);
     },
@@ -111,23 +112,13 @@ const SinglePostPage: React.FC = () => {
 
   const loggedUserCreatedPost = session?.user?.id === data?.userId;
 
-  const { data: attachments } = trpc.useQuery(
-    [
-      "attachments.get-post-attachments",
-      {
-        postId,
-      },
-    ],
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  const attachments = data?.attachments;
 
   const filteredAttachments = useMemo(() => {
-    const isMedia = (file: AttachmentMetadata) =>
+    const isMedia = (file: Attachment) =>
       file.type.includes("image") || file.type.includes("video");
 
-    const isAudio = (file: AttachmentMetadata) => file.type.includes("audio");
+    const isAudio = (file: Attachment) => file.type.includes("audio");
 
     return {
       medias: attachments?.filter((file) => isMedia(file)),

@@ -15,7 +15,7 @@ export const userRouter = createRouter()
   .query("single-user", {
     input: getSingleUserSchema,
     async resolve({ ctx, input }) {
-      const user = await ctx.prisma.user.findUnique({
+      const user = await ctx.prisma.user.findFirst({
         where: {
           id: input.userId,
         },

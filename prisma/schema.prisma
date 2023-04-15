@@ -194,6 +194,7 @@ model Attachment {
   name   String @default("Uploaded file")
   type   String @default("unknown")
   postId String
+  url    String 
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 

@@ -1,5 +1,6 @@
 import { Session } from "next-auth";
 import {
+  Attachment,
   FavoritesOnUsers,
   Like,
   Link,
@@ -17,6 +18,7 @@ type PostType =
       likes: Like[];
       tags?: Tag[];
       link?: Link | null;
+      attachments?: Attachment[] | null;
       favoritedBy?: FavoritesOnUsers[] | undefined;
       poll?:
         | (Poll & {

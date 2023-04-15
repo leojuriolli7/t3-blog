@@ -247,7 +247,7 @@ export const postRouter = createRouter()
   .query("single-post", {
     input: getSinglePostSchema,
     async resolve({ ctx, input }) {
-      const post = await ctx.prisma.post.findUnique({
+      const post = await ctx.prisma.post.findFirst({
         where: {
           id: input.postId,
         },
@@ -256,6 +256,7 @@ export const postRouter = createRouter()
           likes: true,
           tags: true,
           link: true,
+          attachments: true,
           poll: {
             include: {
               options: {
@@ -535,7 +536,7 @@ export const postRouter = createRouter()
             await s3
               .deleteObject({
                 Bucket: BUCKET_NAME,
-                Key: `${post.id}/${file.id}`,
+                Key: file.id,
               })
               .promise();
           })
