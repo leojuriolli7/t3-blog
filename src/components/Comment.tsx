@@ -57,17 +57,10 @@ const getCommentClasses = (
   const commentWithParentClasses =
     hasParent && "border-r-0 border-b-0 rounded-tr-none";
 
-  const lastChildCommentClasses =
-    hasParent && !hasChildren && (compact ? "pb-4" : "pb-6");
+  const childrenlessCommentClasses =
+    !hasChildren && (compact ? "pb-4" : "pb-6");
 
-  const loneCommentClasses =
-    !hasParent && !hasChildren && (compact ? "pb-4" : "pb-6");
-
-  return clsx(
-    commentWithParentClasses,
-    lastChildCommentClasses,
-    loneCommentClasses
-  );
+  return clsx(commentWithParentClasses, childrenlessCommentClasses);
 };
 
 const Comment: React.FC<CommentProps> = ({
