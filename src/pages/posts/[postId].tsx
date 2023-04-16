@@ -109,6 +109,10 @@ const SinglePostPage: React.FC = () => {
       },
     ],
     {
+      onSettled(data) {
+        // if post not found, 404
+        if (!data?.id) router.push("/404");
+      },
       refetchOnWindowFocus: false,
     }
   );
