@@ -532,7 +532,15 @@ const SinglePostPage: React.FC = () => {
       </ShouldRender>
 
       <ShouldRender if={isRawMarkdownPage}>
-        <pre className="p-3">{data?.markdownBody}</pre>
+        <pre
+          className="p-3"
+          style={{
+            wordWrap: "break-word",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {data?.markdownBody}
+        </pre>
       </ShouldRender>
     </>
   );
