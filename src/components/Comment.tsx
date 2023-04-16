@@ -3,21 +3,47 @@ import { CommentWithChildren } from "@utils/types";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 import useGetDate from "@hooks/useGetDate";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import Link from "next/link";
 import getUserDisplayName from "@utils/getUserDisplayName";
-import CommentField from "./CommentField";
 import ListComments from "./Comments";
 import ShouldRender from "./ShouldRender";
 import ActionButton from "./ActionButton";
-import EditCommentForm from "./EditCommentForm";
 import HTMLBody from "./HTMLBody";
-import ConfirmationModal from "./ConfirmationModal";
 import Skeleton from "./Skeleton";
+import useMediaQuery from "@hooks/useMediaQuery";
+import dynamic from "next/dynamic";
+
+const ConfirmationModal = dynamic(
+  () => import("@components/ConfirmationModal"),
+  {
+    ssr: false,
+  }
+);
+
+const EditCommentForm = dynamic(() => import("@components/EditCommentForm"), {
+  ssr: false,
+  loading: () => (
+    <Skeleton parentClass="h-[200px] mt-2" width="w-full" heading lines={5} />
+  ),
+});
+
+const CommentField = dynamic(() => import("@components/CommentField"), {
+  ssr: false,
+  loading: () => (
+    <Skeleton parentClass="h-[200px] mt-2" width="w-full" heading lines={5} />
+  ),
+});
+
+const CommentActionModal = dynamic(
+  () => import("@components/CommentActionModal"),
+  {
+    ssr: false,
+  }
+);
 
 type Variant = "outlined" | "primary";
 
@@ -45,6 +71,7 @@ type CommentProps = {
    * Hides comment replies.
    */
   hideReplies?: boolean;
+  hideActions?: boolean;
   loading?: boolean;
   variant?: Variant;
 };
@@ -70,10 +97,14 @@ const Comment: React.FC<CommentProps> = ({
   variant = "primary",
   loading,
   hideReplies = false,
+  hideActions = false,
   linkToPost = false,
 }) => {
-  const [replying, setReplying] = useState(false);
+  const replyState = useState(false);
+  const [replying, setReplying] = replyState;
+
   const [collapsed, setCollapsed] = useState(false);
+  const shouldRenderModals = useMediaQuery("(max-width: 768px)");
 
   const toggleCollapsed = () => setCollapsed((prev) => !prev);
   const canCollapseComment = !!comment?.children?.length && !hideReplies;
@@ -84,7 +115,6 @@ const Comment: React.FC<CommentProps> = ({
 
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
-  const [commentContainerRef] = useAutoAnimate();
 
   const commentClasses = getCommentClasses(
     !!comment?.parentId,
@@ -101,8 +131,12 @@ const Comment: React.FC<CommentProps> = ({
     setIsDeleteModalOpen(true);
   }, [setIsDeleteModalOpen]);
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const toggleIsEditing = useCallback(() => setIsEditing((prev) => !prev), []);
+  const editingState = useState<boolean>(false);
+  const [isEditing, setIsEditing] = editingState;
+  const toggleIsEditing = useCallback(
+    () => setIsEditing((prev) => !prev),
+    [setIsEditing]
+  );
 
   const { date, toggleDateType } = useGetDate(comment?.createdAt);
 
@@ -129,7 +163,7 @@ const Comment: React.FC<CommentProps> = ({
 
   const toggleReplying = useCallback(
     () => setReplying((previousState) => !previousState),
-    []
+    [setReplying]
   );
 
   useEffect(() => {
@@ -140,6 +174,7 @@ const Comment: React.FC<CommentProps> = ({
 
   useEffect(() => {
     if (sessionStatus !== "authenticated") setIsEditing(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionStatus]);
 
   return (
@@ -180,7 +215,6 @@ const Comment: React.FC<CommentProps> = ({
           !hideReplies && !collapsed && "pb-0",
           hideReplies && (compact ? "pb-4" : "pb-6")
         )}
-        ref={commentContainerRef}
       >
         <div
           className={clsx(
@@ -233,7 +267,7 @@ const Comment: React.FC<CommentProps> = ({
             </p>
           </ShouldRender>
         </div>
-        <ShouldRender if={!isEditing}>
+        <ShouldRender if={!isEditing || shouldRenderModals}>
           <HTMLBody
             className={clsx(compact ? "prose prose-sm" : "prose -xl:prose-sm")}
           >
@@ -245,13 +279,13 @@ const Comment: React.FC<CommentProps> = ({
           <Skeleton width="w-full" lines={3} />
         </ShouldRender>
 
-        <ShouldRender if={isEditing}>
+        <ShouldRender if={isEditing && !shouldRenderModals}>
           <EditCommentForm onFinish={toggleIsEditing} comment={comment} />
         </ShouldRender>
 
         <div className="relative w-full flex justify-between items-center">
-          <ShouldRender if={!isEditing}>
-            <ShouldRender if={!linkToPost && !loading}>
+          <ShouldRender if={!isEditing || shouldRenderModals}>
+            <ShouldRender if={!linkToPost && !loading && !hideActions}>
               <button
                 onClick={toggleReplying}
                 className="w-auto underline text-emerald-500 xl:text-base text-sm"
@@ -280,7 +314,11 @@ const Comment: React.FC<CommentProps> = ({
           </ShouldRender>
 
           <ShouldRender
-            if={!linkToPost && session?.user?.id === comment?.userId}
+            if={
+              !linkToPost &&
+              session?.user?.id === comment?.userId &&
+              !hideActions
+            }
           >
             <div className="absolute -bottom-3 -right-2 flex gap-2 items-center">
               <ActionButton
@@ -293,7 +331,7 @@ const Comment: React.FC<CommentProps> = ({
           </ShouldRender>
         </div>
 
-        {replying && (
+        {replying && !shouldRenderModals && (
           <CommentField parentId={comment?.id} onCommented={onCommented} />
         )}
       </div>
@@ -309,6 +347,15 @@ const Comment: React.FC<CommentProps> = ({
         loading={deleting}
         onConfirm={onClickDeleteComment}
       />
+
+      <ShouldRender if={shouldRenderModals}>
+        <CommentActionModal parentComment={comment} openState={replyState} />
+        <CommentActionModal
+          parentComment={comment}
+          openState={editingState}
+          editing
+        />
+      </ShouldRender>
     </div>
   );
 };

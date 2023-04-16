@@ -61,13 +61,6 @@ pre * {
   }
 }
 
-// MD Editor responsiveness adjustments.
-@media (max-width: 425px) {
-  .rc-md-editor .editor-container {
-    flex-direction: column;
-  }
-}
-
 // Create new tailwind class for MD editor dark-mode styles.
 @layer utilities {
   .content-mask {
@@ -104,7 +97,7 @@ pre * {
 
 // Apply prose to MD editor html preview.
 .editor-container .html-section {
-  @apply prose prose-emerald dark:prose-invert;
+  @apply prose -xl:prose-sm prose-emerald dark:prose-invert;
 }
 
 // Apply styles to router progress bar.

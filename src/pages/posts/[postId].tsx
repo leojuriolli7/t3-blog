@@ -418,9 +418,11 @@ const SinglePostPage: React.FC = () => {
                   <LinkPreview loading={isLoading} data={data?.link} />
 
                   <div className="w-full break-words bg-white shadow text-black dark:text-neutral-300 dark:bg-neutral-900 p-4 mt-2 border-l-4 border-gray-300 dark:border-neutral-500">
-                    <h3 className="text-xl font-bold">{data?.link?.title}</h3>
-                    <p className="mt-2 leading-7">{`"${data?.link?.description}"`}</p>
-                    <p className="font-bold text-sm">
+                    <h3 className="sm:text-xl text-lg font-bold">
+                      {data?.link?.title}
+                    </h3>
+                    <p className="mt-2 sm:leading-7 sm:text-base text-sm">{`"${data?.link?.description}"`}</p>
+                    <p className="font-bold text-sm sm:mt-0 mt-2">
                       Read more on{" "}
                       <a
                         href={data?.link?.url}
@@ -435,7 +437,11 @@ const SinglePostPage: React.FC = () => {
                 </div>
               </ShouldRender>
 
-              <HTMLBody className="prose" lines={5} loading={isLoading}>
+              <HTMLBody
+                className="prose -xl:prose-sm"
+                lines={5}
+                loading={isLoading}
+              >
                 {data?.body}
               </HTMLBody>
             </ShouldRender>
