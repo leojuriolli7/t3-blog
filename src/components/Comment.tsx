@@ -289,7 +289,7 @@ const Comment: React.FC<CommentProps> = ({
           <ShouldRender
             if={!linkToPost && session?.user?.id === comment?.userId}
           >
-            <div className="absolute -bottom-2 -right-2 flex gap-2 items-center">
+            <div className="absolute -bottom-3 -right-2 flex gap-2 items-center">
               <ActionButton
                 action={isEditing ? "close" : "edit"}
                 onClick={toggleIsEditing}
