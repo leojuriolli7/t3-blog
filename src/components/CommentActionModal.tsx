@@ -18,7 +18,7 @@ const CloseButton = ({ onClick }: { onClick: () => void }) => (
     onClick={onClick}
     className="absolute z-[3] rounded-full top-0 right-0 p-2 bg-emerald-500 dark:bg-teal-900"
   >
-    <MdClose className="w-5 h-5" />
+    <MdClose className="w-5 h-5 text-white" />
   </button>
 );
 
