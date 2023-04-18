@@ -732,6 +732,15 @@ export const postRouter = createRouter()
 
       // User is favoriting post.
       if (!userHasAlreadyFavoritedPost) {
+        await ctx.prisma.notification.create({
+          data: {
+            postId: input.postId,
+            notifierId: ctx?.session?.user?.id,
+            notifiedId: input.authorId,
+            type: "FAVORITE" as const,
+          },
+        });
+
         await ctx.prisma.favoritesOnUsers.create({
           data: {
             postId,

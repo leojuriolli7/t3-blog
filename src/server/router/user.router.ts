@@ -216,7 +216,7 @@ export const userRouter = createRouter()
   .mutation("follow-user", {
     input: followUserSchema,
     async resolve({ ctx, input }) {
-      const followerId = ctx.session!.user!.id;
+      const followerId = ctx.session.user.id;
       const followingId = input.userId;
 
       const isUserAlreadyFollowing = await ctx.prisma.follows.findUnique({
@@ -244,6 +244,14 @@ export const userRouter = createRouter()
           data: {
             followerId,
             followingId,
+          },
+        });
+
+        await ctx.prisma.notification.create({
+          data: {
+            notifierId: followerId,
+            notifiedId: followingId,
+            type: "FOLLOW" as const,
           },
         });
       }

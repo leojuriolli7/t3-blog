@@ -149,6 +149,7 @@ export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;
 
 export const favoritePostSchema = z.object({
   postId: z.string(),
+  authorId: z.string(),
   userId: z.string(),
 });
 

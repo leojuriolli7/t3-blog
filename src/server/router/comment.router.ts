@@ -177,6 +177,54 @@ export const commentRouter = createRouter()
           },
         });
 
+        const post = await ctx.prisma.post.findFirst({
+          where: {
+            id: input.postId,
+          },
+          select: {
+            userId: true,
+          },
+        });
+
+        const parentPostAuthorId = post?.userId;
+
+        // Notify author of post with a new comment
+        if (parentPostAuthorId) {
+          await ctx.prisma.notification.create({
+            data: {
+              postId: input.postId,
+              notifierId: ctx?.session?.user?.id,
+              notifiedId: parentPostAuthorId,
+              type: "COMMENT" as const,
+            },
+          });
+        }
+
+        if (input.parentId) {
+          const parentComment = await ctx.prisma.comment.findFirst({
+            where: {
+              id: input.parentId,
+            },
+            select: {
+              userId: true,
+            },
+          });
+
+          const parentCommentAuthorId = parentComment?.userId;
+
+          // Notify parent comment author of new reply
+          if (parentCommentAuthorId) {
+            await ctx.prisma.notification.create({
+              data: {
+                commentId: input.parentId,
+                notifierId: ctx?.session?.user?.id,
+                notifiedId: parentCommentAuthorId as string,
+                type: "REPLY" as const,
+              },
+            });
+          }
+        }
+
         return comment;
       } catch (e) {
         console.log(e);

@@ -6,6 +6,7 @@ import { postRouter } from "./post.router";
 import { userRouter } from "./user.router";
 import { scraperRouter } from "./scraper.router";
 import { searchRouter } from "./search.router";
+import { notificationRouter } from "./notification.router";
 
 export const appRouter = createRouter()
   .merge("posts.", postRouter)
@@ -14,7 +15,8 @@ export const appRouter = createRouter()
   .merge("likes.", likeRouter)
   .merge("attachments.", attachmentsRouter)
   .merge("scraper.", scraperRouter)
-  .merge("search.", searchRouter);
+  .merge("search.", searchRouter)
+  .merge("notification.", notificationRouter);
 
 // Export only the type of a router
 // This prevents us from importing server code on the client.

@@ -21,6 +21,15 @@ export const likeRouter = createRouter()
       const hasUserAlreadyLiked = !!previousUserLikeOnPost;
 
       if (!hasUserAlreadyLiked) {
+        await ctx.prisma.notification.create({
+          data: {
+            postId: input.postId,
+            notifierId: ctx?.session?.user?.id,
+            notifiedId: input.authorId,
+            type: "LIKE" as const,
+          },
+        });
+
         return ctx.prisma.like.create({
           data: {
             postId,

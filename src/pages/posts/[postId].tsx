@@ -289,11 +289,12 @@ const SinglePostPage: React.FC = () => {
       if (session?.user) {
         return likePost({
           postId,
+          authorId: data?.userId as string,
           dislike: dislike,
         });
       }
     },
-    [postId, likePost, session]
+    [postId, likePost, session, data?.userId]
   );
 
   const handleFavoritePost = useCallback(() => {
@@ -304,10 +305,11 @@ const SinglePostPage: React.FC = () => {
     if (session?.user) {
       return favoritePost({
         postId,
+        authorId: data?.userId as string,
         userId: session?.user?.id,
       });
     }
-  }, [postId, favoritePost, session]);
+  }, [postId, favoritePost, session, data?.userId]);
 
   const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
   const [isEditing, setIsEditing] = useState<boolean>(false);
