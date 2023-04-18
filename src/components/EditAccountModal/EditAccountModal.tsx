@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import Field from "@components/Field";
 import ShouldRender from "@components/ShouldRender";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { User } from "@utils/types";
 import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
 import { Modal } from "../Modal";
@@ -24,9 +23,8 @@ const EditAccountModal: React.FC<Props> = ({
   openState,
   user: userInformation,
 }) => {
-  const router = useRouter();
   const { data: session } = useSession();
-  const userId = router.query.userId as string;
+  const userId = session?.user?.id as string;
 
   const [isOpen, setIsOpen] = openState;
 
@@ -107,16 +105,10 @@ const EditAccountModal: React.FC<Props> = ({
           image: imageUrl,
         }),
         url: values?.url || null,
-
-        userId: userId,
       });
     },
     [update, userId, createPresignedUrl]
   );
-
-  useEffect(() => {
-    if (userId) setValue("userId", userId);
-  }, [setValue, userId]);
 
   useEffect(() => {
     if (userInformation?.name && isOpen) {

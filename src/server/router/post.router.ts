@@ -530,6 +530,13 @@ export const postRouter = createRouter()
         },
       });
 
+      if (post?.userId !== ctx.session.user.id) {
+        throw new trpc.TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Cannot delete another user's post.",
+        });
+      }
+
       if (post?.attachments?.length) {
         await Promise.all(
           post.attachments.map(async (file) => {

@@ -193,6 +193,19 @@ export const commentRouter = createRouter()
       try {
         const { commentId } = input;
 
+        const previousComment = await ctx.prisma.comment.findFirst({
+          where: {
+            id: commentId,
+          },
+        });
+
+        if (previousComment?.userId !== ctx.session.user.id) {
+          throw new trpc.TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Cannot delete another user's comment",
+          });
+        }
+
         await deleteChildComments(commentId, ctx.prisma);
 
         return true;
@@ -212,6 +225,19 @@ export const commentRouter = createRouter()
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
           message: "Comment cannot be empty",
+        });
+      }
+
+      const previousComment = await ctx.prisma.comment.findFirst({
+        where: {
+          id: input.commentId,
+        },
+      });
+
+      if (previousComment?.userId !== ctx.session.user.id) {
+        throw new trpc.TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You can only update comments created by you.",
         });
       }
 

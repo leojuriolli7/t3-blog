@@ -123,7 +123,7 @@ export const userRouter = createRouter()
       if (ctx.session?.user.id !== input.userId) {
         throw new trpc.TRPCError({
           code: "UNAUTHORIZED",
-          message: "You cannot delete another user's profile.",
+          message: "You cannot delete another user's account.",
         });
       }
 
@@ -144,6 +144,8 @@ export const userRouter = createRouter()
   .mutation("update-profile", {
     input: updateUserSchema,
     async resolve({ ctx, input }) {
+      const userId = ctx?.session?.user?.id;
+
       if (isStringEmpty(input.name)) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
@@ -151,59 +153,64 @@ export const userRouter = createRouter()
         });
       }
 
-      if (input.userId === ctx?.session?.user?.id) {
-        const prevUser = await ctx.prisma.user.findUnique({
-          where: {
-            id: input.userId,
-          },
-          include: {
-            url: true,
-          },
+      const userToUpdate = await ctx.prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+        include: {
+          url: true,
+        },
+      });
+
+      if (userToUpdate?.id !== userId) {
+        throw new trpc.TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You can only update your own profile.",
         });
-
-        const previousLink = prevUser?.url?.url;
-        const userIsDeletingLink = !input?.url?.url && !!previousLink;
-        const userIsAddingNewLink = !!input?.url?.url && !!previousLink;
-        const userIsCreatingLink = !!input?.url?.url && !previousLink;
-
-        if (userIsDeletingLink || userIsAddingNewLink) {
-          await ctx.prisma.userLink.delete({
-            where: {
-              userId: input.userId,
-            },
-          });
-        }
-
-        const user = await ctx.prisma.user.update({
-          where: {
-            id: input.userId,
-          },
-          data: {
-            ...(input.name && {
-              name: input.name,
-            }),
-            bio: input?.bio,
-            ...(input?.image && {
-              image: input.image,
-            }),
-
-            url: {
-              ...((userIsAddingNewLink || userIsCreatingLink) &&
-                !!input?.url?.url && {
-                  create: {
-                    icon: input.url?.icon,
-                    title: input.url?.title,
-                    url: input.url?.url,
-                    ...(input.url?.publisher && {
-                      publisher: input.url?.publisher,
-                    }),
-                  },
-                }),
-            },
-          },
-        });
-        return user;
       }
+
+      const previousLink = userToUpdate?.url?.url;
+      const userIsDeletingLink = !input?.url?.url && !!previousLink;
+      const userIsAddingNewLink = !!input?.url?.url && !!previousLink;
+      const userIsCreatingLink = !!input?.url?.url && !previousLink;
+
+      if (userIsDeletingLink || userIsAddingNewLink) {
+        await ctx.prisma.userLink.delete({
+          where: {
+            userId: userId,
+          },
+        });
+      }
+
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          ...(input.name && {
+            name: input.name,
+          }),
+          bio: input?.bio,
+          ...(input?.image && {
+            image: input.image,
+          }),
+
+          url: {
+            ...((userIsAddingNewLink || userIsCreatingLink) &&
+              !!input?.url?.url && {
+                create: {
+                  icon: input.url?.icon,
+                  title: input.url?.title,
+                  url: input.url?.url,
+                  ...(input.url?.publisher && {
+                    publisher: input.url?.publisher,
+                  }),
+                },
+              }),
+          },
+        },
+      });
+      return user;
     },
   })
   .mutation("follow-user", {
