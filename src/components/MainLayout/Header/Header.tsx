@@ -8,6 +8,15 @@ import Link from "next/link";
 import SearchDropdown from "./SearchDropdown";
 import { SidebarContent } from "../Sidebar/Sidebar";
 
+import dynamic from "next/dynamic";
+
+const NotificationDropdown = dynamic(
+  () => import("./NotificationDropdown/NotificationDropdown"),
+  {
+    ssr: false,
+  }
+);
+
 const Header: React.FC = () => {
   const router = useRouter();
 
@@ -27,7 +36,9 @@ const Header: React.FC = () => {
         <SidebarContent />
       </SlideOver>
 
-      <div className="absolute right-0 z-[100]">
+      <div className="absolute right-0 z-[100] flex items-center gap-3">
+        <NotificationDropdown />
+
         <ShouldRender if={!router.pathname.includes("/search")}>
           <SearchDropdown />
         </ShouldRender>

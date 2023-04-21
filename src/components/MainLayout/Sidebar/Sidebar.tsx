@@ -23,7 +23,6 @@ import { useMemo } from "react";
 import Image from "next/future/image";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import ThemeButton from "./ThemeButton";
-import { trpc } from "@utils/trpc";
 
 type ItemProps = {
   path: string;
@@ -87,12 +86,6 @@ export const SidebarContent = () => {
 
   const user = session?.data?.user;
   const sessionStatus = session?.status;
-
-  const { data } = trpc.useQuery(["notification.new"], {
-    enabled: !!user?.id,
-    ssr: false,
-  });
-  console.log("data:", data);
 
   const callbackRoute = router.isReady && !!router.asPath ? router.asPath : "/";
   const filteredRoute = callbackRoute.split("?")[0];

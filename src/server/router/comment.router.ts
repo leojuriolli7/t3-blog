@@ -193,6 +193,7 @@ export const commentRouter = createRouter()
           await ctx.prisma.notification.create({
             data: {
               postId: input.postId,
+              commentId: comment.id,
               notifierId: ctx?.session?.user?.id,
               notifiedId: parentPostAuthorId,
               type: "COMMENT" as const,
@@ -216,7 +217,8 @@ export const commentRouter = createRouter()
           if (parentCommentAuthorId) {
             await ctx.prisma.notification.create({
               data: {
-                commentId: input.parentId,
+                commentId: comment.id,
+                postId: input.postId,
                 notifierId: ctx?.session?.user?.id,
                 notifiedId: parentCommentAuthorId as string,
                 type: "REPLY" as const,
