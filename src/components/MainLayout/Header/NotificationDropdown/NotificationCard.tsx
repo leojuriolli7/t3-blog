@@ -7,6 +7,9 @@ import { Notification } from "@utils/types";
 import { format, isToday } from "date-fns";
 import ShouldRender from "@components/ShouldRender";
 import { trpc } from "@utils/trpc";
+import { HiDotsVertical } from "react-icons/hi";
+import Popover from "@components/Popover";
+import { MouseEvent } from "react";
 
 function formatNotificationDate(date?: Date) {
   if (date) {
@@ -15,7 +18,6 @@ function formatNotificationDate(date?: Date) {
   }
 }
 
-// TO-DO: `Mark as read` button.
 export const NotificationCard = (notification: Notification) => {
   const notificationHasComment = !!notification?.comment;
   const isReplyNotification = notification?.type === "reply";
@@ -50,14 +52,18 @@ export const NotificationCard = (notification: Notification) => {
     }
   );
 
-  const handleClickCard = () => markAsRead({ notificationId: notification.id });
+  const handleMarkAsRead = (preventDefault: boolean) => (e: MouseEvent) => {
+    if (preventDefault) e.preventDefault();
+
+    markAsRead({ notificationId: notification.id });
+  };
 
   return (
     <Link
       href={notification?.href || "/"}
       className="p-3 text-sm flex gap-2 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/40 transition-colors w-full"
       key={notification.id}
-      onClick={handleClickCard}
+      onClick={handleMarkAsRead(false)}
     >
       <Image
         width={32}
@@ -68,13 +74,34 @@ export const NotificationCard = (notification: Notification) => {
       />
 
       <div className="w-full">
-        <p>
-          {`${username} ${notification.message}  ·  `}
-          <span className="text-neutral-400">{formattedDate}</span>
-        </p>
+        <div className="w-full flex">
+          <p className="w-11/12">
+            {`${username} ${notification.message}  ·  `}
+            <span className="text-neutral-400">{formattedDate}</span>
+          </p>
+
+          <Popover.Main
+            className="rounded-lg"
+            placement="left"
+            icon={
+              <div className="w-1/12">
+                <HiDotsVertical className="w-4 h-4 dark:text-neutral-500" />
+              </div>
+            }
+          >
+            <button
+              onClick={handleMarkAsRead(true)}
+              type="button"
+              className="hover:opacity-60 rounded-lg text-sm dark:hover:brightness-125 dark:hover:opacity-100 bg-inherit p-4 cursor-pointer"
+            >
+              Mark as read
+            </button>
+          </Popover.Main>
+        </div>
+
         <ShouldRender if={notificationHasComment}>
           <div className="mt-2">
-            <HTMLBody className="content-mask bg-neutral-300/60 text-neutral-700/90 dark:text-neutral-400 dark:bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
+            <HTMLBody className="bg-neutral-300/60 text-neutral-700/90 dark:text-neutral-400 dark:bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
               {notification?.comment?.body}
             </HTMLBody>
 
