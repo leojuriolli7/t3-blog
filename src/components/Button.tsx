@@ -72,7 +72,7 @@ const BUTTON_VARIANTS = {
   transparent: "border-transparent hover:opacity-80",
   danger:
     "text-white border-red-700 bg-red-500 hover:bg-red-600 hover:border-red-800",
-  text: "border-transparent text-neutral-800 hover:text-neutral-500 dark:text-white dark:hover:text-gray-400",
+  text: "text-neutral-800 hover:text-neutral-500 dark:text-white dark:hover:text-gray-400",
 };
 
 const getButtonClasses = (

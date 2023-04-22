@@ -118,7 +118,7 @@ export const NotificationCard = (notification: Notification) => {
         <ShouldRender if={isFollowNotification || notificationHasComment}>
           <Button
             className="w-full rounded-full mt-2 flex justify-center bg-white border border-neutral-400 dark:border-none dark:bg-neutral-700"
-            variant="transparent"
+            variant="text"
             size="sm"
           >
             {notification?.type === "reply" && "Reply back"}
