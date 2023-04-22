@@ -10,12 +10,14 @@ type Props = {
   placement?: Placement;
   rounded?: boolean;
   className?: string;
+  strategy?: "fixed" | "absolute";
 };
 
 const Popover: React.FC<Props> = ({
   icon,
   children,
   placement = "bottom",
+  strategy = "absolute",
   className,
   rounded,
 }) => {
@@ -24,7 +26,7 @@ const Popover: React.FC<Props> = ({
   let [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
   let { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: placement,
-    strategy: "absolute",
+    strategy: strategy,
     modifiers: [
       {
         name: "offset",

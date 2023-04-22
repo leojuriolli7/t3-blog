@@ -89,6 +89,8 @@ const NotificationDropdown = () => {
 
   return (
     <Popover.Main
+      placement="bottom"
+      strategy="fixed"
       rounded
       icon={
         <div className="relative flex items-center justify-center bg-white w-[50px] h-[50px] border-zinc-300 border-[1px] dark:border-neutral-800 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors rounded-full">
