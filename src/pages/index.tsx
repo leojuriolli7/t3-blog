@@ -165,14 +165,17 @@ export default PostListingPage;
 export async function getServerSideProps() {
   const ssg = await generateSSGHelper();
 
-  await ssg.prefetchQuery("posts.posts-by-tags", {
+  const tagsQuery = ssg.prefetchQuery("posts.posts-by-tags", {
     tagLimit: 4,
   });
 
-  await ssg.prefetchInfiniteQuery("posts.posts", {
+  const postsQuery = ssg.prefetchInfiniteQuery("posts.posts", {
     limit: 4,
     filter: "newest",
   });
+
+  // fetching in parallel to reduce load times
+  await Promise.all([tagsQuery, postsQuery]);
 
   return {
     props: {
