@@ -20,6 +20,12 @@ import Skeleton from "@components/Skeleton";
 import UserLinkPreview from "@components/EditAccountModal/UserLink/UserLinkPreview";
 import Button from "@components/Button";
 import clsx from "clsx";
+import { generateSSGHelper } from "@server/ssgHepers";
+import {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 
 const UserPageList = dynamic(() => import("@components/UserPageList"), {
   ssr: false,
@@ -50,7 +56,11 @@ const ConfirmationModal = dynamic(
   }
 );
 
-const UserPage: React.FC = () => {
+const UserPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = (props) => {
+  const { userId } = props;
+
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
 
@@ -63,7 +73,7 @@ const UserPage: React.FC = () => {
 
   const { data: session } = useSession();
   const router = useRouter();
-  const userId = router.query.userId as string;
+
   const userIsProfileOwner =
     !!session?.user?.id && userId === session?.user?.id;
 
@@ -430,3 +440,20 @@ const UserPage: React.FC = () => {
 };
 
 export default UserPage;
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ userId: string }>
+) {
+  const ssg = await generateSSGHelper();
+  const userId = context.params?.userId as string;
+
+  await ssg.prefetchQuery("users.single-user", {
+    userId,
+  });
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      userId,
+    },
+  };
+}

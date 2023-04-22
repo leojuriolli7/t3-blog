@@ -62,7 +62,6 @@ const SearchPage = () => {
         },
       ],
       {
-        ssr: false,
         refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
         enabled: !!query,

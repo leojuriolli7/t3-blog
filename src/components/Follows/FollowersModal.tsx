@@ -31,7 +31,6 @@ const FollowersModal: React.FC<Props> = ({ openState, user }) => {
       ],
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-        ssr: false,
       }
     );
 

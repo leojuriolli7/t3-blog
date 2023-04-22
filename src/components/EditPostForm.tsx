@@ -26,7 +26,6 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
     ["posts.tags"],
     {
-      ssr: false,
       refetchOnWindowFocus: false,
     }
   );

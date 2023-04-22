@@ -37,7 +37,6 @@ const CreatePostPage: React.FC = () => {
     ["posts.tags"],
     {
       refetchOnWindowFocus: false,
-      ssr: false,
     }
   );
   const initialTags = tags?.map((tag) => tag.name);
