@@ -6,7 +6,13 @@ import {
 import { createRouter } from "@server/createRouter";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 
-type NotificationTypes = "reply" | "comment" | "like" | "favorite" | "follow";
+type NotificationTypes =
+  | "reply"
+  | "comment"
+  | "like"
+  | "favorite"
+  | "follow"
+  | "following-post";
 
 // Get the main notification text.
 const notificationText: Record<NotificationTypes, string> = {
@@ -15,6 +21,7 @@ const notificationText: Record<NotificationTypes, string> = {
   follow: "just followed you",
   like: "liked your post {{postName}}",
   reply: "replied to your comment in {{postName}}",
+  "following-post": "from your following just posted: {{postName}}",
 };
 
 // Get the notification redirect link.
@@ -23,7 +30,7 @@ function getHref(notification: Notification) {
 
   const currentType = notification.type.toLowerCase() as NotificationTypes;
 
-  const postTypes = ["favorite", "like"];
+  const postTypes = ["favorite", "like", "following-post"];
   const commentTypes = ["reply", "comment"];
   const userTypes = ["follow"];
 
