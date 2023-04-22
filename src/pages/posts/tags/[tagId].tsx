@@ -5,19 +5,26 @@ import PostCard from "@components/PostCard";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
-import { useRouter } from "next/router";
 import Skeleton from "@components/Skeleton";
 import useFilterPosts from "@hooks/useFilterPosts";
 import Tab from "@components/Tab";
+import { generateSSGHelper } from "@server/ssgHepers";
+import {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 
-const PostsByTagPage: React.FC = () => {
+const SingleTagPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = (props) => {
+  const { tagId } = props;
+
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
-  const router = useRouter();
-  const tagId = router.query.tagId as string;
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
@@ -93,4 +100,23 @@ const PostsByTagPage: React.FC = () => {
   );
 };
 
-export default PostsByTagPage;
+export default SingleTagPage;
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ tagId: string }>
+) {
+  const ssg = await generateSSGHelper();
+  const tagId = context.params?.tagId as string;
+
+  await ssg.prefetchInfiniteQuery("posts.posts", {
+    limit: 6,
+    tagId,
+    filter: "newest",
+  });
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      tagId,
+    },
+  };
+}

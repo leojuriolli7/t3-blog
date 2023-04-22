@@ -21,6 +21,12 @@ import LinkPreview from "@components/LinkPreview";
 import PollView from "@components/PollView/PollView";
 import HTMLBody from "@components/HTMLBody";
 import { Attachment } from "@prisma/client";
+import {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
+import { generateSSGHelper } from "@server/ssgHepers";
 
 type ReplyData = {
   parentId: string;
@@ -73,11 +79,12 @@ const PreviewMediaModal = dynamic(
   }
 );
 
-const SinglePostPage: React.FC = () => {
+const SinglePostPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = (props) => {
+  const { postId } = props;
+
   const router = useRouter();
-  const queryPostId = router.query.postId as string;
-  const isRawMarkdownPage = queryPostId?.endsWith(".md");
-  const postId = isRawMarkdownPage ? queryPostId.split(".md")[0] : queryPostId;
 
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
@@ -351,209 +358,212 @@ const SinglePostPage: React.FC = () => {
         description={data?.markdownBody}
       />
 
-      <ShouldRender if={!isRawMarkdownPage}>
-        <MainLayout>
-          <main className="relative w-full flex flex-col gap-10 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700/90 bg-slate-100 p-8 xs:p-12 dark:bg-zinc-800">
-            <ShouldRender if={data && loggedUserCreatedPost}>
-              <div className="absolute -top-2 right-2 flex gap-3 align-center">
-                <ActionButton
-                  action={isEditing ? "close" : "edit"}
-                  onClick={toggleIsEditing}
-                />
+      <MainLayout>
+        <main className="relative w-full flex flex-col gap-10 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700/90 bg-slate-100 p-8 xs:p-12 dark:bg-zinc-800">
+          <ShouldRender if={data && loggedUserCreatedPost}>
+            <div className="absolute -top-2 right-2 flex gap-3 align-center">
+              <ActionButton
+                action={isEditing ? "close" : "edit"}
+                onClick={toggleIsEditing}
+              />
 
-                <ActionButton onClick={showDeleteConfirm} action="delete" />
-              </div>
+              <ActionButton onClick={showDeleteConfirm} action="delete" />
+            </div>
+          </ShouldRender>
+
+          <ShouldRender if={isEditing}>
+            <EditPostForm onFinish={toggleIsEditing} post={data} />
+          </ShouldRender>
+
+          <ShouldRender if={!isEditing}>
+            <ShouldRender if={!isLoading}>
+              <h1 className="prose dark:prose-invert xs:text-4xl xl:text-3xl text-2xl font-bold">
+                {data?.title}
+              </h1>
             </ShouldRender>
 
-            <ShouldRender if={isEditing}>
-              <EditPostForm onFinish={toggleIsEditing} post={data} />
+            <ShouldRender if={isLoading}>
+              <Skeleton heading />
             </ShouldRender>
 
-            <ShouldRender if={!isEditing}>
-              <ShouldRender if={!isLoading}>
-                <h1 className="prose dark:prose-invert xs:text-4xl xl:text-3xl text-2xl font-bold">
-                  {data?.title}
-                </h1>
-              </ShouldRender>
-
+            <div>
               <ShouldRender if={isLoading}>
-                <Skeleton heading />
+                <Skeleton width="w-1/2" />
               </ShouldRender>
 
-              <div>
-                <ShouldRender if={isLoading}>
-                  <Skeleton width="w-1/2" />
-                </ShouldRender>
-
-                <ShouldRender if={!isLoading}>
-                  <p className="w-fit">
-                    By{" "}
-                    <Link
-                      href={`/users/${data?.user?.id}`}
-                      title="Go to user's profile"
-                      className="underline text-emerald-700 dark:text-emerald-500 font-bold"
-                      prefetch={false}
-                    >
-                      {getUserDisplayName(data?.user)}
-                    </Link>
-                    <ShouldRender if={data?.user?.id === session?.user.id}>
-                      <span className=" text-emerald-700 dark:text-emerald-500">
-                        {" "}
-                        (You)
-                      </span>
-                    </ShouldRender>
-                    <span
-                      onClick={toggleDateType}
-                      className="cursor-pointer select-none"
-                      role="button"
-                      aria-label="Change date visualization type"
-                      title="Change date visualization type"
-                    >{` ${isDistance ? "" : "at"} ${date}`}</span>
-                  </p>
-                </ShouldRender>
-              </div>
-
-              <ShouldRender if={!!data?.poll}>
-                <PollView poll={data?.poll} />
+              <ShouldRender if={!isLoading}>
+                <p className="w-fit">
+                  By{" "}
+                  <Link
+                    href={`/users/${data?.user?.id}`}
+                    title="Go to user's profile"
+                    className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+                    prefetch={false}
+                  >
+                    {getUserDisplayName(data?.user)}
+                  </Link>
+                  <ShouldRender if={data?.user?.id === session?.user.id}>
+                    <span className=" text-emerald-700 dark:text-emerald-500">
+                      {" "}
+                      (You)
+                    </span>
+                  </ShouldRender>
+                  <span
+                    onClick={toggleDateType}
+                    className="cursor-pointer select-none"
+                    role="button"
+                    aria-label="Change date visualization type"
+                    title="Change date visualization type"
+                  >{` ${isDistance ? "" : "at"} ${date}`}</span>
+                </p>
               </ShouldRender>
+            </div>
 
-              <ShouldRender if={!!data?.link}>
-                <div className="w-full -mt-4 -mb-4">
-                  <LinkPreview loading={isLoading} data={data?.link} />
-
-                  <div className="w-full break-words bg-white shadow text-black dark:text-neutral-300 dark:bg-neutral-900 p-4 mt-2 border-l-4 border-gray-300 dark:border-neutral-500">
-                    <h3 className="sm:text-xl text-lg font-bold">
-                      {data?.link?.title}
-                    </h3>
-                    <p className="mt-2 sm:leading-7 sm:text-base text-sm">{`"${data?.link?.description}"`}</p>
-                    <p className="font-bold text-sm sm:mt-0 mt-2">
-                      Read more on{" "}
-                      <a
-                        href={data?.link?.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline italic text-emerald-500"
-                      >
-                        {data?.link?.url}
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </ShouldRender>
-
-              <HTMLBody
-                className="prose -xl:prose-sm"
-                lines={5}
-                loading={isLoading}
-              >
-                {data?.body}
-              </HTMLBody>
+            <ShouldRender if={!!data?.poll}>
+              <PollView poll={data?.poll} />
             </ShouldRender>
 
-            <div className="flex gap-3 absolute -bottom-4 left-4">
-              <LikeButton
-                disabled={isLoading}
-                label={data?.likes}
-                onClick={handleLikeOrDislikePost(false)}
-                likedOrDislikedByMe={data?.likedByMe}
-              />
+            <ShouldRender if={!!data?.link}>
+              <div className="w-full -mt-4 -mb-4">
+                <LinkPreview loading={isLoading} data={data?.link} />
 
-              <LikeButton
-                disabled={isLoading}
-                label={data?.dislikes}
-                onClick={handleLikeOrDislikePost(true)}
-                dislike
-                likedOrDislikedByMe={data?.dislikedByMe}
-              />
-            </div>
+                <div className="w-full break-words bg-white shadow text-black dark:text-neutral-300 dark:bg-neutral-900 p-4 mt-2 border-l-4 border-gray-300 dark:border-neutral-500">
+                  <h3 className="sm:text-xl text-lg font-bold">
+                    {data?.link?.title}
+                  </h3>
+                  <p className="mt-2 sm:leading-7 sm:text-base text-sm">{`"${data?.link?.description}"`}</p>
+                  <p className="font-bold text-sm sm:mt-0 mt-2">
+                    Read more on{" "}
+                    <a
+                      href={data?.link?.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline italic text-emerald-500"
+                    >
+                      {data?.link?.url}
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </ShouldRender>
 
-            <div className="flex gap-3 absolute -bottom-4 right-4">
-              <FavoriteButton
-                disabled={isLoading}
-                onClick={handleFavoritePost}
-                favoritedByMe={data?.favoritedByMe}
-              />
-            </div>
-          </main>
-
-          <ShouldRender if={attachments?.length}>
-            <div className="w-full mt-3 flex flex-col gap-2">
-              <h2 className="text-lg font-medium mb-2">Attachments</h2>
-              {filteredAttachments?.medias?.map((media, key) => (
-                <AttachmentPreview
-                  type="media"
-                  onClickImage={onClickImage(media)}
-                  file={media}
-                  key={key}
-                  downloadable
-                  optimized
-                />
-              ))}
-
-              {filteredAttachments?.audio?.map((audio, key) => (
-                <AttachmentPreview
-                  file={audio}
-                  type="audio"
-                  key={key}
-                  downloadable
-                  optimized
-                />
-              ))}
-
-              {filteredAttachments?.documents?.map((attachment, key) => (
-                <AttachmentPreview
-                  type="document"
-                  file={attachment}
-                  key={key}
-                  downloadable
-                  optimized
-                />
-              ))}
-            </div>
+            <HTMLBody
+              className="prose -xl:prose-sm"
+              lines={5}
+              loading={isLoading}
+            >
+              {data?.body}
+            </HTMLBody>
           </ShouldRender>
 
-          <ShouldRender if={data?.tags?.length || isLoading}>
-            <div className="w-full -mb-10">
-              <h2 className="text-lg font-medium">Tags</h2>
+          <div className="flex gap-3 absolute -bottom-4 left-4">
+            <LikeButton
+              disabled={isLoading}
+              label={data?.likes}
+              onClick={handleLikeOrDislikePost(false)}
+              likedOrDislikedByMe={data?.likedByMe}
+            />
 
-              <TagList tags={data?.tags} loading={isLoading} />
-            </div>
-          </ShouldRender>
-
-          <div className="w-full mt-6">
-            <h2 className="text-lg font-medium">Comments</h2>
-
-            <CommentSection />
+            <LikeButton
+              disabled={isLoading}
+              label={data?.dislikes}
+              onClick={handleLikeOrDislikePost(true)}
+              dislike
+              likedOrDislikedByMe={data?.dislikedByMe}
+            />
           </div>
 
-          <PreviewMediaModal
-            media={currentMedia}
-            openState={isMediaPreviewModalOpen}
-          />
+          <div className="flex gap-3 absolute -bottom-4 right-4">
+            <FavoriteButton
+              disabled={isLoading}
+              onClick={handleFavoritePost}
+              favoritedByMe={data?.favoritedByMe}
+            />
+          </div>
+        </main>
 
-          <ConfirmationModal
-            title="Are you sure you want to delete this post?"
-            confirmationLabel="Delete post"
-            openState={isDeleteModalOpen}
-            loading={deleting}
-            onConfirm={onClickDeletePost}
-          />
-        </MainLayout>
-      </ShouldRender>
+        <ShouldRender if={attachments?.length}>
+          <div className="w-full mt-3 flex flex-col gap-2">
+            <h2 className="text-lg font-medium mb-2">Attachments</h2>
+            {filteredAttachments?.medias?.map((media, key) => (
+              <AttachmentPreview
+                type="media"
+                onClickImage={onClickImage(media)}
+                file={media}
+                key={key}
+                downloadable
+                optimized
+              />
+            ))}
 
-      <ShouldRender if={isRawMarkdownPage}>
-        <pre
-          className="p-3"
-          style={{
-            wordWrap: "break-word",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {data?.markdownBody}
-        </pre>
-      </ShouldRender>
+            {filteredAttachments?.audio?.map((audio, key) => (
+              <AttachmentPreview
+                file={audio}
+                type="audio"
+                key={key}
+                downloadable
+                optimized
+              />
+            ))}
+
+            {filteredAttachments?.documents?.map((attachment, key) => (
+              <AttachmentPreview
+                type="document"
+                file={attachment}
+                key={key}
+                downloadable
+                optimized
+              />
+            ))}
+          </div>
+        </ShouldRender>
+
+        <ShouldRender if={data?.tags?.length || isLoading}>
+          <div className="w-full -mb-10">
+            <h2 className="text-lg font-medium">Tags</h2>
+
+            <TagList tags={data?.tags} loading={isLoading} />
+          </div>
+        </ShouldRender>
+
+        <div className="w-full mt-6">
+          <h2 className="text-lg font-medium">Comments</h2>
+
+          <CommentSection />
+        </div>
+
+        <PreviewMediaModal
+          media={currentMedia}
+          openState={isMediaPreviewModalOpen}
+        />
+
+        <ConfirmationModal
+          title="Are you sure you want to delete this post?"
+          confirmationLabel="Delete post"
+          openState={isDeleteModalOpen}
+          loading={deleting}
+          onConfirm={onClickDeletePost}
+        />
+      </MainLayout>
     </>
   );
 };
 
 export default SinglePostPage;
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ postId: string }>
+) {
+  const ssg = await generateSSGHelper();
+  const postId = context.params?.postId as string;
+
+  await ssg.prefetchQuery("posts.single-post", {
+    postId,
+  });
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      postId,
+    },
+  };
+}

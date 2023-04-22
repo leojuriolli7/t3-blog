@@ -6,12 +6,11 @@ import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
 import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
-import { useRouter } from "next/router";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
+import { generateSSGHelper } from "@server/ssgHepers";
 
-const TagsListPage: React.FC = () => {
-  const router = useRouter();
+const AllTagsPage: React.FC = () => {
   const [queryValue, setQueryValue] = useState("");
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -99,4 +98,19 @@ const TagsListPage: React.FC = () => {
   );
 };
 
-export default TagsListPage;
+export default AllTagsPage;
+
+export async function getServerSideProps() {
+  const ssg = await generateSSGHelper();
+
+  await ssg.prefetchInfiniteQuery("posts.posts-by-tags", {
+    tagLimit: 6,
+    query: "",
+  });
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
+}
