@@ -1,5 +1,8 @@
 import { Notification } from "@prisma/client";
-import { getNotificationsSchema } from "@schema/notification.schema";
+import {
+  getNotificationsSchema,
+  markAsReadSchema,
+} from "@schema/notification.schema";
 import { createRouter } from "@server/createRouter";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 
@@ -37,13 +40,18 @@ export const notificationRouter = createRouter()
   .query("get-all", {
     input: getNotificationsSchema,
     async resolve({ ctx, input }) {
+      const { limit, skip, cursor, read } = input;
+
       const notifications = await ctx.prisma.notification.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           createdAt: "desc",
         },
         where: {
           notifiedId: ctx.session?.user?.id,
-          read: input.read,
+          read,
         },
         include: {
           comment: true,
@@ -51,6 +59,12 @@ export const notificationRouter = createRouter()
           notifier: true,
         },
       });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (notifications.length > limit) {
+        const nextItem = notifications.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
 
       const filteredNotifications = notifications?.map((notification) => {
         const currentType =
@@ -71,7 +85,36 @@ export const notificationRouter = createRouter()
 
       return {
         list: filteredNotifications,
-        total: notifications?.length || 0,
+        nextCursor,
       };
+    },
+  })
+  .query("total-unreads", {
+    async resolve({ ctx }) {
+      const unreads = await ctx.prisma.notification.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          notifiedId: ctx.session?.user?.id,
+          read: false,
+        },
+      });
+
+      return unreads.length;
+    },
+  })
+  .middleware(isLoggedInMiddleware)
+  .mutation("mark-as-read", {
+    input: markAsReadSchema,
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.notification.update({
+        where: {
+          id: input.notificationId,
+        },
+        data: {
+          read: true,
+        },
+      });
     },
   });

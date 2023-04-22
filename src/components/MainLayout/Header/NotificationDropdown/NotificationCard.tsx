@@ -6,6 +6,7 @@ import Button from "@components/Button";
 import { Notification } from "@utils/types";
 import { format, isToday } from "date-fns";
 import ShouldRender from "@components/ShouldRender";
+import { trpc } from "@utils/trpc";
 
 function formatNotificationDate(date?: Date) {
   if (date) {
@@ -14,6 +15,7 @@ function formatNotificationDate(date?: Date) {
   }
 }
 
+// TO-DO: `Mark as read` button.
 export const NotificationCard = (notification: Notification) => {
   const notificationHasComment = !!notification?.comment;
   const isReplyNotification = notification?.type === "reply";
@@ -21,12 +23,41 @@ export const NotificationCard = (notification: Notification) => {
 
   const username = getUserDisplayName(notification.notifier);
   const formattedDate = formatNotificationDate(notification.createdAt);
+  const utils = trpc.useContext();
+
+  const { mutate: markAsRead } = trpc.useMutation(
+    ["notification.mark-as-read"],
+    {
+      onSettled: () => {
+        utils.invalidateQueries(["notification.total-unreads"]);
+
+        utils.invalidateQueries([
+          "notification.get-all",
+          {
+            limit: 6,
+            read: true,
+          },
+        ]);
+
+        utils.invalidateQueries([
+          "notification.get-all",
+          {
+            limit: 6,
+            read: false,
+          },
+        ]);
+      },
+    }
+  );
+
+  const handleClickCard = () => markAsRead({ notificationId: notification.id });
 
   return (
     <Link
       href={notification?.href || "/"}
-      className="p-3 text-sm flex gap-2 hover:bg-neutral-800/40 transition-colors w-full"
+      className="p-3 text-sm flex gap-2 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/40 transition-colors w-full"
       key={notification.id}
+      onClick={handleClickCard}
     >
       <Image
         width={32}
@@ -43,12 +74,12 @@ export const NotificationCard = (notification: Notification) => {
         </p>
         <ShouldRender if={notificationHasComment}>
           <div className="mt-2">
-            <HTMLBody className="text-neutral-400 bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
+            <HTMLBody className="bg-neutral-300/60 text-neutral-700/90 dark:text-neutral-400 dark:bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
               {notification?.comment?.body}
             </HTMLBody>
 
             <Button
-              className="w-full rounded-full mt-2 flex justify-center bg-neutral-600"
+              className="w-full rounded-full mt-2 flex justify-center bg-gray-300 dark:bg-neutral-600"
               variant="transparent"
               size="sm"
             >
@@ -59,7 +90,7 @@ export const NotificationCard = (notification: Notification) => {
 
         <ShouldRender if={isFollowNotification}>
           <Button
-            className="w-full rounded-full mt-2 flex justify-center bg-neutral-600"
+            className="w-full rounded-full mt-2 flex justify-center bg-gray-300 dark:bg-neutral-600"
             variant="transparent"
             size="sm"
           >
