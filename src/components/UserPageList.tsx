@@ -42,7 +42,6 @@ const UserPageList: React.FC<Props> = ({ currentTab, currentFilter }) => {
     ],
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      ssr: false,
       enabled: isCommentsTab,
     }
   );
@@ -73,9 +72,6 @@ const UserPageList: React.FC<Props> = ({ currentTab, currentFilter }) => {
     {
       enabled: isPostsTab,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      // The initial focus of this page is the user, so the
-      // user's comments can load afterwards.
-      ssr: false,
     }
   );
 

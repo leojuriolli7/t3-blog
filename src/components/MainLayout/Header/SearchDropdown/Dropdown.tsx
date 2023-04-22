@@ -42,7 +42,6 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
     {
       enabled: !!query,
       refetchOnWindowFocus: false,
-      ssr: false,
     }
   );
 

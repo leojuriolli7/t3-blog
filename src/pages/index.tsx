@@ -11,6 +11,7 @@ import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
 import { ButtonLink } from "@components/Button";
 import Link from "next/link";
+import { generateSSGHelper } from "@server/ssgHepers";
 
 const PostListingPage: React.FC = () => {
   const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
@@ -31,7 +32,6 @@ const PostListingPage: React.FC = () => {
     ["posts.following-posts", { limit: 4 }],
     {
       refetchOnWindowFocus: false,
-      ssr: false,
     }
   );
 
@@ -161,3 +161,22 @@ const PostListingPage: React.FC = () => {
 };
 
 export default PostListingPage;
+
+export async function getServerSideProps() {
+  const ssg = await generateSSGHelper();
+
+  await ssg.prefetchQuery("posts.posts-by-tags", {
+    tagLimit: 4,
+  });
+
+  await ssg.prefetchInfiniteQuery("posts.posts", {
+    limit: 4,
+    filter: "newest",
+  });
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
+}
