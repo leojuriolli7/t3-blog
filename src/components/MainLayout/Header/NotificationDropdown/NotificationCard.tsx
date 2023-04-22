@@ -20,7 +20,6 @@ function formatNotificationDate(date?: Date) {
 
 export const NotificationCard = (notification: Notification) => {
   const notificationHasComment = !!notification?.comment;
-  const isReplyNotification = notification?.type === "reply";
   const isFollowNotification = notification?.type === "follow";
 
   const username = getUserDisplayName(notification.notifier);
@@ -55,7 +54,14 @@ export const NotificationCard = (notification: Notification) => {
   const handleMarkAsRead = (preventDefault: boolean) => (e: MouseEvent) => {
     if (preventDefault) e.preventDefault();
 
-    markAsRead({ notificationId: notification.id });
+    if (notification.read === false)
+      markAsRead({ notificationId: notification.id });
+  };
+
+  const buttonLabels = {
+    follow: "Follow back",
+    reply: "Reply back",
+    comment: "Read comment",
   };
 
   return (
@@ -75,28 +81,30 @@ export const NotificationCard = (notification: Notification) => {
 
       <div className="w-full">
         <div className="w-full flex">
-          <p className="w-11/12">
+          <p className={notification.read ? "w-full" : "w-11/12"}>
             {`${username} ${notification.message}  ·  `}
             <span className="text-neutral-400">{formattedDate}</span>
           </p>
 
-          <Popover.Main
-            className="rounded-lg"
-            placement="left"
-            icon={
-              <div className="w-1/12">
-                <HiDotsVertical className="w-4 h-4 dark:text-neutral-500" />
-              </div>
-            }
-          >
-            <button
-              onClick={handleMarkAsRead(true)}
-              type="button"
-              className="hover:opacity-60 rounded-lg text-sm dark:hover:brightness-125 dark:hover:opacity-100 bg-inherit p-4 cursor-pointer"
+          <ShouldRender if={notification?.read === false}>
+            <Popover.Main
+              className="rounded-lg"
+              placement="left"
+              icon={
+                <div className="w-1/12">
+                  <HiDotsVertical className="w-4 h-4 dark:text-neutral-500" />
+                </div>
+              }
             >
-              Mark as read
-            </button>
-          </Popover.Main>
+              <button
+                onClick={handleMarkAsRead(true)}
+                type="button"
+                className="hover:opacity-60 rounded-lg text-sm dark:hover:brightness-125 dark:hover:opacity-100 bg-inherit p-4 cursor-pointer"
+              >
+                Mark as read
+              </button>
+            </Popover.Main>
+          </ShouldRender>
         </div>
 
         <ShouldRender if={notificationHasComment}>
@@ -104,24 +112,18 @@ export const NotificationCard = (notification: Notification) => {
             <HTMLBody className="bg-neutral-300/60 text-neutral-700/90 dark:text-neutral-400 dark:bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
               {notification?.comment?.body}
             </HTMLBody>
-
-            <Button
-              className="w-full rounded-full mt-2 flex justify-center bg-gray-300 dark:bg-neutral-600"
-              variant="transparent"
-              size="sm"
-            >
-              {isReplyNotification ? "Reply back" : "Read comment"}
-            </Button>
           </div>
         </ShouldRender>
 
-        <ShouldRender if={isFollowNotification}>
+        <ShouldRender if={isFollowNotification || notificationHasComment}>
           <Button
-            className="w-full rounded-full mt-2 flex justify-center bg-gray-300 dark:bg-neutral-600"
+            className="w-full rounded-full mt-2 flex justify-center bg-white border border-neutral-400 dark:border-none dark:bg-neutral-700"
             variant="transparent"
             size="sm"
           >
-            Follow back
+            {notification?.type === "reply" && "Reply back"}
+            {notification?.type === "comment" && "Read comment"}
+            {notification?.type === "follow" && "Follow back"}
           </Button>
         </ShouldRender>
       </div>
