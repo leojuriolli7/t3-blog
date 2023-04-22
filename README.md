@@ -12,6 +12,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 
 - Login with Google, Github or discord, or with a [Magic link](https://www.beyondidentity.com/glossary/magic-links) to your e-mail.
 - Create & edit posts.
+- Receive notifications for new posts, replies, comments on your posts, new followers, and more.
 - Tag your posts.
 - Upload files to your posts as attachments: You can upload videos, images, audio or documents (.pdf, .msword, etc.)
 - Upload images to your posts' body by dragging and dropping (or file system) like on Github!
