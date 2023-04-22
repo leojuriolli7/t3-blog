@@ -9,6 +9,7 @@ import SearchDropdown from "./SearchDropdown";
 import { SidebarContent } from "../Sidebar/Sidebar";
 
 import dynamic from "next/dynamic";
+import { useSession } from "next-auth/react";
 
 const NotificationDropdown = dynamic(
   () => import("./NotificationDropdown/NotificationDropdown"),
@@ -19,6 +20,8 @@ const NotificationDropdown = dynamic(
 
 const Header: React.FC = () => {
   const router = useRouter();
+
+  const { status: sessionStatus } = useSession();
 
   const openAsideState = useState(false);
   const [, setOpen] = openAsideState;
@@ -37,7 +40,9 @@ const Header: React.FC = () => {
       </SlideOver>
 
       <div className="absolute right-0 z-[100] flex items-center gap-3">
-        <NotificationDropdown />
+        <ShouldRender if={sessionStatus === "authenticated"}>
+          <NotificationDropdown />
+        </ShouldRender>
 
         <ShouldRender if={!router.pathname.includes("/search")}>
           <SearchDropdown />

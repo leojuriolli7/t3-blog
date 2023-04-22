@@ -74,7 +74,7 @@ export const NotificationCard = (notification: Notification) => {
         </p>
         <ShouldRender if={notificationHasComment}>
           <div className="mt-2">
-            <HTMLBody className="bg-neutral-300/60 text-neutral-700/90 dark:text-neutral-400 dark:bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
+            <HTMLBody className="content-mask bg-neutral-300/60 text-neutral-700/90 dark:text-neutral-400 dark:bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
               {notification?.comment?.body}
             </HTMLBody>
 
