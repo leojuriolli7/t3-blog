@@ -505,6 +505,33 @@ export const postRouter = createRouter()
         });
       }
 
+      const followers = await ctx.prisma.follows.findMany({
+        where: {
+          followingId: ctx.session.user.id,
+        },
+        select: {
+          followerId: true,
+        },
+      });
+
+      const userHasFollowers = !!followers?.length;
+
+      if (userHasFollowers) {
+        const followersId = followers?.map((user) => user.followerId);
+
+        const notificationInfo = followersId?.map((id) => ({
+          postId: post.id,
+          type: "FOLLOWING-POST",
+          notifiedId: id,
+          notifierId: ctx.session.user.id,
+        }));
+
+        // Notify all followers of a new post.
+        await ctx.prisma.notification.createMany({
+          data: notificationInfo,
+        });
+      }
+
       return post;
     },
   })
@@ -732,6 +759,15 @@ export const postRouter = createRouter()
 
       // User is favoriting post.
       if (!userHasAlreadyFavoritedPost) {
+        await ctx.prisma.notification.create({
+          data: {
+            postId: input.postId,
+            notifierId: ctx?.session?.user?.id,
+            notifiedId: input.authorId,
+            type: "FAVORITE" as const,
+          },
+        });
+
         await ctx.prisma.favoritesOnUsers.create({
           data: {
             postId,

@@ -105,6 +105,9 @@ model User {
   following Follows[]          @relation("follower")
   url       UserLink?
 
+  notified  Notification[]  @relation(name: "NotifiedNotification")
+  notifier  Notification[]  @relation(name: "NotifierNotification")
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Post      Post[]
@@ -152,6 +155,27 @@ model Poll {
   post    Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
+model Notification {
+    id          String    @id @default(cuid())
+    postId      String?
+    post        Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
+    comment     Comment?   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    commentId   String?
+    notifiedId  String
+    notified    User      @relation(name: "NotifiedNotification", fields: [notifiedId], references: [id], onDelete: Cascade)
+    notifierId  String
+    notifier    User      @relation(name: "NotifierNotification", fields: [notifierId], references: [id], onDelete: Cascade)
+    type        String
+    read        Boolean   @default(false)
+    createdAt   DateTime  @default(now())
+
+    @@index([notifiedId])
+    @@index([notifierId])
+    @@index([postId])
+    @@index([commentId])
+}
+
+
 model Post {
   id          String             @id @default(uuid())
   title       String
@@ -163,6 +187,7 @@ model Post {
   link        Link?
   poll        Poll?
   favoritedBy FavoritesOnUsers[]
+  notifications  Notification[]
 
   tags Tag[]
 
@@ -214,6 +239,7 @@ model Comment {
   children Comment[] @relation("comment_children")
   parent   Comment?  @relation("comment_children", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId String?
+  notifications   Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

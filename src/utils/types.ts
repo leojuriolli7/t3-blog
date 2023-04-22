@@ -29,5 +29,8 @@ export type FollowingUser =
 export type Metadata = InferQueryOutput<"scraper.scrape-link">;
 export type Poll = InferQueryOutput<"posts.single-post">["poll"];
 
+export type Notification =
+  InferQueryOutput<"notification.get-all">["list"][number];
+
 // React-hook-form Controller's 'field' type
 export type FieldType = ControllerRenderProps<FieldValues, string>;
