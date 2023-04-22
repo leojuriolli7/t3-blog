@@ -76,7 +76,7 @@ export const NotificationCard = (notification: Notification) => {
         height={32}
         alt={notification.notifier?.name || "User"}
         src={notification.notifier?.image || "/static/default-profile.jpg"}
-        className="rounded-full object-cover h-[32px]"
+        className="rounded-full flex-shrink-0 object-cover h-[32px]"
       />
 
       <div className="w-full">
