@@ -55,6 +55,19 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - Implemented infinite scrolling on multiple screens with TanStack Query's `useInfiniteQuery`, tRPC and the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API).
 - I used [Lodash debounce](https://lodash.com/docs/#debounce) to debounce search results and improve the search input performance while keeping a good UX. (Typing and automatically receiving results) 
 
+## Performance increases
+
+Various performance optimizations were implemented on this website, such as code splitting, data-fetching in parallel, optimizing fonts, dynamic importing, reducing the first load JS and leveraging the Next.JS server-side for expensive calculations instead of doing them on the client-side. 
+
+By data fetching in parallel, all requests go out at the same time and we await them together. If we await each one individually, each request will only fire when the previous one has been resolved, causing potentially huge performance hits.
+
+By dynamic importing and code-splitting, the initial JS loaded on page-load was drastically reduced on every page. For instance, instead of loading the JS for the edit post form on the post page load, it is loaded on-demand when the user clicks to edit a post.
+
+
+
+I also leveraged the Next.JS node server for processsing markdown and formatting all dates on the server-side, instead of doing it on the client. I also truncate the HTML (Limit it to 250 characters) on the server to reduce the size of the DOM tree and avoid sending unnecessary HTML to the client. It is also parsed before being sent to the client, adjusting for Search Engine Optimizations. [Read more here.](https://github.com/leojuriolli7/t3-blog/commit/2ce73b4df034c05180211aac07c70a4323a7cf1e#diff-1ee892b507c8886a683fe2e7011d58a1eb69dd233ceb47fc65ad62d8e97e1f9eR30-R56)
+
+
 ### Processing markdown on the server
 
 Another important UX improvement was when I switched from converting markdown to HTML on the client-side with [React Markdown](https://github.com/remarkjs/react-markdown) to converting MD to HTML on the server-side, and returning simple HTML to the client.
@@ -66,8 +79,6 @@ I could notice whenever I first loaded the site, or scrolled down to load new po
 | Parsing markdown on the client | After parsing markdown on the server |
 |--------|--------|
 | ![Screenshot from 2023-03-29 23-46-02](https://user-images.githubusercontent.com/100495707/228715389-f1206b83-ae93-4e1f-b5af-d18bb1356e5d.png) | ![Screenshot from 2023-03-29 23-47-33](https://user-images.githubusercontent.com/100495707/228715384-b8cee082-a162-4d9e-a0f6-1a1f791242a1.png)  | 
-
-I truncate the HTML (Limit it to 250 characters) to reduce the size of the DOM and avoid sending unnecessary HTML to the client. It is also parsed before being sent to the client, adjusting for Search Engine Optimizations. [Read more here.](https://github.com/leojuriolli7/t3-blog/commit/2ce73b4df034c05180211aac07c70a4323a7cf1e#diff-1ee892b507c8886a683fe2e7011d58a1eb69dd233ceb47fc65ad62d8e97e1f9eR30-R56)
 
 ## Overcoming T3 Stack limitations
 tRPC [does not support `multipart/form-data`](https://github.com/trpc/trpc/discussions/658#discussioncomment-998746), so file uploads could not be done reliably inside the tRPC router. For that reason, I decided to use the AWS SDK, S3 buckets and presigned URLs, a very safe and reliable method of uploading files. 
