@@ -3,12 +3,12 @@ import clsx from "clsx";
 import React, { useState } from "react";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import { useContextualRouting } from "next-use-contextual-routing";
-import dynamic from "next/dynamic";
 import LikeCount from "./LikeCount";
 import Link from "next/link";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 import HTMLBody from "./HTMLBody";
+import PostModal from "./PostModal";
 
 type Props = {
   slide?: boolean;
@@ -16,10 +16,6 @@ type Props = {
   loading?: boolean;
   bgClass?: string;
 };
-
-const PostModal = dynamic(() => import("@components/PostModal"), {
-  ssr: false,
-});
 
 const CompactCard: React.FC<Props> = ({ slide, post, loading, bgClass }) => {
   const { makeContextualHref, returnHref } = useContextualRouting();

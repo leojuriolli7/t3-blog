@@ -1,19 +1,15 @@
+import { useState } from "react";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import { PostFromList } from "@utils/types";
 import { useContextualRouting } from "next-use-contextual-routing";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import LikeCount from "./LikeCount";
 import LinkPreview from "./LinkPreview";
 import HTMLBody from "./HTMLBody";
 import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 import TagList from "./TagList";
-import { useState } from "react";
-
-const PostModal = dynamic(() => import("@components/PostModal"), {
-  ssr: false,
-});
+import PostModal from "./PostModal";
 
 type Props = {
   loading?: boolean;
