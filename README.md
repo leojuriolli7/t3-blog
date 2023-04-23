@@ -14,6 +14,7 @@ Aditionally, I used [AWS S3](https://aws.amazon.com/s3/) Buckets for file upload
 - Create & edit posts.
 - Receive notifications for new posts, replies, comments on your posts, new followers, and more.
 - Tag your posts.
+- Intercepted routes like reddit and instagram (Read a post with a modal, without having to go to a new page)
 - Upload files to your posts as attachments: You can upload videos, images, audio or documents (.pdf, .msword, etc.)
 - Upload images to your posts' body by dragging and dropping (or file system) like on Github!
 - Every file uploaded can be interacted - You can listen to the audios using a custom-built audio-player, watch the videos, download any of the files, etc.)
