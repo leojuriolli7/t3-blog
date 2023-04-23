@@ -194,14 +194,15 @@ export const commentRouter = createRouter()
         });
 
         const parentPostAuthorId = post?.userId;
+        const userId = ctx?.session?.user?.id;
 
         // Notify author of post with a new comment
-        if (parentPostAuthorId) {
+        if (parentPostAuthorId && userId !== parentPostAuthorId) {
           await ctx.prisma.notification.create({
             data: {
               postId: input.postId,
               commentId: comment.id,
-              notifierId: ctx?.session?.user?.id,
+              notifierId: userId,
               notifiedId: parentPostAuthorId,
               type: "COMMENT" as const,
             },
@@ -219,15 +220,16 @@ export const commentRouter = createRouter()
           });
 
           const parentCommentAuthorId = parentComment?.userId;
+          const userId = ctx?.session?.user?.id;
 
           // Notify parent comment author of new reply
-          if (parentCommentAuthorId) {
+          if (parentCommentAuthorId && userId !== parentCommentAuthorId) {
             await ctx.prisma.notification.create({
               data: {
                 commentId: comment.id,
                 postId: input.postId,
-                notifierId: ctx?.session?.user?.id,
-                notifiedId: parentCommentAuthorId as string,
+                notifierId: userId,
+                notifiedId: parentCommentAuthorId,
                 type: "REPLY" as const,
               },
             });

@@ -10,10 +10,11 @@ export const likeRouter = createRouter()
       const { dislike, postId } = input;
       const isDislike = dislike;
       const isLike = !dislike;
+      const userId = ctx?.session?.user?.id;
 
       const previousUserLikeOnPost = await ctx.prisma.like.findFirst({
         where: {
-          userId: ctx.session?.user.id,
+          userId,
           postId,
         },
       });
@@ -21,14 +22,16 @@ export const likeRouter = createRouter()
       const hasUserAlreadyLiked = !!previousUserLikeOnPost;
 
       if (!hasUserAlreadyLiked) {
-        await ctx.prisma.notification.create({
-          data: {
-            postId: input.postId,
-            notifierId: ctx?.session?.user?.id,
-            notifiedId: input.authorId,
-            type: "LIKE" as const,
-          },
-        });
+        if (userId !== input.authorId) {
+          await ctx.prisma.notification.create({
+            data: {
+              postId: input.postId,
+              notifierId: userId,
+              notifiedId: input.authorId,
+              type: "LIKE" as const,
+            },
+          });
+        }
 
         return ctx.prisma.like.create({
           data: {

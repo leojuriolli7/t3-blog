@@ -36,7 +36,7 @@ const PostModal: React.FC<Props> = ({ returnHref, openState }) => {
 
   return (
     <Modal openState={openState} alwaysCentered onClose={onCloseModal}>
-      <div className="relative rounded-lg shadow-lg p-6 bg-white dark:bg-zinc-900 w-screen xl:max-w-4xl max-w-[90vw] max-h-[90vh] overflow-y-auto">
+      <div className="relative rounded-lg shadow-lg p-6 -2sm:p-0 -2sm:pt-12 -2sm:pb-6 bg-white dark:bg-zinc-900 w-screen xl:max-w-4xl max-w-[90vw] max-h-[90vh] overflow-y-auto">
         <div className="flex flex-col items-center gap-10 w-11/12 max-w-2xl mx-auto">
           <PostDetails
             data={post}
