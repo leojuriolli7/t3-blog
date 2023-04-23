@@ -1,6 +1,6 @@
+import { Dispatch, SetStateAction } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction } from "react";
 import { Modal } from "./Modal";
 import { PostDetails } from "./PostDetails";
 
@@ -9,12 +9,20 @@ type Props = {
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
 };
 
+/**
+ * This modal will intercept the route change and be rendered instead of
+ * redirecting the user to the [postId] page.
+ */
 const PostModal: React.FC<Props> = ({ returnHref, openState }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
   const [open] = openState;
 
-  const { data, isLoading } = trpc.useQuery(
+  const onCloseModal = () => {
+    router.push(returnHref, undefined, { shallow: true });
+  };
+
+  const { data: post, isLoading } = trpc.useQuery(
     [
       "posts.single-post",
       {
@@ -27,19 +35,12 @@ const PostModal: React.FC<Props> = ({ returnHref, openState }) => {
   );
 
   return (
-    <Modal
-      openState={openState}
-      alwaysCentered
-      closeButton
-      onClose={() => {
-        router.push(returnHref, undefined, { shallow: true });
-      }}
-    >
+    <Modal openState={openState} alwaysCentered onClose={onCloseModal}>
       <div className="relative rounded-lg shadow-lg p-6 bg-white dark:bg-zinc-900 w-screen xl:max-w-4xl max-w-[90vw] max-h-[90vh] overflow-y-auto">
         <div className="flex flex-col items-center gap-10 w-11/12 max-w-2xl mx-auto">
           <PostDetails
-            data={data}
-            isLoading={isLoading || !data}
+            data={post}
+            isLoading={isLoading || !post}
             postId={postId}
           />
         </div>
