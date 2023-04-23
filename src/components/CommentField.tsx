@@ -85,6 +85,11 @@ const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
     if (createCommentError) toast.error(createCommentError?.message);
   }, [createCommentError]);
 
+  useEffect(() => {
+    if (postId) setValue("postId", postId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]);
+
   return (
     <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>
       <Field error={errors.body}>
