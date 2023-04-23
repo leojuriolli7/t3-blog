@@ -48,6 +48,7 @@ export const updateUserSchema = z.object({
     })
     .optional(),
   image: z.string().optional(),
+  userId: z.string(),
   name: z.string().max(50, "Max name length is 50").optional(),
   url: urlSchema,
   bio: z.string().max(160, "Max bio length is 160").optional(),

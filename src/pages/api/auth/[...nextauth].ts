@@ -50,6 +50,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }) => {
       session.user.id = user.id;
+      session.user.isAdmin = user.role === "admin";
+
       return Promise.resolve(session);
     },
   },

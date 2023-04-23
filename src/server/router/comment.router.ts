@@ -251,6 +251,7 @@ export const commentRouter = createRouter()
     async resolve({ ctx, input }) {
       try {
         const { commentId } = input;
+        const isAdmin = ctx.session.user.isAdmin;
 
         const previousComment = await ctx.prisma.comment.findFirst({
           where: {
@@ -258,7 +259,7 @@ export const commentRouter = createRouter()
           },
         });
 
-        if (previousComment?.userId !== ctx.session.user.id) {
+        if (previousComment?.userId !== ctx.session.user.id && !isAdmin) {
           throw new trpc.TRPCError({
             code: "UNAUTHORIZED",
             message: "Cannot delete another user's comment",
@@ -280,6 +281,8 @@ export const commentRouter = createRouter()
   .mutation("update-comment", {
     input: updateCommentSchema,
     async resolve({ ctx, input }) {
+      const isAdmin = ctx.session.user.isAdmin;
+
       if (isStringEmpty(input.body)) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
@@ -293,7 +296,7 @@ export const commentRouter = createRouter()
         },
       });
 
-      if (previousComment?.userId !== ctx.session.user.id) {
+      if (previousComment?.userId !== ctx.session.user.id && !isAdmin) {
         throw new trpc.TRPCError({
           code: "UNAUTHORIZED",
           message: "You can only update comments created by you.",
