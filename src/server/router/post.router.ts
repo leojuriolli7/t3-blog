@@ -7,9 +7,10 @@ import {
   formatPosts,
   getPostWithLikes,
   markdownToHtml,
+  formatDate,
+  isStringEmpty,
 } from "@server/utils/index";
 import * as trpc from "@trpc/server";
-import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createPostSchema,
   favoritePostSchema,
@@ -116,11 +117,13 @@ export const postRouter = createRouter()
           body: {
             search: input.query,
           },
-          OR: {
-            title: {
-              search: input.query,
-            },
-          },
+          // `jsonProtocol` preview feature broke this part of the query:
+          // TO-DO: Add back when fixed.
+          // OR: {
+          //   title: {
+          //     search: input.query,
+          //   },
+          // },
         },
         include: {
           user: true,
@@ -309,9 +312,12 @@ export const postRouter = createRouter()
         linkifyImages: true,
       });
 
+      const formattedDate = formatDate(post!.createdAt);
+
       return {
         ...postWithLikes,
         body: htmlBody,
+        createdAt: formattedDate,
         // By also sendind the markdown body, we avoid having to
         // parse html back to MD when needed.
         markdownBody: post?.body,
@@ -346,11 +352,13 @@ export const postRouter = createRouter()
             body: {
               search: query,
             },
-            OR: {
-              title: {
-                search: query,
-              },
-            },
+            // `jsonProtocol` preview feature broke this part of the query:
+            // TO-DO: Add back when fixed.
+            // OR: {
+            //   title: {
+            //     search: query,
+            //   },
+            // },
           }),
         },
       });
@@ -396,11 +404,13 @@ export const postRouter = createRouter()
             body: {
               search: query,
             },
-            OR: {
-              title: {
-                search: query,
-              },
-            },
+            // `jsonProtocol` preview feature broke this part of the query:
+            // TO-DO: Add back when fixed.
+            // OR: {
+            //   title: {
+            //     search: query,
+            //   },
+            // },
           }),
         },
       });

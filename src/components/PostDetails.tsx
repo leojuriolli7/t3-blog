@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-toastify";
 import LikeButton from "@components/LikeButton";
-import useGetDate from "@hooks/useGetDate";
 import ShouldRender from "@components/ShouldRender";
 import Skeleton from "@components/Skeleton";
 import ActionButton from "@components/ActionButton";
@@ -296,7 +295,6 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
     }
   }, [postId, favoritePost, session, data?.userId]);
 
-  const { date, toggleDateType, isDistance } = useGetDate(data?.createdAt);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const { mutate: deletePost, isLoading: deleting } = trpc.useMutation(
@@ -387,13 +385,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
                     (You)
                   </span>
                 </ShouldRender>
-                <span
-                  onClick={toggleDateType}
-                  className="cursor-pointer select-none"
-                  role="button"
-                  aria-label="Change date visualization type"
-                  title="Change date visualization type"
-                >{` ${isDistance ? "" : "at"} ${date}`}</span>
+                <span> {data?.createdAt}</span>
               </p>
             </ShouldRender>
           </div>

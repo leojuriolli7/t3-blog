@@ -5,9 +5,10 @@ import {
   isLoggedInMiddleware,
   deleteChildComments,
   getFiltersByInput,
+  formatDate,
+  isStringEmpty,
 } from "@server/utils";
 import * as trpc from "@trpc/server";
-import { isStringEmpty } from "@utils/checkEmpty";
 import {
   createCommentSchema,
   deleteCommentSchema,
@@ -56,6 +57,8 @@ export const commentRouter = createRouter()
 
         const withFormattedBody = await Promise.all(
           comments.map(async (comment) => {
+            const formattedDate = formatDate(comment.createdAt);
+
             const formattedBody = await markdownToHtml(comment?.body || "", {
               removeLinksAndImages: false,
               truncate: false,
@@ -65,6 +68,7 @@ export const commentRouter = createRouter()
             return {
               ...comment,
               body: formattedBody,
+              createdAt: formattedDate,
               markdownBody: comment.body,
               authorIsOP: comment?.Post?.userId === comment?.userId,
               children: [],
@@ -109,6 +113,8 @@ export const commentRouter = createRouter()
 
         const withFormattedBody = await Promise.all(
           comments.map(async (comment) => {
+            const formattedDate = formatDate(comment.createdAt);
+
             const formattedBody = await markdownToHtml(comment?.body || "", {
               removeLinksAndImages: false,
               truncate: false,
@@ -118,6 +124,7 @@ export const commentRouter = createRouter()
             return {
               ...comment,
               body: formattedBody,
+              createdAt: formattedDate,
               // By also sendind the markdown body, we avoid having to
               // parse html back to MD when needed.
               markdownBody: comment?.body,
@@ -126,7 +133,7 @@ export const commentRouter = createRouter()
           })
         );
 
-        type CommentType = typeof withFormattedBody[0];
+        type CommentType = (typeof withFormattedBody)[0];
         const withChildren = formatComments<CommentType>(withFormattedBody);
 
         return withChildren;

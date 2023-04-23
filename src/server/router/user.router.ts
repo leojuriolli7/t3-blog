@@ -8,8 +8,7 @@ import {
   getSingleUserSchema,
   updateUserSchema,
 } from "@schema/user.schema";
-import { isStringEmpty } from "@utils/checkEmpty";
-import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
+import { isLoggedInMiddleware, isStringEmpty, formatDate } from "@server/utils";
 
 export const userRouter = createRouter()
   .query("single-user", {
@@ -27,6 +26,8 @@ export const userRouter = createRouter()
         },
       });
 
+      const formattedDate = formatDate(user!.createdAt);
+
       if (ctx.session?.user?.id) {
         const followerId = ctx.session.user.id;
         const followingId = input.userId;
@@ -42,12 +43,14 @@ export const userRouter = createRouter()
 
         return {
           ...user,
+          createdAt: formattedDate,
           alreadyFollowing: !!alreadyFollowing,
         };
       }
 
       return {
         ...user,
+        createdAt: formattedDate,
         alreadyFollowing: false,
       };
     },

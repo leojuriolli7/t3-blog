@@ -6,7 +6,7 @@ import ShouldRender from "./ShouldRender";
 import Skeleton from "./Skeleton";
 
 type Props = {
-  user?: Omit<User, "alreadyFollowing" | "url">;
+  user?: Pick<User, "id" | "name" | "image" | "bio">;
   loading?: boolean;
 };
 

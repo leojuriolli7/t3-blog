@@ -4,26 +4,17 @@ import Image from "next/future/image";
 import HTMLBody from "@components/HTMLBody";
 import Button from "@components/Button";
 import { Notification } from "@utils/types";
-import { format, isToday } from "date-fns";
 import ShouldRender from "@components/ShouldRender";
 import { trpc } from "@utils/trpc";
 import { HiDotsVertical } from "react-icons/hi";
 import Popover from "@components/Popover";
 import { MouseEvent } from "react";
 
-function formatNotificationDate(date?: Date) {
-  if (date) {
-    const toDate = new Date(date);
-    return format(toDate, isToday(toDate) ? "HH:mm" : "dd/MM/yyyy");
-  }
-}
-
 export const NotificationCard = (notification: Notification) => {
   const notificationHasComment = !!notification?.comment;
   const isFollowNotification = notification?.type === "follow";
 
   const username = getUserDisplayName(notification.notifier);
-  const formattedDate = formatNotificationDate(notification.createdAt);
   const utils = trpc.useContext();
 
   const { mutate: markAsRead } = trpc.useMutation(
@@ -83,7 +74,7 @@ export const NotificationCard = (notification: Notification) => {
         <div className="w-full flex">
           <p className={notification.read ? "w-full" : "w-11/12"}>
             {`${username} ${notification.message}  ·  `}
-            <span className="text-neutral-400">{formattedDate}</span>
+            <span className="text-neutral-400">{notification.createdAt}</span>
           </p>
 
           <ShouldRender if={notification?.read === false}>
