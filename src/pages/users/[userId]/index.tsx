@@ -25,6 +25,7 @@ import {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
+import { Badge } from "@components/Badge";
 
 const UserPageList = dynamic(() => import("@components/UserPageList"), {
   ssr: false,
@@ -320,12 +321,7 @@ const UserPage: NextPage<
                   </span>
                 </ShouldRender>
                 <ShouldRender if={profileIsAdmin}>
-                  <span
-                    title={`${username} is a site admin`}
-                    className="bg-emerald-500 dark:bg-emerald-600 ml-1 text-xs text-white font-bold p-[2px] px-1 shadow-sm select-none"
-                  >
-                    Admin
-                  </span>
+                  <Badge title={`${username} is a site admin`}>Admin</Badge>
                 </ShouldRender>
               </p>
             </ShouldRender>

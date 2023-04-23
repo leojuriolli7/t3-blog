@@ -7,14 +7,15 @@ import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import Link from "next/link";
+import useMediaQuery from "@hooks/useMediaQuery";
+import dynamic from "next/dynamic";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import ListComments from "./Comments";
 import ShouldRender from "./ShouldRender";
 import ActionButton from "./ActionButton";
 import HTMLBody from "./HTMLBody";
 import Skeleton from "./Skeleton";
-import useMediaQuery from "@hooks/useMediaQuery";
-import dynamic from "next/dynamic";
+import { Badge } from "./Badge";
 
 const ConfirmationModal = dynamic(
   () => import("@components/ConfirmationModal"),
@@ -248,12 +249,7 @@ const Comment: React.FC<CommentProps> = ({
                 </span>
               </ShouldRender>
               <ShouldRender if={comment?.authorIsOP}>
-                <span
-                  className="bg-emerald-500 dark:bg-emerald-600 ml-1 text-xs text-white font-bold p-[2px] px-1 shadow-sm select-none"
-                  title="Post author"
-                >
-                  OP
-                </span>
+                <Badge title="Post author">OP</Badge>
               </ShouldRender>
             </span>
           </div>
