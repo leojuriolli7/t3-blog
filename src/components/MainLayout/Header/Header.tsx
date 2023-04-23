@@ -32,7 +32,11 @@ const Header: React.FC = () => {
         <Image src="/static/logo.png" width={60} height={60} alt="T3 logo" />
       </Link>
 
-      <button className="xl:hidden block" onClick={() => setOpen(true)}>
+      <button
+        aria-label="Open navigation menu"
+        className="xl:hidden block"
+        onClick={() => setOpen(true)}
+      >
         <GiHamburgerMenu className="h-8 w-8 text-gray-500 dark:text-gray-400" />
       </button>
       <SlideOver openState={openAsideState}>
