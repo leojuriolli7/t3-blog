@@ -6,7 +6,12 @@ declare module "next-auth" {
    */
   interface Session {
     user: {
+      isAdmin: boolean;
       id: string;
     } & DefaultSession["user"];
+  }
+
+  interface User extends DefaultUser {
+    role: "user" | "admin" | null;
   }
 }

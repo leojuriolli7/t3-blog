@@ -548,6 +548,8 @@ export const postRouter = createRouter()
   .mutation("delete-post", {
     input: getSinglePostSchema,
     async resolve({ ctx, input }) {
+      const isAdmin = ctx.session.user.isAdmin;
+
       const post = await ctx.prisma.post.findFirst({
         where: {
           id: input.postId,
@@ -567,7 +569,7 @@ export const postRouter = createRouter()
         },
       });
 
-      if (post?.userId !== ctx.session.user.id) {
+      if (post?.userId !== ctx.session.user.id && !isAdmin) {
         throw new trpc.TRPCError({
           code: "UNAUTHORIZED",
           message: "Cannot delete another user's post.",
@@ -615,6 +617,8 @@ export const postRouter = createRouter()
   .mutation("update-post", {
     input: updatePostSchema,
     async resolve({ ctx, input }) {
+      const isAdmin = ctx.session.user.isAdmin;
+
       if (!input?.title && !input.body) {
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
@@ -647,7 +651,7 @@ export const postRouter = createRouter()
         },
       });
 
-      if (previousPost?.userId !== ctx.session.user.id) {
+      if (previousPost?.userId !== ctx.session.user.id && !isAdmin) {
         throw new trpc.TRPCError({
           code: "UNAUTHORIZED",
           message: "You can only update posts created by you.",

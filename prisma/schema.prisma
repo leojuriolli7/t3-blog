@@ -97,6 +97,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
+  role      String             @default("user")
   bio       String?            @db.VarChar(160)
   likes     Like[]
   votes     PollOption[]

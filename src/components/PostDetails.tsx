@@ -101,7 +101,8 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
     setIsDeleteModalOpen(true);
   }, [setIsDeleteModalOpen]);
 
-  const loggedUserCreatedPost = session?.user?.id === data?.userId;
+  const canDeleteOrEditPost =
+    session?.user?.id === data?.userId || session?.user?.isAdmin === true;
 
   const attachments = data?.attachments;
 
@@ -337,7 +338,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
       />
 
       <main className="relative w-full flex flex-col gap-10 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700/90 bg-slate-100 p-8 xs:p-12 dark:bg-zinc-800">
-        <ShouldRender if={data && loggedUserCreatedPost}>
+        <ShouldRender if={data && canDeleteOrEditPost}>
           <div className="absolute -top-2 right-2 flex gap-3 align-center">
             <ActionButton
               action={isEditing ? "close" : "edit"}

@@ -115,6 +115,9 @@ const Comment: React.FC<CommentProps> = ({
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
 
+  const canDeleteOrEdit =
+    session?.user?.id === comment?.userId || session?.user?.isAdmin === true;
+
   const commentClasses = getCommentClasses(
     !!comment?.parentId,
     !!comment?.children?.length,
@@ -305,13 +308,7 @@ const Comment: React.FC<CommentProps> = ({
             </ShouldRender>
           </ShouldRender>
 
-          <ShouldRender
-            if={
-              !linkToPost &&
-              session?.user?.id === comment?.userId &&
-              !hideActions
-            }
-          >
+          <ShouldRender if={!linkToPost && canDeleteOrEdit && !hideActions}>
             <div className="absolute -bottom-3 -right-2 flex gap-2 items-center">
               <ActionButton
                 action={isEditing ? "close" : "edit"}

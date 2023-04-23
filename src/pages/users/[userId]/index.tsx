@@ -73,8 +73,10 @@ const UserPage: NextPage<
   const { data: session } = useSession();
   const router = useRouter();
 
-  const userIsProfileOwner =
+  const loggedUserIsProfileOwner =
     !!session?.user?.id && userId === session?.user?.id;
+
+  const loggedUserIsAdmin = session?.user?.isAdmin === true;
 
   const redirectToTerms = (value: "privacy" | "conduct") => () =>
     router.push(`/terms/${value}`);
@@ -94,6 +96,8 @@ const UserPage: NextPage<
     }
   );
 
+  const profileIsAdmin = user?.role === "admin";
+  const username = getUserDisplayName(user);
   const isDeleteAccountModalOpen = useState(false);
   const [, setIsDeleteAccountModalOpen] = isDeleteAccountModalOpen;
 
@@ -222,7 +226,7 @@ const UserPage: NextPage<
   return (
     <>
       <MetaTags
-        title={getUserDisplayName(user) || "User"}
+        title={username || "User"}
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
@@ -235,7 +239,7 @@ const UserPage: NextPage<
               className="rounded-full object-cover w-[240px] h-[240px]"
               alt={user?.name as string}
             />
-            <ShouldRender if={!userIsProfileOwner && session?.user?.id}>
+            <ShouldRender if={!loggedUserIsProfileOwner && session?.user?.id}>
               <Button
                 disabled={loadingUser}
                 variant="gradient"
@@ -246,18 +250,19 @@ const UserPage: NextPage<
                 {user?.alreadyFollowing ? "Unfollow" : "Follow"}
               </Button>
             </ShouldRender>
-            <ShouldRender if={userIsProfileOwner}>
+            <ShouldRender if={loggedUserIsProfileOwner || loggedUserIsAdmin}>
               <div
-                className={`${
-                  loadingUser ? "pointer-events-none opacity-80" : ""
-                } absolute bottom-0 right-10 flex items-center justify-center rounded-full bg-emerald-500 p-2 shadow-2xl`}
+                className={clsx(
+                  "absolute bottom-0 right-7 flex items-center justify-center rounded-full bg-emerald-500 p-2 shadow-2xl",
+                  loadingUser && "pointer-events-none opacity-80"
+                )}
                 role="button"
               >
                 <Popover.Main
                   icon={
                     <IoMdSettings
                       size={23}
-                      className="text-white  drop-shadow-lg hover:opacity-80"
+                      className="text-white drop-shadow-lg hover:opacity-80"
                     />
                   }
                 >
@@ -307,12 +312,19 @@ const UserPage: NextPage<
           </div>
           <div className="w-fit text-center">
             <ShouldRender if={!!user}>
-              <p className="text-xl">
-                {getUserDisplayName(user)}{" "}
-                <ShouldRender if={userIsProfileOwner}>
+              <p className="text-xl flex items-center gap-1 justify-center">
+                {username}
+                <ShouldRender if={loggedUserIsProfileOwner}>
                   <span className="text-emerald-700 dark:text-emerald-500">
-                    {" "}
                     (You)
+                  </span>
+                </ShouldRender>
+                <ShouldRender if={profileIsAdmin}>
+                  <span
+                    title={`${username} is a site admin`}
+                    className="bg-emerald-500 dark:bg-emerald-600 ml-1 text-xs text-white font-bold p-[2px] px-1 shadow-sm select-none"
+                  >
+                    Admin
                   </span>
                 </ShouldRender>
               </p>

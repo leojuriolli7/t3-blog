@@ -123,7 +123,9 @@ export const userRouter = createRouter()
   .mutation("delete-user", {
     input: deleteUserSchema,
     async resolve({ ctx, input }) {
-      if (ctx.session?.user.id !== input.userId) {
+      const isAdmin = ctx?.session?.user?.isAdmin;
+
+      if (ctx.session?.user.id !== input.userId && !isAdmin) {
         throw new trpc.TRPCError({
           code: "UNAUTHORIZED",
           message: "You cannot delete another user's account.",
@@ -147,7 +149,8 @@ export const userRouter = createRouter()
   .mutation("update-profile", {
     input: updateUserSchema,
     async resolve({ ctx, input }) {
-      const userId = ctx?.session?.user?.id;
+      const { userId } = input;
+      const isAdmin = ctx?.session?.user?.isAdmin;
 
       if (isStringEmpty(input.name)) {
         throw new trpc.TRPCError({
@@ -165,7 +168,7 @@ export const userRouter = createRouter()
         },
       });
 
-      if (userToUpdate?.id !== userId) {
+      if (userToUpdate?.id !== ctx?.session?.user?.id && !isAdmin) {
         throw new trpc.TRPCError({
           code: "UNAUTHORIZED",
           message: "You can only update your own profile.",

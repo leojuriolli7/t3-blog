@@ -13,6 +13,7 @@ import Avatar from "./Avatar";
 import UserLinkField from "./UserLink/UserLinkField";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
+import { useRouter } from "next/router";
 
 type Props = {
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -24,7 +25,8 @@ const EditAccountModal: React.FC<Props> = ({
   user: userInformation,
 }) => {
   const { data: session } = useSession();
-  const userId = session?.user?.id as string;
+  const router = useRouter();
+  const userId = router.query.userId as string;
 
   const [isOpen, setIsOpen] = openState;
 
@@ -48,7 +50,8 @@ const EditAccountModal: React.FC<Props> = ({
     {
       onSuccess: (data) => {
         // Overwrite auth session image to the newly uploaded image url.
-        if (!!data?.image) session!.user.image = data.image;
+        if (!!data?.image && userId === session?.user?.id)
+          session!.user.image = data.image;
 
         utils.invalidateQueries([
           "users.single-user",
@@ -97,6 +100,7 @@ const EditAccountModal: React.FC<Props> = ({
       const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME}.s3.amazonaws.com/${userId}`;
 
       update({
+        userId,
         ...(values.name && {
           name: values.name,
         }),
@@ -116,6 +120,9 @@ const EditAccountModal: React.FC<Props> = ({
       setValue("bio", userInformation?.bio || undefined);
       setValue("url", userInformation?.url || undefined);
     }
+
+    if (userId) setValue("userId", userId);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
