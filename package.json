@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "change-role": "node -r esbuild-register scripts/change-role.ts"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",
@@ -78,7 +79,6 @@
     "@types/file-saver": "^2.0.5",
     "@types/lodash.debounce": "^4.0.7",
     "@types/lodash.unescape": "^4.0.7",
-    "@types/markdown-it": "^12.2.3",
     "@types/marked": "^4.0.8",
     "@types/node": "18.0.0",
     "@types/nodemailer": "^6.4.4",
@@ -86,11 +86,12 @@
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
     "@types/react-lottie": "^1.2.6",
-    "@types/turndown": "^5.0.1",
     "@types/uuid": "^9.0.1",
     "@types/validator": "^13.7.13",
     "autoprefixer": "^10.4.13",
     "cssnano": "^5.1.15",
+    "esbuild": "^0.17.18",
+    "esbuild-register": "^3.4.2",
     "eslint": "8.18.0",
     "eslint-config-next": "12.1.6",
     "postcss": "^8.4.21",
