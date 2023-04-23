@@ -3,7 +3,6 @@ import { CommentWithChildren } from "@utils/types";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
-import useGetDate from "@hooks/useGetDate";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -138,8 +137,6 @@ const Comment: React.FC<CommentProps> = ({
     [setIsEditing]
   );
 
-  const { date, toggleDateType } = useGetDate(comment?.createdAt);
-
   const {
     mutate: deleteComment,
     isLoading: deleting,
@@ -259,12 +256,7 @@ const Comment: React.FC<CommentProps> = ({
           </div>
 
           <ShouldRender if={!compact}>
-            <p
-              className="cursor-pointer select-none xl:block hidden"
-              onClick={toggleDateType}
-            >
-              {date}
-            </p>
+            <p className="xl:block hidden">{comment?.createdAt}</p>
           </ShouldRender>
         </div>
         <ShouldRender if={!isEditing || shouldRenderModals}>

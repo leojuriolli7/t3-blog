@@ -18,6 +18,7 @@ const CommentSection: React.FC = () => {
     ],
     {
       refetchOnWindowFocus: false,
+      enabled: !!postId,
     }
   );
 

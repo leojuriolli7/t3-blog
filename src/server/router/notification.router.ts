@@ -4,6 +4,7 @@ import {
   markAsReadSchema,
 } from "@schema/notification.schema";
 import { createRouter } from "@server/createRouter";
+import { formatDate } from "@server/utils/formatDate";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 
 type NotificationTypes =
@@ -78,10 +79,14 @@ export const notificationRouter = createRouter()
           notification.type.toLowerCase() as NotificationTypes;
 
         const href = getHref(notification);
+        const formattedDate = formatDate(notification.createdAt, {
+          smart: true,
+        });
 
         return {
           ...notification,
           type: currentType,
+          createdAt: formattedDate,
           message: notificationText[currentType].replace(
             "{{postName}}",
             notification?.post?.title || ""

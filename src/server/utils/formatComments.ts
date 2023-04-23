@@ -1,5 +1,7 @@
 import { Comment } from "@prisma/client";
 
+type CommentType = Pick<Comment, "parentId" | "id">;
+
 type WithChildren<T> = T & {
   children: Array<WithChildren<T>>;
 };
@@ -8,7 +10,7 @@ type WithChildren<T> = T & {
  * Format comments from the database and group them with their
  * children/parents before sending to the client.
  */
-function formatComments<T extends Comment>(comments: Array<T>) {
+function formatComments<T extends CommentType>(comments: Array<T>) {
   const map = new Map();
 
   const commentsWithChildren: WithChildren<T>[] = comments?.map((comment) => ({
