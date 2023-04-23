@@ -52,6 +52,7 @@ const PollView: React.FC<Props> = ({ poll }) => {
             bio: null,
             createdAt: new Date(),
             updatedAt: new Date(),
+            role: "user",
           };
 
           options[changedOptionIndex].votedByMe = true;
