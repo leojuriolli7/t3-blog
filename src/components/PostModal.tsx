@@ -19,7 +19,11 @@ const PostModal: React.FC<Props> = ({ returnHref, openState }) => {
   const [open] = openState;
 
   const onCloseModal = () => {
-    router.push(returnHref, undefined, { shallow: true });
+    // the timeout ensures the modal close animation is finished before
+    // resetting the `postId` and going back to the loading state.
+    setTimeout(() => {
+      router.push(returnHref, undefined, { shallow: true });
+    }, 300);
   };
 
   const { data: post, isLoading } = trpc.useQuery(
