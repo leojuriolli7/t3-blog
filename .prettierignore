@@ -1,0 +1,8 @@
+node_modules
+build
+dist
+res
+coverage
+.swc
+.vscode
+.husky
