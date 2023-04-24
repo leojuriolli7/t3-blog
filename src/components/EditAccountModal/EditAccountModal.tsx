@@ -130,7 +130,7 @@ const EditAccountModal: React.FC<Props> = ({
     <Modal openState={openState} alwaysCentered>
       <div className="relative dark:bg-neutral-900 bg-white sm:p-12 p-8 flex items-center sm:w-[400px] rounded-lg">
         <ShouldRender if={!userInformation?.image}>
-          <div className="absolute bg-emerald-600 -top-2 -right-2 z-10">
+          <div className="absolute bg-emerald-600 -top-2 -left-2 z-10 rounded-md">
             <p className="text-white p-1 px-2">
               Tip: upload a profile picture!
             </p>

@@ -45,24 +45,32 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
 
   if (!userHasAlreadyBeenWelcomed) {
-    const welcomeNotification = prisma.notification.create({
-      data: {
-        type: "WELCOME" as const,
-        notifierId: session?.user.id,
-        notifiedId: session?.user.id,
-      },
-    });
+    const noAvatar = !session?.user?.image;
+    const noUsername = !session?.user?.name;
 
-    const firstPostNotification = prisma.notification.create({
-      data: {
-        type: "FIRST-POST" as const,
-        notifierId: session?.user.id,
-        notifiedId: session?.user.id,
-      },
-    });
+    const createSystemNotification = (type: string) => {
+      return prisma.notification.create({
+        data: {
+          type,
+          notifierId: session?.user.id,
+          notifiedId: session?.user.id,
+        },
+      });
+    };
+
+    const welcomeNotification = createSystemNotification("WELCOME");
+    const firstPostNotification = createSystemNotification("FIRST-POST");
+    const noUsernameNotification = createSystemNotification("NO-USERNAME");
+    const noAvatarNotification = createSystemNotification("NO-AVATAR");
+
+    const promisesToAwait = [welcomeNotification, firstPostNotification];
+
+    // If the user does not have avatar or username, they will be alerted on first sign-in.
+    if (noAvatar) promisesToAwait.push(noAvatarNotification);
+    if (noUsername) promisesToAwait.push(noUsernameNotification);
 
     // fetching in parallel to reduce wait.
-    await Promise.all([welcomeNotification, firstPostNotification]);
+    await Promise.all(promisesToAwait);
   }
 
   return { redirect: { destination: callbackUrl || "/" } };

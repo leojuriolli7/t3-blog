@@ -15,7 +15,9 @@ type NotificationTypes =
   | "follow"
   | "following-post"
   | "first-post"
-  | "welcome";
+  | "welcome"
+  | "no-username"
+  | "no-avatar";
 
 // Get the main notification text.
 const notificationText: Record<NotificationTypes, string> = {
@@ -28,9 +30,17 @@ const notificationText: Record<NotificationTypes, string> = {
   "first-post":
     "Start by writing your first post! Share a link, create a poll, and more!",
   welcome: "Welcome to T3 Blog! We are very pleased to have you here!",
+  "no-username":
+    "You have no username! Set one for yourself on your account page",
+  "no-avatar": "You have no avatar! You can add one on your account page",
 };
 
-const systemNotificationTypes = ["first-post", "welcome"];
+const systemNotificationTypes = [
+  "first-post",
+  "welcome",
+  "no-avatar",
+  "no-username",
+];
 
 // Get the notification redirect link.
 function getHref(notification: Notification) {
@@ -40,7 +50,7 @@ function getHref(notification: Notification) {
 
   const postTypes = ["favorite", "like", "following-post"];
   const commentTypes = ["reply", "comment"];
-  const userTypes = ["follow"];
+  const userTypes = ["follow", "no-username", "no-avatar"];
 
   if (postTypes.includes(currentType)) return `/posts/${postId}`;
 
