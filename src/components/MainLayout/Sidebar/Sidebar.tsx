@@ -19,7 +19,6 @@ import { useSession } from "next-auth/react";
 import ShouldRender from "@components/ShouldRender";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi";
 import packageJson from "@package";
-import { useMemo } from "react";
 import Image from "next/future/image";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import ThemeButton from "./ThemeButton";
@@ -47,14 +46,18 @@ const Item: React.FC<ItemProps> = ({
   title,
 }) => {
   const router = useRouter();
-  const currentPath = router.asPath;
+  const { pathname } = router;
 
-  const isActive = useMemo(() => {
-    if (path === "/") return path === currentPath;
+  const getActive = () => {
+    if (path.includes("/users/")) {
+      const userId = path.split("/users/")[1];
+      return router.query.userId === userId;
+    }
 
-    // This is necessary so that path with query params is still is recognized.
-    return currentPath.includes(path);
-  }, [currentPath, path]);
+    return pathname === path;
+  };
+
+  const isActive = getActive();
 
   const Icon = isActive ? activeIcon : defaultIcon;
 
