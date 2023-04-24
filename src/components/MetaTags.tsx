@@ -1,6 +1,8 @@
 import React, { useMemo } from "react";
 import { baseUrl } from "@utils/constants";
 import Head from "next/head";
+import { trpc } from "@utils/trpc";
+import { useSession } from "next-auth/react";
 
 type Props = {
   title?: string;
@@ -15,13 +17,22 @@ const MetaTags: React.FC<Props> = ({
   url = baseUrl,
   image,
 }) => {
+  const session = useSession();
+  const user = session?.data?.user;
+
+  const { data: totalUnreads } = trpc.useQuery(["notification.total-unreads"], {
+    enabled: !!user?.id,
+  });
+
   const formattedTitle = useMemo(() => {
+    const defaultTitle = `${totalUnreads ? `(${totalUnreads})` : ""} T3 Blog`;
+
     if (title) {
-      return `T3 Blog | ${title}`;
+      return `${defaultTitle} | ${title}`;
     }
 
-    return title;
-  }, [title]);
+    return defaultTitle;
+  }, [title, totalUnreads]);
 
   const DEFAULT_DESCRIPTION = "Blog built with the T3 Stack.";
   const LOGO_PATH = `${baseUrl}/static/square-logo.png`;
