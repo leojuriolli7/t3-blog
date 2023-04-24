@@ -16,8 +16,5 @@
   "singleQuote": false,
   "tabWidth": 2,
   "trailingComma": "es5",
-  "useTabs": false,
-  "vueIndentScriptAndStyle": false,
-  "filepath": "/home/leonardo/Desktop/Projetos/t3-blog/.prettierrc",
-  "parser": "yaml"
+  "useTabs": false
 }
