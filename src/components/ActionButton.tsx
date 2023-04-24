@@ -24,7 +24,7 @@ const ActionButton: React.FC<Props> = (props) => {
   return (
     <button
       {...props}
-      className={`bg-teal-100 p-2 rounded-md shadow-lg hover:opacity-70 dark:bg-teal-900 ${className}`}
+      className={`rounded-md bg-teal-100 p-2 shadow-lg hover:opacity-70 dark:bg-teal-900 ${className}`}
     >
       {icons[action]}
     </button>

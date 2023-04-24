@@ -54,7 +54,7 @@ const UserLikedPage: React.FC = () => {
       <MetaTags title="Liked posts" />
       <MainLayout>
         <div className="-mb-5 w-full">
-          <h1 className="sm:text-3xl mb-2 text-2xl prose dark:prose-invert font-bold w-full text-left">
+          <h1 className="prose mb-2 w-full text-left text-2xl font-bold dark:prose-invert sm:text-3xl">
             Your likes
           </h1>
           <SearchInput

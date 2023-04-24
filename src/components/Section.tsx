@@ -24,17 +24,17 @@ const Section: React.FC<Props> = ({
   return (
     <section
       className={clsx(
-        "bg-white border-2 rounded-lg border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700/90 shadow-4xl w-full",
-        compact ? "p-3" : "sm:px-10 px-5 py-5"
+        "w-full rounded-lg border-2 border-zinc-200 bg-white shadow-4xl dark:border-zinc-700/90 dark:bg-zinc-800",
+        compact ? "p-3" : "px-5 py-5 sm:px-10"
       )}
     >
-      <div className="w-full flex justify-between">
+      <div className="flex w-full justify-between">
         <div>
           <ShouldRender if={!loading}>
             <h2
               className={clsx(
-                "prose break-all dark:prose-invert font-bold text-ellipsis line-clamp-1",
-                compact ? "text-lg" : "sm:text-2xl text-xl"
+                "prose line-clamp-1 text-ellipsis break-all font-bold dark:prose-invert",
+                compact ? "text-lg" : "text-xl sm:text-2xl"
               )}
             >
               {title}

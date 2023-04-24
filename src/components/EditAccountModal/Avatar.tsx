@@ -27,27 +27,27 @@ const Avatar: React.FC<Props> = ({ image }) => {
 
   return (
     <>
-      <div className="w-full flex justify-center items-center">
+      <div className="flex w-full items-center justify-center">
         <label htmlFor="avatar-file-input">
-          <div className="w-fit mx-auto relative cursor-pointer flex items-center justify-center">
+          <div className="relative mx-auto flex w-fit cursor-pointer items-center justify-center">
             <div className="group w-fit">
               <Image
                 src={currentImage || "/static/default-profile.jpg"}
                 width={128}
                 height={128}
                 alt="Your profile picture"
-                className="rounded-full group-hover:brightness-50 dark:group-hover:opacity-50 object-cover h-[128px]"
+                className="h-[128px] rounded-full object-cover group-hover:brightness-50 dark:group-hover:opacity-50"
               />
 
               <MdAdd
                 size={45}
-                className="text-white cursor-pointer hidden group-hover:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 transform cursor-pointer text-white group-hover:block"
               />
             </div>
 
             <div
               role="button"
-              className="absolute bottom-0 right-0 p-2 rounded-full flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 transition-colors"
+              className="absolute bottom-0 right-0 flex items-center justify-center rounded-full bg-emerald-500 p-2 transition-colors hover:bg-emerald-600"
             >
               <MdOutlineAddAPhoto className="text-white" size={20} />
             </div>

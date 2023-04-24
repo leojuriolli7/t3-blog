@@ -123,7 +123,7 @@ const ButtonContent: React.FC<{
   return (
     <React.Fragment>
       <ShouldRender if={loading}>
-        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-5">
+        <span className="absolute left-1/2 top-1/2 h-5 -translate-x-1/2 -translate-y-1/2">
           <Spinner
             alwaysWhite={
               isTransparentButtonWithoutSpinnerVariant ||

@@ -13,7 +13,7 @@ type Props = {
 const Field: React.FC<Props> = ({ children, error, label, description }) => {
   const [parentRef] = useAutoAnimate();
   return (
-    <div className="relative w-full flex flex-col" ref={parentRef}>
+    <div className="relative flex w-full flex-col" ref={parentRef}>
       <ShouldRender if={label}>
         <div>
           <label className="block text-sm font-bold text-gray-900 dark:text-neutral-100">

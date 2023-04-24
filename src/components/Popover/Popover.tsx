@@ -38,7 +38,7 @@ const Popover: React.FC<Props> = ({
   });
 
   return (
-    <HeadlessPopover className="relative flex items-center z-50">
+    <HeadlessPopover className="relative z-50 flex items-center">
       <HeadlessPopover.Button
         ref={(ref) => setReferenceElement(ref)}
         className={clsx(
@@ -67,7 +67,7 @@ const Popover: React.FC<Props> = ({
           <div className="w-fit shadow dark:shadow-xl">
             <ul
               className={clsx(
-                "flex flex-col gap-1 bg-white border border-neutral-300 dark:border-zinc-800 dark:bg-neutral-900 rounded-md",
+                "flex flex-col gap-1 rounded-md border border-neutral-300 bg-white dark:border-zinc-800 dark:bg-neutral-900",
                 className
               )}
             >

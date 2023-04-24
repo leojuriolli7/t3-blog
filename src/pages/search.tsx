@@ -109,11 +109,11 @@ const SearchPage = () => {
       <MetaTags title={pageTitle} />
       <MainLayout>
         <div className="w-full">
-          <h1 className="xl:text-3xl text-2xl mb-3 font-bold prose dark:prose-invert">
+          <h1 className="prose mb-3 text-2xl font-bold dark:prose-invert xl:text-3xl">
             {pageTitle}
           </h1>
           <div className="w-full">
-            <div className="w-full flex gap-2 items-center mb-4">
+            <div className="mb-4 flex w-full items-center gap-2">
               {SEARCH_FILTERS.map((filter) => (
                 <Tab
                   key={filter}

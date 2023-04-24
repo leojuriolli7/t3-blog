@@ -51,11 +51,11 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
   return (
     <div
       className={clsx(
-        `absolute z-50 top-16 shadow-2xl bg-white rounded-lg border-zinc-300 border-[1px] dark:border-neutral-800 dark:bg-neutral-900 p-8`,
+        `absolute top-16 z-50 rounded-lg border-[1px] border-zinc-300 bg-white p-8 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900`,
         open ? "w-full" : "hidden"
       )}
     >
-      <div className="w-full flex gap-2 items-center mb-4">
+      <div className="mb-4 flex w-full items-center gap-2">
         {SEARCH_FILTERS.map((filter) => (
           <Tab
             key={filter}
@@ -67,7 +67,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
         ))}
       </div>
 
-      <div ref={listRef} className="flex flex-col w-full items-center gap-3">
+      <div ref={listRef} className="flex w-full flex-col items-center gap-3">
         <ShouldRender if={data?.type === "posts" && !!data?.posts?.length}>
           {data?.posts?.map((post) => (
             <CompactCard
@@ -115,7 +115,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
         </ShouldRender>
       </div>
 
-      <div className="w-full flex flex-col items-center gap-2 mt-3">
+      <div className="mt-3 flex w-full flex-col items-center gap-2">
         <ShouldRender if={hasDataToShow}>
           <Link
             href={`/search?q=${query}&type=${currentFilter}`}
@@ -136,7 +136,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
         </ShouldRender>
 
         <ShouldRender if={noDataToShow}>
-          <p className="w-full flex justify-center">No results to show</p>
+          <p className="flex w-full justify-center">No results to show</p>
         </ShouldRender>
       </div>
     </div>

@@ -28,19 +28,19 @@ type ReplyData = {
 export type ReplyingTo = ReplyData | undefined;
 
 const CommentSectionSkeleton = (
-  <div role="status" className="w-full mt-2">
-    <div className="w-full h-[39px]">
+  <div role="status" className="mt-2 w-full">
+    <div className="h-[39px] w-full">
       <Skeleton width="w-full" parentClass="h-full" height="h-full" />
     </div>
-    <div className="w-full h-[159px] border border-neutral-200  dark:border-neutral-800">
-      <div className="w-1/2 h-full border-r border-r-neutral-200  dark:border-r-neutral-800"></div>
+    <div className="h-[159px] w-full border border-neutral-200  dark:border-neutral-800">
+      <div className="h-full w-1/2 border-r border-r-neutral-200  dark:border-r-neutral-800"></div>
     </div>
 
-    <div className="sm:w-[140px] w-full h-[40px] mt-2">
+    <div className="mt-2 h-[40px] w-full sm:w-[140px]">
       <Skeleton width="w-full" parentClass="h-full" height="h-full" />
     </div>
 
-    <div className="w-full mt-10 flex flex-col gap-5 bg-slate-100 shadow-md p-6 dark:bg-zinc-800 h-[164px]">
+    <div className="mt-10 flex h-[164px] w-full flex-col gap-5 bg-slate-100 p-6 shadow-md dark:bg-zinc-800">
       <Skeleton lines={4} />
     </div>
   </div>
@@ -339,9 +339,9 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
         />
       </ShouldRender>
 
-      <main className="relative w-full flex flex-col gap-10 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700/90 bg-slate-100 p-8 xs:p-12 dark:bg-zinc-800">
+      <main className="relative flex w-full flex-col gap-10 rounded-lg border border-zinc-200 bg-slate-100 p-8 shadow-lg dark:border-zinc-700/90 dark:bg-zinc-800 xs:p-12">
         <ShouldRender if={data && canDeleteOrEditPost}>
-          <div className="absolute -top-2 right-2 flex gap-3 align-center">
+          <div className="align-center absolute -top-2 right-2 flex gap-3">
             <ActionButton
               action={isEditing ? "close" : "edit"}
               onClick={toggleIsEditing}
@@ -357,7 +357,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
 
         <ShouldRender if={!isEditing}>
           <ShouldRender if={!isLoading}>
-            <h1 className="prose dark:prose-invert xs:text-4xl xl:text-3xl text-2xl font-bold">
+            <h1 className="prose text-2xl font-bold dark:prose-invert xs:text-4xl xl:text-3xl">
               {data?.title}
             </h1>
           </ShouldRender>
@@ -377,7 +377,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
                 <Link
                   href={`/users/${data?.user?.id}`}
                   title="Go to user's profile"
-                  className="underline text-emerald-700 dark:text-emerald-500 font-bold"
+                  className="font-bold text-emerald-700 underline dark:text-emerald-500"
                   prefetch={false}
                 >
                   {getUserDisplayName(data?.user)}
@@ -398,21 +398,21 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
           </ShouldRender>
 
           <ShouldRender if={!!data?.link}>
-            <div className="w-full -mt-4 -mb-4">
+            <div className="-mb-4 -mt-4 w-full">
               <LinkPreview loading={isLoading} data={data?.link} />
 
-              <div className="w-full break-words bg-white shadow text-black dark:text-neutral-300 dark:bg-neutral-900 p-4 mt-2 border-l-4 border-gray-300 dark:border-neutral-500">
-                <h3 className="sm:text-xl text-lg font-bold">
+              <div className="mt-2 w-full break-words border-l-4 border-gray-300 bg-white p-4 text-black shadow dark:border-neutral-500 dark:bg-neutral-900 dark:text-neutral-300">
+                <h3 className="text-lg font-bold sm:text-xl">
                   {data?.link?.title}
                 </h3>
-                <p className="mt-2 sm:leading-7 sm:text-base text-sm">{`"${data?.link?.description}"`}</p>
-                <p className="font-bold text-sm sm:mt-0 mt-2">
+                <p className="mt-2 text-sm sm:text-base sm:leading-7">{`"${data?.link?.description}"`}</p>
+                <p className="mt-2 text-sm font-bold sm:mt-0">
                   Read more on{" "}
                   <a
                     href={data?.link?.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="underline italic text-emerald-500"
+                    className="italic text-emerald-500 underline"
                   >
                     {data?.link?.url}
                   </a>
@@ -430,7 +430,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
           </HTMLBody>
         </ShouldRender>
 
-        <div className="flex gap-3 absolute -bottom-4 left-4">
+        <div className="absolute -bottom-4 left-4 flex gap-3">
           <LikeButton
             disabled={isLoading}
             label={data?.likes}
@@ -447,7 +447,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
           />
         </div>
 
-        <div className="flex gap-3 absolute -bottom-4 right-4">
+        <div className="absolute -bottom-4 right-4 flex gap-3">
           <FavoriteButton
             disabled={isLoading}
             onClick={handleFavoritePost}
@@ -457,8 +457,8 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
       </main>
 
       <ShouldRender if={attachments?.length}>
-        <div className="w-full mt-3 flex flex-col gap-2">
-          <h2 className="text-lg font-medium mb-2">Attachments</h2>
+        <div className="mt-3 flex w-full flex-col gap-2">
+          <h2 className="mb-2 text-lg font-medium">Attachments</h2>
           {filteredAttachments?.medias?.map((media, key) => (
             <AttachmentPreview
               type="media"
@@ -493,14 +493,14 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
       </ShouldRender>
 
       <ShouldRender if={data?.tags?.length || isLoading}>
-        <div className="w-full -mb-10">
+        <div className="-mb-10 w-full">
           <h2 className="text-lg font-medium">Tags</h2>
 
           <TagList tags={data?.tags} loading={isLoading} />
         </div>
       </ShouldRender>
 
-      <div className="w-full mt-6">
+      <div className="mt-6 w-full">
         <h2 className="text-lg font-medium">Comments</h2>
 
         <CommentSection />

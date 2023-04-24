@@ -56,7 +56,7 @@ const AttachmentPreview: React.FC<Props> = ({
   useEffect(() => setIsAudioPlaying(false), [file, setIsAudioPlaying]);
 
   return (
-    <div className="relative border rounded-md border-zinc-300 bg-white p-4 first:mt-4 dark:border-zinc-700/90 dark:bg-zinc-800/90">
+    <div className="relative rounded-md border border-zinc-300 bg-white p-4 first:mt-4 dark:border-zinc-700/90 dark:bg-zinc-800/90">
       <div className="flex gap-3">
         <div onClick={onClickImage} className="group relative h-16 w-16">
           <ShouldRender if={type === "document"}>
@@ -102,7 +102,7 @@ const AttachmentPreview: React.FC<Props> = ({
               width={64}
               height={64}
               alt={file.name || "Uploaded image"}
-              className="cursor-pointer transition-all group-hover:brightness-50 dark:group-hover:opacity-50 object-cover h-full"
+              className="h-full cursor-pointer object-cover transition-all group-hover:brightness-50 dark:group-hover:opacity-50"
               // Attachment images cannot be optimized because their URL is constantly changing.
               unoptimized={!optimized}
             />
@@ -122,12 +122,12 @@ const AttachmentPreview: React.FC<Props> = ({
           <ShouldRender if={!!onClickImage}>
             <IoExpandOutline
               size={26}
-              className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer text-white group-hover:block"
+              className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer text-white group-hover:block"
             />
           </ShouldRender>
         </div>
         <div>
-          <p className="mt-2 text-ellipsis text-sm text-neutral-700 line-clamp-2 dark:text-neutral-400">
+          <p className="mt-2 line-clamp-2 text-ellipsis text-sm text-neutral-700 dark:text-neutral-400">
             {file.name}
           </p>
           <p className="text-sm text-neutral-500 dark:text-neutral-500">
@@ -141,7 +141,7 @@ const AttachmentPreview: React.FC<Props> = ({
             title="Remove file"
             aria-label="Remove file"
             onClick={removeFile}
-            className="absolute top-2 right-2 cursor-pointer text-neutral-700 transition-transform hover:scale-125 dark:text-neutral-300"
+            className="absolute right-2 top-2 cursor-pointer text-neutral-700 transition-transform hover:scale-125 dark:text-neutral-300"
           />
         </ShouldRender>
 
@@ -151,7 +151,7 @@ const AttachmentPreview: React.FC<Props> = ({
             role="button"
             title="Download file"
             aria-label="Download file"
-            className="absolute top-1/2 right-4 -translate-y-1/2
+            className="absolute right-4 top-1/2 -translate-y-1/2
           cursor-pointer text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-400"
             onClick={handleClickDownload}
           />

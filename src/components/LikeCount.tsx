@@ -14,7 +14,7 @@ const LikeCount: React.FC<Props> = (props) => {
     <div
       className={`flex gap-2 ${
         vertical ? "flex-col" : ""
-      } items-center bg-teal-100 dark:bg-teal-900 p-1 shadow-md rounded-md border border-emerald-500/20`}
+      } items-center rounded-md border border-emerald-500/20 bg-teal-100 p-1 shadow-md dark:bg-teal-900`}
     >
       <ShouldRender if={dislike}>
         <AiFillDislike size={22} className="text-emerald-500" />

@@ -12,7 +12,7 @@ const Spinner: React.FC<Props> = ({ alwaysWhite, alwaysDark }) => {
   return (
     <div
       className={clsx(
-        "animate-spin inline-block w-5 h-5 border-[3px] border-current border-t-transparent rounded-full",
+        "inline-block h-5 w-5 animate-spin rounded-full border-[3px] border-current border-t-transparent",
         alwaysWhite && "text-white",
         alwaysDark && "text-gray-800",
         hasDefaultColors && "text-gray-800 dark:text-white"

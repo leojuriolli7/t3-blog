@@ -53,10 +53,10 @@ const Following = () => {
       <MetaTags title="Following" />
       <MainLayout>
         <div className="w-full">
-          <h2 className="xl:text-3xl text-xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
+          <h2 className="prose -mb-3 text-xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
             Posts from your following
           </h2>
-          <div className="flex mt-3 gap-3">
+          <div className="mt-3 flex gap-3">
             {filters.map((filter) => (
               <Tab
                 key={filter}

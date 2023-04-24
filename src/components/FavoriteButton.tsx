@@ -18,7 +18,7 @@ const FavoriteButton: React.FC<Props> = (props) => {
       disabled={disabled}
       title={buttonDescription}
       aria-label={buttonDescription}
-      className={`flex gap-2 rounded-md bg-emerald-500 dark:bg-teal-900 sm:p-2 px-2 py-1 hover:opacity-80 shadow-lg`}
+      className={`flex gap-2 rounded-md bg-emerald-500 px-2 py-1 shadow-lg hover:opacity-80 dark:bg-teal-900 sm:p-2`}
       onClick={onClick}
     >
       <AiFillHeart

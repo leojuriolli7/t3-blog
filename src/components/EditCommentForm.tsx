@@ -80,7 +80,7 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
       </Field>
 
       <Button
-        className="mt-2 px-6 md:w-auto flex justify-center w-full rounded-md"
+        className="mt-2 flex w-full justify-center rounded-md px-6 md:w-auto"
         variant="secondary"
         type="submit"
         loading={updating}

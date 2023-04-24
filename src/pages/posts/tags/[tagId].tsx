@@ -60,8 +60,8 @@ const SingleTagPage: NextPage<
     <>
       <MetaTags title={`${tag?.name || ""} posts`} />
       <MainLayout>
-        <div className="w-full  mt-5 -mb-5">
-          <h1 className="xl:text-3xl text-2xl text-left">
+        <div className="-mb-5  mt-5 w-full">
+          <h1 className="text-left text-2xl xl:text-3xl">
             <ShouldRender if={!isLoading}>{tag?.name} posts</ShouldRender>
 
             <ShouldRender if={isLoading}>
@@ -69,7 +69,7 @@ const SingleTagPage: NextPage<
             </ShouldRender>
           </h1>
 
-          <div className="flex sm:items-start mt-3 gap-3">
+          <div className="mt-3 flex gap-3 sm:items-start">
             {filters.map((filter) => (
               <Tab
                 key={filter}

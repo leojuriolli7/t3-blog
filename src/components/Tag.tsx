@@ -40,7 +40,7 @@ const Tag: React.FC<Props> = ({
     <span
       title={title || undefined}
       role={role || undefined}
-      className={`cursor-pointer rounded-md transition flex items-center p-2 text-sm select-none border-[1px] border-neutral-300 dark:border-neutral-800 dark:text-neutral-200 whitespace-nowrap ${
+      className={`flex cursor-pointer select-none items-center whitespace-nowrap rounded-md border-[1px] border-neutral-300 p-2 text-sm transition dark:border-neutral-800 dark:text-neutral-200 ${
         notCheckableTag && !omitBgClass
           ? regularTagClasses
           : checkableTagClasses

@@ -16,15 +16,15 @@ const UserPreview: React.FC<Props> = ({ loading, user }) => {
       <div
         className={`${
           loading ? "pointer-events-none" : ""
-        } w-full cursor-pointer rounded-lg hover:opacity-80 bg-white dark:bg-zinc-800 shadow-md border-2 border-zinc-300 dark:border-neutral-700 p-6 flex justify-between items-start gap-2`}
+        } flex w-full cursor-pointer items-start justify-between gap-2 rounded-lg border-2 border-zinc-300 bg-white p-6 shadow-md hover:opacity-80 dark:border-neutral-700 dark:bg-zinc-800`}
       >
-        <div className="w-8 min-w-[32px] h-8">
+        <div className="h-8 w-8 min-w-[32px]">
           <Image
             width={32}
             height={32}
             alt={user?.name || "User"}
             src={user?.image || "/static/default-profile.jpg"}
-            className="rounded-full object-cover h-[32px]"
+            className="h-[32px] rounded-full object-cover"
           />
         </div>
         <div className="w-full">
@@ -37,7 +37,7 @@ const UserPreview: React.FC<Props> = ({ loading, user }) => {
           <ShouldRender if={!loading}>
             <p>{user?.name}</p>
 
-            <p className="text-sm text-ellipsis line-clamp-2 text-neutral-600 dark:text-neutral-400">
+            <p className="line-clamp-2 text-ellipsis text-sm text-neutral-600 dark:text-neutral-400">
               {user?.bio}
             </p>
           </ShouldRender>

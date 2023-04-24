@@ -121,9 +121,9 @@ const CreatePostPage: React.FC = () => {
         <FormProvider {...methods}>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="w-full max-w-3xl mx-auto flex flex-col gap-10"
+            className="mx-auto flex w-full max-w-3xl flex-col gap-10"
           >
-            <h1 className="text-2xl font-medium text-center">Create a post</h1>
+            <h1 className="text-center text-2xl font-medium">Create a post</h1>
 
             <Field error={errors.title}>
               <TextInput
@@ -159,7 +159,7 @@ const CreatePostPage: React.FC = () => {
             />
 
             <Button
-              className="sm:w-6/12 w-full min-w-fit mx-auto flex justify-center rounded-lg"
+              className="mx-auto flex w-full min-w-fit justify-center rounded-lg sm:w-6/12"
               variant="primary"
               type="submit"
               loading={isLoading}

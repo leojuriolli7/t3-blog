@@ -101,9 +101,9 @@ const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
           placeholder={isReply ? "Post reply" : "Post comment"}
         />
       </Field>
-      <div className="sm:flex w-full sm:justify-between">
+      <div className="w-full sm:flex sm:justify-between">
         <Button
-          className="sm:w-auto mt-2 w-full flex justify-center rounded-md"
+          className="mt-2 flex w-full justify-center rounded-md sm:w-auto"
           type="submit"
           loading={isLoading}
         >
@@ -111,7 +111,7 @@ const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
         </Button>
 
         <ShouldRender if={!isReply}>
-          <p className="prose dark:prose-invert sm:block hidden text-sm text-right mt-1">
+          <p className="prose mt-1 hidden text-right text-sm dark:prose-invert sm:block">
             powered by{" "}
             <a
               className="text-emerald-500"

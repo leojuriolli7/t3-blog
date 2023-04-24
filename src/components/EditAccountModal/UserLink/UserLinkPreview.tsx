@@ -16,12 +16,12 @@ const UserLinkPreview: React.FC<PreviewProps> = ({ data }) => {
         <div
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
-          className="flex w-full gap-2 items-center h-[40px] mt-2 ring-1 dark:ring-0 rounded-md ring-inset ring-gray-300 bg-white hover:bg-gray-100 dark:hover:bg-zinc-600 dark:bg-zinc-700 p-2 cursor-pointer"
+          className="mt-2 flex h-[40px] w-full cursor-pointer items-center gap-2 rounded-md bg-white p-2 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 dark:bg-zinc-700 dark:ring-0 dark:hover:bg-zinc-600"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={data?.icon} alt={data?.title} width="16px" height="16px" />
 
-          <p className="text-sm line-clamp-1 text-ellipsis break-all overflow-hidden">
+          <p className="line-clamp-1 overflow-hidden text-ellipsis break-all text-sm">
             {hovering ? data?.url : data?.title}
           </p>
         </div>

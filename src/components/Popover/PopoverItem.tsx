@@ -17,12 +17,12 @@ const PopoverItem: React.FC<ItemProps> = ({
 }) => {
   return (
     <li
-      className="hover:opacity-60 dark:hover:brightness-125 dark:hover:opacity-100 bg-inherit p-4 cursor-pointer"
+      className="cursor-pointer bg-inherit p-4 hover:opacity-60 dark:hover:opacity-100 dark:hover:brightness-125"
       onClick={onClick || undefined}
     >
       <div className="text-left">
         <div className={`flex w-full gap-${gap || "3"}`}>
-          <p className="text-lg text-black dark:text-white font-medium leading-6">
+          <p className="text-lg font-medium leading-6 text-black dark:text-white">
             {title}
           </p>
           <ShouldRender if={icon}>{icon}</ShouldRender>

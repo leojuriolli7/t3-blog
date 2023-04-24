@@ -7,9 +7,9 @@ const CloseButton = ({ onClick }: { onClick: () => void }) => (
   <button
     onClick={onClick}
     aria-label="Close modal"
-    className="absolute group z-[3] rounded-full top-0 right-0 p-2 bg-emerald-500 hover:bg-emerald-400 dark:bg-teal-900 dark:hover:bg-emerald-700 transition-colors"
+    className="group absolute right-0 top-0 z-[3] rounded-full bg-emerald-500 p-2 transition-colors hover:bg-emerald-400 dark:bg-teal-900 dark:hover:bg-emerald-700"
   >
-    <MdClose className="w-5 h-5 text-white group-hover:text-emerald-900 dark:group-hover:text-emerald-300 transition-colors" />
+    <MdClose className="h-5 w-5 text-white transition-colors group-hover:text-emerald-900 dark:group-hover:text-emerald-300" />
   </button>
 );
 
@@ -50,7 +50,7 @@ export const Modal: React.FC<{
         <div
           className={`flex min-h-screen ${
             alwaysCentered ? "items-center" : "items-end"
-          } justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0`}
+          } justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0`}
         >
           <Transition.Child
             as={Fragment}

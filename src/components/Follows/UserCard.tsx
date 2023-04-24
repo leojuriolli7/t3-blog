@@ -25,15 +25,15 @@ const UserCard: React.FC<Props> = ({ loading, user, onClickCard }) => {
       onClick={handleClickCard}
       className={`${
         loading ? "pointer-events-none" : ""
-      } sm:w-64 w-full rounded-md cursor-pointer hover:opacity-80 bg-white dark:bg-zinc-800 shadow-md border-2 border-zinc-300 dark:border-neutral-700 p-6 flex justify-between items-center gap-2`}
+      } flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border-2 border-zinc-300 bg-white p-6 shadow-md hover:opacity-80 dark:border-neutral-700 dark:bg-zinc-800 sm:w-64`}
     >
-      <div className="w-8 min-w-[32px] h-8">
+      <div className="h-8 w-8 min-w-[32px]">
         <Image
           width={32}
           height={32}
           alt={user?.name || "Follower"}
           src={user?.image || "/static/default-profile.jpg"}
-          className="rounded-full object-cover h-[32px]"
+          className="h-[32px] rounded-full object-cover"
         />
       </div>
       <div className="w-full">

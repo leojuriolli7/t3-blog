@@ -122,7 +122,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="w-full mx-auto flex flex-col items-center gap-10"
+        className="mx-auto flex w-full flex-col items-center gap-10"
       >
         <Field error={errors.title}>
           <TextInput
@@ -153,7 +153,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
 
         <Button
           variant="primary"
-          className="sm:w-6/12 w-full min-w-fit flex justify-center rounded-lg"
+          className="flex w-full min-w-fit justify-center rounded-lg sm:w-6/12"
           type="submit"
           loading={updating}
           disabled={fetchingTags}

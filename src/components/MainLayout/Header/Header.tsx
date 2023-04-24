@@ -27,14 +27,14 @@ const Header: React.FC = () => {
   const [, setOpen] = openAsideState;
 
   return (
-    <header className="w-full relative flex h-10 gap-2 items-center">
-      <Link href="/" className="xl:block hidden">
+    <header className="relative flex h-10 w-full items-center gap-2">
+      <Link href="/" className="hidden xl:block">
         <Image src="/static/logo.png" width={60} height={60} alt="T3 logo" />
       </Link>
 
       <button
         aria-label="Open navigation menu"
-        className="xl:hidden block"
+        className="block xl:hidden"
         onClick={() => setOpen(true)}
       >
         <GiHamburgerMenu className="h-8 w-8 text-gray-500 dark:text-gray-400" />

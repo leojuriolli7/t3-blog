@@ -25,18 +25,18 @@ const TagList: React.FC<Props> = ({
   const paddings = `${compact ? "px-2 py-1" : "p-2"}`;
 
   return (
-    <div className={`flex flex-wrap gap-2 mt-2 ${full ? "w-full" : ""}`}>
+    <div className={`mt-2 flex flex-wrap gap-2 ${full ? "w-full" : ""}`}>
       {(loading ? loadingArray : tags)?.map((tag, i) => (
         <Link
           key={loading ? i : tag?.id}
           href={`/posts/tags/${tag?.id}`}
           prefetch={false}
-          className={loading ? "pointer-events-none cursor-disabled" : ""}
+          className={loading ? "cursor-disabled pointer-events-none" : ""}
         >
           <Tag
             title={`Click to see all ${tag?.name} posts`}
             role="link"
-            className={`border-none hover:opacity-80 cursor-pointer select-none ${paddings} ${loadingClasses}`}
+            className={`cursor-pointer select-none border-none hover:opacity-80 ${paddings} ${loadingClasses}`}
           >
             {tag?.name}
           </Tag>
