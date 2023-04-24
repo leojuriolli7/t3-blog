@@ -13,7 +13,9 @@ type NotificationTypes =
   | "like"
   | "favorite"
   | "follow"
-  | "following-post";
+  | "following-post"
+  | "first-post"
+  | "welcome";
 
 // Get the main notification text.
 const notificationText: Record<NotificationTypes, string> = {
@@ -23,7 +25,12 @@ const notificationText: Record<NotificationTypes, string> = {
   like: "liked your post {{postName}}",
   reply: "replied to your comment in {{postName}}",
   "following-post": "from your following just posted: {{postName}}",
+  "first-post":
+    "Start by writing your first post! Share a link, create a poll, and more!",
+  welcome: "Welcome to T3 Blog! We are very pleased to have you here!",
 };
+
+const systemNotificationTypes = ["first-post", "welcome"];
 
 // Get the notification redirect link.
 function getHref(notification: Notification) {
@@ -36,6 +43,8 @@ function getHref(notification: Notification) {
   const userTypes = ["follow"];
 
   if (postTypes.includes(currentType)) return `/posts/${postId}`;
+
+  if (currentType === "first-post") return `/posts/new`;
 
   if (commentTypes.includes(currentType))
     return `/posts/${postId}?highlightedComment=${commentId}`;
@@ -83,6 +92,8 @@ export const notificationRouter = createRouter()
           smart: true,
         });
 
+        const isSystem = systemNotificationTypes.includes(currentType);
+
         return {
           ...notification,
           type: currentType,
@@ -92,6 +103,7 @@ export const notificationRouter = createRouter()
             notification?.post?.title || ""
           ),
           href,
+          isSystem,
         };
       });
 
