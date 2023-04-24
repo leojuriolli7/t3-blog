@@ -182,10 +182,10 @@ export const SidebarContent = () => {
                 alt="Your profile picture"
               />
 
-              <div>
+              <div className="w-full overflow-hidden">
                 <Link
                   href={`/users/${user?.id}`}
-                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words xl:text-base text-sm"
+                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words xl:text-base text-sm max-w-[95%]"
                 >
                   {getUserDisplayName(user)}
                 </Link>
