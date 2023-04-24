@@ -185,7 +185,7 @@ export const SidebarContent = () => {
               <div>
                 <Link
                   href={`/users/${user?.id}`}
-                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words xl:text-base text-sm"
+                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words xl:text-base text-sm max-w-[85%]"
                 >
                   {getUserDisplayName(user)}
                 </Link>

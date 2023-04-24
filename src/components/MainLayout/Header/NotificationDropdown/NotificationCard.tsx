@@ -8,11 +8,13 @@ import ShouldRender from "@components/ShouldRender";
 import { trpc } from "@utils/trpc";
 import { HiDotsVertical } from "react-icons/hi";
 import Popover from "@components/Popover";
-import { MouseEvent } from "react";
+import { MouseEvent, useMemo } from "react";
+import clsx from "clsx";
 
 export const NotificationCard = (notification: Notification) => {
   const notificationHasComment = !!notification?.comment;
   const isFollowNotification = notification?.type === "follow";
+  const isSystemNotification = notification?.isSystem === true;
 
   const username = getUserDisplayName(notification.notifier);
   const utils = trpc.useContext();
@@ -42,38 +44,56 @@ export const NotificationCard = (notification: Notification) => {
     }
   );
 
-  const handleMarkAsRead = (preventDefault: boolean) => (e: MouseEvent) => {
-    if (preventDefault) e.preventDefault();
+  const handleMarkAsRead =
+    ({ preventDefault }: { preventDefault: boolean }) =>
+    (e: MouseEvent) => {
+      if (preventDefault) e.preventDefault();
 
-    if (notification.read === false)
-      markAsRead({ notificationId: notification.id });
-  };
+      if (notification.read === false)
+        markAsRead({ notificationId: notification.id });
+    };
 
-  const buttonLabels = {
-    follow: "Follow back",
-    reply: "Reply back",
-    comment: "Read comment",
-  };
+  const imageProps = useMemo(() => {
+    if (isSystemNotification)
+      return {
+        alt: "T3 Logo",
+        src: "/static/small-logo.png",
+      };
+
+    return {
+      alt: notification.notifier?.name || "User",
+      src: notification.notifier?.image || "/static/default-profile.jpg",
+    };
+  }, [isSystemNotification, notification]);
 
   return (
     <Link
-      href={notification?.href || "/"}
-      className="p-3 text-sm flex gap-2 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/40 transition-colors w-full"
+      href={notification?.href || ""}
+      className={clsx(
+        "p-3 text-sm flex gap-2 transition-colors w-full",
+        notification?.href &&
+          "hover:bg-neutral-100/60 dark:hover:bg-neutral-800/40"
+      )}
       key={notification.id}
-      onClick={handleMarkAsRead(false)}
+      onClick={handleMarkAsRead({ preventDefault: false })}
     >
       <Image
         width={32}
         height={32}
-        alt={notification.notifier?.name || "User"}
-        src={notification.notifier?.image || "/static/default-profile.jpg"}
-        className="rounded-full flex-shrink-0 object-cover h-[32px]"
+        alt={imageProps.alt}
+        src={imageProps.src}
+        className={clsx(
+          "rounded-full flex-shrink-0 object-cover h-[32px]",
+          isSystemNotification && "bg-white"
+        )}
       />
 
       <div className="w-full">
         <div className="w-full flex">
           <p className={notification.read ? "w-full" : "w-11/12"}>
-            {`${username} ${notification.message}  ·  `}
+            {`${!isSystemNotification ? username : ""} ${
+              notification.message
+            }  ·  `}
             <span className="text-neutral-400">{notification.createdAt}</span>
           </p>
 
@@ -88,7 +108,7 @@ export const NotificationCard = (notification: Notification) => {
               }
             >
               <button
-                onClick={handleMarkAsRead(true)}
+                onClick={handleMarkAsRead({ preventDefault: true })}
                 type="button"
                 className="hover:opacity-60 rounded-lg text-sm dark:hover:brightness-125 dark:hover:opacity-100 bg-inherit p-4 cursor-pointer"
               >
