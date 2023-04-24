@@ -13,10 +13,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.+(js|jsx|css|less|scss|ts|tsx)": [
-      "prettier --write",
-      "git add"
-    ]
+    "**/*.+(js|jsx|css|less|scss|ts|tsx)": "prettier --write"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",
