@@ -7,6 +7,11 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import MetaTags from "@components/MetaTags";
 import Spinner from "@components/Spinner";
 
+/**
+ * This page is where new users logging in for the first time are
+ * redirected to, by Next Auth. Here we will just create two welcome
+ * notifications and redirect them back on their way.
+ */
 const NewUserPage: React.FC = () => {
   return (
     <>
