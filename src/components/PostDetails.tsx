@@ -331,11 +331,13 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
 
   return (
     <>
-      <MetaTags
-        title={data?.title}
-        image={data?.link?.image}
-        description={data?.markdownBody}
-      />
+      <ShouldRender if={data}>
+        <MetaTags
+          title={data?.title}
+          image={data?.link?.image}
+          description={data?.markdownBody}
+        />
+      </ShouldRender>
 
       <main className="relative w-full flex flex-col gap-10 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700/90 bg-slate-100 p-8 xs:p-12 dark:bg-zinc-800">
         <ShouldRender if={data && canDeleteOrEditPost}>
