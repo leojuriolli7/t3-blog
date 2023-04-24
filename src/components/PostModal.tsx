@@ -10,11 +10,17 @@ import { useContextualRouting } from "next-use-contextual-routing";
  * redirecting the user to the [postId] page.
  */
 const PostModal: React.FC = () => {
+  const { returnHref } = useContextualRouting();
   const router = useRouter();
   const postId = router.query.postId as string;
+
+  const isPostPage = router.pathname.includes("posts/[postId]");
+
+  // The modal cannot render on the post's actual page.
+  const canOpenModal = !!postId && !isPostPage;
+
   const openState = useState(false);
   const [open, setOpen] = openState;
-  const { returnHref } = useContextualRouting();
 
   const onCloseModal = () => {
     // the timeout ensures the modal close animation is finished before
@@ -32,12 +38,12 @@ const PostModal: React.FC = () => {
       },
     ],
     {
-      enabled: !!postId && open,
+      enabled: canOpenModal && open,
     }
   );
 
   useEffect(() => {
-    setOpen(!!postId);
+    setOpen(canOpenModal);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
 
