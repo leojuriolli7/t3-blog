@@ -68,7 +68,7 @@ export const NotificationCard = (notification: Notification) => {
 
   return (
     <Link
-      href={notification?.href || ""}
+      href={notification?.href || "/"}
       className={clsx(
         "p-3 text-sm flex gap-2 transition-colors w-full",
         notification?.href &&
