@@ -50,8 +50,14 @@ const EditAccountModal: React.FC<Props> = ({
     {
       onSuccess: (data) => {
         // Overwrite auth session image to the newly uploaded image url.
-        if (!!data?.image && userId === session?.user?.id)
+        if (!!data?.image && userId === session?.user?.id) {
           session!.user.image = data.image;
+        }
+
+        // Overwrite auth session name to the newly updated name.
+        if (!!data?.name && userId === session?.user?.id) {
+          session!.user.name = data.name;
+        }
 
         utils.invalidateQueries([
           "users.single-user",
