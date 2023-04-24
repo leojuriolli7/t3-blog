@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/future/image";
 import HTMLBody from "@components/HTMLBody";
 import Button from "@components/Button";
-import { Notification } from "@utils/types";
+import type { Notification } from "@utils/types";
 import ShouldRender from "@components/ShouldRender";
 import { trpc } from "@utils/trpc";
 import { HiDotsVertical } from "react-icons/hi";

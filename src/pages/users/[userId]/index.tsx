@@ -14,7 +14,7 @@ import getUserDisplayName from "@utils/getUserDisplayName";
 import Popover from "@components/Popover";
 import dynamic from "next/dynamic";
 import { MdDelete, MdEditNote, MdOutlineTextSnippet } from "react-icons/md";
-import { User } from "@utils/types";
+import type { User } from "@utils/types";
 import Skeleton from "@components/Skeleton";
 import UserLinkPreview from "@components/EditAccountModal/UserLink/UserLinkPreview";
 import Button from "@components/Button";

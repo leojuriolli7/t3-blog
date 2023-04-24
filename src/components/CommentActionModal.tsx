@@ -1,4 +1,4 @@
-import { CommentWithChildren } from "@utils/types";
+import type { CommentWithChildren } from "@utils/types";
 import { Dispatch, SetStateAction } from "react";
 import Comment from "./Comment";
 import CommentField from "./CommentField";

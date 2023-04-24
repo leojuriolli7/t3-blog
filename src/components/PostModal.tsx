@@ -1,22 +1,20 @@
-import { Dispatch, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { Modal } from "./Modal";
 import { PostDetails } from "./PostDetails";
-
-type Props = {
-  returnHref: string;
-  openState: [boolean, Dispatch<SetStateAction<boolean>>];
-};
+import { useContextualRouting } from "next-use-contextual-routing";
 
 /**
  * This modal will intercept the route change and be rendered instead of
  * redirecting the user to the [postId] page.
  */
-const PostModal: React.FC<Props> = ({ returnHref, openState }) => {
+const PostModal: React.FC = () => {
   const router = useRouter();
   const postId = router.query.postId as string;
-  const [open] = openState;
+  const openState = useState(false);
+  const [open, setOpen] = openState;
+  const { returnHref } = useContextualRouting();
 
   const onCloseModal = () => {
     // the timeout ensures the modal close animation is finished before
@@ -37,6 +35,11 @@ const PostModal: React.FC<Props> = ({ returnHref, openState }) => {
       enabled: !!postId && open,
     }
   );
+
+  useEffect(() => {
+    setOpen(!!postId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]);
 
   return (
     <Modal openState={openState} alwaysCentered onClose={onCloseModal}>

@@ -1,4 +1,4 @@
-import { User } from "@utils/types";
+import type { User } from "@utils/types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

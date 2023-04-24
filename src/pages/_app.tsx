@@ -10,6 +10,7 @@ import RouterProgressBar from "@components/RouterProgressBar";
 import { AppRouter } from "@server/router/app.router";
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
+import PostModal from "@components/PostModal";
 import "@styles/globals.scss";
 import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,6 +27,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         </Head>
         <RouterProgressBar />
         <Component {...pageProps} />
+        <PostModal />
         <ToastContainer
           closeButton={false}
           toastClassName={() =>

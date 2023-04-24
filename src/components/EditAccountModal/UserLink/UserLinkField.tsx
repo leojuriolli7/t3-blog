@@ -6,7 +6,7 @@ import { UpdateUserInput } from "@schema/user.schema";
 import debounce from "lodash.debounce";
 import { toast } from "react-toastify";
 import isURL from "validator/lib/isURL";
-import { Metadata, UserLink } from "@utils/types";
+import type { Metadata, UserLink } from "@utils/types";
 import UserLinkPreview from "./UserLinkPreview";
 import { baseUrl } from "@utils/constants";
 import TextInput from "@components/TextInput";

@@ -1,5 +1,5 @@
 import React from "react";
-import { CommentWithChildren } from "@utils/types";
+import type { CommentWithChildren } from "@utils/types";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Comment from "./Comment";
 import clsx from "clsx";

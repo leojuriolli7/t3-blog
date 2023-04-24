@@ -1,4 +1,4 @@
-import { FollowingUser } from "@utils/types";
+import type { FollowingUser } from "@utils/types";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";

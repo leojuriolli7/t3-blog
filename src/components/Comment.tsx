@@ -1,5 +1,5 @@
 import { trpc } from "@utils/trpc";
-import { CommentWithChildren } from "@utils/types";
+import type { CommentWithChildren } from "@utils/types";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";

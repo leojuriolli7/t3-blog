@@ -1,5 +1,5 @@
 import { trpc } from "@utils/trpc";
-import { Poll } from "@utils/types";
+import type { Poll } from "@utils/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useCallback } from "react";

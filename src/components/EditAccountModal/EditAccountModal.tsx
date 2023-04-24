@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import Field from "@components/Field";
 import ShouldRender from "@components/ShouldRender";
 import { useSession } from "next-auth/react";
-import { User } from "@utils/types";
+import type { User } from "@utils/types";
 import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
 import { Modal } from "../Modal";
 import Avatar from "./Avatar";

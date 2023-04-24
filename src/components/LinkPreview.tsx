@@ -1,4 +1,4 @@
-import { Metadata } from "@utils/types";
+import type { Metadata } from "@utils/types";
 import { useCallback, useState } from "react";
 import PreviewMediaModal from "./PreviewMediaModal";
 import { IoExpandOutline } from "react-icons/io5";
