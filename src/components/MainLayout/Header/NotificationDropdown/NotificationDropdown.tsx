@@ -137,7 +137,7 @@ const NotificationDropdown = () => {
           </div>
         </ShouldRender>
 
-        <div ref={bottomRef} />
+        {dataToShow && <div ref={bottomRef} />}
       </div>
     </Popover.Main>
   );
