@@ -8,6 +8,7 @@ import superjson from "superjson";
 import { url } from "@utils/constants";
 import RouterProgressBar from "@components/RouterProgressBar";
 import { AppRouter } from "@server/router/app.router";
+import MainLayout from "@layouts/MainLayout";
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import PostModal from "@components/PostModal";
@@ -16,7 +17,6 @@ import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
 import "nprogress/nprogress.css";
 import "keen-slider/keen-slider.min.css";
-import MainLayout from "@components/MainLayout";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
