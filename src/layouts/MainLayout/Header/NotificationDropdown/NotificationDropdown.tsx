@@ -97,21 +97,20 @@ const NotificationDropdown = () => {
         </div>
       }
     >
-      <div className="max-h-[500px] w-80 overflow-y-auto">
-        <div className="flex w-full justify-end gap-2 p-3">
-          <NotificationTab
-            isActive={currentTab === "new"}
-            onClick={toggleTab("new")}
-            label="Unreads"
-          />
+      <div className="flex w-full justify-end gap-2 p-3">
+        <NotificationTab
+          isActive={currentTab === "new"}
+          onClick={toggleTab("new")}
+          label="Unreads"
+        />
 
-          <NotificationTab
-            isActive={currentTab === "old"}
-            onClick={toggleTab("old")}
-            label="Old"
-          />
-        </div>
-
+        <NotificationTab
+          isActive={currentTab === "old"}
+          onClick={toggleTab("old")}
+          label="Old"
+        />
+      </div>
+      <div className="max-h-[450px] w-80 overflow-y-auto">
         <ShouldRender if={!!dataToShow?.length}>
           {dataToShow?.map((notification) => (
             <NotificationCard key={notification.id} {...notification} />
