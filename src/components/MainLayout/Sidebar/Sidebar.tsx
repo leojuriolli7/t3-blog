@@ -188,7 +188,7 @@ export const SidebarContent = () => {
               <div className="w-full overflow-hidden">
                 <Link
                   href={`/users/${user?.id}`}
-                  className="-mb-1 line-clamp-1 max-w-[95%] text-ellipsis break-words text-sm hover:underline xl:text-base"
+                  className="-mb-1 line-clamp-1 w-fit max-w-[95%] text-ellipsis break-words text-sm hover:underline xl:text-base"
                 >
                   {getUserDisplayName(user)}
                 </Link>
