@@ -70,7 +70,7 @@ export const NotificationCard = (notification: Notification) => {
     <Link
       href={notification?.href || "/"}
       className={clsx(
-        "p-3 text-sm flex gap-2 transition-colors w-full",
+        "flex w-full gap-2 p-3 text-sm transition-colors",
         notification?.href &&
           "hover:bg-neutral-100/60 dark:hover:bg-neutral-800/40"
       )}
@@ -83,13 +83,13 @@ export const NotificationCard = (notification: Notification) => {
         alt={imageProps.alt}
         src={imageProps.src}
         className={clsx(
-          "rounded-full flex-shrink-0 object-cover h-[32px]",
+          "h-[32px] flex-shrink-0 rounded-full object-cover",
           isSystemNotification && "bg-white"
         )}
       />
 
       <div className="w-full">
-        <div className="w-full flex">
+        <div className="flex w-full">
           <p className={notification.read ? "w-full" : "w-11/12"}>
             {`${!isSystemNotification ? username : ""} ${
               notification.message
@@ -103,14 +103,14 @@ export const NotificationCard = (notification: Notification) => {
               placement="left"
               icon={
                 <div className="w-1/12">
-                  <HiDotsVertical className="w-4 h-4 dark:text-neutral-500" />
+                  <HiDotsVertical className="h-4 w-4 dark:text-neutral-500" />
                 </div>
               }
             >
               <button
                 onClick={handleMarkAsRead({ preventDefault: true })}
                 type="button"
-                className="hover:opacity-60 rounded-lg text-sm dark:hover:brightness-125 dark:hover:opacity-100 bg-inherit p-4 cursor-pointer"
+                className="cursor-pointer rounded-lg bg-inherit p-4 text-sm hover:opacity-60 dark:hover:opacity-100 dark:hover:brightness-125"
               >
                 Mark as read
               </button>
@@ -120,7 +120,7 @@ export const NotificationCard = (notification: Notification) => {
 
         <ShouldRender if={notificationHasComment}>
           <div className="mt-2">
-            <HTMLBody className="bg-neutral-300/60 text-neutral-700/90 dark:text-neutral-400 dark:bg-neutral-800/60 p-2 rounded-md text-ellipsis line-clamp-2">
+            <HTMLBody className="line-clamp-2 text-ellipsis rounded-md bg-neutral-300/60 p-2 text-neutral-700/90 dark:bg-neutral-800/60 dark:text-neutral-400">
               {notification?.comment?.body}
             </HTMLBody>
           </div>
@@ -128,7 +128,7 @@ export const NotificationCard = (notification: Notification) => {
 
         <ShouldRender if={isFollowNotification || notificationHasComment}>
           <Button
-            className="w-full rounded-full mt-2 flex justify-center bg-white border border-neutral-400 dark:border-none dark:bg-neutral-700"
+            className="mt-2 flex w-full justify-center rounded-full border border-neutral-400 bg-white dark:border-none dark:bg-neutral-700"
             variant="text"
             size="sm"
           >

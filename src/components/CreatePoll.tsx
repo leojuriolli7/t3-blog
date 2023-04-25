@@ -100,25 +100,25 @@ const CreatePoll: React.FC = () => {
           sizeVariant="lg"
           type="text"
           placeholder="poll title/question"
-          className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900 rounded-md"
+          className="w-full rounded-md border-[1px] border-zinc-300 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900"
           onChange={debouncedTitleChange}
         />
 
         <ShouldRender if={!!title}>
-          <div className="w-full relative mt-3">
+          <div className="relative mt-3 w-full">
             <TextInput
               variant="primary"
               sizeVariant="lg"
               type="text"
               placeholder="new option"
-              className="bg-white border-zinc-300 border-[1px] dark:border-neutral-800 p-3 w-full dark:bg-neutral-900 rounded-md"
+              className="w-full rounded-md border-[1px] border-zinc-300 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900"
               onPressEnter={addNewOption}
               onChange={onNewOptionChange}
               ref={optionInputRef}
             />
             <button
               type="button"
-              className="h-full px-5 absolute right-0 bg-emerald-500 flex items-center justify-center hover:opacity-80 top-1/2 -translate-y-1/2 rounded-r-md"
+              className="absolute right-0 top-1/2 flex h-full -translate-y-1/2 items-center justify-center rounded-r-md bg-emerald-500 px-5 hover:opacity-80"
               aria-label="Add poll option"
               title="Add poll option"
               onClick={addNewOption}
@@ -131,7 +131,7 @@ const CreatePoll: React.FC = () => {
           <div ref={itemsListRef} className="mt-2 flex w-full flex-col gap-2">
             {options?.map((option) => (
               <div
-                className="w-full flex justify-between gap-3"
+                className="flex w-full justify-between gap-3"
                 key={option.title}
               >
                 <div
@@ -140,7 +140,7 @@ const CreatePoll: React.FC = () => {
                     backgroundColor: `${option.color}90`,
                   }}
                 >
-                  <p className="text-ellipsis line-clamp-1 overflow-hidden break-all text-sm sm:text-base">
+                  <p className="line-clamp-1 overflow-hidden text-ellipsis break-all text-sm sm:text-base">
                     {option.title}
                   </p>
                 </div>

@@ -150,12 +150,12 @@ const MarkdownEditor: React.FC<Props> = ({
           />
 
           <ShouldRender if={imageUploadTip}>
-            <div className="flex w-full sm:items-center gap-1 bg-white select-none border-[1px] border-t-0 border-zinc-300 dark:border-neutral-800 dark:bg-neutral-900 py-2 px-1">
+            <div className="flex w-full select-none gap-1 border-[1px] border-t-0 border-zinc-300 bg-white px-1 py-2 dark:border-neutral-800 dark:bg-neutral-900 sm:items-center">
               <MdInfoOutline
                 size={18}
-                className="text-neutral-700 dark:text-neutral-400 flex-shrink-0"
+                className="flex-shrink-0 text-neutral-700 dark:text-neutral-400"
               />
-              <span className="sm:text-sm text-xs text-neutral-700 dark:text-neutral-400">
+              <span className="text-xs text-neutral-700 dark:text-neutral-400 sm:text-sm">
                 Drag n&apos; drop images or click the image icon on the menu to
                 upload your own images to the text.
               </span>

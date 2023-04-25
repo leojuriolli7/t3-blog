@@ -99,7 +99,7 @@ const TextInput = React.forwardRef<
   return (
     <div className="relative w-full">
       <ShouldRender if={icon}>
-        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
           {icon}
         </div>
       </ShouldRender>
@@ -121,7 +121,7 @@ const TextInput = React.forwardRef<
       </ShouldRender>
 
       <ShouldRender if={loading}>
-        <div className="absolute transform -translate-y-1/2 top-1/2 right-0 flex items-center pr-3 pointer-events-none opacity-40">
+        <div className="pointer-events-none absolute right-0 top-1/2 flex -translate-y-1/2 transform items-center pr-3 opacity-40">
           <Spinner />
         </div>
       </ShouldRender>

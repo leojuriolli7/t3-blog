@@ -67,14 +67,14 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-neutral-900 py-6 shadow-xl">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl dark:bg-neutral-900">
                     <div className="relative flex-1 px-4 sm:px-6">
                       <Image
                         src="/static/logo.png"
                         width={60}
                         height={60}
                         alt="T3 logo"
-                        className="absolute top-0 left-6"
+                        className="absolute left-6 top-0"
                       />
 
                       {children}

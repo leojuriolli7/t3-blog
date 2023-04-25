@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["*"]
+  merge_group:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+
+  prettier:
+    runs-on: ubuntu-latest
+    name: Run Prettier
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn
+
+      - run: npx prettier --check *.{js,jsx,ts,tsx} --ignore-unknown --no-error-on-unmatched-pattern
+
+  tsc:
+    runs-on: ubuntu-latest
+    name: Run Typechecker
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn
+
+      - run: yarn typecheck

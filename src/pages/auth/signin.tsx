@@ -100,11 +100,11 @@ const SigninPage: NextPage = () => {
     <>
       <MetaTags title="Sign in" description="Sign in to your account" />
       <MainLayout>
-        <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
           <div className="w-full max-w-md space-y-8">
             <div>
               <AuthFeedbackMessage message={error} />
-              <h1 className="mt-6 text-center font-bold sm:text-3xl text-2xl tracking-tight text-gray-900 dark:text-white">
+              <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
                 Sign in to your account
               </h1>
             </div>
@@ -117,7 +117,7 @@ const SigninPage: NextPage = () => {
                 variant="transparent"
                 icon={<FcGoogle size={20} />}
                 textClass="text-neutral-800"
-                className="w-full bg-white ring-1 ring-inset ring-gray-300 rounded-lg"
+                className="w-full rounded-lg bg-white ring-1 ring-inset ring-gray-300"
                 spinnerVariant="dark"
               >
                 Sign in with Google
@@ -130,7 +130,7 @@ const SigninPage: NextPage = () => {
                 variant="transparent"
                 textClass="text-neutral-200"
                 icon={<BsDiscord size={19} color="white" />}
-                className="w-full bg-indigo-500 rounded-lg"
+                className="w-full rounded-lg bg-indigo-500"
                 spinnerVariant="white"
               >
                 Sign in with Discord
@@ -143,18 +143,18 @@ const SigninPage: NextPage = () => {
                 variant="transparent"
                 textClass="text-neutral-200"
                 icon={<BsGithub size={19} color="white" />}
-                className="w-full bg-zinc-800 rounded-lg"
+                className="w-full rounded-lg bg-zinc-800"
                 spinnerVariant="white"
               >
                 Sign in with Github
               </Button>
 
-              <div className="inline-flex items-center justify-between w-full">
-                <hr className="w-[42%] h-1 my-8 bg-gray-200 border-0 rounded dark:bg-neutral-700" />
-                <div className="absolute px-4 -translate-x-1/2 left-1/2">
+              <div className="inline-flex w-full items-center justify-between">
+                <hr className="my-8 h-1 w-[42%] rounded border-0 bg-gray-200 dark:bg-neutral-700" />
+                <div className="absolute left-1/2 -translate-x-1/2 px-4">
                   <p className="text-sm font-bold text-gray-400">or</p>
                 </div>
-                <hr className="w-[42%] h-1 my-8 bg-gray-200 border-0 rounded dark:bg-neutral-700" />
+                <hr className="my-8 h-1 w-[42%] rounded border-0 bg-gray-200 dark:bg-neutral-700" />
               </div>
 
               <div>
@@ -173,7 +173,7 @@ const SigninPage: NextPage = () => {
                     loading={isLoading.email}
                     variant="primary"
                     type="submit"
-                    className="w-full mt-2 rounded-lg"
+                    className="mt-2 w-full rounded-lg"
                     icon={<MdEmail size={19} color="white" />}
                   >
                     Sign in with e-mail

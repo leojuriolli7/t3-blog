@@ -75,19 +75,19 @@ const Dropzone: React.FC = () => {
       <Field error={errors.files as any}>
         <div
           {...getRootProps({ onClick: (e) => e.preventDefault() })}
-          className="flex items-center justify-center w-full"
+          className="flex w-full items-center justify-center"
         >
           <label
             htmlFor="file"
-            className={`flex flex-col mt-2 items-center justify-center w-full h-64 border-2 rounded-md border-dashed cursor-pointer bg-white dark:bg-neutral-900 ${
-              isDragAccept ? "opacity-80 border-emerald-500" : ""
+            className={`mt-2 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed bg-white dark:bg-neutral-900 ${
+              isDragAccept ? "border-emerald-500 opacity-80" : ""
             } ${isDragReject ? "border-red-600" : ""} ${
               !isDragAccept && !isDragReject
-                ? "dark:border-neutral-700 border-gray-300"
+                ? "border-gray-300 dark:border-neutral-700"
                 : ""
             }`}
           >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+            <div className="flex flex-col items-center justify-center pb-6 pt-5">
               <HiOutlineCloudUpload
                 aria-hidden="true"
                 size={37}
@@ -98,7 +98,7 @@ const Dropzone: React.FC = () => {
 
               <div>
                 <p
-                  className={`mb-2 text-sm text-center ${
+                  className={`mb-2 text-center text-sm ${
                     isDragReject ? "text-red-600" : ""
                   } ${isDragAccept ? "text-emerald-500" : ""} ${
                     !isDragAccept && !isDragReject
@@ -109,7 +109,7 @@ const Dropzone: React.FC = () => {
                   <span className="font-bold">Click to upload</span> or drag and
                   drop
                 </p>
-                <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+                <p className="text-center text-xs text-gray-500 dark:text-gray-400">
                   Images, .pdf, .txt, .msword, .doc, .mp3, .wav, .mp4
                   <br />
                   <span>(Maximum of {maxSizeInMB}MB per file)</span>

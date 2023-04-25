@@ -54,7 +54,7 @@ const UserFavoritesPage: React.FC = () => {
       <MetaTags title="Favorite posts" />
       <MainLayout>
         <div className="-mb-5 w-full">
-          <h1 className="sm:text-3xl mb-2 text-2xl font-bold prose dark:prose-invert w-full text-left">
+          <h1 className="prose mb-2 w-full text-left text-2xl font-bold dark:prose-invert sm:text-3xl">
             Your favorites
           </h1>
           <SearchInput

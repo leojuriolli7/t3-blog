@@ -27,7 +27,7 @@ const HTMLBody: React.FC<Props> = ({
 
       <ShouldRender if={!loading}>
         <div
-          className={`${className} prose-emerald markdown__content dark:prose-invert break-words dark:prose-hr:border-neutral-700`}
+          className={`${className} markdown__content prose-emerald break-words dark:prose-invert dark:prose-hr:border-neutral-700`}
           dangerouslySetInnerHTML={{ __html: children || "" }}
         />
       </ShouldRender>

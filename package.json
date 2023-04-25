@@ -9,7 +9,14 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
-    "change-role": "node -r esbuild-register scripts/change-role.ts"
+    "change-role": "node -r esbuild-register scripts/change-role.ts",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "npx prettier --write",
+      "npx eslint --fix"
+    ]
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",
@@ -94,7 +101,11 @@
     "esbuild-register": "^3.4.2",
     "eslint": "8.18.0",
     "eslint-config-next": "12.1.6",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.1",
     "postcss": "^8.4.21",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.2.7",
     "prisma": "^4.13.0",
     "sass": "^1.58.3",
     "tailwindcss": "^3.2.7",

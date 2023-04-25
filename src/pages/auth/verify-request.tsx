@@ -12,10 +12,10 @@ const VerifyEmailPage: React.FC = () => {
     <>
       <MetaTags title="Link sent to your e-mail" />
       <MainLayout>
-        <div className="relative shadow dark:shadow-2xl dark:bg-neutral-800 pb-5 sm:pb-0">
+        <div className="relative pb-5 shadow dark:bg-neutral-800 dark:shadow-2xl sm:pb-0">
           <AuthFeedbackMessage message="E-mail sent" type="success" />
           <div className="p-6 text-center">
-            <h1 className="mt-6 sm:text-2xl text-xl font-bold tracking-tight mx-2 text-gray-900 dark:text-white">
+            <h1 className="mx-2 mt-6 text-xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-2xl">
               E-mail sent to your e-mail address.
             </h1>
 
@@ -30,7 +30,7 @@ const VerifyEmailPage: React.FC = () => {
             <div className="mt-5">
               <Link
                 href="/"
-                className="text-center cursor-pointer text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 underline"
+                className="cursor-pointer text-center text-emerald-600 underline hover:text-emerald-500 dark:text-emerald-400"
               >
                 Go back to home
               </Link>

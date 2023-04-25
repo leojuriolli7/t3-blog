@@ -20,7 +20,7 @@ const NotificationTab: React.FC<TabProps> = ({ isActive, label, onClick }) => {
     <button
       onClick={onClick}
       className={clsx(
-        "dark:text-neutral-300 text-neutral-500",
+        "text-neutral-500 dark:text-neutral-300",
         isActive ? "underline" : "text-neutral-400/70 dark:text-neutral-300/50"
       )}
     >
@@ -93,18 +93,18 @@ const NotificationDropdown = () => {
       strategy="fixed"
       rounded
       icon={
-        <div className="relative flex items-center justify-center bg-white w-[50px] h-[50px] border-zinc-300 border-[1px] dark:border-neutral-800 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors rounded-full">
+        <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full border-[1px] border-zinc-300 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800">
           {!!totalUnreads && totalUnreads > 0 && (
-            <label className="absolute top-0 right-0 bg-red-500 w-5 h-5 text-xs flex justify-center items-center rounded-full text-white">
+            <label className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
               {totalUnreads > 9 ? "9+" : totalUnreads}
             </label>
           )}
 
-          <MdNotifications className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <MdNotifications className="h-5 w-5 text-gray-500 dark:text-gray-400" />
         </div>
       }
     >
-      <div className="w-80 max-h-[500px] overflow-y-auto">
+      <div className="max-h-[500px] w-80 overflow-y-auto">
         <div className="flex w-full justify-end gap-2 p-3">
           <NotificationTab
             isActive={currentTab === "new"}
@@ -124,7 +124,7 @@ const NotificationDropdown = () => {
         ))}
 
         <ShouldRender if={noDataToShow}>
-          <div className="w-full flex justify-center py-6">
+          <div className="flex w-full justify-center py-6">
             <p className="text-neutral-400">
               You have no {emptyMessageLabel[currentTab]}
             </p>
@@ -132,7 +132,7 @@ const NotificationDropdown = () => {
         </ShouldRender>
 
         <ShouldRender if={isFetchingNextPage || isLoading}>
-          <div className="w-full flex justify-center py-2">
+          <div className="flex w-full justify-center py-2">
             <BeatLoader className="dark:fill-white" />
           </div>
         </ShouldRender>

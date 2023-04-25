@@ -71,7 +71,7 @@ const SearchDropdown: React.FC = () => {
             placeholder="Search posts, comments, users & tags"
             replace={false}
             className={clsx(
-              `h-[50px] pr-2 outline-none focus-visible:outline-neutral-800/50 dark:focus-visible:outline-gray-500/50 rounded-full transition-all ease focus:w-96 -2sm:focus:w-72 max-w-[90vw]`,
+              `ease h-[50px] max-w-[90vw] rounded-full pr-2 outline-none transition-all focus:w-96 focus-visible:outline-neutral-800/50 dark:focus-visible:outline-gray-500/50 -2sm:focus:w-72`,
               open ? "w-96 -2sm:w-72" : "w-[50px]"
             )}
             full={false}

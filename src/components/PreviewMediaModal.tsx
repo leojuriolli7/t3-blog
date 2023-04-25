@@ -16,14 +16,14 @@ const PreviewMediaModal: React.FC<Props> = ({ openState, media }) => {
           <img
             src={media?.url || "/static/default.jpg"}
             alt={media?.name}
-            className="w-auto h-auto max-w-[60vw] max-h-[80vh]"
+            className="h-auto max-h-[80vh] w-auto max-w-[60vw]"
           />
         </ShouldRender>
 
         <ShouldRender if={media?.type?.includes("video")}>
           <video
             src={media?.url}
-            className="w-auto h-auto max-w-[60vw] max-h-[80vh]"
+            className="h-auto max-h-[80vh] w-auto max-w-[60vw]"
             controls
             playsInline
             autoPlay

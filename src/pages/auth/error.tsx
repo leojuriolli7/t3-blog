@@ -33,7 +33,7 @@ const ErrorPage = () => {
           <p className="mb-3">An unindentified error has occured.</p>
           <Link
             href="/"
-            className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500"
+            className="font-medium text-emerald-600 underline hover:text-emerald-500 dark:text-emerald-400"
           >
             Back to home
           </Link>
@@ -60,7 +60,7 @@ const ErrorPage = () => {
           <p className="mb-4">You do not have permission to sign in.</p>
           <Link
             href="/auth/signin"
-            className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500"
+            className="font-medium text-emerald-600 underline hover:text-emerald-500 dark:text-emerald-400"
           >
             Sign in
           </Link>
@@ -78,7 +78,7 @@ const ErrorPage = () => {
       ),
       signin: (
         <Link
-          className="font-medium underline dark:text-emerald-400 text-emerald-600 hover:text-emerald-500"
+          className="font-medium text-emerald-600 underline hover:text-emerald-500 dark:text-emerald-400"
           href="/auth/signin"
         >
           Sign in
@@ -94,13 +94,13 @@ const ErrorPage = () => {
     <>
       <MetaTags title={`Error - ${status}`} />
       <MainLayout>
-        <div className="shadow dark:shadow-2xl dark:bg-neutral-800 pb-5 sm:pb-0">
+        <div className="pb-5 shadow dark:bg-neutral-800 dark:shadow-2xl sm:pb-0">
           <AuthFeedbackMessage message={`Error - ${status}`} />
-          <h1 className="mt-6 text-center text-2xl sm:text-3xl font-bold tracking-tight mx-2 text-gray-900 dark:text-white">
+          <h1 className="mx-2 mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
             {heading}
           </h1>
 
-          <div className="sm:p-7 p-5 text-center">
+          <div className="p-5 text-center sm:p-7">
             <div>{message}</div>
             {signin && <div className="mt-5">{signin}</div>}
           </div>

@@ -30,9 +30,9 @@ const Arrow: React.FC<ArrowProps> = ({ onClick, prev }) => {
   return (
     <button
       aria-label={prev ? "Carousel back button" : "Carousel next button"}
-      className={`absolute hidden sm:block top-0 ${
+      className={`absolute top-0 hidden sm:block ${
         prev ? "-left-7" : "-right-7"
-      } h-full w-5 flex justify-center items-center`}
+      } flex h-full w-5 items-center justify-center`}
       onClick={onClick}
     >
       <ShouldRender if={prev}>

@@ -58,10 +58,10 @@ const ThemeButton = () => {
         onClick={toggleTheme}
         size="lg"
         variant="transparent"
-        className={`w-full shadow-md rounded-full flex justify-center bg-gradient-to-br ${bgClasses} text-white bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500 hover:opacity-100`}
+        className={`flex w-full justify-center rounded-full bg-gradient-to-br shadow-md ${bgClasses} bg-size-200 bg-pos-0 text-white transition-all duration-500 hover:bg-pos-100 hover:opacity-100`}
       >
-        <div className="w-full flex justify-center items-center gap-2 overflow-hidden">
-          <div className="w-[20px] h-[20px]">
+        <div className="flex w-full items-center justify-center gap-2 overflow-hidden">
+          <div className="h-[20px] w-[20px]">
             <Transition {...transitionConfig} show={hovering}>
               {icons[isDarkMode ? 0 : 1]}
             </Transition>

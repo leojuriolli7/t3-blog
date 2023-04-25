@@ -109,7 +109,7 @@ const SelectTags: React.FC<Props> = ({
         <div ref={containerRef}>
           <h2 className="text-2xl">Tags</h2>
           <ErrorMessage error={error} />
-          <div ref={parentRef} className="flex flex-wrap gap-2 mb-4 mt-2">
+          <div ref={parentRef} className="mb-4 mt-2 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <CheckableTag
                 key={tag}
@@ -120,7 +120,7 @@ const SelectTags: React.FC<Props> = ({
               </CheckableTag>
             ))}
           </div>
-          <div className="w-full relative">
+          <div className="relative w-full">
             {inputVisible ? (
               <TextInput
                 ref={inputRef}
@@ -138,7 +138,7 @@ const SelectTags: React.FC<Props> = ({
               <Tag
                 onClick={showInput}
                 omitBgClass
-                className="bg-white text-neutral-500 h-[46px] border-zinc-300 dark:border-neutral-800 p-3 w-full dark:bg-neutral-900"
+                className="h-[46px] w-full border-zinc-300 bg-white p-3 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900"
               >
                 create new tag
               </Tag>
@@ -147,7 +147,7 @@ const SelectTags: React.FC<Props> = ({
               type="button"
               disabled={!inputValue}
               onClick={handleInputConfirm(field)}
-              className="h-full px-5 absolute rounded-r-md right-0 bg-emerald-500 flex items-center justify-center hover:opacity-80 top-1/2 -translate-y-1/2"
+              className="absolute right-0 top-1/2 flex h-full -translate-y-1/2 items-center justify-center rounded-r-md bg-emerald-500 px-5 hover:opacity-80"
               aria-label="Add new tag"
               title="Add new tag"
             >

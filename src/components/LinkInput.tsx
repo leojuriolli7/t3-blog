@@ -96,7 +96,7 @@ const LinkInput: React.FC<Props> = ({ initialLink }) => {
   }, [initialLink]);
 
   return (
-    <div ref={animateRef} className="flex flex-col w-full gap-3">
+    <div ref={animateRef} className="flex w-full flex-col gap-3">
       <Field
         label="Link"
         description="By adding a link to your post, the link will be highlighted on the post."

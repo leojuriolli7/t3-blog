@@ -231,13 +231,13 @@ const UserPage: NextPage<
         image={user?.image || "/static/default-profile.jpg"}
       />
       <MainLayout>
-        <section className="mx-auto xl:mt-10 mt-4 flex flex-col items-center gap-5">
+        <section className="mx-auto mt-4 flex flex-col items-center gap-5 xl:mt-10">
           <div className="relative">
             <Image
               src={user?.image || "/static/default-profile.jpg"}
               width={240}
               height={240}
-              className="rounded-full object-cover w-[240px] h-[240px]"
+              className="h-[240px] w-[240px] rounded-full object-cover"
               alt={user?.name as string}
             />
             <ShouldRender if={!loggedUserIsProfileOwner && session?.user?.id}>
@@ -313,7 +313,7 @@ const UserPage: NextPage<
           </div>
           <div className="w-fit text-center">
             <ShouldRender if={!!user}>
-              <p className="text-xl flex items-center gap-1 justify-center">
+              <p className="flex items-center justify-center gap-1 text-xl">
                 {username}
                 <ShouldRender if={loggedUserIsProfileOwner}>
                   <span className="text-emerald-700 dark:text-emerald-500">
@@ -359,13 +359,13 @@ const UserPage: NextPage<
                 </ShouldRender>
               </button>
             </div>
-            <div className="xl:w-[356px] w-full">
+            <div className="w-full xl:w-[356px]">
               <ShouldRender if={!!user?.url}>
                 <UserLinkPreview data={user?.url} />
               </ShouldRender>
 
               <ShouldRender if={!!user?.bio}>
-                <blockquote className="prose mt-2 w-full border-l-4 rounded-r-md border-gray-300 bg-white p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
+                <blockquote className="prose mt-2 w-full rounded-r-md border-l-4 border-gray-300 bg-white p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
                   {user?.bio}
                 </blockquote>
               </ShouldRender>
@@ -380,12 +380,12 @@ const UserPage: NextPage<
 
         <section className="w-full">
           <div className="mb-5 flex w-full flex-col justify-between">
-            <div className="w-full flex gap-3 items-center">
+            <div className="flex w-full items-center gap-3">
               <h2
                 role="button"
                 onClick={toggleTab("posts")}
                 className={clsx(
-                  "text-2xl cursor-pointer",
+                  "cursor-pointer text-2xl",
                   isPostsTab ? "underline" : "opacity-50"
                 )}
               >
@@ -394,7 +394,7 @@ const UserPage: NextPage<
               <h2
                 onClick={toggleTab("comments")}
                 className={clsx(
-                  "text-2xl cursor-pointer",
+                  "cursor-pointer text-2xl",
                   isCommentsTab ? "underline" : "opacity-50"
                 )}
               >

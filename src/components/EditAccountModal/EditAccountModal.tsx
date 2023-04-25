@@ -134,10 +134,10 @@ const EditAccountModal: React.FC<Props> = ({
 
   return (
     <Modal openState={openState} alwaysCentered>
-      <div className="relative dark:bg-neutral-900 bg-white sm:p-12 p-8 flex items-center sm:w-[400px] rounded-lg">
+      <div className="relative flex items-center rounded-lg bg-white p-8 dark:bg-neutral-900 sm:w-[400px] sm:p-12">
         <ShouldRender if={!userInformation?.image}>
-          <div className="absolute bg-emerald-600 -top-2 -left-2 z-10 rounded-md">
-            <p className="text-white p-1 px-2">
+          <div className="absolute -left-2 -top-2 z-10 rounded-md bg-emerald-600">
+            <p className="p-1 px-2 text-white">
               Tip: upload a profile picture!
             </p>
           </div>
@@ -145,7 +145,7 @@ const EditAccountModal: React.FC<Props> = ({
         <FormProvider {...methods}>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="w-full flex flex-col gap-5"
+            className="flex w-full flex-col gap-5"
           >
             <Avatar image={userInformation?.image} />
 
@@ -207,7 +207,7 @@ const EditAccountModal: React.FC<Props> = ({
             </Field>
 
             <Button
-              className="w-full min-w-fit px-8 py-2 mx-auto hover:opacity-80 mt-7 flex justify-center rounded-lg"
+              className="mx-auto mt-7 flex w-full min-w-fit justify-center rounded-lg px-8 py-2 hover:opacity-80"
               variant="primary"
               type="submit"
               disabled={!userInformation}

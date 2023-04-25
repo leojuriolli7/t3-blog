@@ -66,7 +66,7 @@ const Item: React.FC<ItemProps> = ({
       <Link
         href={path}
         prefetch={false}
-        className={`w-auto flex gap-2 rounded-full xl:p-3 p-2 hover:ring hover:ring-neutral-100 dark:hover:ring-0 hover:dark:bg-neutral-800 transition-all ${className}`}
+        className={`flex w-auto gap-2 rounded-full p-2 transition-all hover:ring hover:ring-neutral-100 hover:dark:bg-neutral-800 dark:hover:ring-0 xl:p-3 ${className}`}
       >
         <Icon {...iconProps} />
 
@@ -95,9 +95,9 @@ export const SidebarContent = () => {
   const callbackUrl = encodeURIComponent(filteredRoute);
 
   return (
-    <div className="xl:py-6 pt-6 px-3 xl:mt-2 flex flex-col gap-3 w-full h-full overflow-y-auto relative">
+    <div className="relative flex h-full w-full flex-col gap-3 overflow-y-auto px-3 pt-6 xl:mt-2 xl:py-6">
       <nav>
-        <ul className="flex flex-col xl:gap-3 gap-1">
+        <ul className="flex flex-col gap-1 xl:gap-3">
           <Item
             defaultIcon={AiOutlineHome}
             activeIcon={AiFillHome}
@@ -147,7 +147,7 @@ export const SidebarContent = () => {
         </ul>
       </nav>
 
-      <div className="w-full xl:mt-auto flex flex-col gap-3">
+      <div className="flex w-full flex-col gap-3 xl:mt-auto">
         <ShouldRender if={sessionStatus !== "loading"}>
           <Link
             passHref
@@ -161,7 +161,7 @@ export const SidebarContent = () => {
             <ButtonLink
               variant="primary"
               size="lg"
-              className="rounded-full flex justify-center shadow-md font-bold w-full transition-opacity"
+              className="flex w-full justify-center rounded-full font-bold shadow-md transition-opacity"
             >
               {sessionStatus === "authenticated" ? "Create post" : "Sign in"}
             </ButtonLink>
@@ -170,38 +170,38 @@ export const SidebarContent = () => {
 
         <ThemeButton />
 
-        <div className="w-full flex flex-col items-center">
+        <div className="flex w-full flex-col items-center">
           <ShouldRender if={session.status === "loading"}>
-            <BeatLoader className="dark:fill-white fill-neutral-900" />
+            <BeatLoader className="fill-neutral-900 dark:fill-white" />
           </ShouldRender>
 
           <ShouldRender if={sessionStatus === "authenticated"}>
-            <div className="flex gap-2 w-full py-2">
+            <div className="flex w-full gap-2 py-2">
               <Image
                 src={user?.image || "/static/default-profile.jpg"}
                 width={48}
                 height={48}
-                className="rounded-full xl:w-11 xl:h-11 w-10 h-10"
+                className="h-10 w-10 rounded-full xl:h-11 xl:w-11"
                 alt="Your profile picture"
               />
 
               <div className="w-full overflow-hidden">
                 <Link
                   href={`/users/${user?.id}`}
-                  className="text-ellipsis line-clamp-1 -mb-1 hover:underline break-words xl:text-base text-sm max-w-[95%]"
+                  className="-mb-1 line-clamp-1 max-w-[95%] text-ellipsis break-words text-sm hover:underline xl:text-base"
                 >
                   {getUserDisplayName(user)}
                 </Link>
                 <Link
                   href={`/auth/signout?callbackUrl=${callbackUrl}`}
-                  className="text-sm text-neutral-600 dark:text-neutral-500 hover:underline"
+                  className="text-sm text-neutral-600 hover:underline dark:text-neutral-500"
                 >
                   Sign out
                 </Link>
               </div>
             </div>
           </ShouldRender>
-          <p className="text-xs dark:text-neutral-600 text-neutral-500 text-center mt-2">
+          <p className="mt-2 text-center text-xs text-neutral-500 dark:text-neutral-600">
             {packageJson.version} ·{" "}
             <a
               className="underline"
@@ -220,7 +220,7 @@ export const SidebarContent = () => {
 
 const Sidebar = () => {
   return (
-    <aside className="fixed xl:block hidden left-0 w-[250px] h-screen bg-white border-zinc-300 border-x dark:border-neutral-800 dark:bg-neutral-900">
+    <aside className="fixed left-0 hidden h-screen w-[250px] border-x border-zinc-300 bg-white dark:border-neutral-800 dark:bg-neutral-900 xl:block">
       <SidebarContent />
     </aside>
   );

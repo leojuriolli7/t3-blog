@@ -78,10 +78,10 @@ const PostListingPage: React.FC = () => {
       <MainLayout>
         <ShouldRender if={followingPostsToShow?.length}>
           <div className="w-full">
-            <h2 className="w-full text-left xl:text-3xl text-2xl prose dark:prose-invert font-bold">
+            <h2 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
               Following
             </h2>
-            <p className="mb-3 xl:text-base text-sm">
+            <p className="mb-3 text-sm xl:text-base">
               Posts from all your following
             </p>
             <Section seeMoreHref="posts/following">
@@ -96,8 +96,8 @@ const PostListingPage: React.FC = () => {
             </Section>
           </div>
         </ShouldRender>
-        <div className="w-full flex justify-between items-center -mb-5">
-          <h2 className="xl:text-3xl text-2xl prose dark:prose-invert font-bold">
+        <div className="-mb-5 flex w-full items-center justify-between">
+          <h2 className="prose text-2xl font-bold dark:prose-invert xl:text-3xl">
             Featured tags
           </h2>
           <Link prefetch={false} href="/posts/tags" passHref legacyBehavior>
@@ -124,10 +124,10 @@ const PostListingPage: React.FC = () => {
             ))}
           </Section>
         ))}
-        <hr className="w-full h-0.5 -mb-5 -mt-5 bg-gray-200 border-0 dark:bg-neutral-700" />
+        <hr className="-mb-5 -mt-5 h-0.5 w-full border-0 bg-gray-200 dark:bg-neutral-700" />
 
-        <div className="w-full flex sm:justify-between sm:items-center sm:flex-row flex-col gap-5 -mb-5">
-          <h2 className=" xl:text-3xl text-2xl prose dark:prose-invert font-bold sm:mb-0 -mb-3">
+        <div className="-mb-5 flex w-full flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className=" prose -mb-3 text-2xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
             All posts
           </h2>
           <div className="flex gap-3">

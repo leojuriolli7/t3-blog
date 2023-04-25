@@ -32,7 +32,7 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading, bgClass }) => {
         loading && "pointer-events-none",
         slide && "keen-slider__slide",
         bgClass || "bg-white dark:bg-neutral-900",
-        "p-3 cursor-pointer  shadow-md hover:shadow-lg transition-borderAndShadow border rounded-xl border-zinc-300 dark:border-neutral-700 dark:hover:border-neutral-500/80 flex flex-col justify-between"
+        "flex cursor-pointer  flex-col justify-between rounded-xl border border-zinc-300 p-3 shadow-md transition-borderAndShadow hover:shadow-lg dark:border-neutral-700 dark:hover:border-neutral-500/80"
       )}
       style={
         slide
@@ -45,7 +45,7 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading, bgClass }) => {
     >
       <div>
         <ShouldRender if={!loading}>
-          <h2 className="text-lg prose dark:prose-invert font-bold line-clamp-1">
+          <h2 className="prose line-clamp-1 text-lg font-bold dark:prose-invert">
             {post?.title}
           </h2>
         </ShouldRender>
@@ -57,21 +57,21 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading, bgClass }) => {
         <HTMLBody
           loading={loading}
           lines={3}
-          className={`text-md line-clamp-2 text-ellipsis max-h-14 content-mask`}
+          className={`text-md content-mask line-clamp-2 max-h-14 text-ellipsis`}
         >
           {post?.body}
         </HTMLBody>
       </div>
 
-      <div className="flex w-full justify-between items-center mt-4">
+      <div className="mt-4 flex w-full items-center justify-between">
         <div className="flex gap-3">
           <LikeCount vertical={false} label={post?.likes} />
           <LikeCount vertical={false} dislike label={post?.dislikes} />
         </div>
 
         <ShouldRender if={!loading}>
-          <div className="flex gap-3 min-w-min">
-            <p className="text-sm line-clamp-2 ml-3 leading-4">By {username}</p>
+          <div className="flex min-w-min gap-3">
+            <p className="ml-3 line-clamp-2 text-sm leading-4">By {username}</p>
           </div>
         </ShouldRender>
       </div>

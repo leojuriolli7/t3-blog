@@ -35,7 +35,7 @@ const EmptyMessage: React.FC<Props> = ({
       <ShouldRender if={!hideRedirect}>
         <Link
           href={redirect || "/"}
-          className="text-emerald-500 text-center underline mt-2"
+          className="mt-2 text-center text-emerald-500 underline"
         >
           {redirectMessage}
         </Link>

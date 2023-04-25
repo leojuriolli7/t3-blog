@@ -20,14 +20,14 @@ const PostCard: React.FC<Props> = ({ post, loading = false }) => {
 
   return (
     <article
-      className={`relative bg-white border-2 rounded-lg border-zinc-200 dark:border-zinc-700/90 dark:bg-zinc-800 dark:hover:border-zinc-500 shadow-3xl w-full px-10 py-5 flex flex-col justify-center gap-5 cursor-pointer hover:shadow-4xl transition-borderAndShadow ${
+      className={`relative flex w-full cursor-pointer flex-col justify-center gap-5 rounded-lg border-2 border-zinc-200 bg-white px-10 py-5 shadow-3xl transition-borderAndShadow hover:shadow-4xl dark:border-zinc-700/90 dark:bg-zinc-800 dark:hover:border-zinc-500 ${
         loading ? "pointer-events-none" : ""
       }`}
     >
       <ShouldRender if={post?.link}>
         <LinkPreview data={post?.link} loading={loading} disableImagePreview />
       </ShouldRender>
-      <div className="absolute flex flex-col gap-3 sm:-left-3 -left-1 top-3">
+      <div className="absolute -left-1 top-3 flex flex-col gap-3 sm:-left-3">
         <LikeCount label={post?.likes} />
 
         <LikeCount label={post?.dislikes} dislike />
@@ -42,7 +42,7 @@ const PostCard: React.FC<Props> = ({ post, loading = false }) => {
         shallow
       >
         <ShouldRender if={!loading}>
-          <h2 className="prose dark:prose-invert text-2xl font-bold break-words">
+          <h2 className="prose break-words text-2xl font-bold dark:prose-invert">
             {post?.title}
           </h2>
         </ShouldRender>
@@ -54,20 +54,20 @@ const PostCard: React.FC<Props> = ({ post, loading = false }) => {
         <HTMLBody
           loading={loading}
           lines={3}
-          className={`prose prose-code:text-xs line-clamp-4 text-ellipsis prose-headings:text-base max-h-56 overflow-hidden content-mask`}
+          className={`content-mask prose line-clamp-4 max-h-56 overflow-hidden text-ellipsis prose-headings:text-base prose-code:text-xs`}
         >
           {post?.body}
         </HTMLBody>
       </Link>
 
-      <div className="w-full flex justify-between items-center mt-2">
+      <div className="mt-2 flex w-full items-center justify-between">
         <TagList compact loading={loading} tags={post?.tags} />
         <ShouldRender if={!loading}>
-          <p className="min-w-min ml-2 sm:text-sm text-xs mt-2">
+          <p className="ml-2 mt-2 min-w-min text-xs sm:text-sm">
             by{" "}
             <Link
               href={`/users/${post?.userId}`}
-              className="underline text-emerald-600 dark:text-emerald-500 font-bold"
+              className="font-bold text-emerald-600 underline dark:text-emerald-500"
               prefetch={false}
             >
               {username}

@@ -44,7 +44,7 @@ const PollOption: React.FC<Props> = ({
           aria-label={`Click to vote on this option.`}
           disabled={disabled}
           onClick={onClick}
-          className="w-full cursor-pointer h-[40px] rounded-md hover:opacity-80 border-2 text-ellipsis dark:filter dark:contrast-75 transition-opacity"
+          className="h-[40px] w-full cursor-pointer text-ellipsis rounded-md border-2 transition-opacity hover:opacity-80 dark:contrast-75 dark:filter"
           style={{
             borderColor: option.color,
             backgroundColor: `${option.color}60`,
@@ -57,13 +57,13 @@ const PollOption: React.FC<Props> = ({
       </ShouldRender>
 
       <ShouldRender if={alreadyVoted}>
-        <div className="w-full relative p-2 select-none ring-1 rounded-md dark:ring-neutral-700 ring-inset ring-gray-300">
+        <div className="relative w-full select-none rounded-md p-2 ring-1 ring-inset ring-gray-300 dark:ring-neutral-700">
           <div className="flex w-full justify-between gap-2">
-            <p className="relative z-10 text-ellipsis line-clamp-1 overflow-hidden break-all text-sm sm:text-base">
+            <p className="relative z-10 line-clamp-1 overflow-hidden text-ellipsis break-all text-sm sm:text-base">
               {option.title}
             </p>
 
-            <div className="flex items-center gap-1 relative z-10">
+            <div className="relative z-10 flex items-center gap-1">
               <ShouldRender if={option.votedByMe}>
                 <MdOutlineCheckBox
                   className="text-black dark:text-white"
@@ -77,7 +77,7 @@ const PollOption: React.FC<Props> = ({
           </div>
           <div
             ref={optionRef}
-            className="absolute h-full top-0 left-0 rounded-md"
+            className="absolute left-0 top-0 h-full rounded-md"
             style={{
               backgroundColor: `${option.color}90`,
               width: 0,

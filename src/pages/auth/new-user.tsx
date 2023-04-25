@@ -17,7 +17,7 @@ const NewUserPage: React.FC = () => {
     <>
       <MetaTags title="Loading..." />
       <MainLayout>
-        <div className="w-full h-[50vh] overflow-y-hidden flex justify-center items-center">
+        <div className="flex h-[50vh] w-full items-center justify-center overflow-y-hidden">
           <Spinner />
         </div>
       </MainLayout>

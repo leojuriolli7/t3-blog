@@ -13,7 +13,7 @@ const Comments: React.FC<Props> = ({ comments, collapsed }) => {
     <div
       ref={parentRef}
       className={clsx(
-        "w-full flex-col sm:gap-6 gap-4",
+        "w-full flex-col gap-4 sm:gap-6",
         collapsed ? "hidden" : "flex"
       )}
     >

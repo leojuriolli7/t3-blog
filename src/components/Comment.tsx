@@ -182,8 +182,8 @@ const Comment: React.FC<CommentProps> = ({
     <div
       className={clsx(
         VARIANT_CLASSES[variant],
-        `relative w-full flex flex-col rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700/90`,
-        compact ? "gap-2 sm:pl-4 pl-2" : "gap-5 sm:pl-6 pl-3",
+        `relative flex w-full flex-col rounded-lg border border-zinc-200 shadow-sm dark:border-zinc-700/90`,
+        compact ? "gap-2 pl-2 sm:pl-4" : "gap-5 pl-3 sm:pl-6",
         !hideReplies && commentClasses
       )}
       id={identifiable ? comment?.id : undefined}
@@ -196,8 +196,8 @@ const Comment: React.FC<CommentProps> = ({
           }
           onClick={toggleCollapsed}
           className={clsx(
-            "absolute left-0 top-0 h-full bg-inherit hover:brightness-[98%] dark:hover:brightness-125 rounded-l-lg",
-            compact ? "gap-2 sm:w-4 w-2" : "gap-5 sm:w-6 w-3"
+            "absolute left-0 top-0 h-full rounded-l-lg bg-inherit hover:brightness-[98%] dark:hover:brightness-125",
+            compact ? "w-2 gap-2 sm:w-4" : "w-3 gap-5 sm:w-6"
           )}
         />
 
@@ -205,13 +205,13 @@ const Comment: React.FC<CommentProps> = ({
           <HiOutlineDotsVertical
             aria-label="Comments are collapsed"
             title="Comments are collapsed"
-            className="absolute bottom-2 sm:left-0 -left-1 text-neutral-400 dark:text-neutral-500/60 sm:w-[25px] sm:h-[25px] h-5 w-5"
+            className="absolute -left-1 bottom-2 h-5 w-5 text-neutral-400 dark:text-neutral-500/60 sm:left-0 sm:h-[25px] sm:w-[25px]"
           />
         )}
       </ShouldRender>
       <div
         className={clsx(
-          "flex w-full flex-col gap-2 pl-2 relative",
+          "relative flex w-full flex-col gap-2 pl-2",
           compact ? "p-4" : "p-6",
           !hideReplies && !collapsed && "pb-0",
           hideReplies && (compact ? "pb-4" : "pb-6")
@@ -226,24 +226,24 @@ const Comment: React.FC<CommentProps> = ({
           <ShouldRender if={loading}>
             <Skeleton width="w-full max-w-[250px]" height="h-4" />
           </ShouldRender>
-          <div className="flex gap-1 items-center">
+          <div className="flex items-center gap-1">
             <span
               className={clsx(
-                "font-medium flex items-center",
+                "flex items-center font-medium",
                 compact && "text-base"
               )}
             >
               <Link
                 href={`/users/${comment?.userId}`}
                 title="Visit user profile"
-                className="hover:underline text-ellipsis line-clamp-1"
+                className="line-clamp-1 text-ellipsis hover:underline"
               >
                 {getUserDisplayName(comment?.user)}
               </Link>
               <ShouldRender
                 if={comment?.userId === session?.user.id && !!session?.user.id}
               >
-                <span className="xl:text-base text-xs text-emerald-500 ml-1">
+                <span className="ml-1 text-xs text-emerald-500 xl:text-base">
                   {" "}
                   (You)
                 </span>
@@ -255,7 +255,7 @@ const Comment: React.FC<CommentProps> = ({
           </div>
 
           <ShouldRender if={!compact}>
-            <p className="xl:block hidden">{comment?.createdAt}</p>
+            <p className="block text-sm xl:text-base">{comment?.createdAt}</p>
           </ShouldRender>
         </div>
         <ShouldRender if={!isEditing || shouldRenderModals}>
@@ -274,12 +274,12 @@ const Comment: React.FC<CommentProps> = ({
           <EditCommentForm onFinish={toggleIsEditing} comment={comment} />
         </ShouldRender>
 
-        <div className="relative w-full flex justify-between items-center">
+        <div className="relative flex w-full items-center justify-between">
           <ShouldRender if={!isEditing || shouldRenderModals}>
             <ShouldRender if={!linkToPost && !loading && !hideActions}>
               <button
                 onClick={toggleReplying}
-                className="w-auto underline text-emerald-500 xl:text-base text-sm"
+                className="w-auto text-sm text-emerald-500 underline xl:text-base"
               >
                 {replying ? "Stop replying" : "Reply"}
               </button>
@@ -288,13 +288,13 @@ const Comment: React.FC<CommentProps> = ({
             <ShouldRender if={linkToPost && !loading}>
               <p
                 className={clsx(
-                  "w-full pt-4 border-t font-bold border-zinc-300 dark:border-zinc-700 line-clamp-2 text-ellipsis",
-                  compact ? "sm:text-sm text-xs" : "xl:text-base text-sm"
+                  "line-clamp-2 w-full text-ellipsis border-t border-zinc-300 pt-4 font-bold dark:border-zinc-700",
+                  compact ? "text-xs sm:text-sm" : "text-sm xl:text-base"
                 )}
               >
                 <span>commented on</span>{" "}
                 <Link
-                  className="w-auto underline text-emerald-500"
+                  className="w-auto text-emerald-500 underline"
                   href={`/posts/${comment?.postId}?highlightedComment=${comment?.id}`}
                   as={`/posts/${comment?.postId}`}
                 >
@@ -305,7 +305,7 @@ const Comment: React.FC<CommentProps> = ({
           </ShouldRender>
 
           <ShouldRender if={!linkToPost && canDeleteOrEdit && !hideActions}>
-            <div className="absolute -bottom-3 -right-2 flex gap-2 items-center">
+            <div className="absolute -bottom-3 -right-2 flex items-center gap-2">
               <ActionButton
                 action={isEditing ? "close" : "edit"}
                 onClick={toggleIsEditing}
