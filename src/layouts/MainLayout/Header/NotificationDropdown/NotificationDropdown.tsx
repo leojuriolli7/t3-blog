@@ -1,13 +1,13 @@
+import { useMemo, useState } from "react";
 import { MdNotifications } from "react-icons/md";
 import Popover from "@components/Popover";
 import { trpc } from "@utils/trpc";
 import { useSession } from "next-auth/react";
-import { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
+import Button from "@components/Button";
 import BeatLoader from "@components/BeatLoader";
-import { NotificationCard } from "./NotificationCard";
-import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
+import { NotificationCard } from "./NotificationCard";
 
 type TabProps = {
   isActive: boolean;
@@ -44,8 +44,6 @@ const NotificationDropdown = () => {
   const session = useSession();
   const user = session?.data?.user;
   const [currentTab, setCurrentTab] = useState<TabType>("new");
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const reachedBottom = useOnScreen(bottomRef);
 
   const toggleTab = (value: TabType) => () => setCurrentTab(value);
 
@@ -80,12 +78,7 @@ const NotificationDropdown = () => {
 
   const noDataToShow = !isLoading && !dataToShow?.length && !hasNextPage;
 
-  useEffect(() => {
-    if (reachedBottom && hasNextPage) {
-      fetchNextPage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reachedBottom]);
+  const loadMore = () => fetchNextPage();
 
   return (
     <Popover.Main
@@ -93,7 +86,7 @@ const NotificationDropdown = () => {
       strategy="fixed"
       rounded
       icon={
-        <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full border-[1px] border-zinc-300 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+        <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full  border-[1px]  border-zinc-300 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800">
           {!!totalUnreads && totalUnreads > 0 && (
             <label className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
               {totalUnreads > 9 ? "9+" : totalUnreads}
@@ -123,8 +116,6 @@ const NotificationDropdown = () => {
           {dataToShow?.map((notification) => (
             <NotificationCard key={notification.id} {...notification} />
           ))}
-
-          <div ref={bottomRef} />
         </ShouldRender>
 
         <ShouldRender if={noDataToShow}>
@@ -135,9 +126,23 @@ const NotificationDropdown = () => {
           </div>
         </ShouldRender>
 
-        <ShouldRender if={isFetchingNextPage || isLoading}>
+        <ShouldRender if={isLoading}>
           <div className="flex w-full justify-center py-2">
             <BeatLoader className="dark:fill-white" />
+          </div>
+        </ShouldRender>
+
+        <ShouldRender if={!!dataToShow && hasNextPage}>
+          <div className="flex w-full justify-center border-t border-neutral-300 p-3 dark:border-zinc-800">
+            <Button
+              loading={isFetchingNextPage}
+              onClick={loadMore}
+              className="flex w-full justify-center rounded-full"
+              variant="primary"
+              size="sm"
+            >
+              Load more
+            </Button>
           </div>
         </ShouldRender>
       </div>

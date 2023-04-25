@@ -64,7 +64,7 @@ const Popover: React.FC<Props> = ({
           {...attributes.popper}
           className="absolute left-1/2 z-10 flex w-screen max-w-max -translate-x-1/2 px-4"
         >
-          <div className="w-fit shadow dark:shadow-xl">
+          <div className="w-fit rounded-md shadow dark:shadow-xl">
             <ul
               className={clsx(
                 "flex flex-col gap-1 rounded-md border border-neutral-300 bg-white dark:border-zinc-800 dark:bg-neutral-900",

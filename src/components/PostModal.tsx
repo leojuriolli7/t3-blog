@@ -42,6 +42,8 @@ const PostModal: React.FC = () => {
     }
   );
 
+  // Modal will open and intercept whenever there is a
+  // `postId` router query and it is outside a post's actual page.
   useEffect(() => {
     setOpen(canOpenModal);
     // eslint-disable-next-line react-hooks/exhaustive-deps
