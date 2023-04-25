@@ -1,8 +1,6 @@
 import React from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import MainLayout from "@components/MainLayout";
-import MetaTags from "@components/MetaTags";
 import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -34,11 +32,7 @@ const SinglePostPage: NextPage<
     }
   );
 
-  return (
-    <MainLayout>
-      <PostDetails data={data} isLoading={isLoading} postId={postId} />
-    </MainLayout>
-  );
+  return <PostDetails data={data} isLoading={isLoading} postId={postId} />;
 };
 
 export default SinglePostPage;

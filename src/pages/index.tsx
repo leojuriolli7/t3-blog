@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
 import { trpc } from "@utils/trpc";
-import MainLayout from "@components/MainLayout";
 import PostCard from "@components/PostCard";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
@@ -75,87 +74,85 @@ const PostListingPage: React.FC = () => {
   return (
     <>
       <MetaTags title="Home" />
-      <MainLayout>
-        <ShouldRender if={followingPostsToShow?.length}>
-          <div className="w-full">
-            <h2 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
-              Following
-            </h2>
-            <p className="mb-3 text-sm xl:text-base">
-              Posts from all your following
-            </p>
-            <Section seeMoreHref="posts/following">
-              {followingPostsToShow?.map((post) => (
-                <CompactCard
-                  key={post.id}
-                  loading={loadingTags}
-                  post={post}
-                  slide
-                />
-              ))}
-            </Section>
-          </div>
-        </ShouldRender>
-        <div className="-mb-5 flex w-full items-center justify-between">
-          <h2 className="prose text-2xl font-bold dark:prose-invert xl:text-3xl">
-            Featured tags
+      <ShouldRender if={followingPostsToShow?.length}>
+        <div className="w-full">
+          <h2 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
+            Following
           </h2>
-          <Link prefetch={false} href="/posts/tags" passHref legacyBehavior>
-            <ButtonLink variant="gradient" size="sm" className="rounded-full">
-              All tags
-            </ButtonLink>
-          </Link>
-        </div>
-
-        {(loadingTags ? loadingArray : taggedPosts)?.map((tag, key) => (
-          <Section
-            loading={loadingTags}
-            title={tag?.name}
-            key={loadingTags ? key : tag?.id}
-            seeMoreHref={`/posts/tags/${tag?.id}`}
-          >
-            {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
+          <p className="mb-3 text-sm xl:text-base">
+            Posts from all your following
+          </p>
+          <Section seeMoreHref="posts/following">
+            {followingPostsToShow?.map((post) => (
               <CompactCard
+                key={post.id}
                 loading={loadingTags}
-                key={loadingTags ? key : `${tag?.id}-${post?.id}`}
                 post={post}
                 slide
               />
             ))}
           </Section>
-        ))}
-        <hr className="-mb-5 -mt-5 h-0.5 w-full border-0 bg-gray-200 dark:bg-neutral-700" />
-
-        <div className="-mb-5 flex w-full flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className=" prose -mb-3 text-2xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
-            All posts
-          </h2>
-          <div className="flex gap-3">
-            {filters.map((filter) => (
-              <Tab
-                key={filter}
-                active={currentFilter === filter}
-                title={`Filter by ${filterLabels[filter]}`}
-                label={filterLabels[filter]}
-                onClick={toggleFilter(filter)}
-              />
-            ))}
-          </div>
         </div>
-        {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-          <PostCard
-            key={isLoading ? i : post?.id}
-            post={post}
-            loading={isLoading}
-          />
-        ))}
+      </ShouldRender>
+      <div className="-mb-5 flex w-full items-center justify-between">
+        <h2 className="prose text-2xl font-bold dark:prose-invert xl:text-3xl">
+          Featured tags
+        </h2>
+        <Link prefetch={false} href="/posts/tags" passHref legacyBehavior>
+          <ButtonLink variant="gradient" size="sm" className="rounded-full">
+            All tags
+          </ButtonLink>
+        </Link>
+      </div>
 
-        <ShouldRender if={isFetchingNextPage}>
-          <PostCard loading />
-        </ShouldRender>
+      {(loadingTags ? loadingArray : taggedPosts)?.map((tag, key) => (
+        <Section
+          loading={loadingTags}
+          title={tag?.name}
+          key={loadingTags ? key : tag?.id}
+          seeMoreHref={`/posts/tags/${tag?.id}`}
+        >
+          {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
+            <CompactCard
+              loading={loadingTags}
+              key={loadingTags ? key : `${tag?.id}-${post?.id}`}
+              post={post}
+              slide
+            />
+          ))}
+        </Section>
+      ))}
+      <hr className="-mb-5 -mt-5 h-0.5 w-full border-0 bg-gray-200 dark:bg-neutral-700" />
 
-        <div ref={bottomRef} />
-      </MainLayout>
+      <div className="-mb-5 flex w-full flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className=" prose -mb-3 text-2xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
+          All posts
+        </h2>
+        <div className="flex gap-3">
+          {filters.map((filter) => (
+            <Tab
+              key={filter}
+              active={currentFilter === filter}
+              title={`Filter by ${filterLabels[filter]}`}
+              label={filterLabels[filter]}
+              onClick={toggleFilter(filter)}
+            />
+          ))}
+        </div>
+      </div>
+      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
+        <PostCard
+          key={isLoading ? i : post?.id}
+          post={post}
+          loading={isLoading}
+        />
+      ))}
+
+      <ShouldRender if={isFetchingNextPage}>
+        <PostCard loading />
+      </ShouldRender>
+
+      <div ref={bottomRef} />
     </>
   );
 };

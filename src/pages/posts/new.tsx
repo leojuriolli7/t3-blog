@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { CreatePostInput, createPostSchema } from "@schema/post.schema";
-import MainLayout from "@components/MainLayout";
 import MarkdownEditor from "@components/MarkdownEditor";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
@@ -117,59 +116,57 @@ const CreatePostPage: React.FC = () => {
   return (
     <>
       <MetaTags title="New post" />
-      <MainLayout>
-        <FormProvider {...methods}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="mx-auto flex w-full max-w-3xl flex-col gap-10"
-          >
-            <h1 className="text-center text-2xl font-medium">Create a post</h1>
+      <FormProvider {...methods}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mx-auto flex w-full max-w-3xl flex-col gap-10"
+        >
+          <h1 className="text-center text-2xl font-medium">Create a post</h1>
 
-            <Field error={errors.title}>
-              <TextInput
-                variant="primary"
-                sizeVariant="lg"
-                type="text"
-                placeholder="your post title"
-                className="rounded-md"
-                {...register("title")}
-              />
-            </Field>
-
-            <Field error={errors.body}>
-              <MarkdownEditor
-                placeholder="your post content - you can use markdown!"
-                control={control}
-                name="body"
-                imageUploadTip
-              />
-            </Field>
-
-            <LinkInput />
-
-            <CreatePoll />
-
-            <Dropzone />
-
-            <SelectTags
-              control={control}
-              initialTags={initialTags}
-              name="tags"
-              error={errors.tags}
-            />
-
-            <Button
-              className="mx-auto flex w-full min-w-fit justify-center rounded-lg sm:w-6/12"
+          <Field error={errors.title}>
+            <TextInput
               variant="primary"
-              type="submit"
-              loading={isLoading}
-              disabled={fetchingTags}
-            >
-              Create
-            </Button>
-          </form>
-        </FormProvider>
-      </MainLayout>
+              sizeVariant="lg"
+              type="text"
+              placeholder="your post title"
+              className="rounded-md"
+              {...register("title")}
+            />
+          </Field>
+
+          <Field error={errors.body}>
+            <MarkdownEditor
+              placeholder="your post content - you can use markdown!"
+              control={control}
+              name="body"
+              imageUploadTip
+            />
+          </Field>
+
+          <LinkInput />
+
+          <CreatePoll />
+
+          <Dropzone />
+
+          <SelectTags
+            control={control}
+            initialTags={initialTags}
+            name="tags"
+            error={errors.tags}
+          />
+
+          <Button
+            className="mx-auto flex w-full min-w-fit justify-center rounded-lg sm:w-6/12"
+            variant="primary"
+            type="submit"
+            loading={isLoading}
+            disabled={fetchingTags}
+          >
+            Create
+          </Button>
+        </form>
+      </FormProvider>
     </>
   );
 };

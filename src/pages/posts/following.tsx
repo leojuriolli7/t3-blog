@@ -1,5 +1,4 @@
 import EmptyMessage from "@components/EmptyMessage";
-import MainLayout from "@components/MainLayout";
 import MetaTags from "@components/MetaTags";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
@@ -51,45 +50,43 @@ const Following = () => {
   return (
     <>
       <MetaTags title="Following" />
-      <MainLayout>
-        <div className="w-full">
-          <h2 className="prose -mb-3 text-xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
-            Posts from your following
-          </h2>
-          <div className="mt-3 flex gap-3">
-            {filters.map((filter) => (
-              <Tab
-                key={filter}
-                active={currentFilter === filter}
-                title={`Filter by ${filterLabels[filter]}`}
-                label={filterLabels[filter]}
-                onClick={toggleFilter(filter)}
-              />
-            ))}
-          </div>
+      <div className="w-full">
+        <h2 className="prose -mb-3 text-xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
+          Posts from your following
+        </h2>
+        <div className="mt-3 flex gap-3">
+          {filters.map((filter) => (
+            <Tab
+              key={filter}
+              active={currentFilter === filter}
+              title={`Filter by ${filterLabels[filter]}`}
+              label={filterLabels[filter]}
+              onClick={toggleFilter(filter)}
+            />
+          ))}
         </div>
-        {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-          <PostCard
-            key={isLoading ? i : post?.id}
-            post={post}
-            loading={isLoading}
-          />
-        ))}
+      </div>
+      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
+        <PostCard
+          key={isLoading ? i : post?.id}
+          post={post}
+          loading={isLoading}
+        />
+      ))}
 
-        <ShouldRender if={isFetchingNextPage}>
-          <PostCard loading />
-        </ShouldRender>
+      <ShouldRender if={isFetchingNextPage}>
+        <PostCard loading />
+      </ShouldRender>
 
-        <ShouldRender if={noDataToShow}>
-          <EmptyMessage
-            message="Hmm. Could not find any posts from your following."
-            hideRedirect
-            small
-          />
-        </ShouldRender>
+      <ShouldRender if={noDataToShow}>
+        <EmptyMessage
+          message="Hmm. Could not find any posts from your following."
+          hideRedirect
+          small
+        />
+      </ShouldRender>
 
-        <div ref={bottomRef} />
-      </MainLayout>
+      <div ref={bottomRef} />
     </>
   );
 };

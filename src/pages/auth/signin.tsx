@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import MainLayout from "@components/MainLayout";
 import { signIn } from "next-auth/react";
 import type { SignInErrorTypes } from "next-auth/core/pages/signin";
 import { BsDiscord, BsGithub } from "react-icons/bs";
@@ -99,91 +98,89 @@ const SigninPage: NextPage = () => {
   return (
     <>
       <MetaTags title="Sign in" description="Sign in to your account" />
-      <MainLayout>
-        <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-          <div className="w-full max-w-md space-y-8">
-            <div>
-              <AuthFeedbackMessage message={error} />
-              <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
-                Sign in to your account
-              </h1>
+      <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8">
+          <div>
+            <AuthFeedbackMessage message={error} />
+            <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+              Sign in to your account
+            </h1>
+          </div>
+
+          <div className="flex w-full flex-col gap-3">
+            <Button
+              disabled={getDisabledState("google")}
+              loading={isLoading.google}
+              onClick={handleSignIn("google")}
+              variant="transparent"
+              icon={<FcGoogle size={20} />}
+              textClass="text-neutral-800"
+              className="w-full rounded-lg bg-white ring-1 ring-inset ring-gray-300"
+              spinnerVariant="dark"
+            >
+              Sign in with Google
+            </Button>
+
+            <Button
+              disabled={getDisabledState("discord")}
+              loading={isLoading.discord}
+              onClick={handleSignIn("discord")}
+              variant="transparent"
+              textClass="text-neutral-200"
+              icon={<BsDiscord size={19} color="white" />}
+              className="w-full rounded-lg bg-indigo-500"
+              spinnerVariant="white"
+            >
+              Sign in with Discord
+            </Button>
+
+            <Button
+              disabled={getDisabledState("github")}
+              loading={isLoading.github}
+              onClick={handleSignIn("github")}
+              variant="transparent"
+              textClass="text-neutral-200"
+              icon={<BsGithub size={19} color="white" />}
+              className="w-full rounded-lg bg-zinc-800"
+              spinnerVariant="white"
+            >
+              Sign in with Github
+            </Button>
+
+            <div className="inline-flex w-full items-center justify-between">
+              <hr className="my-8 h-1 w-[42%] rounded border-0 bg-gray-200 dark:bg-neutral-700" />
+              <div className="absolute left-1/2 -translate-x-1/2 px-4">
+                <p className="text-sm font-bold text-gray-400">or</p>
+              </div>
+              <hr className="my-8 h-1 w-[42%] rounded border-0 bg-gray-200 dark:bg-neutral-700" />
             </div>
 
-            <div className="flex w-full flex-col gap-3">
-              <Button
-                disabled={getDisabledState("google")}
-                loading={isLoading.google}
-                onClick={handleSignIn("google")}
-                variant="transparent"
-                icon={<FcGoogle size={20} />}
-                textClass="text-neutral-800"
-                className="w-full rounded-lg bg-white ring-1 ring-inset ring-gray-300"
-                spinnerVariant="dark"
-              >
-                Sign in with Google
-              </Button>
-
-              <Button
-                disabled={getDisabledState("discord")}
-                loading={isLoading.discord}
-                onClick={handleSignIn("discord")}
-                variant="transparent"
-                textClass="text-neutral-200"
-                icon={<BsDiscord size={19} color="white" />}
-                className="w-full rounded-lg bg-indigo-500"
-                spinnerVariant="white"
-              >
-                Sign in with Discord
-              </Button>
-
-              <Button
-                disabled={getDisabledState("github")}
-                loading={isLoading.github}
-                onClick={handleSignIn("github")}
-                variant="transparent"
-                textClass="text-neutral-200"
-                icon={<BsGithub size={19} color="white" />}
-                className="w-full rounded-lg bg-zinc-800"
-                spinnerVariant="white"
-              >
-                Sign in with Github
-              </Button>
-
-              <div className="inline-flex w-full items-center justify-between">
-                <hr className="my-8 h-1 w-[42%] rounded border-0 bg-gray-200 dark:bg-neutral-700" />
-                <div className="absolute left-1/2 -translate-x-1/2 px-4">
-                  <p className="text-sm font-bold text-gray-400">or</p>
-                </div>
-                <hr className="my-8 h-1 w-[42%] rounded border-0 bg-gray-200 dark:bg-neutral-700" />
-              </div>
-
-              <div>
-                <form onSubmit={handleSubmit(onEmailSubmit)}>
-                  <TextInput
-                    variant="primary"
-                    type="email"
-                    placeholder="type your e-mail"
-                    disabled={isLoading.email}
-                    required
-                    className="rounded-md"
-                    {...register("email")}
-                  />
-                  <Button
-                    disabled={getDisabledState("email")}
-                    loading={isLoading.email}
-                    variant="primary"
-                    type="submit"
-                    className="mt-2 w-full rounded-lg"
-                    icon={<MdEmail size={19} color="white" />}
-                  >
-                    Sign in with e-mail
-                  </Button>
-                </form>
-              </div>
+            <div>
+              <form onSubmit={handleSubmit(onEmailSubmit)}>
+                <TextInput
+                  variant="primary"
+                  type="email"
+                  placeholder="type your e-mail"
+                  disabled={isLoading.email}
+                  required
+                  className="rounded-md"
+                  {...register("email")}
+                />
+                <Button
+                  disabled={getDisabledState("email")}
+                  loading={isLoading.email}
+                  variant="primary"
+                  type="submit"
+                  className="mt-2 w-full rounded-lg"
+                  icon={<MdEmail size={19} color="white" />}
+                >
+                  Sign in with e-mail
+                </Button>
+              </form>
             </div>
           </div>
         </div>
-      </MainLayout>
+      </div>
     </>
   );
 };

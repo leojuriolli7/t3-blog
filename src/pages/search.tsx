@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import MainLayout from "@components/MainLayout";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
@@ -107,102 +106,98 @@ const SearchPage = () => {
   return (
     <>
       <MetaTags title={pageTitle} />
-      <MainLayout>
+      <div className="w-full">
+        <h1 className="prose mb-3 text-2xl font-bold dark:prose-invert xl:text-3xl">
+          {pageTitle}
+        </h1>
         <div className="w-full">
-          <h1 className="prose mb-3 text-2xl font-bold dark:prose-invert xl:text-3xl">
-            {pageTitle}
-          </h1>
-          <div className="w-full">
-            <div className="mb-4 flex w-full items-center gap-2">
-              {SEARCH_FILTERS.map((filter) => (
-                <Tab
-                  key={filter}
-                  onClick={toggleFilter(filter)}
-                  active={currentFilter === filter}
-                  label={filter}
-                  className="capitalize"
-                />
-              ))}
-            </div>
-
-            <SearchInput
-              setQuery={setQuery}
-              placeholder="What do you want to find?"
-            />
+          <div className="mb-4 flex w-full items-center gap-2">
+            {SEARCH_FILTERS.map((filter) => (
+              <Tab
+                key={filter}
+                onClick={toggleFilter(filter)}
+                active={currentFilter === filter}
+                label={filter}
+                className="capitalize"
+              />
+            ))}
           </div>
-        </div>
 
-        <ShouldRender if={!query && !router.query}>
-          <div className="flex flex-col items-center">
-            <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
-            <p className="text-center">
-              Search through users, posts, tags & comments in T3 Blog.
-            </p>
-          </div>
-        </ShouldRender>
-
-        <ShouldRender if={!!dataToDisplay?.posts?.length}>
-          {dataToDisplay?.posts?.map((post) => (
-            <PostCard key={post?.id} post={post} />
-          ))}
-        </ShouldRender>
-
-        <ShouldRender if={!!dataToDisplay?.comments?.length}>
-          {dataToDisplay?.comments?.map((comment) => (
-            <Comment
-              hideReplies
-              variant="outlined"
-              linkToPost
-              key={comment?.id}
-              comment={comment}
-            />
-          ))}
-        </ShouldRender>
-
-        <ShouldRender if={!!dataToDisplay?.tags?.length}>
-          {dataToDisplay?.tags?.map((tag) => (
-            <Section
-              title={tag?.name}
-              key={tag?.id}
-              seeMoreHref={`/posts/tags/${tag?.id}`}
-            >
-              {tag?.posts?.map((post) => (
-                <CompactCard key={`${tag?.id}-${post?.id}`} post={post} slide />
-              ))}
-            </Section>
-          ))}
-        </ShouldRender>
-
-        <ShouldRender if={!!dataToDisplay?.users?.length}>
-          {dataToDisplay?.users?.map((user) => (
-            <UserPreview key={user?.id} user={user} />
-          ))}
-        </ShouldRender>
-
-        <ShouldRender if={isLoading || isFetchingNextPage}>
-          {currentFilter === "users" && <UserPreview loading />}
-
-          {currentFilter === "tags" && (
-            <Section loading>
-              <CompactCard loading slide />
-            </Section>
-          )}
-
-          {currentFilter === "posts" && <PostCard loading />}
-          {currentFilter === "comments" && (
-            <Comment variant="outlined" loading />
-          )}
-        </ShouldRender>
-
-        <ShouldRender if={noDataToShow}>
-          <EmptyMessage
-            message={`Oops, no ${currentFilter} found. Maybe try again with a different query.`}
-            hideRedirect
+          <SearchInput
+            setQuery={setQuery}
+            placeholder="What do you want to find?"
           />
-        </ShouldRender>
+        </div>
+      </div>
 
-        <div ref={bottomRef} />
-      </MainLayout>
+      <ShouldRender if={!query && !router.query}>
+        <div className="flex flex-col items-center">
+          <Lottie options={LOTTIE_OPTIONS} width={232} height={207} />
+          <p className="text-center">
+            Search through users, posts, tags & comments in T3 Blog.
+          </p>
+        </div>
+      </ShouldRender>
+
+      <ShouldRender if={!!dataToDisplay?.posts?.length}>
+        {dataToDisplay?.posts?.map((post) => (
+          <PostCard key={post?.id} post={post} />
+        ))}
+      </ShouldRender>
+
+      <ShouldRender if={!!dataToDisplay?.comments?.length}>
+        {dataToDisplay?.comments?.map((comment) => (
+          <Comment
+            hideReplies
+            variant="outlined"
+            linkToPost
+            key={comment?.id}
+            comment={comment}
+          />
+        ))}
+      </ShouldRender>
+
+      <ShouldRender if={!!dataToDisplay?.tags?.length}>
+        {dataToDisplay?.tags?.map((tag) => (
+          <Section
+            title={tag?.name}
+            key={tag?.id}
+            seeMoreHref={`/posts/tags/${tag?.id}`}
+          >
+            {tag?.posts?.map((post) => (
+              <CompactCard key={`${tag?.id}-${post?.id}`} post={post} slide />
+            ))}
+          </Section>
+        ))}
+      </ShouldRender>
+
+      <ShouldRender if={!!dataToDisplay?.users?.length}>
+        {dataToDisplay?.users?.map((user) => (
+          <UserPreview key={user?.id} user={user} />
+        ))}
+      </ShouldRender>
+
+      <ShouldRender if={isLoading || isFetchingNextPage}>
+        {currentFilter === "users" && <UserPreview loading />}
+
+        {currentFilter === "tags" && (
+          <Section loading>
+            <CompactCard loading slide />
+          </Section>
+        )}
+
+        {currentFilter === "posts" && <PostCard loading />}
+        {currentFilter === "comments" && <Comment variant="outlined" loading />}
+      </ShouldRender>
+
+      <ShouldRender if={noDataToShow}>
+        <EmptyMessage
+          message={`Oops, no ${currentFilter} found. Maybe try again with a different query.`}
+          hideRedirect
+        />
+      </ShouldRender>
+
+      <div ref={bottomRef} />
     </>
   );
 };

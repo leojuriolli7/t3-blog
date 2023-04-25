@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import MainLayout from "@components/MainLayout";
 import MetaTags from "@components/MetaTags";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import { GetServerSidePropsContext } from "next";
@@ -52,43 +51,41 @@ const UserLikedPage: React.FC = () => {
   return (
     <>
       <MetaTags title="Liked posts" />
-      <MainLayout>
-        <div className="-mb-5 w-full">
-          <h1 className="prose mb-2 w-full text-left text-2xl font-bold dark:prose-invert sm:text-3xl">
-            Your likes
-          </h1>
-          <SearchInput
-            placeholder="Search your liked posts"
-            setQuery={setQueryValue}
-          />
-        </div>
-        {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-          <PostCard
-            key={isLoading ? i : post?.id}
-            post={post}
-            loading={isLoading}
-          />
-        ))}
+      <div className="-mb-5 w-full">
+        <h1 className="prose mb-2 w-full text-left text-2xl font-bold dark:prose-invert sm:text-3xl">
+          Your likes
+        </h1>
+        <SearchInput
+          placeholder="Search your liked posts"
+          setQuery={setQueryValue}
+        />
+      </div>
+      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
+        <PostCard
+          key={isLoading ? i : post?.id}
+          post={post}
+          loading={isLoading}
+        />
+      ))}
 
-        <ShouldRender if={isFetchingNextPage}>
-          <PostCard loading />
-        </ShouldRender>
+      <ShouldRender if={isFetchingNextPage}>
+        <PostCard loading />
+      </ShouldRender>
 
-        <div ref={bottomRef} />
+      <div ref={bottomRef} />
 
-        <ShouldRender if={noDataToShow}>
-          <EmptyMessage
-            message={
-              !!queryValue
-                ? "Hmm. No posts found."
-                : "You have not liked any posts yet."
-            }
-            redirect="/"
-            redirectMessage="Back to home"
-            hideRedirect={!!queryValue}
-          />
-        </ShouldRender>
-      </MainLayout>
+      <ShouldRender if={noDataToShow}>
+        <EmptyMessage
+          message={
+            !!queryValue
+              ? "Hmm. No posts found."
+              : "You have not liked any posts yet."
+          }
+          redirect="/"
+          redirectMessage="Back to home"
+          hideRedirect={!!queryValue}
+        />
+      </ShouldRender>
     </>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import MainLayout from "@components/MainLayout";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react";
@@ -27,38 +26,36 @@ const SignoutPage: React.FC = () => {
   return (
     <>
       <MetaTags title="Sign out" />
-      <MainLayout>
-        <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-          <div className="w-full max-w-md space-y-8">
-            <div>
-              <h1 className="mt-6 text-center text-xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-2xl">
-                Are you sure you want to sign out?
-              </h1>
-              <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-                Or{" "}
-                <Link
-                  href="/"
-                  className="font-medium text-emerald-600 underline hover:text-emerald-500 dark:text-emerald-500 dark:hover:text-emerald-400"
-                >
-                  go back to home
-                </Link>
-              </p>
-            </div>
-
-            <div>
-              <Button
-                loading={isLoading}
-                type="button"
-                variant="primary"
-                onClick={handleSignout}
-                className="flex h-[38px] w-full justify-center rounded-lg font-bold"
+      <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8">
+          <div>
+            <h1 className="mt-6 text-center text-xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-2xl">
+              Are you sure you want to sign out?
+            </h1>
+            <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+              Or{" "}
+              <Link
+                href="/"
+                className="font-medium text-emerald-600 underline hover:text-emerald-500 dark:text-emerald-500 dark:hover:text-emerald-400"
               >
-                Sign out
-              </Button>
-            </div>
+                go back to home
+              </Link>
+            </p>
+          </div>
+
+          <div>
+            <Button
+              loading={isLoading}
+              type="button"
+              variant="primary"
+              onClick={handleSignout}
+              className="flex h-[38px] w-full justify-center rounded-lg font-bold"
+            >
+              Sign out
+            </Button>
           </div>
         </div>
-      </MainLayout>
+      </div>
     </>
   );
 };

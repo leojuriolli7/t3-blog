@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
-import MainLayout from "@components/MainLayout";
 import Image from "next/future/image";
 import ShouldRender from "@components/ShouldRender";
 import { useRouter } from "next/router";
@@ -230,194 +229,192 @@ const UserPage: NextPage<
         title={username || "User"}
         image={user?.image || "/static/default-profile.jpg"}
       />
-      <MainLayout>
-        <section className="mx-auto mt-4 flex flex-col items-center gap-5 xl:mt-10">
-          <div className="relative">
-            <Image
-              src={user?.image || "/static/default-profile.jpg"}
-              width={240}
-              height={240}
-              className="h-[240px] w-[240px] rounded-full object-cover"
-              alt={user?.name as string}
-            />
-            <ShouldRender if={!loggedUserIsProfileOwner && session?.user?.id}>
-              <Button
-                disabled={loadingUser}
-                variant="gradient"
-                onClick={handleClickFollowButton}
-                absolute
-                className="-bottom-3 left-1/2 -translate-x-1/2 px-3 py-2"
+      <section className="mx-auto mt-4 flex flex-col items-center gap-5 xl:mt-10">
+        <div className="relative">
+          <Image
+            src={user?.image || "/static/default-profile.jpg"}
+            width={240}
+            height={240}
+            className="h-[240px] w-[240px] rounded-full object-cover"
+            alt={user?.name as string}
+          />
+          <ShouldRender if={!loggedUserIsProfileOwner && session?.user?.id}>
+            <Button
+              disabled={loadingUser}
+              variant="gradient"
+              onClick={handleClickFollowButton}
+              absolute
+              className="-bottom-3 left-1/2 -translate-x-1/2 px-3 py-2"
+            >
+              {user?.alreadyFollowing ? "Unfollow" : "Follow"}
+            </Button>
+          </ShouldRender>
+          <ShouldRender if={loggedUserIsProfileOwner || loggedUserIsAdmin}>
+            <div
+              className={clsx(
+                "absolute bottom-0 right-7 flex items-center justify-center rounded-full bg-emerald-500 p-2 shadow-2xl",
+                loadingUser && "pointer-events-none opacity-80"
+              )}
+              role="button"
+            >
+              <Popover.Main
+                icon={
+                  <IoMdSettings
+                    size={23}
+                    className="text-white drop-shadow-lg hover:opacity-80"
+                  />
+                }
               >
-                {user?.alreadyFollowing ? "Unfollow" : "Follow"}
-              </Button>
-            </ShouldRender>
-            <ShouldRender if={loggedUserIsProfileOwner || loggedUserIsAdmin}>
-              <div
-                className={clsx(
-                  "absolute bottom-0 right-7 flex items-center justify-center rounded-full bg-emerald-500 p-2 shadow-2xl",
-                  loadingUser && "pointer-events-none opacity-80"
-                )}
-                role="button"
-              >
-                <Popover.Main
+                <Popover.Item
+                  title="Edit account"
+                  icon={<MdEditNote size={21} className="text-emerald-500" />}
+                  subtitle="Change your avatar & details"
+                  onClick={toggleEditModal(true)}
+                />
+
+                <Popover.Item
+                  title="Code of conduct"
+                  gap="2"
                   icon={
-                    <IoMdSettings
-                      size={23}
-                      className="text-white drop-shadow-lg hover:opacity-80"
+                    <MdOutlineTextSnippet
+                      size={16}
+                      className="text-emerald-500"
                     />
                   }
-                >
-                  <Popover.Item
-                    title="Edit account"
-                    icon={<MdEditNote size={21} className="text-emerald-500" />}
-                    subtitle="Change your avatar & details"
-                    onClick={toggleEditModal(true)}
-                  />
+                  subtitle="Read our code of conduct"
+                  onClick={redirectToTerms("conduct")}
+                />
 
-                  <Popover.Item
-                    title="Code of conduct"
-                    gap="2"
-                    icon={
-                      <MdOutlineTextSnippet
-                        size={16}
-                        className="text-emerald-500"
-                      />
-                    }
-                    subtitle="Read our code of conduct"
-                    onClick={redirectToTerms("conduct")}
-                  />
+                <Popover.Item
+                  title="Privacy Policy"
+                  gap="2"
+                  icon={
+                    <MdOutlineTextSnippet
+                      size={16}
+                      className="text-emerald-500"
+                    />
+                  }
+                  subtitle="Read our privacy terms"
+                  onClick={redirectToTerms("privacy")}
+                />
 
-                  <Popover.Item
-                    title="Privacy Policy"
-                    gap="2"
-                    icon={
-                      <MdOutlineTextSnippet
-                        size={16}
-                        className="text-emerald-500"
-                      />
-                    }
-                    subtitle="Read our privacy terms"
-                    onClick={redirectToTerms("privacy")}
-                  />
+                <Popover.Item
+                  title="Delete account"
+                  gap="1"
+                  icon={<MdDelete size={18} className="text-emerald-500" />}
+                  subtitle="Delete your account"
+                  onClick={showDeleteConfirm}
+                />
+              </Popover.Main>
+            </div>
+          </ShouldRender>
+        </div>
+        <div className="w-fit text-center">
+          <ShouldRender if={!!user}>
+            <p className="flex items-center justify-center gap-1 text-xl">
+              {username}
+              <ShouldRender if={loggedUserIsProfileOwner}>
+                <span className="text-emerald-700 dark:text-emerald-500">
+                  (You)
+                </span>
+              </ShouldRender>
+              <ShouldRender if={profileIsAdmin}>
+                <Badge title={`${username} is a site admin`}>Admin</Badge>
+              </ShouldRender>
+            </p>
+          </ShouldRender>
+          <div className="my-3 flex w-full items-center justify-center gap-2">
+            <button
+              className="flex cursor-pointer flex-col items-center"
+              onClick={() => setOpenFollowersModal(true)}
+              disabled={loadingUser}
+            >
+              <p className="prose-base text-neutral-600 hover:underline hover:brightness-125 dark:text-neutral-400">
+                Followers
+              </p>
+              <ShouldRender if={!loadingUser}>
+                <p>{user?._count?.followers}</p>
+              </ShouldRender>
+              <ShouldRender if={loadingUser}>
+                <Skeleton width="w-6" />
+              </ShouldRender>
+            </button>
 
-                  <Popover.Item
-                    title="Delete account"
-                    gap="1"
-                    icon={<MdDelete size={18} className="text-emerald-500" />}
-                    subtitle="Delete your account"
-                    onClick={showDeleteConfirm}
-                  />
-                </Popover.Main>
-              </div>
-            </ShouldRender>
+            <button
+              disabled={loadingUser}
+              className="flex cursor-pointer flex-col items-center"
+              onClick={() => setOpenFollowingModal(true)}
+            >
+              <p className="prose-base text-neutral-600 hover:underline hover:brightness-125 dark:text-neutral-400">
+                Following
+              </p>
+              <ShouldRender if={!loadingUser}>
+                <p>{user?._count?.following}</p>
+              </ShouldRender>
+
+              <ShouldRender if={loadingUser}>
+                <Skeleton width="w-6" />
+              </ShouldRender>
+            </button>
           </div>
-          <div className="w-fit text-center">
-            <ShouldRender if={!!user}>
-              <p className="flex items-center justify-center gap-1 text-xl">
-                {username}
-                <ShouldRender if={loggedUserIsProfileOwner}>
-                  <span className="text-emerald-700 dark:text-emerald-500">
-                    (You)
-                  </span>
-                </ShouldRender>
-                <ShouldRender if={profileIsAdmin}>
-                  <Badge title={`${username} is a site admin`}>Admin</Badge>
-                </ShouldRender>
+          <div className="w-full xl:w-[356px]">
+            <ShouldRender if={!!user?.url}>
+              <UserLinkPreview data={user?.url} />
+            </ShouldRender>
+
+            <ShouldRender if={!!user?.bio}>
+              <blockquote className="prose mt-2 w-full rounded-r-md border-l-4 border-gray-300 bg-white p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
+                {user?.bio}
+              </blockquote>
+            </ShouldRender>
+            <ShouldRender if={!!user?.createdAt}>
+              <p className="mt-2 text-neutral-800 dark:text-neutral-400 dark:opacity-80">
+                Member since <span>{user?.createdAt}</span>
               </p>
             </ShouldRender>
-            <div className="my-3 flex w-full items-center justify-center gap-2">
-              <button
-                className="flex cursor-pointer flex-col items-center"
-                onClick={() => setOpenFollowersModal(true)}
-                disabled={loadingUser}
-              >
-                <p className="prose-base text-neutral-600 hover:underline hover:brightness-125 dark:text-neutral-400">
-                  Followers
-                </p>
-                <ShouldRender if={!loadingUser}>
-                  <p>{user?._count?.followers}</p>
-                </ShouldRender>
-                <ShouldRender if={loadingUser}>
-                  <Skeleton width="w-6" />
-                </ShouldRender>
-              </button>
-
-              <button
-                disabled={loadingUser}
-                className="flex cursor-pointer flex-col items-center"
-                onClick={() => setOpenFollowingModal(true)}
-              >
-                <p className="prose-base text-neutral-600 hover:underline hover:brightness-125 dark:text-neutral-400">
-                  Following
-                </p>
-                <ShouldRender if={!loadingUser}>
-                  <p>{user?._count?.following}</p>
-                </ShouldRender>
-
-                <ShouldRender if={loadingUser}>
-                  <Skeleton width="w-6" />
-                </ShouldRender>
-              </button>
-            </div>
-            <div className="w-full xl:w-[356px]">
-              <ShouldRender if={!!user?.url}>
-                <UserLinkPreview data={user?.url} />
-              </ShouldRender>
-
-              <ShouldRender if={!!user?.bio}>
-                <blockquote className="prose mt-2 w-full rounded-r-md border-l-4 border-gray-300 bg-white p-4 text-left dark:border-gray-500 dark:bg-neutral-800 dark:text-neutral-400">
-                  {user?.bio}
-                </blockquote>
-              </ShouldRender>
-              <ShouldRender if={!!user?.createdAt}>
-                <p className="mt-2 text-neutral-800 dark:text-neutral-400 dark:opacity-80">
-                  Member since <span>{user?.createdAt}</span>
-                </p>
-              </ShouldRender>
-            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="w-full">
-          <div className="mb-5 flex w-full flex-col justify-between">
-            <div className="flex w-full items-center gap-3">
-              <h2
-                role="button"
-                onClick={toggleTab("posts")}
-                className={clsx(
-                  "cursor-pointer text-2xl",
-                  isPostsTab ? "underline" : "opacity-50"
-                )}
-              >
-                Posts
-              </h2>
-              <h2
-                onClick={toggleTab("comments")}
-                className={clsx(
-                  "cursor-pointer text-2xl",
-                  isCommentsTab ? "underline" : "opacity-50"
-                )}
-              >
-                Comments
-              </h2>
-            </div>
-
-            <div className="mt-3 flex justify-start gap-3 sm:mt-1 sm:items-start sm:justify-end">
-              {filters.map((filter) => (
-                <Tab
-                  key={filter}
-                  active={currentFilter === filter}
-                  title={`Filter by ${filterLabels[filter]}`}
-                  label={filterLabels[filter]}
-                  onClick={toggleFilter(filter)}
-                />
-              ))}
-            </div>
+      <section className="w-full">
+        <div className="mb-5 flex w-full flex-col justify-between">
+          <div className="flex w-full items-center gap-3">
+            <h2
+              role="button"
+              onClick={toggleTab("posts")}
+              className={clsx(
+                "cursor-pointer text-2xl",
+                isPostsTab ? "underline" : "opacity-50"
+              )}
+            >
+              Posts
+            </h2>
+            <h2
+              onClick={toggleTab("comments")}
+              className={clsx(
+                "cursor-pointer text-2xl",
+                isCommentsTab ? "underline" : "opacity-50"
+              )}
+            >
+              Comments
+            </h2>
           </div>
 
-          <UserPageList currentFilter={currentFilter} currentTab={currentTab} />
-        </section>
-      </MainLayout>
+          <div className="mt-3 flex justify-start gap-3 sm:mt-1 sm:items-start sm:justify-end">
+            {filters.map((filter) => (
+              <Tab
+                key={filter}
+                active={currentFilter === filter}
+                title={`Filter by ${filterLabels[filter]}`}
+                label={filterLabels[filter]}
+                onClick={toggleFilter(filter)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <UserPageList currentFilter={currentFilter} currentTab={currentTab} />
+      </section>
 
       <ConfirmationModal
         title="Are you sure you want to delete your account?"

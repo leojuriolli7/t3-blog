@@ -1,5 +1,4 @@
 import React from "react";
-import MainLayout from "@components/MainLayout";
 import { GetServerSidePropsContext } from "next";
 import { prisma } from "@utils/prisma";
 import { getServerSession } from "next-auth";
@@ -16,11 +15,9 @@ const NewUserPage: React.FC = () => {
   return (
     <>
       <MetaTags title="Loading..." />
-      <MainLayout>
-        <div className="flex h-[50vh] w-full items-center justify-center overflow-y-hidden">
-          <Spinner />
-        </div>
-      </MainLayout>
+      <div className="flex h-[50vh] w-full items-center justify-center overflow-y-hidden">
+        <Spinner />
+      </div>
     </>
   );
 };

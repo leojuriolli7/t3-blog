@@ -16,6 +16,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
 import "nprogress/nprogress.css";
 import "keen-slider/keen-slider.min.css";
+import MainLayout from "@components/MainLayout";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -26,7 +27,9 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
         </Head>
         <RouterProgressBar />
-        <Component {...pageProps} />
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
         <PostModal />
         <ToastContainer
           closeButton={false}

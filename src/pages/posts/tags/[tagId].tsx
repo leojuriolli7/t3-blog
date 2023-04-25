@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
 import { trpc } from "@utils/trpc";
-import MainLayout from "@components/MainLayout";
 import PostCard from "@components/PostCard";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
@@ -59,43 +58,41 @@ const SingleTagPage: NextPage<
   return (
     <>
       <MetaTags title={`${tag?.name || ""} posts`} />
-      <MainLayout>
-        <div className="-mb-5  mt-5 w-full">
-          <h1 className="text-left text-2xl xl:text-3xl">
-            <ShouldRender if={!isLoading}>{tag?.name} posts</ShouldRender>
+      <div className="-mb-5  mt-5 w-full">
+        <h1 className="text-left text-2xl xl:text-3xl">
+          <ShouldRender if={!isLoading}>{tag?.name} posts</ShouldRender>
 
-            <ShouldRender if={isLoading}>
-              <Skeleton heading lines={1} width="w-40" />
-            </ShouldRender>
-          </h1>
+          <ShouldRender if={isLoading}>
+            <Skeleton heading lines={1} width="w-40" />
+          </ShouldRender>
+        </h1>
 
-          <div className="mt-3 flex gap-3 sm:items-start">
-            {filters.map((filter) => (
-              <Tab
-                key={filter}
-                active={currentFilter === filter}
-                title={`Filter by ${filterLabels[filter]}`}
-                label={filterLabels[filter]}
-                onClick={toggleFilter(filter)}
-              />
-            ))}
-          </div>
+        <div className="mt-3 flex gap-3 sm:items-start">
+          {filters.map((filter) => (
+            <Tab
+              key={filter}
+              active={currentFilter === filter}
+              title={`Filter by ${filterLabels[filter]}`}
+              label={filterLabels[filter]}
+              onClick={toggleFilter(filter)}
+            />
+          ))}
         </div>
+      </div>
 
-        {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-          <PostCard
-            key={isLoading ? i : post?.id}
-            post={post}
-            loading={isLoading}
-          />
-        ))}
+      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
+        <PostCard
+          key={isLoading ? i : post?.id}
+          post={post}
+          loading={isLoading}
+        />
+      ))}
 
-        <ShouldRender if={isFetchingNextPage}>
-          <PostCard loading />
-        </ShouldRender>
+      <ShouldRender if={isFetchingNextPage}>
+        <PostCard loading />
+      </ShouldRender>
 
-        <div ref={bottomRef} />
-      </MainLayout>
+      <div ref={bottomRef} />
     </>
   );
 };

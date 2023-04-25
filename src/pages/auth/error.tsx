@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import MainLayout from "@components/MainLayout";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
@@ -93,19 +92,17 @@ const ErrorPage = () => {
   return (
     <>
       <MetaTags title={`Error - ${status}`} />
-      <MainLayout>
-        <div className="pb-5 shadow dark:bg-neutral-800 dark:shadow-2xl sm:pb-0">
-          <AuthFeedbackMessage message={`Error - ${status}`} />
-          <h1 className="mx-2 mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
-            {heading}
-          </h1>
+      <div className="pb-5 shadow dark:bg-neutral-800 dark:shadow-2xl sm:pb-0">
+        <AuthFeedbackMessage message={`Error - ${status}`} />
+        <h1 className="mx-2 mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+          {heading}
+        </h1>
 
-          <div className="p-5 text-center sm:p-7">
-            <div>{message}</div>
-            {signin && <div className="mt-5">{signin}</div>}
-          </div>
+        <div className="p-5 text-center sm:p-7">
+          <div>{message}</div>
+          {signin && <div className="mt-5">{signin}</div>}
         </div>
-      </MainLayout>
+      </div>
     </>
   );
 };
