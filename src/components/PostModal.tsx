@@ -51,7 +51,7 @@ const PostModal: React.FC = () => {
 
   return (
     <Modal openState={openState} alwaysCentered onClose={onCloseModal}>
-      <div className="relative max-h-[90vh] w-screen max-w-[90vw] overflow-y-auto rounded-lg bg-white p-6 shadow-lg dark:bg-zinc-900 xl:max-w-4xl -2sm:p-0 -2sm:pb-6 -2sm:pt-12">
+      <div className="grey-scrollbar relative max-h-[90vh] w-screen max-w-[90vw] overflow-y-auto rounded-lg bg-white p-6 shadow-lg scrollbar-thumb-rounded dark:bg-zinc-900 xl:max-w-4xl -2sm:p-0 -2sm:pb-6 -2sm:pt-12">
         <div className="mx-auto flex w-11/12 max-w-2xl flex-col items-center gap-10">
           <PostDetails
             data={post}

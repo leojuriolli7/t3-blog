@@ -304,7 +304,9 @@ const Comment: React.FC<CommentProps> = ({
             </ShouldRender>
           </ShouldRender>
 
-          <ShouldRender if={!linkToPost && canDeleteOrEdit && !hideActions}>
+          <ShouldRender
+            if={!linkToPost && canDeleteOrEdit && !hideActions && !loading}
+          >
             <div className="absolute -bottom-3 -right-2 flex items-center gap-2">
               <ActionButton
                 action={isEditing ? "close" : "edit"}
