@@ -95,7 +95,7 @@ export const SidebarContent = () => {
   const callbackUrl = encodeURIComponent(filteredRoute);
 
   return (
-    <div className="relative flex h-full w-full flex-col gap-3 overflow-y-auto px-3 pt-6 xl:mt-2 xl:py-6">
+    <div className="grey-scrollbar relative flex h-full w-full flex-col gap-3 overflow-y-auto px-3 pt-6 xl:mt-2 xl:py-6">
       <nav>
         <ul className="flex flex-col gap-1 xl:gap-3">
           <Item

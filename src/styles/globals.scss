@@ -7,6 +7,10 @@ button {
   cursor: pointer;
 }
 
+html {
+  @apply base-scrollbar scroll-smooth scrollbar-thumb-emerald-600/70;
+}
+
 button:disabled {
   cursor: not-allowed;
   filter: opacity(0.6);
@@ -63,6 +67,14 @@ pre * {
 
 // Create new tailwind class for MD editor dark-mode styles.
 @layer utilities {
+  .base-scrollbar {
+    @apply scrollbar-thin scrollbar-track-transparent dark:scrollbar-track-transparent;
+  }
+
+  .grey-scrollbar {
+    @apply base-scrollbar scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-800;
+  }
+
   .content-mask {
     -webkit-mask-image: linear-gradient(180deg, #000 71%, transparent);
     mask-image: linear-gradient(180deg, #000 71%, transparent);
@@ -86,7 +98,7 @@ pre * {
     }
 
     .rc-md-navigation {
-      @apply bg-neutral-800 text-zinc-100 border-none;
+      @apply border-none bg-neutral-800 text-zinc-100;
 
       .button:hover {
         color: theme("colors.neutral.300") !important;
@@ -97,7 +109,7 @@ pre * {
 
 // Apply prose to MD editor html preview.
 .editor-container .html-section {
-  @apply prose -xl:prose-sm prose-emerald dark:prose-invert;
+  @apply prose prose-emerald dark:prose-invert -xl:prose-sm;
 }
 
 // Apply styles to router progress bar.
@@ -109,6 +121,6 @@ pre * {
 // Remove exaggerated margin from checklist.
 .prose {
   input[type="checkbox"] {
-    @apply mt-0 mb-0;
+    @apply mb-0 mt-0;
   }
 }
