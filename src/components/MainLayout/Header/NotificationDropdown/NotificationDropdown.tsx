@@ -119,9 +119,13 @@ const NotificationDropdown = () => {
           />
         </div>
 
-        {dataToShow?.map((notification) => (
-          <NotificationCard key={notification.id} {...notification} />
-        ))}
+        <ShouldRender if={!!dataToShow?.length}>
+          {dataToShow?.map((notification) => (
+            <NotificationCard key={notification.id} {...notification} />
+          ))}
+
+          <div ref={bottomRef} />
+        </ShouldRender>
 
         <ShouldRender if={noDataToShow}>
           <div className="flex w-full justify-center py-6">
@@ -136,8 +140,6 @@ const NotificationDropdown = () => {
             <BeatLoader className="dark:fill-white" />
           </div>
         </ShouldRender>
-
-        {dataToShow && <div ref={bottomRef} />}
       </div>
     </Popover.Main>
   );
