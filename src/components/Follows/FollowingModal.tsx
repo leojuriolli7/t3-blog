@@ -1,8 +1,8 @@
-import useOnScreen from "@hooks/useOnScreen";
+import Button from "@components/Button";
 import { trpc } from "@utils/trpc";
 import type { User } from "@utils/types";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import EmptyMessage from "../EmptyMessage";
 import { Modal } from "../Modal";
 import ShouldRender from "../ShouldRender";
@@ -18,15 +18,12 @@ const FollowingModal: React.FC<Props> = ({ openState, user }) => {
 
   const [, toggleModal] = openState;
 
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const reachedBottom = useOnScreen(bottomRef);
-
   const { data, fetchNextPage, isLoading, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
         "users.get-following",
         {
-          limit: 15,
+          limit: 10,
           userId,
         },
       ],
@@ -42,19 +39,13 @@ const FollowingModal: React.FC<Props> = ({ openState, user }) => {
 
   const loadingArray = Array.from<undefined>({ length: 4 });
   const noDataToShow = !isLoading && !dataToShow?.length && !hasNextPage;
-
-  useEffect(() => {
-    if (reachedBottom && hasNextPage) {
-      fetchNextPage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reachedBottom]);
+  const loadMore = () => fetchNextPage();
 
   return (
     <Modal openState={openState} alwaysCentered>
       <div className="relative max-h-[85vh] max-w-[90vw] rounded-lg bg-white p-8 dark:bg-neutral-900 sm:max-w-[352px] sm:p-12">
         <h3 className="mb-5 text-xl">{`${user?.name}'s following`}</h3>
-        <div className="flex h-[300px] w-full flex-col items-center gap-3 overflow-y-auto overflow-x-hidden pr-3 sm:w-fit">
+        <div className="flex h-[400px] w-full flex-col items-center gap-3 overflow-y-auto overflow-x-hidden sm:w-fit">
           {(isLoading ? loadingArray : dataToShow)?.map((following, key) => {
             const user = following?.following;
 
@@ -68,8 +59,18 @@ const FollowingModal: React.FC<Props> = ({ openState, user }) => {
             );
           })}
 
-          <ShouldRender if={isFetchingNextPage}>
-            <UserCard loading />
+          <ShouldRender if={!!dataToShow && hasNextPage}>
+            <div className="flex w-full justify-center border-t border-neutral-300 p-3 dark:border-zinc-800">
+              <Button
+                loading={isFetchingNextPage}
+                onClick={loadMore}
+                className="flex w-full justify-center rounded-full"
+                variant="primary"
+                size="sm"
+              >
+                Load more
+              </Button>
+            </div>
           </ShouldRender>
 
           <ShouldRender if={noDataToShow}>
@@ -79,8 +80,6 @@ const FollowingModal: React.FC<Props> = ({ openState, user }) => {
               small
             />
           </ShouldRender>
-
-          <div ref={bottomRef} />
         </div>
       </div>
     </Modal>
