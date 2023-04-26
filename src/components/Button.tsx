@@ -14,7 +14,7 @@ type HTMLAnchorProps = React.DetailedHTMLProps<
 >;
 
 const BUTTON_CLASSES =
-  "inline-flex items-center font-base disabled:cursor-not-allowed";
+  "inline-flex items-center font-base disabled:cursor-not-allowed disabled:opacity-60";
 
 type ButtonVariant =
   | "primary"
