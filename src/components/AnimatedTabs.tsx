@@ -105,7 +105,7 @@ const AnimatedTabs = ({
             key={i}
             className={clsx(
               "prose relative z-20 flex h-6 cursor-pointer select-none items-center rounded-md bg-transparent px-4 transition-colors dark:prose-invert",
-              hoveredTabIndex === i && "text-neutral-600",
+              hoveredTabIndex === i && "text-neutral-600 dark:text-gray-300",
               large ? "px-6 py-6 text-2xl font-bold" : "px-4"
             )}
             aria-label={`Select ${item.label}`}
@@ -119,7 +119,7 @@ const AnimatedTabs = ({
         );
       })}
       <div
-        className="absolute left-0 top-0 z-10 rounded-md bg-gray-200 transition-[width]"
+        className="absolute left-0 top-0 z-10 rounded-md bg-gray-200 transition-[width] dark:bg-neutral-700"
         style={hoverStyles}
       />
       <div

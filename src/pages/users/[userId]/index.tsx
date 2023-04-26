@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import { IoMdSettings } from "react-icons/io";
-import useFilterContent from "@hooks/useFilterContent";
 import { toast } from "react-toastify";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Popover from "@components/Popover";
@@ -61,10 +60,7 @@ const UserPage: NextPage<
 > = (props) => {
   const { userId } = props;
 
-  const { selectedTab: currentFilter, tabProps: filterTabsProps } =
-    useFilterContent();
-
-  const [typesTabs] = useState({
+  const [tabs] = useState({
     tabs: [
       {
         label: "Posts",
@@ -78,8 +74,7 @@ const UserPage: NextPage<
     initialTabId: "posts",
   });
 
-  const tabs = useTabs(typesTabs);
-  const { selectedTab: currentType, tabProps: typeTabsProps } = tabs;
+  const { selectedTab, tabProps } = useTabs(tabs);
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -390,20 +385,11 @@ const UserPage: NextPage<
       </section>
 
       <section className="w-full">
-        <div className="mb-5 flex w-full flex-col items-center justify-between">
-          <div className="flex items-center gap-3">
-            <AnimatedTabs {...typeTabsProps} large />
-          </div>
-
-          <div className="mt-4 flex justify-start gap-3">
-            <AnimatedTabs {...filterTabsProps} />
-          </div>
+        <div className="mx-auto w-full">
+          <AnimatedTabs {...tabProps} large />
         </div>
 
-        <UserPageList
-          currentFilter={currentFilter.id}
-          currentTab={currentType.id}
-        />
+        <UserPageList currentTab={selectedTab.id} />
       </section>
 
       <ConfirmationModal
