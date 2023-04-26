@@ -13,6 +13,7 @@
       "@config/*": ["src/config/*"],
       "@hooks/*": ["src/hooks/*"],
       "@package": ["package.json"],
+      "@i18n-config": ["next-i18next.config.mjs"],
       "@schema/*": ["src/schema/*"]
     }
   }

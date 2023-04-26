@@ -1,0 +1,28 @@
+{
+  "back-to-home": "Go back to home",
+  "filters": {
+    "most-recent": "Most recent",
+    "oldest": "Oldest",
+    "most-interactions": "Most interactions",
+    "filter-by": "Filter by {{filterLabel}}"
+  },
+  "navigation": {
+    "home": "Home",
+    "go-to-home": "Go to home",
+    "all-tags": "All tags",
+    "explore-tags": "Explore through all tags",
+    "following": "Following",
+    "posts-from-your-following": "Posts from users you follow",
+    "liked": "Liked",
+    "your-likes": "Your liked posts",
+    "favorites": "Favorites",
+    "your-favorites": "Your favorited posts",
+    "profile": "Profile",
+    "go-to-profile": "Go to your profile",
+    "create-post": "Create post",
+    "change-theme": "Change theme",
+    "sign-out": "Sign out",
+    "sign-in": "Sign in",
+    "see-more": "See more"
+  }
+}

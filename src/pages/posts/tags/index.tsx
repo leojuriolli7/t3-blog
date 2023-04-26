@@ -8,8 +8,12 @@ import CompactCard from "@components/CompactCard";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
 import { generateSSGHelper } from "@server/ssgHepers";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import nextI18nConfig from "@i18n-config";
 
 const AllTagsPage: React.FC = () => {
+  const { t } = useTranslation(["side-pages", "common"]);
   const [queryValue, setQueryValue] = useState("");
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -52,14 +56,14 @@ const AllTagsPage: React.FC = () => {
 
   return (
     <>
-      <MetaTags title="All tags" />
+      <MetaTags title={t("all-tags") ?? "All tags"} />
       <div className="w-full">
         <h1 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
-          All tags
+          {t("all-tags")}
         </h1>
-        <p className="-mb-3">See all tags created on T3 blog.</p>
+        <p className="-mb-3">{t("see-all-tags")}</p>
       </div>
-      <SearchInput setQuery={setQueryValue} placeholder="Search tags" />
+      <SearchInput setQuery={setQueryValue} placeholder={t("search-tags")} />
       {(isLoading ? loadingArray(4) : dataToShow)?.map((tag, key) => (
         <Section
           loading={isLoading}
@@ -87,7 +91,7 @@ const AllTagsPage: React.FC = () => {
       </ShouldRender>
 
       <ShouldRender if={!!queryValue && noDataToShow}>
-        <EmptyMessage message="Hmm. Couldn't find any tags." hideRedirect />
+        <EmptyMessage message={t("no-tags-found")} hideRedirect />
       </ShouldRender>
 
       <div ref={bottomRef} />
@@ -97,17 +101,27 @@ const AllTagsPage: React.FC = () => {
 
 export default AllTagsPage;
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ locale }: { locale: string }) {
   const ssg = await generateSSGHelper();
 
-  await ssg.prefetchInfiniteQuery("posts.posts-by-tags", {
+  const translationsData = serverSideTranslations(
+    locale,
+    ["side-pages", "common"],
+    nextI18nConfig,
+    ["en", "pt"]
+  );
+
+  const postsData = ssg.prefetchInfiniteQuery("posts.posts-by-tags", {
     tagLimit: 6,
     query: "",
   });
 
+  const [translations] = await Promise.all([translationsData, postsData]);
+
   return {
     props: {
       trpcState: ssg.dehydrate(),
+      ...translations,
     },
   };
 }

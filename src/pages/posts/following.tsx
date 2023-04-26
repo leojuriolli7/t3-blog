@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useRef } from "react";
 import EmptyMessage from "@components/EmptyMessage";
 import MetaTags from "@components/MetaTags";
 import PostCard from "@components/PostCard";
@@ -9,9 +10,13 @@ import { authOptions } from "@pages/api/auth/[...nextauth]";
 import { trpc } from "@utils/trpc";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
-import { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import nextI18nConfig from "@i18n-config";
 
 const Following = () => {
+  const { t } = useTranslation(["side-pages", "common"]);
+
   const { currentFilter, filterLabels, filters, toggleFilter } =
     useFilterPosts();
 
@@ -49,17 +54,22 @@ const Following = () => {
 
   return (
     <>
-      <MetaTags title="Following" />
+      <MetaTags title={t("following") ?? "Following"} />
       <div className="w-full">
         <h2 className="prose -mb-3 text-xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
-          Posts from your following
+          {t("posts-from-following")}
         </h2>
         <div className="mt-3 flex gap-3">
           {filters.map((filter) => (
             <Tab
               key={filter}
               active={currentFilter === filter}
-              title={`Filter by ${filterLabels[filter]}`}
+              title={
+                t("filters.filter-by", {
+                  filterLabel: filterLabels[filter],
+                  ns: "common",
+                }) as string
+              }
               label={filterLabels[filter]}
               onClick={toggleFilter(filter)}
             />
@@ -79,11 +89,7 @@ const Following = () => {
       </ShouldRender>
 
       <ShouldRender if={noDataToShow}>
-        <EmptyMessage
-          message="Hmm. Could not find any posts from your following."
-          hideRedirect
-          small
-        />
+        <EmptyMessage message={t("no-following-found")} hideRedirect small />
       </ShouldRender>
 
       <div ref={bottomRef} />
@@ -94,13 +100,27 @@ const Following = () => {
 export default Following;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+  const sessionData = getServerSession(context.req, context.res, authOptions);
+
+  const translationsData = serverSideTranslations(
+    context.locale ?? "en",
+    ["side-pages", "common"],
+    nextI18nConfig,
+    ["en", "pt"]
+  );
+
+  const [session, translations] = await Promise.all([
+    sessionData,
+    translationsData,
+  ]);
 
   if (!session?.user) {
     return { redirect: { destination: "/" } };
   }
 
   return {
-    props: {},
+    props: {
+      ...translations,
+    },
   };
 }

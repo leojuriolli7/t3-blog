@@ -1,0 +1,19 @@
+{
+  "all-tags": "All tags",
+  "see-all-tags": "See all tags created on T3 blog.",
+  "no-tags-found": "Hmm. Couldn't find any tags.",
+  "following": "Following",
+  "posts-from-following": "Posts from your following",
+  "no-following-found": "Hmm. Could not find any posts from your following.",
+  "your-favorites": "Your favorites",
+  "your-likes": "Your likes",
+  "search-likes": "Search your liked posts",
+  "search-favorites": "Search your favorite posts",
+  "search-tags": "Search tags",
+  "liked-posts": "Liked posts",
+  "favorite-posts": "Favorite posts",
+  "no-posts-found": "Hmm. No posts found.",
+  "no-likes": "You have not liked any posts yet.",
+  "no-favorites": "You have not favorited any posts yet.",
+  "back-to-home": "Back to home"
+}

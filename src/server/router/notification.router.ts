@@ -67,6 +67,8 @@ export const notificationRouter = createRouter()
   .query("get-all", {
     input: getNotificationsSchema,
     async resolve({ ctx, input }) {
+      // const locale = ctx.req?.cookies?.NEXT_LOCALE ?? "en";
+
       const { limit, skip, cursor, read } = input;
 
       const notifications = await ctx.prisma.notification.findMany({

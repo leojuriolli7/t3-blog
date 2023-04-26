@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import { trpc } from "@utils/trpc";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { generateSSGHelper } from "@server/ssgHepers";
 import PostCard from "@components/PostCard";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
@@ -10,9 +13,11 @@ import Section from "@components/Section";
 import CompactCard from "@components/CompactCard";
 import { ButtonLink } from "@components/Button";
 import Link from "next/link";
-import { generateSSGHelper } from "@server/ssgHepers";
+import nextI18nConfig from "@i18n-config";
 
 const PostListingPage: React.FC = () => {
+  const { t } = useTranslation(["home", "common"]);
+
   const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
     [
       "posts.posts-by-tags",
@@ -77,10 +82,10 @@ const PostListingPage: React.FC = () => {
       <ShouldRender if={followingPostsToShow?.length}>
         <div className="w-full">
           <h2 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
-            Following
+            {t("following")}
           </h2>
           <p className="mb-3 text-sm xl:text-base">
-            Posts from all your following
+            {t("posts-from-your-following")}
           </p>
           <Section seeMoreHref="posts/following">
             {followingPostsToShow?.map((post) => (
@@ -96,11 +101,11 @@ const PostListingPage: React.FC = () => {
       </ShouldRender>
       <div className="-mb-5 flex w-full items-center justify-between">
         <h2 className="prose text-2xl font-bold dark:prose-invert xl:text-3xl">
-          Featured tags
+          {t("featured-tags")}
         </h2>
         <Link prefetch={false} href="/posts/tags" passHref legacyBehavior>
           <ButtonLink variant="gradient" size="sm" className="rounded-full">
-            All tags
+            {t("all-tags")}
           </ButtonLink>
         </Link>
       </div>
@@ -126,14 +131,19 @@ const PostListingPage: React.FC = () => {
 
       <div className="-mb-5 flex w-full flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <h2 className=" prose -mb-3 text-2xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
-          All posts
+          {t("all-posts")}
         </h2>
         <div className="flex gap-3">
           {filters.map((filter) => (
             <Tab
               key={filter}
               active={currentFilter === filter}
-              title={`Filter by ${filterLabels[filter]}`}
+              title={
+                t("filters.filter-by", {
+                  filterLabel: filterLabels[filter],
+                  ns: "common",
+                }) as string
+              }
               label={filterLabels[filter]}
               onClick={toggleFilter(filter)}
             />
@@ -159,8 +169,15 @@ const PostListingPage: React.FC = () => {
 
 export default PostListingPage;
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ locale }: { locale: string }) {
   const ssg = await generateSSGHelper();
+
+  const translationsData = serverSideTranslations(
+    locale,
+    ["home", "common"],
+    nextI18nConfig,
+    ["en", "pt"]
+  );
 
   const tagsQuery = ssg.prefetchQuery("posts.posts-by-tags", {
     tagLimit: 4,
@@ -172,11 +189,16 @@ export async function getServerSideProps() {
   });
 
   // fetching in parallel to reduce load times
-  await Promise.all([tagsQuery, postsQuery]);
+  const [translations] = await Promise.all([
+    translationsData,
+    tagsQuery,
+    postsQuery,
+  ]);
 
   return {
     props: {
       trpcState: ssg.dehydrate(),
+      ...translations,
     },
   };
 }

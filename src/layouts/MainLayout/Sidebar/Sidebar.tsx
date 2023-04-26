@@ -14,6 +14,7 @@ import {
   AiOutlineTag,
 } from "react-icons/ai";
 import { ButtonLink } from "@components/Button";
+import { useTranslation } from "next-i18next";
 import BeatLoader from "@components/BeatLoader";
 import { useSession } from "next-auth/react";
 import ShouldRender from "@components/ShouldRender";
@@ -84,6 +85,7 @@ const Item: React.FC<ItemProps> = ({
 };
 
 export const SidebarContent = () => {
+  const { t } = useTranslation("common");
   const router = useRouter();
   const session = useSession();
 
@@ -94,24 +96,40 @@ export const SidebarContent = () => {
   const filteredRoute = callbackRoute.split("?")[0];
   const callbackUrl = encodeURIComponent(filteredRoute);
 
+  const toggleLanguage = () => {
+    const setCookie = (locale: string) => {
+      document.cookie = `NEXT_LOCALE=${locale}; max-age=31536000; path=/`;
+    };
+
+    const newLocale = router.locale === "en" ? "pt" : "en";
+    setCookie(newLocale);
+    router.push(router.asPath, undefined, {
+      locale: newLocale,
+      scroll: false,
+    });
+  };
+
   return (
     <div className="grey-scrollbar relative flex h-full w-full flex-col gap-3 overflow-y-auto px-3 pt-6 xl:mt-2 xl:py-6">
       <nav>
         <ul className="flex flex-col gap-1 xl:gap-3">
+          <li>
+            <button onClick={toggleLanguage}>Toggle language</button>
+          </li>
           <Item
             defaultIcon={AiOutlineHome}
             activeIcon={AiFillHome}
             path="/"
-            title="Home"
-            subtitle="Go to homepage"
+            title={t("navigation.home")}
+            subtitle={t("navigation.go-to-home")}
             className="mt-4"
           />
           <Item
             activeIcon={AiFillTag}
             defaultIcon={AiOutlineTag}
             path="/posts/tags"
-            title="All tags"
-            subtitle="Explore through all tags"
+            title={t("navigation.all-tags")}
+            subtitle={t("navigation.explore-tags")}
           />
 
           <ShouldRender if={sessionStatus === "authenticated"}>
@@ -119,29 +137,29 @@ export const SidebarContent = () => {
               activeIcon={HiUsers}
               defaultIcon={HiOutlineUsers}
               path="/posts/following"
-              title="Following"
-              subtitle="Posts from users you follow"
+              title={t("navigation.following")}
+              subtitle={t("navigation.posts-from-your-following")}
             />
             <Item
               activeIcon={AiFillLike}
               defaultIcon={AiOutlineLike}
               path="/posts/liked"
-              title="Liked"
-              subtitle="Your liked posts"
+              title={t("navigation.liked")}
+              subtitle={t("navigation.your-likes")}
             />
             <Item
               activeIcon={AiFillHeart}
               defaultIcon={AiOutlineHeart}
               path="/posts/favorited"
-              title="Favorites"
-              subtitle="Your favorited posts"
+              title={t("navigation.favorites")}
+              subtitle={t("navigation.your-favorites")}
             />
             <Item
               activeIcon={FaUser}
               defaultIcon={FaRegUser}
               path={`/users/${user?.id}`}
-              title="Profile"
-              subtitle="Go to your profile"
+              title={t("navigation.profile")}
+              subtitle={t("navigation.go-to-profile")}
             />
           </ShouldRender>
         </ul>
@@ -163,7 +181,9 @@ export const SidebarContent = () => {
               size="lg"
               className="flex w-full justify-center rounded-full font-bold shadow-md transition-opacity"
             >
-              {sessionStatus === "authenticated" ? "Create post" : "Sign in"}
+              {sessionStatus === "authenticated"
+                ? t("navigation.create-post")
+                : t("navigation.sign-in")}
             </ButtonLink>
           </Link>
         </ShouldRender>
@@ -196,7 +216,7 @@ export const SidebarContent = () => {
                   href={`/auth/signout?callbackUrl=${callbackUrl}`}
                   className="text-sm text-neutral-600 hover:underline dark:text-neutral-500"
                 >
-                  Sign out
+                  {t("navigation.sign-out")}
                 </Link>
               </div>
             </div>

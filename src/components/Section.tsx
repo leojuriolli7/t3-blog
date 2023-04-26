@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { useTranslation } from "next-i18next";
 import clsx from "clsx";
 import { ButtonLink } from "./Button";
 import Carousel from "./Carousel";
@@ -21,6 +22,8 @@ const Section: React.FC<Props> = ({
   compact,
   seeMoreHref,
 }) => {
+  const { t } = useTranslation("common");
+
   return (
     <section
       className={clsx(
@@ -59,7 +62,7 @@ const Section: React.FC<Props> = ({
               size={compact ? "xs" : "sm"}
               className="rounded-full"
             >
-              See more
+              {t("navigation.see-more")}
             </ButtonLink>
           </Link>
         </ShouldRender>

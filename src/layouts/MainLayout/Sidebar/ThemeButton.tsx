@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { RiMoonClearFill, RiSunFill } from "react-icons/ri";
 import { Transition } from "@headlessui/react";
+import { useTranslation } from "next-i18next";
 import Button from "@components/Button";
 import ShouldRender from "@components/ShouldRender";
 import { useTheme } from "next-themes";
@@ -26,6 +27,7 @@ const transitionConfig = {
 };
 
 const ThemeButton = () => {
+  const { t } = useTranslation("common");
   const [mounted, setMounted] = useState(false);
   const [hovering, setHovering] = useState(false);
   const onHover = (value: boolean) => () => setHovering(value);
@@ -70,7 +72,7 @@ const ThemeButton = () => {
               {icons[isDarkMode ? 1 : 0]}
             </Transition>
           </div>
-          Change theme
+          {t("navigation.change-theme")}
         </div>
       </Button>
     </ShouldRender>

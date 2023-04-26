@@ -1,9 +1,16 @@
+import config from "./next-i18next.config.mjs";
+
 /**
  * @template {import('next').NextConfig} T
  * @param {T} config - A generic parameter that flows through to the return type
  * @constraint {{import('next').NextConfig}}
  */
+function defineNextConfig(config) {
+  return config;
+}
+
 const nextConfig = {
+  i18n: config.i18n,
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
@@ -25,4 +32,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default defineNextConfig(nextConfig);

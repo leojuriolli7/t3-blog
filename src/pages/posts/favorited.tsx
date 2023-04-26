@@ -9,8 +9,12 @@ import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
 import EmptyMessage from "@components/EmptyMessage";
 import SearchInput from "@components/SearchInput";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import nextI18nConfig from "@i18n-config";
 
 const UserFavoritesPage: React.FC = () => {
+  const { t } = useTranslation(["side-pages", "common"]);
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const [queryValue, setQueryValue] = useState("");
@@ -53,10 +57,10 @@ const UserFavoritesPage: React.FC = () => {
       <MetaTags title="Favorite posts" />
       <div className="-mb-5 w-full">
         <h1 className="prose mb-2 w-full text-left text-2xl font-bold dark:prose-invert sm:text-3xl">
-          Your favorites
+          {t("your-favorites")}
         </h1>
         <SearchInput
-          placeholder="Search your favorite posts"
+          placeholder={t("search-favorites")}
           setQuery={setQueryValue}
         />
       </div>
@@ -76,13 +80,8 @@ const UserFavoritesPage: React.FC = () => {
 
       <ShouldRender if={noDataToShow}>
         <EmptyMessage
-          message={
-            !!queryValue
-              ? "Hmm. No posts found."
-              : "You have not favorited any posts yet."
-          }
+          message={!!queryValue ? t("no-posts-found") : t("no-favorites")}
           redirect="/"
-          redirectMessage="Back to home"
           hideRedirect={!!queryValue}
         />
       </ShouldRender>
@@ -93,13 +92,27 @@ const UserFavoritesPage: React.FC = () => {
 export default UserFavoritesPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+  const sessionData = getServerSession(context.req, context.res, authOptions);
 
-  if (!session) {
+  const translationsData = serverSideTranslations(
+    context.locale ?? "en",
+    ["side-pages", "common"],
+    nextI18nConfig,
+    ["en", "pt"]
+  );
+
+  const [session, translations] = await Promise.all([
+    sessionData,
+    translationsData,
+  ]);
+
+  if (!session?.user) {
     return { redirect: { destination: "/" } };
   }
 
   return {
-    props: {},
+    props: {
+      ...translations,
+    },
   };
 }

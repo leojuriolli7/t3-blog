@@ -9,6 +9,7 @@ import { url } from "@utils/constants";
 import RouterProgressBar from "@components/RouterProgressBar";
 import { AppRouter } from "@server/router/app.router";
 import MainLayout from "@layouts/MainLayout";
+import { appWithTranslation } from "next-i18next";
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import PostModal from "@components/PostModal";
@@ -17,6 +18,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import "react-toastify/dist/ReactToastify.css";
 import "nprogress/nprogress.css";
 import "keen-slider/keen-slider.min.css";
+import nextI18nConfig from "../../next-i18next.config.mjs";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -41,6 +43,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     </SessionProvider>
   );
 }
+const I18nApp = appWithTranslation(App, nextI18nConfig);
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {
@@ -85,4 +88,4 @@ export default withTRPC<AppRouter>({
       transformer: superjson,
     };
   },
-})(App);
+})(I18nApp);
