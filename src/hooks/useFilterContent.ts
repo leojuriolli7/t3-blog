@@ -6,7 +6,7 @@ const useFilterContent = () => {
     tabs: [
       {
         label: "Most recent",
-        id: "recent",
+        id: "newest",
       },
       {
         label: "Oldest",
@@ -14,10 +14,10 @@ const useFilterContent = () => {
       },
       {
         label: "Most interactions",
-        id: "interactions",
+        id: "liked",
       },
     ],
-    initialTabId: "recent",
+    initialTabId: "newest",
   });
 
   const tabs = useTabs(contentFilters);
