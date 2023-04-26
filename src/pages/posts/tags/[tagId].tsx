@@ -5,22 +5,21 @@ import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
 import Skeleton from "@components/Skeleton";
-import useFilterPosts from "@hooks/useFilterPosts";
-import Tab from "@components/Tab";
+import useFilterContent from "@hooks/useFilterContent";
 import { generateSSGHelper } from "@server/ssgHepers";
 import {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
+import AnimatedTabs from "@components/AnimatedTabs";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
   const { tagId } = props;
 
-  const { currentFilter, filterLabels, filters, toggleFilter } =
-    useFilterPosts();
+  const { tabProps, selectedTab } = useFilterContent();
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
@@ -32,7 +31,7 @@ const SingleTagPage: NextPage<
         {
           limit: 6,
           tagId,
-          filter: currentFilter,
+          filter: selectedTab.id,
         },
       ],
       {
@@ -68,15 +67,7 @@ const SingleTagPage: NextPage<
         </h1>
 
         <div className="mt-3 flex gap-3 sm:items-start">
-          {filters.map((filter) => (
-            <Tab
-              key={filter}
-              active={currentFilter === filter}
-              title={`Filter by ${filterLabels[filter]}`}
-              label={filterLabels[filter]}
-              onClick={toggleFilter(filter)}
-            />
-          ))}
+          <AnimatedTabs {...tabProps} />
         </div>
       </div>
 

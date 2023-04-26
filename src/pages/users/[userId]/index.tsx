@@ -6,8 +6,7 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import MetaTags from "@components/MetaTags";
 import { IoMdSettings } from "react-icons/io";
-import useFilterPosts from "@hooks/useFilterPosts";
-import Tab from "@components/Tab";
+import useFilterContent from "@hooks/useFilterContent";
 import { toast } from "react-toastify";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Popover from "@components/Popover";
@@ -25,6 +24,8 @@ import {
   NextPage,
 } from "next";
 import { Badge } from "@components/Badge";
+import AnimatedTabs from "@components/AnimatedTabs";
+import { useTabs } from "@hooks/useTabs";
 
 const UserPageList = dynamic(() => import("@components/UserPageList"), {
   ssr: false,
@@ -60,15 +61,25 @@ const UserPage: NextPage<
 > = (props) => {
   const { userId } = props;
 
-  const { currentFilter, filterLabels, filters, toggleFilter } =
-    useFilterPosts();
+  const { selectedTab: currentFilter, tabProps: filterTabsProps } =
+    useFilterContent();
 
-  const [currentTab, setCurrentTab] = useState<"posts" | "comments">("posts");
+  const [typesTabs] = useState({
+    tabs: [
+      {
+        label: "Posts",
+        id: "posts",
+      },
+      {
+        label: "Comments",
+        id: "comments",
+      },
+    ],
+    initialTabId: "posts",
+  });
 
-  const isPostsTab = currentTab === "posts";
-  const isCommentsTab = currentTab === "comments";
-
-  const toggleTab = (value: "posts" | "comments") => () => setCurrentTab(value);
+  const tabs = useTabs(typesTabs);
+  const { selectedTab: currentType, tabProps: typeTabsProps } = tabs;
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -379,43 +390,20 @@ const UserPage: NextPage<
       </section>
 
       <section className="w-full">
-        <div className="mb-5 flex w-full flex-col justify-between">
-          <div className="flex w-full items-center gap-3">
-            <h2
-              role="button"
-              onClick={toggleTab("posts")}
-              className={clsx(
-                "cursor-pointer text-2xl",
-                isPostsTab ? "underline" : "opacity-50"
-              )}
-            >
-              Posts
-            </h2>
-            <h2
-              onClick={toggleTab("comments")}
-              className={clsx(
-                "cursor-pointer text-2xl",
-                isCommentsTab ? "underline" : "opacity-50"
-              )}
-            >
-              Comments
-            </h2>
+        <div className="mb-5 flex w-full flex-col items-center justify-between">
+          <div className="flex items-center gap-3">
+            <AnimatedTabs {...typeTabsProps} large />
           </div>
 
-          <div className="mt-3 flex justify-start gap-3 sm:mt-1 sm:items-start sm:justify-end">
-            {filters.map((filter) => (
-              <Tab
-                key={filter}
-                active={currentFilter === filter}
-                title={`Filter by ${filterLabels[filter]}`}
-                label={filterLabels[filter]}
-                onClick={toggleFilter(filter)}
-              />
-            ))}
+          <div className="mt-4 flex justify-start gap-3">
+            <AnimatedTabs {...filterTabsProps} />
           </div>
         </div>
 
-        <UserPageList currentFilter={currentFilter} currentTab={currentTab} />
+        <UserPageList
+          currentFilter={currentFilter.id}
+          currentTab={currentType.id}
+        />
       </section>
 
       <ConfirmationModal

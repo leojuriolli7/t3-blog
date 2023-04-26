@@ -1,7 +1,6 @@
 import PostCard from "@components/PostCard";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import { FilterTypes } from "@hooks/useFilterPosts";
 import { useEffect, useMemo, useRef } from "react";
 import Comment from "./Comment";
 import EmptyMessage from "./EmptyMessage";
@@ -9,8 +8,8 @@ import ShouldRender from "./ShouldRender";
 import useOnScreen from "@hooks/useOnScreen";
 
 type Props = {
-  currentTab: "posts" | "comments";
-  currentFilter: FilterTypes;
+  currentTab: string;
+  currentFilter: string;
 };
 
 const UserPageList: React.FC<Props> = ({ currentTab, currentFilter }) => {
