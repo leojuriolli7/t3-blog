@@ -7,6 +7,10 @@ button {
   cursor: pointer;
 }
 
+::selection {
+  @apply bg-blue-500 text-white;
+}
+
 html {
   @apply base-scrollbar scrollbar-thumb-emerald-600/70;
 }
