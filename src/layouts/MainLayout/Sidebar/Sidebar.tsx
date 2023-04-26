@@ -177,17 +177,25 @@ export const SidebarContent = () => {
 
           <ShouldRender if={sessionStatus === "authenticated"}>
             <div className="flex w-full gap-2 py-2">
-              <Image
-                src={user?.image || "/static/default-profile.jpg"}
-                width={48}
-                height={48}
-                className="h-10 w-10 rounded-full xl:h-11 xl:w-11"
-                alt="Your profile picture"
-              />
+              <Link
+                href={`/users/${user?.id}`}
+                className="flex-shrink-0"
+                aria-label="Go to your profile"
+                aria-hidden
+              >
+                <Image
+                  src={user?.image || "/static/default-profile.jpg"}
+                  width={48}
+                  height={48}
+                  className="h-10 w-10 rounded-full xl:h-11 xl:w-11"
+                  alt="Your profile picture"
+                />
+              </Link>
 
               <div className="w-full overflow-hidden">
                 <Link
                   href={`/users/${user?.id}`}
+                  aria-label="Go to your profile"
                   className="-mb-1 line-clamp-1 w-fit max-w-[95%] text-ellipsis break-words text-sm hover:underline xl:text-base"
                 >
                   {getUserDisplayName(user)}
