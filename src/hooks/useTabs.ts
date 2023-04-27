@@ -2,6 +2,10 @@ import { useState } from "react";
 
 export type TabType = { label: string; id: string };
 
+/**
+ * This hook helps interact with the `AnimatedTabs` component,
+ * generating all its necessary props and returning the current active tab.
+ */
 export function useTabs({
   tabs,
   initialTabId,
