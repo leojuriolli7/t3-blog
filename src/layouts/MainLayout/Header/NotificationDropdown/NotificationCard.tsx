@@ -72,7 +72,7 @@ export const NotificationCard = (notification: Notification) => {
       className={clsx(
         "flex w-full gap-2 p-3 text-sm transition-colors",
         notification?.href &&
-          "hover:bg-neutral-100/60 dark:hover:bg-neutral-800/40"
+          "hover:bg-neutral-100/50 dark:hover:bg-neutral-800/40"
       )}
       key={notification.id}
       onClick={handleMarkAsRead({ preventDefault: false })}

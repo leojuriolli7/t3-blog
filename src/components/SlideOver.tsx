@@ -35,7 +35,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
               style={{
                 height: height || "100%",
               }}
-              className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
+              className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 backdrop-blur-md"
             >
               <Transition.Child
                 as={Fragment}
@@ -67,7 +67,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl dark:bg-neutral-900">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-white/80 py-6 shadow-xl dark:bg-neutral-900/80">
                     <div className="relative flex-1 px-4 sm:px-6">
                       <Image
                         src="/static/logo.png"

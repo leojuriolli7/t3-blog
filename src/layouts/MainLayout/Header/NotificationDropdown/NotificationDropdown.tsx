@@ -110,7 +110,7 @@ const NotificationDropdown = () => {
           label="Old"
         />
       </div>
-      <div className="grey-scrollbar max-h-[450px] w-80 overflow-y-auto scrollbar-thumb-rounded">
+      <div className="grey-scrollbar mt-1 max-h-[450px] w-80 overflow-y-auto scrollbar-thumb-rounded">
         <ShouldRender if={!!dataToShow?.length}>
           {dataToShow?.map((notification) => (
             <NotificationCard key={notification.id} {...notification} />
