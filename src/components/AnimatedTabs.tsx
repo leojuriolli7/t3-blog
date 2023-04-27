@@ -1,5 +1,3 @@
-import { TabType } from "@hooks/useTabs";
-import clsx from "clsx";
 import {
   PointerEvent,
   FocusEvent,
@@ -9,7 +7,9 @@ import {
   CSSProperties,
   useCallback,
 } from "react";
+import type { TabType } from "@hooks/useTabs";
 import useGetWindowDimensions from "@hooks/useGetWindowDimensions";
+import clsx from "clsx";
 
 type Props = {
   selectedTabIndex: number;
@@ -18,6 +18,14 @@ type Props = {
   large?: boolean;
 };
 
+/**
+ * This component renders animated tabs.
+ *
+ * The animated tabs are being done with pure CSS
+ * because of the unnecessarily large bundle-sizes
+ * of animation libraries (Framer Motion, React-Spring)
+ * for such a small feature.
+ */
 const AnimatedTabs = ({
   tabs,
   selectedTabIndex,
