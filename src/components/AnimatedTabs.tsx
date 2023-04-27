@@ -9,7 +9,7 @@ import {
   CSSProperties,
   useCallback,
 } from "react";
-import useGetWindowHeight from "@hooks/useWindowDimensions";
+import useGetWindowDimensions from "@hooks/useGetWindowDimensions";
 
 type Props = {
   selectedTabIndex: number;
@@ -24,7 +24,7 @@ const AnimatedTabs = ({
   setSelectedTab,
   large,
 }: Props): JSX.Element => {
-  const windowDimensions = useGetWindowHeight();
+  const { width: windowWidth } = useGetWindowDimensions();
 
   const [buttonRefs, setButtonRefs] = useState<Array<HTMLButtonElement | null>>(
     []
@@ -108,7 +108,7 @@ const AnimatedTabs = ({
     selectStyles,
     selectedRect,
     // By adding window dimensions here, we recalculate the positions on window resize.
-    windowDimensions,
+    windowWidth,
   ]);
 
   toggleStyles();
@@ -116,7 +116,7 @@ const AnimatedTabs = ({
   return (
     <nav
       ref={navRef}
-      className="relative z-0 flex flex-shrink-0 items-center justify-center py-2"
+      className="relative z-0 flex w-full flex-shrink-0 items-center justify-center py-2"
       onPointerLeave={onLeaveTabs}
     >
       {tabs.map((item, i) => {
