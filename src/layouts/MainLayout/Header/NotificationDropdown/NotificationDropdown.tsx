@@ -88,7 +88,7 @@ const NotificationDropdown = () => {
       icon={
         <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full  border-[1px]  border-zinc-300 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800">
           {!!totalUnreads && totalUnreads > 0 && (
-            <label className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+            <label className="absolute right-0 top-0 flex h-5 w-5 animate-popIn items-center justify-center rounded-full bg-red-500 text-xs text-white">
               {totalUnreads > 9 ? "9+" : totalUnreads}
             </label>
           )}

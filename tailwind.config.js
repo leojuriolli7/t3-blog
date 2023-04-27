@@ -29,9 +29,14 @@ module.exports = {
           "0%": { transform: "translateX(-100%)", opacity: "0" },
           "100%": { transform: "translateX(0)", opacity: "100%" },
         },
+        popIn: {
+          "0%": { transform: "scale(0.1)", opacity: 0 },
+          "100%": { transform: "scale(1)", opacity: 1 },
+        },
       },
       animation: {
         slideOver: "slideFromLeft 500ms ease",
+        popIn: "popIn 300ms forwards",
       },
       boxShadow: {
         "3xl": "0 4px 6px rgba(0,0,0,.04)",
