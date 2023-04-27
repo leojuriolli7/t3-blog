@@ -116,7 +116,7 @@ const AnimatedTabs = ({
   return (
     <nav
       ref={navRef}
-      className="relative z-0 flex w-full flex-shrink-0 items-center justify-center py-2"
+      className="relative z-0 flex w-full flex-shrink-0 items-center justify-center overflow-hidden py-2"
       onPointerLeave={onLeaveTabs}
     >
       {tabs.map((item, i) => {
