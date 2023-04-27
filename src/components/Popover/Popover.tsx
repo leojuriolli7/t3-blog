@@ -67,7 +67,7 @@ const Popover: React.FC<Props> = ({
           <div className="w-fit rounded-md shadow dark:shadow-xl">
             <ul
               className={clsx(
-                "flex flex-col rounded-md border border-neutral-300 bg-white/70 backdrop-blur-lg dark:border-zinc-800 dark:bg-zinc-900/70",
+                "flex flex-col rounded-md border border-neutral-300 bg-white/70 backdrop-blur-lg dark:border-zinc-800 dark:bg-zinc-900/80",
                 className
               )}
             >
