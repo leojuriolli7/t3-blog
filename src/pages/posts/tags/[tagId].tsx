@@ -60,11 +60,11 @@ const SingleTagPage: NextPage<
       <div className="-mb-5  mt-5 w-full">
         <h1 className="text-left text-2xl xl:text-3xl">
           <ShouldRender if={!isLoading}>{tag?.name} posts</ShouldRender>
-
-          <ShouldRender if={isLoading}>
-            <Skeleton heading lines={1} width="w-40" />
-          </ShouldRender>
         </h1>
+
+        <ShouldRender if={isLoading}>
+          <Skeleton height="h-[32px] xl:h-[36px]" lines={1} width="w-40" />
+        </ShouldRender>
 
         <div className="mt-3 flex gap-3 sm:items-start">
           <AnimatedTabs {...tabProps} />

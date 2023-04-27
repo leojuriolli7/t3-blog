@@ -106,7 +106,9 @@ const AnimatedTabs = ({
             className={clsx(
               "prose relative z-20 flex h-6 cursor-pointer select-none items-center rounded-md bg-transparent px-4 transition-colors dark:prose-invert",
               hoveredTabIndex === i && "text-neutral-600 dark:text-gray-300",
-              large ? "px-6 py-6 text-2xl font-bold" : "px-4"
+              large
+                ? "px-6 py-6 text-xl font-bold sm:text-2xl"
+                : "px-4 text-base -2sm:px-2 -2sm:text-sm"
             )}
             aria-label={`Select ${item.label}`}
             ref={(el) => (buttonRefs[i] = el)}

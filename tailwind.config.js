@@ -15,6 +15,7 @@ module.exports = {
       "2xl": "1536px",
       "-xl": { max: "1220px" },
       "-2sm": { max: "500px" },
+      "-xs": { max: "425px" },
     },
     extend: {
       transitionProperty: {
