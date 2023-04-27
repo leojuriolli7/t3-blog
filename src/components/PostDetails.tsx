@@ -40,7 +40,7 @@ const CommentSectionSkeleton = (
       <Skeleton width="w-full" parentClass="h-full" height="h-full" />
     </div>
 
-    <div className="mt-10 flex h-[164px] w-full flex-col gap-5 bg-slate-100 p-6 shadow-md dark:bg-zinc-800">
+    <div className="mt-10 flex h-[164px] w-full flex-col gap-5 bg-slate-100 p-6 shadow-md dark:bg-zinc-800/70">
       <Skeleton lines={4} />
     </div>
   </div>
@@ -339,7 +339,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
         />
       </ShouldRender>
 
-      <main className="relative flex w-full flex-col gap-10 rounded-lg border border-zinc-200 bg-slate-100 p-8 shadow-lg dark:border-zinc-700/90 dark:bg-zinc-800 xs:p-12">
+      <main className="relative flex w-full flex-col gap-10 rounded-lg border border-zinc-200 bg-slate-100 p-8 shadow-lg dark:border-zinc-700/90 dark:bg-zinc-800/70 xs:p-12">
         <ShouldRender if={data && canDeleteOrEditPost}>
           <div className="align-center absolute -top-2 right-2 flex gap-3">
             <ActionButton
@@ -401,7 +401,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
             <div className="-mb-4 -mt-4 w-full">
               <LinkPreview loading={isLoading} data={data?.link} />
 
-              <div className="mt-2 w-full break-words border-l-4 border-gray-300 bg-white p-4 text-black shadow dark:border-neutral-500 dark:bg-neutral-900 dark:text-neutral-300">
+              <div className="mt-2 w-full break-words border-l-4 border-gray-300 bg-white p-4 text-black shadow dark:border-neutral-500 dark:bg-zinc-900 dark:text-neutral-300">
                 <h3 className="text-lg font-bold sm:text-xl">
                   {data?.link?.title}
                 </h3>

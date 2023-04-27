@@ -42,7 +42,7 @@ const FollowersModal: React.FC<Props> = ({ openState, user }) => {
 
   return (
     <Modal openState={openState} alwaysCentered>
-      <div className="relative max-h-[85vh] max-w-[90vw] rounded-lg bg-white p-8 dark:bg-neutral-900 sm:max-w-[352px] sm:p-12">
+      <div className="relative max-h-[85vh] max-w-[90vw] rounded-lg bg-white p-8 backdrop-blur-sm dark:bg-zinc-900/80 sm:max-w-[352px] sm:p-12">
         <h3 className="mb-5 text-xl">{`${user?.name}'s followers`}</h3>
         <div className="grey-scrollbar flex h-[400px] w-full flex-col items-center gap-3 overflow-y-auto overflow-x-hidden pr-2 sm:w-fit">
           {(isLoading ? loadingArray : dataToShow)?.map((follower, key) => {

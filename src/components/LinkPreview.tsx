@@ -37,7 +37,7 @@ const LinkPreview: React.FC<Props> = ({
   return (
     <>
       <div>
-        <div className="flex w-full gap-4 rounded-lg border-2 border-zinc-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="flex w-full gap-4 rounded-lg border-2 border-zinc-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-zinc-900">
           <ShouldRender if={!!data && !loading}>
             <div onClick={openModal} className="group relative flex-shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}

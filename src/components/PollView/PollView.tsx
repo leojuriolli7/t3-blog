@@ -103,7 +103,7 @@ const PollView: React.FC<Props> = ({ poll }) => {
 
   return (
     <div
-      className="w-full bg-white p-4 ring-1 ring-neutral-300 dark:bg-neutral-900 dark:ring-0"
+      className="w-full bg-white p-4 ring-1 ring-neutral-300 dark:bg-zinc-900 dark:ring-0"
       aria-label="Poll"
     >
       <h2 className="text-lg font-bold" aria-label="Poll title">

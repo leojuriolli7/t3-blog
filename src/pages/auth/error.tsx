@@ -92,7 +92,7 @@ const ErrorPage = () => {
   return (
     <>
       <MetaTags title={`Error - ${status}`} />
-      <div className="pb-5 shadow dark:bg-neutral-800 dark:shadow-2xl sm:pb-0">
+      <div className="pb-5 shadow dark:bg-zinc-800 dark:shadow-2xl sm:pb-0">
         <AuthFeedbackMessage message={`Error - ${status}`} />
         <h1 className="mx-2 mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
           {heading}

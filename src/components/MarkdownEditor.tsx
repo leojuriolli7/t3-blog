@@ -150,7 +150,7 @@ const MarkdownEditor: React.FC<Props> = ({
           />
 
           <ShouldRender if={imageUploadTip}>
-            <div className="flex w-full select-none gap-1 border-[1px] border-t-0 border-zinc-300 bg-white px-1 py-2 dark:border-neutral-800 dark:bg-neutral-900 sm:items-center">
+            <div className="flex w-full select-none gap-1 border-[1px] border-t-0 border-zinc-300 bg-white px-1 py-2 dark:border-neutral-800 dark:bg-zinc-900 sm:items-center">
               <MdInfoOutline
                 size={18}
                 className="flex-shrink-0 text-neutral-700 dark:text-neutral-400"

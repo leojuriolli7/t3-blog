@@ -85,7 +85,7 @@ pre * {
   }
 
   .md-dark-mode {
-    @apply bg-neutral-900;
+    @apply bg-zinc-900;
 
     .editor-container {
       .sec-md {
@@ -97,12 +97,12 @@ pre * {
       }
 
       .sec-md textarea {
-        @apply bg-neutral-900 text-neutral-100;
+        @apply bg-zinc-900 text-neutral-100;
       }
     }
 
     .rc-md-navigation {
-      @apply border-none bg-neutral-800 text-zinc-100;
+      @apply border-none bg-zinc-800 text-zinc-100;
 
       .button:hover {
         color: theme("colors.neutral.300") !important;

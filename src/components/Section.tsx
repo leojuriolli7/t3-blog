@@ -24,7 +24,7 @@ const Section: React.FC<Props> = ({
   return (
     <section
       className={clsx(
-        "w-full rounded-lg border-2 border-zinc-200 bg-white shadow-4xl dark:border-zinc-700/90 dark:bg-zinc-800",
+        "w-full rounded-lg border-2 border-zinc-200 bg-white shadow-4xl dark:border-zinc-700/90 dark:bg-zinc-800/70",
         compact ? "p-3" : "px-5 py-5 sm:px-10"
       )}
     >

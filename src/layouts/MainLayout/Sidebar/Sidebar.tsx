@@ -66,7 +66,7 @@ const Item: React.FC<ItemProps> = ({
       <Link
         href={path}
         prefetch={false}
-        className={`flex w-auto gap-2 rounded-full p-2 transition-all hover:ring hover:ring-neutral-100 hover:dark:bg-neutral-800 dark:hover:ring-0 xl:p-3 ${className}`}
+        className={`flex w-auto gap-2 rounded-full p-2 transition-all hover:ring hover:ring-neutral-100 hover:dark:bg-zinc-800 dark:hover:ring-0 xl:p-3 ${className}`}
       >
         <Icon {...iconProps} />
 
@@ -228,7 +228,7 @@ export const SidebarContent = () => {
 
 const Sidebar = () => {
   return (
-    <aside className="fixed left-0 hidden h-screen w-[250px] animate-slideOver border-x border-zinc-300 bg-white dark:border-neutral-800 dark:bg-neutral-900 xl:block">
+    <aside className="fixed left-0 hidden h-screen w-[250px] animate-slideOver border-r border-zinc-300 bg-white dark:border-zinc-700/90 dark:bg-zinc-800/70 xl:block">
       <SidebarContent />
     </aside>
   );

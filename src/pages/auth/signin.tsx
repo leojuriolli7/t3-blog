@@ -141,7 +141,7 @@ const SigninPage: NextPage = () => {
               variant="transparent"
               textClass="text-neutral-200"
               icon={<BsGithub size={19} color="white" />}
-              className="w-full rounded-lg bg-zinc-800"
+              className="w-full rounded-lg bg-zinc-800/70"
               spinnerVariant="white"
             >
               Sign in with Github

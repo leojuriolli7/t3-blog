@@ -10,7 +10,7 @@ const VerifyEmailPage: React.FC = () => {
   return (
     <>
       <MetaTags title="Link sent to your e-mail" />
-      <div className="relative pb-5 shadow dark:bg-neutral-800 dark:shadow-2xl sm:pb-0">
+      <div className="relative pb-5 shadow dark:bg-zinc-800 dark:shadow-2xl sm:pb-0">
         <AuthFeedbackMessage message="E-mail sent" type="success" />
         <div className="p-6 text-center">
           <h1 className="mx-2 mt-6 text-xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-2xl">

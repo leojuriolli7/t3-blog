@@ -49,7 +49,7 @@ type Variant = "outlined" | "primary";
 
 const VARIANT_CLASSES = {
   outlined:
-    "bg-white dark:border-zinc-700/90 dark:bg-zinc-800 shadow-md border-2 border-zinc-300",
+    "bg-white dark:border-zinc-700/90 dark:bg-zinc-800/70 shadow-md border-2 border-zinc-300",
   primary: "bg-slate-100 dark:bg-zinc-800",
 };
 

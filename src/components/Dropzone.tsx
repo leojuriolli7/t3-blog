@@ -79,7 +79,7 @@ const Dropzone: React.FC = () => {
         >
           <label
             htmlFor="file"
-            className={`mt-2 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed bg-white transition-colors hover:bg-zinc-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 ${
+            className={`mt-2 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed bg-white transition-colors hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 ${
               isDragAccept ? "border-emerald-500 opacity-80" : ""
             } ${isDragReject ? "border-red-600" : ""} ${
               !isDragAccept && !isDragReject

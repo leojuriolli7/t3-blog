@@ -20,7 +20,7 @@ const PostCard: React.FC<Props> = ({ post, loading = false }) => {
 
   return (
     <article
-      className={`relative flex w-full cursor-pointer flex-col justify-center gap-5 rounded-lg border-2 border-zinc-200 bg-white px-10 py-5 shadow-3xl transition-borderAndShadow hover:shadow-4xl dark:border-zinc-700/90 dark:bg-zinc-800 dark:hover:border-zinc-500 ${
+      className={`relative flex w-full cursor-pointer flex-col justify-center gap-5 rounded-lg border-2 border-zinc-200 bg-white px-10 py-5 shadow-3xl transition-borderAndShadow hover:shadow-4xl dark:border-zinc-700/90 dark:bg-zinc-800/70 dark:hover:border-zinc-500 ${
         loading ? "pointer-events-none" : ""
       }`}
     >

@@ -72,7 +72,7 @@ export const NotificationCard = (notification: Notification) => {
       className={clsx(
         "flex w-full gap-2 p-3 text-sm transition-colors",
         notification?.href &&
-          "hover:bg-neutral-100/50 dark:hover:bg-neutral-800/40"
+          "hover:bg-neutral-100/50 dark:hover:bg-zinc-800/40"
       )}
       key={notification.id}
       onClick={handleMarkAsRead({ preventDefault: false })}
@@ -120,7 +120,7 @@ export const NotificationCard = (notification: Notification) => {
 
         <ShouldRender if={notificationHasComment}>
           <div className="mt-2">
-            <HTMLBody className="line-clamp-2 text-ellipsis rounded-md bg-neutral-300/60 p-2 text-neutral-700/90 dark:bg-neutral-800/60 dark:text-neutral-400">
+            <HTMLBody className="line-clamp-2 text-ellipsis rounded-md bg-neutral-300/60 p-2 text-neutral-700/90 dark:bg-zinc-800/60 dark:text-neutral-400">
               {notification?.comment?.body}
             </HTMLBody>
           </div>

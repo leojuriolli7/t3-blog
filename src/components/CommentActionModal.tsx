@@ -23,7 +23,7 @@ const CommentActionModal: React.FC<Props> = ({
 
   return (
     <Modal openState={openState} alwaysCentered>
-      <div className="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 shadow-xl dark:bg-neutral-900 sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+      <div className="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 shadow-xl dark:bg-zinc-900 sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
         <ShouldRender if={!editing}>
           <Comment comment={parentComment} compact hideReplies hideActions />
         </ShouldRender>

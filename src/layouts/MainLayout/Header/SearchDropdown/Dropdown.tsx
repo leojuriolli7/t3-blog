@@ -51,7 +51,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
   return (
     <div
       className={clsx(
-        `absolute top-16 z-50 rounded-lg border-[1px] border-zinc-300 bg-white/70 p-8 shadow-2xl backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/70`,
+        `absolute top-16 z-50 rounded-lg border-[1px] border-zinc-300 bg-white/70 p-8 shadow-2xl backdrop-blur-xl dark:border-neutral-800 dark:bg-zinc-900/70`,
         open ? "w-full" : "hidden"
       )}
     >
@@ -73,7 +73,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
             <CompactCard
               key={post?.id}
               post={post}
-              bgClass="bg-white dark:bg-zinc-800"
+              bgClass="bg-white dark:bg-zinc-800/70"
             />
           ))}
         </ShouldRender>

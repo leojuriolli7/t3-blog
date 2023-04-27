@@ -25,7 +25,7 @@ const UserCard: React.FC<Props> = ({ loading, user, onClickCard }) => {
       onClick={handleClickCard}
       className={`${
         loading ? "pointer-events-none" : ""
-      } flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border-2 border-zinc-300 bg-white p-6 shadow-md hover:opacity-80 dark:border-neutral-700 dark:bg-zinc-800 sm:w-64`}
+      } flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border-2 border-zinc-300 bg-white p-6 shadow-md hover:opacity-80 dark:border-neutral-700 dark:bg-zinc-800/70 sm:w-64`}
     >
       <div className="h-8 w-8 min-w-[32px]">
         <Image

@@ -138,7 +138,7 @@ const SelectTags: React.FC<Props> = ({
               <Tag
                 onClick={showInput}
                 omitBgClass
-                className="h-[46px] w-full border-zinc-300 bg-white p-3 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900"
+                className="h-[46px] w-full border-zinc-300 bg-white p-3 text-neutral-500 dark:border-neutral-800 dark:bg-zinc-900"
               >
                 create new tag
               </Tag>

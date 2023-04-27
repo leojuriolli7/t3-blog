@@ -100,7 +100,7 @@ const CreatePoll: React.FC = () => {
           sizeVariant="lg"
           type="text"
           placeholder="poll title/question"
-          className="w-full rounded-md border-[1px] border-zinc-300 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900"
+          className="w-full rounded-md border-[1px] border-zinc-300 bg-white p-3 dark:border-neutral-800 dark:bg-zinc-900"
           onChange={debouncedTitleChange}
         />
 
@@ -111,7 +111,7 @@ const CreatePoll: React.FC = () => {
               sizeVariant="lg"
               type="text"
               placeholder="new option"
-              className="w-full rounded-md border-[1px] border-zinc-300 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900"
+              className="w-full rounded-md border-[1px] border-zinc-300 bg-white p-3 dark:border-neutral-800 dark:bg-zinc-900"
               onPressEnter={addNewOption}
               onChange={onNewOptionChange}
               ref={optionInputRef}

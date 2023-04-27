@@ -25,7 +25,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-neutral-800/60 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-zinc-800/60 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-hidden">
@@ -67,7 +67,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white/80 py-6 shadow-xl dark:bg-neutral-900/80">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-white/80 py-6 shadow-xl dark:bg-zinc-900/80">
                     <div className="relative flex-1 px-4 sm:px-6">
                       <Image
                         src="/static/logo.png"

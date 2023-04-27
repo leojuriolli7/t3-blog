@@ -31,7 +31,7 @@ const Tag: React.FC<Props> = ({
   const checkableTagClasses = `${
     checked
       ? "bg-emerald-500 text-white"
-      : "bg-white dark:bg-neutral-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-neutral-800"
+      : "bg-white dark:bg-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800"
   }`;
 
   const regularTagClasses = "bg-emerald-500 dark:bg-teal-900 text-white";
