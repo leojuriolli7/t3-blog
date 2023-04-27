@@ -1,9 +1,9 @@
+import AnimatedTabs from "@components/AnimatedTabs";
 import EmptyMessage from "@components/EmptyMessage";
 import MetaTags from "@components/MetaTags";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
-import Tab from "@components/Tab";
-import useFilterPosts from "@hooks/useFilterPosts";
+import useFilterContent from "@hooks/useFilterContent";
 import useOnScreen from "@hooks/useOnScreen";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import { trpc } from "@utils/trpc";
@@ -12,8 +12,7 @@ import { getServerSession } from "next-auth";
 import { useEffect, useMemo, useRef } from "react";
 
 const Following = () => {
-  const { currentFilter, filterLabels, filters, toggleFilter } =
-    useFilterPosts();
+  const { tabProps, selectedTab } = useFilterContent();
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
@@ -24,7 +23,7 @@ const Following = () => {
         "posts.following-posts",
         {
           limit: 6,
-          filter: currentFilter,
+          filter: selectedTab.id,
         },
       ],
       {
@@ -55,15 +54,7 @@ const Following = () => {
           Posts from your following
         </h2>
         <div className="mt-3 flex gap-3">
-          {filters.map((filter) => (
-            <Tab
-              key={filter}
-              active={currentFilter === filter}
-              title={`Filter by ${filterLabels[filter]}`}
-              label={filterLabels[filter]}
-              onClick={toggleFilter(filter)}
-            />
-          ))}
+          <AnimatedTabs {...tabProps} />
         </div>
       </div>
       {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (

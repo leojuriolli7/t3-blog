@@ -124,7 +124,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
           >
             <ButtonLink
               variant="primary"
-              className="w-full justify-center text-center"
+              className="w-full justify-center rounded-md text-center"
             >
               {`See all results for "${query}"`}
             </ButtonLink>

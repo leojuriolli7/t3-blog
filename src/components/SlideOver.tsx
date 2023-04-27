@@ -2,7 +2,7 @@ import { Dispatch, Fragment, SetStateAction } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MdClose } from "react-icons/md";
 import Image from "next/future/image";
-import useGetWindowHeight from "@hooks/useWindowDimensions";
+import useGetWindowDimensions from "@hooks/useGetWindowDimensions";
 
 type Props = {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ type Props = {
 
 const SlideOver: React.FC<Props> = ({ children, openState }) => {
   const [open, setOpen] = openState;
-  const height = useGetWindowHeight();
+  const { height } = useGetWindowDimensions();
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -59,7 +59,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
                     <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
                       <button
                         type="button"
-                        className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                        className="rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-white hover:text-white"
                         onClick={() => setOpen(false)}
                       >
                         <span className="sr-only">Close panel</span>

@@ -1,21 +1,24 @@
 import PostCard from "@components/PostCard";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import { FilterTypes } from "@hooks/useFilterPosts";
 import { useEffect, useMemo, useRef } from "react";
 import Comment from "./Comment";
 import EmptyMessage from "./EmptyMessage";
 import ShouldRender from "./ShouldRender";
 import useOnScreen from "@hooks/useOnScreen";
+import useFilterContent from "@hooks/useFilterContent";
+import AnimatedTabs from "./AnimatedTabs";
 
 type Props = {
-  currentTab: "posts" | "comments";
-  currentFilter: FilterTypes;
+  currentTab: string;
 };
 
-const UserPageList: React.FC<Props> = ({ currentTab, currentFilter }) => {
+const UserPageList: React.FC<Props> = ({ currentTab }) => {
   const isPostsTab = currentTab === "posts";
   const isCommentsTab = currentTab === "comments";
+
+  const { selectedTab: currentFilter, tabProps: filterTabsProps } =
+    useFilterContent();
 
   const router = useRouter();
   const userId = router.query.userId as string;
@@ -37,7 +40,7 @@ const UserPageList: React.FC<Props> = ({ currentTab, currentFilter }) => {
       {
         userId,
         limit: 4,
-        filter: currentFilter,
+        filter: currentFilter.id,
       },
     ],
     {
@@ -66,7 +69,7 @@ const UserPageList: React.FC<Props> = ({ currentTab, currentFilter }) => {
       {
         userId,
         limit: 4,
-        filter: currentFilter,
+        filter: currentFilter.id,
       },
     ],
     {
@@ -94,50 +97,56 @@ const UserPageList: React.FC<Props> = ({ currentTab, currentFilter }) => {
   }, [reachedBottom]);
 
   return (
-    <div className="flex w-full flex-col gap-10">
-      <ShouldRender if={isPostsTab}>
-        {(loadingPosts ? loadingArray : dataToShow)?.map((post, i) => (
-          <PostCard
-            post={post}
-            key={loadingPosts ? i : post?.id}
-            loading={loadingPosts}
-          />
-        ))}
+    <>
+      <div className="mx-auto mt-4 w-full">
+        <AnimatedTabs {...filterTabsProps} />
+      </div>
 
-        <ShouldRender if={isFetchingMorePosts}>
-          <PostCard loading />
-        </ShouldRender>
-
-        <ShouldRender if={noPostsToShow}>
-          <EmptyMessage message="Hmm. It seems that this user has not created any posts yet." />
-        </ShouldRender>
-      </ShouldRender>
-
-      <ShouldRender if={isCommentsTab}>
-        {(loadingComments ? loadingArray : commentsToShow)?.map(
-          (comment, i) => (
-            <Comment
-              comment={comment}
-              key={loadingComments ? i : comment?.id}
-              loading={loadingComments}
-              hideReplies
-              variant="outlined"
-              linkToPost
+      <div className="mt-6 flex w-full flex-col gap-10">
+        <ShouldRender if={isPostsTab}>
+          {(loadingPosts ? loadingArray : dataToShow)?.map((post, i) => (
+            <PostCard
+              post={post}
+              key={loadingPosts ? i : post?.id}
+              loading={loadingPosts}
             />
-          )
-        )}
+          ))}
 
-        <ShouldRender if={fetchingMoreComments}>
-          <Comment loading linkToPost variant="outlined" />
+          <ShouldRender if={isFetchingMorePosts}>
+            <PostCard loading />
+          </ShouldRender>
+
+          <ShouldRender if={noPostsToShow}>
+            <EmptyMessage message="Hmm. It seems that this user has not created any posts yet." />
+          </ShouldRender>
         </ShouldRender>
 
-        <ShouldRender if={noCommentsToShow}>
-          <EmptyMessage message="Hmm. It seems that this user has not commented on any posts yet." />
-        </ShouldRender>
-      </ShouldRender>
+        <ShouldRender if={isCommentsTab}>
+          {(loadingComments ? loadingArray : commentsToShow)?.map(
+            (comment, i) => (
+              <Comment
+                comment={comment}
+                key={loadingComments ? i : comment?.id}
+                loading={loadingComments}
+                hideReplies
+                variant="outlined"
+                linkToPost
+              />
+            )
+          )}
 
-      <div ref={bottomRef} />
-    </div>
+          <ShouldRender if={fetchingMoreComments}>
+            <Comment loading linkToPost variant="outlined" />
+          </ShouldRender>
+
+          <ShouldRender if={noCommentsToShow}>
+            <EmptyMessage message="Hmm. It seems that this user has not commented on any posts yet." />
+          </ShouldRender>
+        </ShouldRender>
+
+        <div ref={bottomRef} />
+      </div>
+    </>
   );
 };
 

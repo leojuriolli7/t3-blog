@@ -15,6 +15,7 @@ module.exports = {
       "2xl": "1536px",
       "-xl": { max: "1220px" },
       "-2sm": { max: "500px" },
+      "-xs": { max: "425px" },
     },
     extend: {
       transitionProperty: {
@@ -22,6 +23,15 @@ module.exports = {
       },
       fontFamily: {
         inter: ["Inter", ...defaultTheme.fontFamily.sans],
+      },
+      keyframes: {
+        slideFromLeft: {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "100%" },
+        },
+      },
+      animation: {
+        slideOver: "slideFromLeft 500ms ease",
       },
       boxShadow: {
         "3xl": "0 4px 6px rgba(0,0,0,.04)",

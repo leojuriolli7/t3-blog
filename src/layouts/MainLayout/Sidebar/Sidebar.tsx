@@ -228,7 +228,7 @@ export const SidebarContent = () => {
 
 const Sidebar = () => {
   return (
-    <aside className="fixed left-0 hidden h-screen w-[250px] border-x border-zinc-300 bg-white dark:border-neutral-800 dark:bg-neutral-900 xl:block">
+    <aside className="fixed left-0 hidden h-screen w-[250px] animate-slideOver border-x border-zinc-300 bg-white dark:border-neutral-800 dark:bg-neutral-900 xl:block">
       <SidebarContent />
     </aside>
   );
