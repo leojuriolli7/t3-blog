@@ -7,7 +7,9 @@ import {
   useRef,
   useState,
   CSSProperties,
+  useCallback,
 } from "react";
+import useGetWindowHeight from "@hooks/useWindowDimensions";
 
 type Props = {
   selectedTabIndex: number;
@@ -22,6 +24,8 @@ const AnimatedTabs = ({
   setSelectedTab,
   large,
 }: Props): JSX.Element => {
+  const windowDimensions = useGetWindowHeight();
+
   const [buttonRefs, setButtonRefs] = useState<Array<HTMLButtonElement | null>>(
     []
   );
@@ -67,31 +71,47 @@ const AnimatedTabs = ({
   };
 
   let hoverStyles: CSSProperties = { opacity: 0 };
-  if (navRect && hoveredRect) {
-    hoverStyles.transform = `translate3d(${hoveredRect.left - navRect.left}px,${
-      hoveredRect.top - navRect.top
-    }px,0px)`;
-    hoverStyles.width = hoveredRect.width;
-    hoverStyles.height = hoveredRect.height;
-    hoverStyles.opacity = hoveredTabIndex != null ? 1 : 0;
-    hoverStyles.transition = isInitialHoveredElement
-      ? `opacity 150ms`
-      : `transform 150ms 0ms, opacity 150ms 0ms, width 150ms`;
-  }
-
   let selectStyles: CSSProperties = { opacity: 0 };
-  if (navRect && selectedRect) {
-    selectStyles.width = selectedRect.width * 0.8;
-    selectStyles.transform = `translateX(calc(${
-      selectedRect.left - navRect.left
-    }px + 10%))`;
-    selectStyles.opacity = 1;
-    selectStyles.transition = isInitialRender.current
-      ? `opacity 150ms 150ms`
-      : `transform 150ms 0ms, opacity 150ms 150ms, width 150ms`;
 
-    isInitialRender.current = false;
-  }
+  const toggleStyles = useCallback(() => {
+    if (navRect && hoveredRect) {
+      hoverStyles.transform = `translate3d(${
+        hoveredRect.left - navRect.left
+      }px,${hoveredRect.top - navRect.top}px,0px)`;
+      hoverStyles.width = hoveredRect.width;
+      hoverStyles.height = hoveredRect.height;
+      hoverStyles.opacity = hoveredTabIndex != null ? 1 : 0;
+      hoverStyles.transition = isInitialHoveredElement
+        ? `opacity 150ms`
+        : `transform 150ms 0ms, opacity 150ms 0ms, width 150ms`;
+    }
+
+    if (navRect && selectedRect) {
+      selectStyles.width = selectedRect.width * 0.8;
+      selectStyles.transform = `translateX(calc(${
+        selectedRect.left - navRect.left
+      }px + 10%))`;
+      selectStyles.opacity = 1;
+      selectStyles.transition = isInitialRender.current
+        ? `opacity 150ms 150ms`
+        : `transform 150ms 0ms, opacity 150ms 150ms, width 150ms`;
+
+      isInitialRender.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    hoverStyles,
+    hoveredRect,
+    hoveredTabIndex,
+    isInitialHoveredElement,
+    navRect,
+    selectStyles,
+    selectedRect,
+    // By adding window dimensions here, we recalculate the positions on window resize.
+    windowDimensions,
+  ]);
+
+  toggleStyles();
 
   return (
     <nav

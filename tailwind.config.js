@@ -24,6 +24,15 @@ module.exports = {
       fontFamily: {
         inter: ["Inter", ...defaultTheme.fontFamily.sans],
       },
+      keyframes: {
+        slideFrames: {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "100%" },
+        },
+      },
+      animation: {
+        slideOver: "slideFrames 500ms ease",
+      },
       boxShadow: {
         "3xl": "0 4px 6px rgba(0,0,0,.04)",
         "4xl": "0 6px 14px rgba(0,0,0,.08)",
