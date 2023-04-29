@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import MetaTags from "@components/MetaTags";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import { GetServerSidePropsContext, NextPage } from "next";
-import { getServerSession, Session } from "next-auth";
+import { getServerSession, User } from "next-auth";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import PostCard from "@components/PostCard";
@@ -11,11 +11,10 @@ import EmptyMessage from "@components/EmptyMessage";
 import SearchInput from "@components/SearchInput";
 
 type Props = {
-  session: Session;
+  user: User;
 };
 
-const UserLikedPage: NextPage<Props> = ({ session }) => {
-  const { user } = session;
+const UserLikedPage: NextPage<Props> = ({ user }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const [queryValue, setQueryValue] = useState("");
@@ -101,13 +100,13 @@ export default UserLikedPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session) {
+  if (!session?.user) {
     return { redirect: { destination: "/" } };
   }
 
   return {
     props: {
-      session,
+      user: session.user,
     },
   };
 }
