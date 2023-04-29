@@ -57,7 +57,7 @@ const Following = () => {
           <AnimatedTabs {...tabProps} />
         </div>
       </div>
-      <div className="w-ful -mt-3 flex flex-col gap-10">
+      <div className="-mt-3 flex w-full flex-col gap-10">
         {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
           <PostCard
             key={isLoading ? i : post?.id}
