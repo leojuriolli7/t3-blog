@@ -24,6 +24,13 @@ const SingleTagPage: NextPage<
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
+  const { data: tag, isLoading: loadingTag } = trpc.useQuery([
+    "posts.single-tag",
+    {
+      tagId,
+    },
+  ]);
+
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
@@ -44,7 +51,6 @@ const SingleTagPage: NextPage<
     [data]
   );
 
-  const tag = dataToShow?.[0]?.tags?.find((tag) => tag.id === tagId);
   const loadingArray = Array.from<undefined>({ length: 4 });
 
   useEffect(() => {
@@ -59,10 +65,10 @@ const SingleTagPage: NextPage<
       <MetaTags title={`${tag?.name || ""} posts`} />
       <div className="-mb-5  mt-5 w-full">
         <h1 className="text-left text-2xl xl:text-3xl">
-          <ShouldRender if={!isLoading}>{tag?.name} posts</ShouldRender>
+          <ShouldRender if={!loadingTag}>{tag?.name} posts</ShouldRender>
         </h1>
 
-        <ShouldRender if={isLoading}>
+        <ShouldRender if={loadingTag}>
           <Skeleton height="h-[32px] xl:h-[36px]" lines={1} width="w-40" />
         </ShouldRender>
 
@@ -96,11 +102,19 @@ export async function getServerSideProps(
   const ssg = await generateSSGHelper();
   const tagId = context.params?.tagId as string;
 
-  await ssg.prefetchInfiniteQuery("posts.posts", {
+  const postsQuery = ssg.prefetchInfiniteQuery("posts.posts", {
     limit: 6,
     tagId,
     filter: "newest",
   });
+
+  const tagQuery = ssg.prefetchQuery("posts.single-tag", {
+    tagId,
+  });
+
+  // fetching in parallel to reduce load times
+  await Promise.all([postsQuery, tagQuery]);
+
   return {
     props: {
       trpcState: ssg.dehydrate(),

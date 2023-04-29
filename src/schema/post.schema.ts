@@ -132,6 +132,10 @@ export const getSinglePostSchema = z.object({
   postId: z.string(),
 });
 
+export const getSingleTagSchema = z.object({
+  tagId: z.string(),
+});
+
 export const voteOnPollSchema = z.object({
   postId: z.string(),
   optionId: z.string(),

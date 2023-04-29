@@ -23,6 +23,7 @@ import {
   searchPostsSchema,
   getLikedPostsSchema,
   voteOnPollSchema,
+  getSingleTagSchema,
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
@@ -31,6 +32,18 @@ export const postRouter = createRouter()
       const tags = ctx.prisma.tag.findMany();
 
       return tags;
+    },
+  })
+  .query("single-tag", {
+    input: getSingleTagSchema,
+    async resolve({ ctx, input }) {
+      const tag = ctx.prisma.tag.findFirst({
+        where: {
+          id: input.tagId,
+        },
+      });
+
+      return tag;
     },
   })
   .query("posts-by-tags", {
