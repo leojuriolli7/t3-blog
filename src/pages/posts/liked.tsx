@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import MetaTags from "@components/MetaTags";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
-import { GetServerSidePropsContext } from "next";
-import { getServerSession } from "next-auth";
+import { GetServerSidePropsContext, NextPage } from "next";
+import { getServerSession, Session } from "next-auth";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import PostCard from "@components/PostCard";
@@ -10,7 +10,12 @@ import ShouldRender from "@components/ShouldRender";
 import EmptyMessage from "@components/EmptyMessage";
 import SearchInput from "@components/SearchInput";
 
-const UserLikedPage: React.FC = () => {
+type Props = {
+  session: Session;
+};
+
+const UserLikedPage: NextPage<Props> = ({ session }) => {
+  const { user } = session;
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const [queryValue, setQueryValue] = useState("");
@@ -27,6 +32,7 @@ const UserLikedPage: React.FC = () => {
       {
         limit: 6,
         query: queryValue,
+        userId: user.id,
       },
     ],
     {
@@ -100,6 +106,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: {},
+    props: {
+      session,
+    },
   };
 }
