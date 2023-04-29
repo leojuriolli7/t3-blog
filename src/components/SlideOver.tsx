@@ -25,7 +25,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-zinc-800/60 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-zinc-800/60 bg-opacity-75 backdrop-blur-md transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-hidden">
@@ -35,7 +35,7 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
               style={{
                 height: height || "100%",
               }}
-              className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 backdrop-blur-md"
+              className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
             >
               <Transition.Child
                 as={Fragment}
