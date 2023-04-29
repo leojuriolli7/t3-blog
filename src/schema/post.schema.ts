@@ -91,6 +91,7 @@ export const getPostsSchema = z.object({
   userId: z.string().optional(),
   tagId: z.string().optional(),
   filter: z.string().optional(),
+  query: z.string().optional(),
 });
 
 export const getFollowingPostsSchema = z.object({

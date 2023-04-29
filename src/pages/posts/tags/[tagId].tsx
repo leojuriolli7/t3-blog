@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
 import useOnScreen from "@hooks/useOnScreen";
@@ -13,11 +13,14 @@ import {
   NextPage,
 } from "next";
 import AnimatedTabs from "@components/AnimatedTabs";
+import SearchInput from "@components/SearchInput";
+import EmptyMessage from "@components/EmptyMessage";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
   const { tagId } = props;
+  const [queryValue, setQueryValue] = useState("");
 
   const { tabProps, selectedTab } = useFilterContent();
 
@@ -39,6 +42,7 @@ const SingleTagPage: NextPage<
           limit: 6,
           tagId,
           filter: selectedTab.id,
+          query: queryValue,
         },
       ],
       {
@@ -52,6 +56,8 @@ const SingleTagPage: NextPage<
   );
 
   const loadingArray = Array.from<undefined>({ length: 4 });
+
+  const noDataToShow = !!queryValue && !dataToShow?.length && !isLoading;
 
   useEffect(() => {
     if (reachedBottom && hasNextPage) {
@@ -72,6 +78,13 @@ const SingleTagPage: NextPage<
           <Skeleton height="h-[32px] xl:h-[36px]" lines={1} width="w-40" />
         </ShouldRender>
 
+        <SearchInput
+          replace={false}
+          className="mt-4 rounded-full"
+          placeholder={`Search ${tag?.name} posts`}
+          setQuery={setQueryValue}
+        />
+
         <div className="mt-3 flex gap-3 sm:items-start">
           <AnimatedTabs {...tabProps} />
         </div>
@@ -84,6 +97,10 @@ const SingleTagPage: NextPage<
           loading={isLoading}
         />
       ))}
+
+      <ShouldRender if={noDataToShow}>
+        <EmptyMessage message="Hmm. No posts found." hideRedirect />
+      </ShouldRender>
 
       <ShouldRender if={isFetchingNextPage}>
         <PostCard loading />

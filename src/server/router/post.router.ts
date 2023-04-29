@@ -242,6 +242,11 @@ export const postRouter = createRouter()
                 id: input.tagId,
               },
             },
+            ...(input.query && {
+              body: {
+                search: input.query,
+              },
+            }),
           },
         }),
       });
