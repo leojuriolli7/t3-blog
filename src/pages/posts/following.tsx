@@ -50,34 +50,36 @@ const Following = () => {
     <>
       <MetaTags title="Following" />
       <div className="w-full">
-        <h2 className="prose -mb-3 text-xl font-bold dark:prose-invert sm:mb-0 xl:text-3xl">
+        <h2 className="prose text-2xl font-bold dark:prose-invert xl:text-3xl">
           Posts from your following
         </h2>
         <div className="mt-3 flex gap-3">
           <AnimatedTabs {...tabProps} />
         </div>
       </div>
-      {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
-        <PostCard
-          key={isLoading ? i : post?.id}
-          post={post}
-          loading={isLoading}
-        />
-      ))}
+      <div className="w-ful -mt-3 flex flex-col gap-10">
+        {(isLoading ? loadingArray : dataToShow)?.map((post, i) => (
+          <PostCard
+            key={isLoading ? i : post?.id}
+            post={post}
+            loading={isLoading}
+          />
+        ))}
 
-      <ShouldRender if={isFetchingNextPage}>
-        <PostCard loading />
-      </ShouldRender>
+        <ShouldRender if={isFetchingNextPage}>
+          <PostCard loading />
+        </ShouldRender>
 
-      <ShouldRender if={noDataToShow}>
-        <EmptyMessage
-          message="Hmm. Could not find any posts from your following."
-          hideRedirect
-          small
-        />
-      </ShouldRender>
+        <ShouldRender if={noDataToShow}>
+          <EmptyMessage
+            message="Hmm. Could not find any posts from your following."
+            hideRedirect
+            small
+          />
+        </ShouldRender>
 
-      <div ref={bottomRef} />
+        <div ref={bottomRef} />
+      </div>
     </>
   );
 };
