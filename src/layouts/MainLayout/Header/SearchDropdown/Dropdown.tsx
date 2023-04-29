@@ -45,6 +45,10 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
     }
   );
 
+  function isSearchType(type: SearchFilterTypes) {
+    return data?.type === type && !!data?.[type]?.length;
+  }
+
   const noDataToShow = !data?.[currentFilter]?.length && !isLoading;
   const hasDataToShow = !!data?.[currentFilter]?.length && !isLoading;
 
@@ -68,7 +72,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
       </div>
 
       <div ref={listRef} className="flex w-full flex-col items-center gap-3">
-        <ShouldRender if={data?.type === "posts" && !!data?.posts?.length}>
+        <ShouldRender if={isSearchType("posts")}>
           {data?.posts?.map((post) => (
             <CompactCard
               key={post?.id}
@@ -78,9 +82,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
           ))}
         </ShouldRender>
 
-        <ShouldRender
-          if={data?.type === "comments" && !!data?.comments?.length}
-        >
+        <ShouldRender if={isSearchType("comments")}>
           {data?.comments?.map((comment) => (
             <Comment
               hideReplies
@@ -93,7 +95,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
           ))}
         </ShouldRender>
 
-        <ShouldRender if={data?.type === "tags" && !!data?.tags?.length}>
+        <ShouldRender if={isSearchType("tags")}>
           {data?.tags?.map((tag) => (
             <Section
               compact
@@ -108,7 +110,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
           ))}
         </ShouldRender>
 
-        <ShouldRender if={data?.type === "users" && !!data?.users?.length}>
+        <ShouldRender if={isSearchType("users")}>
           {data?.users?.map((user) => (
             <UserPreview key={user?.id} user={user} />
           ))}
