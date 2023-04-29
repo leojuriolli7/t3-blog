@@ -16,6 +16,7 @@ type Props = {
 const UserPageList: React.FC<Props> = ({ currentTab }) => {
   const isPostsTab = currentTab === "posts";
   const isCommentsTab = currentTab === "comments";
+  const isLikedTab = currentTab === "liked";
 
   const { selectedTab: currentFilter, tabProps: filterTabsProps } =
     useFilterContent();
@@ -58,7 +59,7 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
     !loadingComments && !commentsToShow?.length && !hasMoreComments;
 
   const {
-    data,
+    data: userPosts,
     isLoading: loadingPosts,
     fetchNextPage: fetchMorePosts,
     isFetchingNextPage: isFetchingMorePosts,
@@ -78,12 +79,38 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
     }
   );
 
-  const dataToShow = useMemo(
-    () => data?.pages.flatMap((page) => page.posts),
-    [data]
+  const postsToShow = useMemo(
+    () => userPosts?.pages.flatMap((page) => page.posts),
+    [userPosts]
   );
 
-  const noPostsToShow = !loadingPosts && !dataToShow?.length && !hasMorePosts;
+  const noPostsToShow = !loadingPosts && !postsToShow?.length && !hasMorePosts;
+
+  const {
+    data: liked,
+    isLoading: loadingLiked,
+    fetchNextPage: fetchMoreLiked,
+    isFetchingNextPage: isFetchingMoreLiked,
+    hasNextPage: hasMoreLiked,
+  } = trpc.useInfiniteQuery(
+    [
+      "posts.get-liked-posts",
+      {
+        limit: 6,
+        userId,
+      },
+    ],
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+
+  const likedToShow = useMemo(
+    () => liked?.pages.flatMap((page) => page.posts),
+    [liked]
+  );
+
+  const noLikedToShow = !loadingLiked && !likedToShow?.length && !hasMoreLiked;
 
   useEffect(() => {
     if (reachedBottom && hasMorePosts && isPostsTab) {
@@ -93,18 +120,24 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
     if (reachedBottom && hasMoreComments && isCommentsTab) {
       fetchMoreComments();
     }
+
+    if (reachedBottom && hasMoreLiked && isLikedTab) {
+      fetchMoreLiked();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reachedBottom]);
 
   return (
     <>
-      <div className="mx-auto mt-4 w-full">
-        <AnimatedTabs {...filterTabsProps} />
-      </div>
+      <ShouldRender if={!isLikedTab}>
+        <div className="mx-auto mt-4 w-full">
+          <AnimatedTabs {...filterTabsProps} />
+        </div>
+      </ShouldRender>
 
       <div className="mt-6 flex w-full flex-col gap-10">
         <ShouldRender if={isPostsTab}>
-          {(loadingPosts ? loadingArray : dataToShow)?.map((post, i) => (
+          {(loadingPosts ? loadingArray : postsToShow)?.map((post, i) => (
             <PostCard
               post={post}
               key={loadingPosts ? i : post?.id}
@@ -118,6 +151,24 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
 
           <ShouldRender if={noPostsToShow}>
             <EmptyMessage message="Hmm. It seems that this user has not created any posts yet." />
+          </ShouldRender>
+        </ShouldRender>
+
+        <ShouldRender if={isLikedTab}>
+          {(loadingLiked ? loadingArray : likedToShow)?.map((post, i) => (
+            <PostCard
+              post={post}
+              key={loadingLiked ? i : post?.id}
+              loading={loadingLiked}
+            />
+          ))}
+
+          <ShouldRender if={isFetchingMoreLiked}>
+            <PostCard loading />
+          </ShouldRender>
+
+          <ShouldRender if={noLikedToShow}>
+            <EmptyMessage message="Hmm. It seems that this user has not liked any posts yet." />
           </ShouldRender>
         </ShouldRender>
 

@@ -400,6 +400,11 @@ export const postRouter = createRouter()
               userId,
             },
           },
+          // We don't want to list the user's own posts,
+          // as they are liked by the user automatically on creation.
+          NOT: {
+            userId,
+          },
           ...(query && {
             body: {
               search: query,
