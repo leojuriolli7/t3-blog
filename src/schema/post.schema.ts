@@ -106,7 +106,7 @@ export const getFavoritesSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish(),
   skip: z.number().optional(),
-  userId: z.string().optional(),
+  userId: z.string(),
   filter: z.string().optional(),
   query: z.string().optional(),
 });

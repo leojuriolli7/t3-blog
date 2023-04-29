@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import MetaTags from "@components/MetaTags";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
-import { GetServerSidePropsContext } from "next";
-import { getServerSession } from "next-auth";
+import { getServerSession, User } from "next-auth";
+import { GetServerSidePropsContext, NextPage } from "next";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import PostCard from "@components/PostCard";
@@ -10,7 +10,11 @@ import ShouldRender from "@components/ShouldRender";
 import EmptyMessage from "@components/EmptyMessage";
 import SearchInput from "@components/SearchInput";
 
-const UserFavoritesPage: React.FC = () => {
+type Props = {
+  user: User;
+};
+
+const UserFavoritesPage: NextPage<Props> = ({ user }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const [queryValue, setQueryValue] = useState("");
@@ -27,6 +31,7 @@ const UserFavoritesPage: React.FC = () => {
       {
         limit: 6,
         query: queryValue,
+        userId: user.id,
       },
     ],
     {
@@ -95,11 +100,13 @@ export default UserFavoritesPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  if (!session) {
+  if (!session?.user) {
     return { redirect: { destination: "/" } };
   }
 
   return {
-    props: {},
+    props: {
+      user: session.user,
+    },
   };
 }
