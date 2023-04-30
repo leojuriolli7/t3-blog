@@ -159,11 +159,3 @@ export const favoritePostSchema = z.object({
 });
 
 export type FavoritePostInput = z.TypeOf<typeof favoritePostSchema>;
-
-export const searchPostsSchema = z.object({
-  query: z.string(),
-  limit: z.number(),
-  cursor: z.string().nullish(),
-  skip: z.number().optional(),
-  filter: z.string().optional(),
-});

@@ -20,7 +20,6 @@ import {
   getFollowingPostsSchema,
   getSinglePostSchema,
   updatePostSchema,
-  searchPostsSchema,
   getLikedPostsSchema,
   voteOnPollSchema,
   getSingleTagSchema,
@@ -105,57 +104,6 @@ export const postRouter = createRouter()
 
       return {
         tags: tagsWithPosts,
-        nextCursor,
-      };
-    },
-  })
-  .query("search-posts", {
-    input: searchPostsSchema,
-    async resolve({ ctx, input }) {
-      const { limit, skip, cursor } = input;
-      if (!input?.query) return null;
-
-      const posts = await ctx.prisma.post.findMany({
-        take: limit + 1,
-        skip: skip,
-        cursor: cursor ? { id: cursor } : undefined,
-        ...(input?.filter
-          ? { orderBy: getFiltersByInput(input?.filter) }
-          : {
-              orderBy: {
-                createdAt: "desc",
-              },
-            }),
-        where: {
-          body: {
-            search: input.query,
-          },
-          // `jsonProtocol` preview feature broke this part of the query:
-          // TO-DO: Add back when fixed.
-          // OR: {
-          //   title: {
-          //     search: input.query,
-          //   },
-          // },
-        },
-        include: {
-          user: true,
-          likes: true,
-          tags: true,
-          link: true,
-        },
-      });
-
-      let nextCursor: typeof cursor | undefined = undefined;
-      if (posts.length > limit) {
-        const nextItem = posts.pop(); // return the last item from the array
-        nextCursor = nextItem?.id;
-      }
-
-      const formattedPosts = await formatPosts(posts);
-
-      return {
-        posts: formattedPosts,
         nextCursor,
       };
     },
