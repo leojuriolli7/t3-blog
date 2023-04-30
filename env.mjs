@@ -24,7 +24,7 @@ export const env = createEnv({
     NEXT_PUBLIC_BYPASS_URL: z.string().optional(),
     NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME: z.string(),
     NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME: z.string(),
-    NEXT_PUBLIC_AWS_REGION: z.string(),
+    NEXT_PUBLIC_AWS_REGION: z.string().default("sa-east-1"),
     NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE: z.string().default("10485760"),
     NEXT_PUBLIC_UPLOADING_TIME_LIMIT: z.string().default("30"),
     NEXT_PUBLIC_UPLOAD_MAX_NUMBER_OF_FILES: z.string().default("4"),
