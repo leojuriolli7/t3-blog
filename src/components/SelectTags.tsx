@@ -63,7 +63,7 @@ const SelectTags: React.FC<Props> = ({
 
   const handleInputConfirm = useCallback(
     (field: FieldType) => () => {
-      const trimmedInputValue = inputValue?.trim();
+      const trimmedInputValue = inputValue?.trim().toLowerCase();
       const inputValueOnTagArray = tags.indexOf(trimmedInputValue);
 
       if (
