@@ -9,8 +9,8 @@ import {
   s3,
   UPLOAD_MAX_FILE_SIZE,
   UPLOADING_TIME_LIMIT,
-  S3_REGION,
-} from "@config/aws";
+} from "@server/config/aws";
+import { env } from "@env";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
@@ -22,7 +22,7 @@ export const attachmentsRouter = createRouter()
       const { postId, name, type, randomKey } = input;
 
       const attachmentKey = `${postId}/${randomKey}`;
-      const url = `https://${process.env.AWS_S3_ATTACHMENTS_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com/${attachmentKey}`;
+      const url = `https://${env.AWS_S3_ATTACHMENTS_BUCKET_NAME}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${attachmentKey}`;
 
       const attachment = await ctx.prisma.attachment.create({
         data: {
@@ -42,7 +42,7 @@ export const attachmentsRouter = createRouter()
             ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
           ],
           Expires: UPLOADING_TIME_LIMIT,
-          Bucket: process.env.AWS_S3_ATTACHMENTS_BUCKET_NAME as string,
+          Bucket: env.AWS_S3_ATTACHMENTS_BUCKET_NAME,
         });
 
         return { url, fields };
@@ -61,7 +61,7 @@ export const attachmentsRouter = createRouter()
       const { userId } = input;
       try {
         const { url, fields } = await createPresignedPost(s3, {
-          Bucket: process.env.AWS_S3_AVATARS_BUCKET_NAME as string,
+          Bucket: env.NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME,
           Key: userId,
           Expires: UPLOADING_TIME_LIMIT,
           Conditions: [
@@ -87,8 +87,7 @@ export const attachmentsRouter = createRouter()
 
       try {
         const { url, fields } = await createPresignedPost(s3, {
-          Bucket: process.env
-            .NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME as string,
+          Bucket: env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
           Key: `${userId}-${randomKey}`,
           Expires: UPLOADING_TIME_LIMIT,
           Conditions: [

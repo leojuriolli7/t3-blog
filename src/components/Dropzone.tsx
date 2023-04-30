@@ -3,16 +3,19 @@ import { useFormContext } from "react-hook-form";
 import { HiOutlineCloudUpload } from "react-icons/hi";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
-import { UPLOAD_MAX_FILE_SIZE, UPLOAD_MAX_NUMBER_OF_FILES } from "@config/aws";
+import { env } from "@env";
 import convertToMegabytes from "@utils/convertToMB";
 import AttachmentList from "./AttachmentList";
 import Field from "./Field";
 
 const Dropzone: React.FC = () => {
+  const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
+  const maxNumberOfFiles = Number(env.NEXT_PUBLIC_UPLOAD_MAX_NUMBER_OF_FILES);
+
   const methods = useFormContext();
   const { formState } = methods;
   const { errors } = formState;
-  const maxSizeInMB = convertToMegabytes(UPLOAD_MAX_FILE_SIZE);
+  const maxSizeInMB = convertToMegabytes(maxFileSize);
 
   const filesState = useState<File[]>([]);
   const [files, setFiles] = filesState;
@@ -24,9 +27,7 @@ const Dropzone: React.FC = () => {
     }
 
     if (firstFileCode === "too-many-files")
-      return toast.error(
-        `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} files per post`
-      );
+      return toast.error(`Maximum of ${maxNumberOfFiles} files per post`);
 
     return toast.error("File type not supported");
   };
@@ -38,25 +39,25 @@ const Dropzone: React.FC = () => {
       );
       const updatedFiles = [...files, ...newFilesArray];
 
-      if (updatedFiles?.length > UPLOAD_MAX_NUMBER_OF_FILES)
+      if (updatedFiles?.length > maxNumberOfFiles)
         return toast.error(
-          `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} attachments per post`
+          `Maximum of ${maxNumberOfFiles} attachments per post`
         );
 
       setFiles(updatedFiles);
 
       methods.setValue("files", updatedFiles);
     },
-    [files, setFiles, methods]
+    [files, setFiles, methods, maxNumberOfFiles]
   );
 
   const { getRootProps, getInputProps, isDragAccept, isDragReject } =
     useDropzone({
       onDropAccepted,
       onDropRejected,
-      maxFiles: UPLOAD_MAX_NUMBER_OF_FILES,
+      maxFiles: maxNumberOfFiles,
       multiple: true,
-      maxSize: UPLOAD_MAX_FILE_SIZE,
+      maxSize: maxFileSize,
       noKeyboard: true,
       accept: {
         "image/*": [],

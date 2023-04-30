@@ -1,4 +1,4 @@
-import { UPLOAD_MAX_NUMBER_OF_FILES } from "@config/aws";
+import { env } from "@env";
 import z from "zod";
 
 const link = z
@@ -75,8 +75,8 @@ export const createPostSchema = z.object({
     })
     .array()
     .max(
-      UPLOAD_MAX_NUMBER_OF_FILES,
-      `Maximum of ${UPLOAD_MAX_NUMBER_OF_FILES} files`
+      Number(env.NEXT_PUBLIC_UPLOAD_MAX_NUMBER_OF_FILES),
+      `Maximum of ${env.NEXT_PUBLIC_UPLOAD_MAX_NUMBER_OF_FILES} files`
     )
     .optional(),
   poll: pollSchema,

@@ -1,6 +1,7 @@
 import { createRouter } from "@server/createRouter";
-import { s3 } from "@config/aws";
+import { s3 } from "@server/config/aws";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { env } from "@env";
 import {
   deleteChildComments,
   getFiltersByInput,
@@ -552,7 +553,7 @@ export const postRouter = createRouter()
         await Promise.all(
           post.attachments.map(async (file) => {
             const deleteAttachmentCommand = new DeleteObjectCommand({
-              Bucket: process.env.AWS_S3_ATTACHMENTS_BUCKET_NAME as string,
+              Bucket: env.AWS_S3_ATTACHMENTS_BUCKET_NAME,
               Key: file.id,
             });
 
