@@ -9,6 +9,7 @@ import { s3 } from "@server/config/aws";
 import { env } from "@env";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { generateS3Url } from "@utils/generateS3Url";
 
 const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
 const uploadTimeLimit = Number(env.NEXT_PUBLIC_UPLOADING_TIME_LIMIT);
@@ -21,7 +22,11 @@ export const attachmentsRouter = createRouter()
       const { postId, name, type, randomKey } = input;
 
       const attachmentKey = `${postId}/${randomKey}`;
-      const url = `https://${env.AWS_S3_ATTACHMENTS_BUCKET_NAME}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${attachmentKey}`;
+
+      const url = generateS3Url(
+        env.AWS_S3_ATTACHMENTS_BUCKET_NAME,
+        attachmentKey
+      );
 
       const attachment = await ctx.prisma.attachment.create({
         data: {
