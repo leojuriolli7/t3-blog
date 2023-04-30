@@ -239,7 +239,7 @@ const Comment: React.FC<CommentProps> = ({
                 height={30}
                 src={comment?.user?.image || "/static/default-profile.jpg"}
                 alt={`${username || "User"} profile picture.`}
-                className="mr-2 flex-shrink-0 rounded-full object-cover"
+                className="mr-2 h-8 w-8 flex-shrink-0 rounded-full object-cover"
               />
               <ShouldRender if={loading}>
                 <Skeleton width="w-[120px]" height="h-4" />
