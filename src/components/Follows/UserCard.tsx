@@ -1,5 +1,5 @@
 import type { FollowingUser } from "@utils/types";
-import Image from "next/image";
+import Image from "@components/Image";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import ShouldRender from "../ShouldRender";
@@ -31,6 +31,7 @@ const UserCard: React.FC<Props> = ({ loading, user, onClickCard }) => {
         <Image
           width={32}
           height={32}
+          isLoading={loading}
           alt={user?.name || "Follower"}
           src={user?.image || "/static/default-profile.jpg"}
           className="h-[32px] rounded-full object-cover"

@@ -1,5 +1,5 @@
 import type { User } from "@utils/types";
-import Image from "next/image";
+import Image from "@components/Image";
 import Link from "next/link";
 import React from "react";
 import ShouldRender from "./ShouldRender";
@@ -22,6 +22,7 @@ const UserPreview: React.FC<Props> = ({ loading, user }) => {
           <Image
             width={32}
             height={32}
+            isLoading={loading}
             alt={user?.name || "User"}
             src={user?.image || "/static/default-profile.jpg"}
             className="h-[32px] rounded-full object-cover"

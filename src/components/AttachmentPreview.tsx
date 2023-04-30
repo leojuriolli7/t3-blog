@@ -1,10 +1,10 @@
-import Image from "next/future/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { saveAs } from "file-saver";
 import { IoExpandOutline } from "react-icons/io5";
 import { MdClose, MdDownload, MdPause, MdAudiotrack } from "react-icons/md";
 import { RiFileTextFill, RiPlayMiniFill } from "react-icons/ri";
 import ShouldRender from "./ShouldRender";
+import Image from "./Image";
 import AudioPlayer from "./AudioPlayer";
 
 export type MediaType = {

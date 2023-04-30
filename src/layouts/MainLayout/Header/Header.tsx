@@ -3,7 +3,7 @@ import SlideOver from "@components/SlideOver";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import Image from "next/future/image";
+import Image from "@components/Image";
 import Link from "next/link";
 import SearchDropdown from "./SearchDropdown";
 import { SidebarContent } from "../Sidebar/Sidebar";

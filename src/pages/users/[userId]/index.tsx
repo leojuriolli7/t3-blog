@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
-import Image from "next/future/image";
+import Image from "@components/Image";
 import ShouldRender from "@components/ShouldRender";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";

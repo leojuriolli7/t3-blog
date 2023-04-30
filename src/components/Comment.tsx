@@ -16,6 +16,7 @@ import ActionButton from "./ActionButton";
 import HTMLBody from "./HTMLBody";
 import Skeleton from "./Skeleton";
 import { Badge } from "./Badge";
+import Image from "./Image";
 
 const ConfirmationModal = dynamic(
   () => import("@components/ConfirmationModal"),
@@ -100,6 +101,8 @@ const Comment: React.FC<CommentProps> = ({
   hideActions = false,
   linkToPost = false,
 }) => {
+  const username = getUserDisplayName(comment?.user);
+
   const replyState = useState(false);
   const [replying, setReplying] = replyState;
 
@@ -223,9 +226,6 @@ const Comment: React.FC<CommentProps> = ({
             compact && "text-sm"
           )}
         >
-          <ShouldRender if={loading}>
-            <Skeleton width="w-full max-w-[250px]" height="h-4" />
-          </ShouldRender>
           <div className="flex items-center gap-1">
             <span
               className={clsx(
@@ -233,13 +233,27 @@ const Comment: React.FC<CommentProps> = ({
                 compact && "text-base"
               )}
             >
-              <Link
-                href={`/users/${comment?.userId}`}
-                title="Visit user profile"
-                className="line-clamp-1 text-ellipsis hover:underline"
-              >
-                {getUserDisplayName(comment?.user)}
-              </Link>
+              <Image
+                isLoading={loading}
+                width={30}
+                height={30}
+                src={comment?.user?.image || "/static/default-profile.jpg"}
+                alt={`${username || "User"} profile picture.`}
+                className="mr-2 flex-shrink-0 rounded-full object-cover"
+              />
+              <ShouldRender if={loading}>
+                <Skeleton width="w-[120px]" height="h-4" />
+              </ShouldRender>
+              <ShouldRender if={!loading}>
+                <Link
+                  href={`/users/${comment?.userId}`}
+                  title="Visit user profile"
+                  className="line-clamp-1 text-ellipsis text-sm hover:underline xl:text-base"
+                >
+                  {username}
+                </Link>
+              </ShouldRender>
+
               <ShouldRender
                 if={comment?.userId === session?.user.id && !!session?.user.id}
               >
@@ -254,11 +268,11 @@ const Comment: React.FC<CommentProps> = ({
             </span>
           </div>
 
-          <ShouldRender if={!compact}>
+          <ShouldRender if={!compact && !loading}>
             <p className="block text-sm xl:text-base">{comment?.createdAt}</p>
           </ShouldRender>
         </div>
-        <ShouldRender if={!isEditing || shouldRenderModals}>
+        <ShouldRender if={!loading && (!isEditing || shouldRenderModals)}>
           <HTMLBody
             className={clsx(compact ? "prose prose-sm" : "prose -xl:prose-sm")}
           >

@@ -19,7 +19,7 @@ import { useSession } from "next-auth/react";
 import ShouldRender from "@components/ShouldRender";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi";
 import packageJson from "@package";
-import Image from "next/future/image";
+import Image from "@components/Image";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import ThemeButton from "./ThemeButton";
 

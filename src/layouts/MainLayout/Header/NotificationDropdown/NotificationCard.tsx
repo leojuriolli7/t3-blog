@@ -1,6 +1,6 @@
 import getUserDisplayName from "@utils/getUserDisplayName";
 import Link from "next/link";
-import Image from "next/future/image";
+import Image from "@components/Image";
 import HTMLBody from "@components/HTMLBody";
 import Button from "@components/Button";
 import type { Notification } from "@utils/types";

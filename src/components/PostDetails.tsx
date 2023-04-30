@@ -5,6 +5,7 @@ import LikeButton from "@components/LikeButton";
 import ShouldRender from "@components/ShouldRender";
 import Skeleton from "@components/Skeleton";
 import ActionButton from "@components/ActionButton";
+import Image from "@components/Image";
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import type { SinglePost } from "@utils/types";
@@ -81,6 +82,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
+  const username = getUserDisplayName(data?.user);
 
   const isDeleteModalOpen = useState(false);
   const [, setIsDeleteModalOpen] = isDeleteModalOpen;
@@ -366,21 +368,29 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
             <Skeleton heading />
           </ShouldRender>
 
-          <div>
+          <div className="-mb-4 -mt-4 flex w-full items-center">
+            <Image
+              isLoading={isLoading}
+              width={32}
+              height={32}
+              src={data?.user?.image || "/static/default-profile.jpg"}
+              alt={`${username || "User"} profile picture.`}
+              className="mr-2 h-8 w-8 flex-shrink-0 rounded-full object-cover"
+            />
+
             <ShouldRender if={isLoading}>
               <Skeleton width="w-1/2" />
             </ShouldRender>
 
             <ShouldRender if={!isLoading}>
               <p className="w-fit">
-                By{" "}
                 <Link
                   href={`/users/${data?.user?.id}`}
                   title="Go to user's profile"
                   className="font-bold text-emerald-700 underline dark:text-emerald-500"
                   prefetch={false}
                 >
-                  {getUserDisplayName(data?.user)}
+                  {username}
                 </Link>
                 <ShouldRender if={data?.user?.id === session?.user.id}>
                   <span className=" text-emerald-700 dark:text-emerald-500">
@@ -398,7 +408,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
           </ShouldRender>
 
           <ShouldRender if={!!data?.link}>
-            <div className="-mb-4 -mt-4 w-full">
+            <div className="-mb-4 w-full">
               <LinkPreview loading={isLoading} data={data?.link} />
 
               <div className="mt-2 w-full break-words border-l-4 border-gray-300 bg-white p-4 text-black shadow dark:border-neutral-500 dark:bg-zinc-900 dark:text-neutral-300">

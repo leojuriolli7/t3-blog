@@ -1,7 +1,7 @@
 import { Dispatch, Fragment, SetStateAction } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MdClose } from "react-icons/md";
-import Image from "next/future/image";
+import Image from "@components/Image";
 import useGetWindowDimensions from "@hooks/useGetWindowDimensions";
 
 type Props = {

@@ -1,5 +1,5 @@
 import { UpdateUserInput } from "@schema/user.schema";
-import Image from "next/future/image";
+import Image from "@components/Image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { MdAdd, MdOutlineAddAPhoto } from "react-icons/md";
