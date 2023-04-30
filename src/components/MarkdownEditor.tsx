@@ -8,10 +8,10 @@ import * as DOMPurify from "dompurify";
 import { v4 as uuid } from "uuid";
 import "highlight.js/styles/atom-one-dark.css";
 import { trpc } from "@utils/trpc";
+import { env } from "@env";
 import { useSession } from "next-auth/react";
 import { MdInfoOutline } from "react-icons/md";
 import ShouldRender from "./ShouldRender";
-import { UPLOAD_MAX_FILE_SIZE } from "@config/aws";
 import { toast } from "react-toastify";
 import convertToMegabytes from "@utils/convertToMB";
 
@@ -60,9 +60,11 @@ const MarkdownEditor: React.FC<Props> = ({
   imageUploadTip,
   withImageUploads = true,
 }) => {
+  const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
+
   const { data } = useSession();
   const userId = data?.user?.id as string;
-  const maxSizeInMB = convertToMegabytes(UPLOAD_MAX_FILE_SIZE);
+  const maxSizeInMB = convertToMegabytes(maxFileSize);
 
   const { mutateAsync: createPresignedUrl } = trpc.useMutation(
     "attachments.create-presigned-post-body-url"
@@ -79,7 +81,7 @@ const MarkdownEditor: React.FC<Props> = ({
         "Only images are available for uploading. Please select an image."
       );
 
-    if (image.size > UPLOAD_MAX_FILE_SIZE)
+    if (image.size > maxFileSize)
       return toast.error(`Limit of ${maxSizeInMB}MB per file`);
 
     const { url, fields } = await createPresignedUrl({ userId, randomKey });
@@ -98,7 +100,7 @@ const MarkdownEditor: React.FC<Props> = ({
       body: formData,
     });
 
-    const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME}.s3.amazonaws.com/${userId}-${randomKey}`;
+    const imageUrl = `https://${env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${userId}-${randomKey}`;
 
     return imageUrl;
   };

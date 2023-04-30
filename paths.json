@@ -13,6 +13,7 @@
       "@config/*": ["src/config/*"],
       "@hooks/*": ["src/hooks/*"],
       "@package": ["package.json"],
+      "@env": ["env.mjs"],
       "@schema/*": ["src/schema/*"]
     }
   }

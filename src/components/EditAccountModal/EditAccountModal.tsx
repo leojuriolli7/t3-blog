@@ -8,6 +8,7 @@ import ShouldRender from "@components/ShouldRender";
 import { useSession } from "next-auth/react";
 import type { User } from "@utils/types";
 import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
+import { env } from "@env";
 import { Modal } from "../Modal";
 import Avatar from "./Avatar";
 import UserLinkField from "./UserLink/UserLinkField";
@@ -103,7 +104,7 @@ const EditAccountModal: React.FC<Props> = ({
         });
       }
 
-      const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME}.s3.amazonaws.com/${userId}`;
+      const imageUrl = `https://${env.NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME}.s3.${env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${userId}`;
 
       update({
         userId,
