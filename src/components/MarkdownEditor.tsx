@@ -11,7 +11,7 @@ import { trpc } from "@utils/trpc";
 import { useSession } from "next-auth/react";
 import { MdInfoOutline } from "react-icons/md";
 import ShouldRender from "./ShouldRender";
-import { UPLOAD_MAX_FILE_SIZE } from "@config/aws";
+import { S3_REGION, UPLOAD_MAX_FILE_SIZE } from "@config/aws";
 import { toast } from "react-toastify";
 import convertToMegabytes from "@utils/convertToMB";
 
@@ -98,7 +98,7 @@ const MarkdownEditor: React.FC<Props> = ({
       body: formData,
     });
 
-    const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME}.s3.amazonaws.com/${userId}-${randomKey}`;
+    const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com/${userId}-${randomKey}`;
 
     return imageUrl;
   };

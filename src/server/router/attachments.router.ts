@@ -6,12 +6,13 @@ import {
   createPresignedPostBodyUrlSchema,
 } from "@schema/attachment.schema";
 import {
-  BUCKET_NAME,
   s3,
   UPLOAD_MAX_FILE_SIZE,
   UPLOADING_TIME_LIMIT,
-} from "src/config/aws";
+  S3_REGION,
+} from "@config/aws";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
 export const attachmentsRouter = createRouter()
   .middleware(isLoggedInMiddleware)
@@ -21,7 +22,7 @@ export const attachmentsRouter = createRouter()
       const { postId, name, type, randomKey } = input;
 
       const attachmentKey = `${postId}/${randomKey}`;
-      const url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${attachmentKey}`;
+      const url = `https://${process.env.AWS_S3_ATTACHMENTS_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com/${attachmentKey}`;
 
       const attachment = await ctx.prisma.attachment.create({
         data: {
@@ -34,16 +35,14 @@ export const attachmentsRouter = createRouter()
       });
 
       try {
-        const { url, fields } = await s3.createPresignedPost({
-          Fields: {
-            key: attachment.id,
-          },
+        const { url, fields } = await createPresignedPost(s3, {
+          Key: attachment.id,
           Conditions: [
             ["starts-with", "$Content-Type", ""],
             ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
           ],
           Expires: UPLOADING_TIME_LIMIT,
-          Bucket: BUCKET_NAME,
+          Bucket: process.env.AWS_S3_ATTACHMENTS_BUCKET_NAME as string,
         });
 
         return { url, fields };
@@ -61,11 +60,9 @@ export const attachmentsRouter = createRouter()
     async resolve({ input }) {
       const { userId } = input;
       try {
-        const { url, fields } = await s3.createPresignedPost({
-          Bucket: process.env.AWS_S3_AVATARS_BUCKET_NAME,
-          Fields: {
-            key: userId,
-          },
+        const { url, fields } = await createPresignedPost(s3, {
+          Bucket: process.env.AWS_S3_AVATARS_BUCKET_NAME as string,
+          Key: userId,
           Expires: UPLOADING_TIME_LIMIT,
           Conditions: [
             ["starts-with", "$Content-Type", "image/"],
@@ -89,11 +86,10 @@ export const attachmentsRouter = createRouter()
       const { userId, randomKey } = input;
 
       try {
-        const { url, fields } = await s3.createPresignedPost({
-          Bucket: process.env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
-          Fields: {
-            key: `${userId}-${randomKey}`,
-          },
+        const { url, fields } = await createPresignedPost(s3, {
+          Bucket: process.env
+            .NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME as string,
+          Key: `${userId}-${randomKey}`,
           Expires: UPLOADING_TIME_LIMIT,
           Conditions: [
             ["starts-with", "$Content-Type", "image/"],
