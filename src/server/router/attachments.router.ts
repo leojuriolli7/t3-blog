@@ -5,14 +5,13 @@ import {
   createPresignedAvatarUrlSchema,
   createPresignedPostBodyUrlSchema,
 } from "@schema/attachment.schema";
-import {
-  s3,
-  UPLOAD_MAX_FILE_SIZE,
-  UPLOADING_TIME_LIMIT,
-} from "@server/config/aws";
+import { s3 } from "@server/config/aws";
 import { env } from "@env";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+
+const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
+const uploadTimeLimit = Number(env.NEXT_PUBLIC_UPLOADING_TIME_LIMIT);
 
 export const attachmentsRouter = createRouter()
   .middleware(isLoggedInMiddleware)
@@ -39,9 +38,9 @@ export const attachmentsRouter = createRouter()
           Key: attachment.id,
           Conditions: [
             ["starts-with", "$Content-Type", ""],
-            ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
+            ["content-length-range", 0, maxFileSize],
           ],
-          Expires: UPLOADING_TIME_LIMIT,
+          Expires: uploadTimeLimit,
           Bucket: env.AWS_S3_ATTACHMENTS_BUCKET_NAME,
         });
 
@@ -63,10 +62,10 @@ export const attachmentsRouter = createRouter()
         const { url, fields } = await createPresignedPost(s3, {
           Bucket: env.NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME,
           Key: userId,
-          Expires: UPLOADING_TIME_LIMIT,
+          Expires: uploadTimeLimit,
           Conditions: [
             ["starts-with", "$Content-Type", "image/"],
-            ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
+            ["content-length-range", 0, maxFileSize],
           ],
         });
 
@@ -89,10 +88,10 @@ export const attachmentsRouter = createRouter()
         const { url, fields } = await createPresignedPost(s3, {
           Bucket: env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
           Key: `${userId}-${randomKey}`,
-          Expires: UPLOADING_TIME_LIMIT,
+          Expires: uploadTimeLimit,
           Conditions: [
             ["starts-with", "$Content-Type", "image/"],
-            ["content-length-range", 0, UPLOAD_MAX_FILE_SIZE],
+            ["content-length-range", 0, maxFileSize],
           ],
         });
 
