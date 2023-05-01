@@ -247,7 +247,7 @@ export const postRouter = createRouter()
         },
       });
 
-      const postWithLikes = getPostWithLikes(post, ctx?.session);
+      const postWithLikes = getPostWithLikes<typeof post>(post, ctx?.session);
       const favoritedByUser = postWithLikes.favoritedBy?.some(
         (favorite) => favorite.userId === ctx?.session?.user?.id
       );

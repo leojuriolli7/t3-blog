@@ -1,35 +1,18 @@
 import { Session } from "next-auth";
-import {
-  Attachment,
-  FavoritesOnUsers,
-  Like,
-  Link,
-  Poll,
-  PollOption,
-  Post,
-  Tag,
-  User,
-} from "@prisma/client";
+import { Like, Post } from "@prisma/client";
 import { markdownToHtml } from "./markdownToHtml";
 
 type PostType =
   | (Post & {
-      user: User | null;
       likes: Like[];
-      tags?: Tag[];
-      link?: Link | null;
-      attachments?: Attachment[] | null;
-      favoritedBy?: FavoritesOnUsers[] | undefined;
-      poll?:
-        | (Poll & {
-            options: PollOption[];
-          })
-        | null;
     })
   | null;
 
 // Filter post for likes and dislikes, and liked/dislikedByMe
-export const getPostWithLikes = (post: PostType, session?: Session | null) => {
+export function getPostWithLikes<TPostType extends PostType>(
+  post: TPostType,
+  session?: Session | null
+) {
   const likedByMe =
     post?.likes?.some(
       (like) => like.userId === session?.user.id && !like.dislike
@@ -50,7 +33,7 @@ export const getPostWithLikes = (post: PostType, session?: Session | null) => {
     likes: likes?.length || 0,
     dislikes: dislikes?.length || 0,
   };
-};
+}
 
 // Format array of posts converting post body from markdown to HTML.
 export async function formatPosts(posts: PostType[], session?: Session | null) {
