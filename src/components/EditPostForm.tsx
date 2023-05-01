@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
 import Field from "./Field";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SelectTags from "./SelectTags";
 import LinkInput from "./LinkInput";
 import Button from "./Button";
 import TextInput from "./TextInput";
@@ -23,15 +22,6 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const utils = trpc.useContext();
   const router = useRouter();
   const postId = router.query.postId as string;
-  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
-    ["posts.tags"],
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const allTags = tags?.map((tag) => tag.name);
-  const currentTags = post?.tags?.map((tag) => tag.name);
 
   const methods = useForm<UpdatePostInput>({
     resolver: zodResolver(createPostSchema),
@@ -49,15 +39,10 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     isLoading: updating,
     error: updateError,
   } = trpc.useMutation(["posts.update-post"], {
-    onMutate: async ({ postId, tags, link }) => {
+    onMutate: async ({ postId, link }) => {
       await utils.cancelQuery(["posts.single-post", { postId }]);
 
       const prevData = utils.getQueryData(["posts.single-post", { postId }]);
-
-      const mappedTags = tags.map((tag) => ({
-        name: tag,
-        id: uuid(),
-      }));
 
       const formattedLink = link?.url
         ? {
@@ -74,7 +59,6 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
       utils.setQueryData(["posts.single-post", { postId }], (old) => ({
         ...old!,
         link: formattedLink,
-        tags: mappedTags,
       }));
 
       return { prevData };
@@ -141,22 +125,11 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
 
         <LinkInput initialLink={post?.link} />
 
-        <div className="w-full">
-          <SelectTags
-            name="tags"
-            control={methods.control}
-            error={errors.tags}
-            initialTags={allTags}
-            initialSelectedTags={currentTags}
-          />
-        </div>
-
         <Button
           variant="primary"
           className="flex w-full min-w-fit justify-center rounded-lg sm:w-6/12"
           type="submit"
           loading={updating}
-          disabled={fetchingTags}
         >
           Update
         </Button>

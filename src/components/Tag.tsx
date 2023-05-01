@@ -1,26 +1,28 @@
 import React from "react";
+import clsx from "clsx";
+import { TagType } from "@utils/types";
+import { TagCard } from "./TagCard";
 
-type Props = {
+interface TagProps
+  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "onChange"> {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
-  children: React.ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
-  className?: string;
-  title?: string;
-  role?: React.AriaRole;
   omitBgClass?: boolean;
-};
+  tag?: TagType;
+}
 
-const Tag: React.FC<Props> = ({
-  checked,
-  onChange,
-  children,
-  onClick,
-  className,
-  role,
-  title,
-  omitBgClass,
-}) => {
+const Tag: React.FC<TagProps> = (props) => {
+  const {
+    checked,
+    onChange,
+    children,
+    onClick,
+    className,
+    omitBgClass,
+    tag,
+    ...rest
+  } = props;
+
   const handleClick = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     onChange?.(!checked);
     onClick?.(e);
@@ -37,18 +39,21 @@ const Tag: React.FC<Props> = ({
   const regularTagClasses = "bg-emerald-500 dark:bg-teal-900 text-white";
 
   return (
-    <span
-      title={title || undefined}
-      role={role || undefined}
-      className={`flex cursor-pointer select-none items-center whitespace-nowrap rounded-md border-[1px] border-neutral-300 p-2 text-sm transition dark:border-neutral-800 dark:text-neutral-200 ${
-        notCheckableTag && !omitBgClass
-          ? regularTagClasses
-          : checkableTagClasses
-      } ${className || ""} `}
-      onClick={handleClick}
-    >
-      {children}
-    </span>
+    <TagCard tag={tag}>
+      <span
+        {...rest}
+        className={clsx(
+          "flex cursor-pointer select-none items-center whitespace-nowrap rounded-md border-[1px] border-neutral-300 p-2 text-sm transition dark:border-neutral-800 dark:text-neutral-200",
+          notCheckableTag && !omitBgClass
+            ? regularTagClasses
+            : checkableTagClasses,
+          className
+        )}
+        onClick={handleClick}
+      >
+        {tag?.name}
+      </span>
+    </TagCard>
   );
 };
 

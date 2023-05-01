@@ -4,6 +4,7 @@ import {
   createPresignedUrlSchema,
   createPresignedAvatarUrlSchema,
   createPresignedPostBodyUrlSchema,
+  createPresignedTagUrl,
 } from "@schema/attachment.schema";
 import { s3 } from "@server/config/aws";
 import { env } from "@env";
@@ -106,6 +107,32 @@ export const attachmentsRouter = createRouter()
         throw new trpc.TRPCError({
           code: "BAD_REQUEST",
           message: "Error creating S3 presigned post body url",
+        });
+      }
+    },
+  })
+  .mutation("create-presigned-tag-url", {
+    input: createPresignedTagUrl,
+    async resolve({ input }) {
+      const { tagName, type } = input;
+
+      try {
+        const { url, fields } = await createPresignedPost(s3, {
+          Bucket: env.NEXT_PUBLIC_AWS_S3_TAG_IMAGES_BUCKET_NAME,
+          Key: `${tagName}/${type}`,
+          Expires: uploadTimeLimit,
+          Conditions: [
+            ["starts-with", "$Content-Type", "image/"],
+            ["content-length-range", 0, maxFileSize],
+          ],
+        });
+
+        return { url, fields };
+      } catch (e) {
+        console.log("e:", e);
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Error creating S3 presigned tag url",
         });
       }
     },

@@ -52,8 +52,27 @@ const pollSchema = z
   )
   .optional();
 
-const tagsSchema = z
-  .string()
+const fileSchema = z.custom<File>((file) => {
+  const isFile = file instanceof File;
+
+  return isFile;
+});
+
+const singleTagSchema = z.object({
+  name: z.string().max(50, "Maximum of 50 characters"),
+  id: z.string(),
+  description: z
+    .string()
+    .min(3, "Minimum of 3 characters")
+    .max(256, "Maximum of 256 characters"),
+  avatar: z.string(),
+  backgroundImage: z.string(),
+  // TO-DO: better validation.
+  avatarFile: z.custom().optional(),
+  backgroundImageFile: z.custom().optional(),
+});
+
+const tagsSchema = singleTagSchema
   .array()
   .nonempty("Post must have at least one tag")
   .max(5, "Maximum of 5 tags per post");
@@ -67,12 +86,7 @@ export const createPostSchema = z.object({
   body: z.string().trim().min(5, "Minimum body length is 5"),
   link,
   tags: tagsSchema,
-  files: z
-    .custom<File>((file) => {
-      const isFile = file instanceof File;
-
-      return isFile;
-    })
+  files: fileSchema
     .array()
     .max(
       Number(env.NEXT_PUBLIC_UPLOAD_MAX_NUMBER_OF_FILES),
@@ -83,6 +97,9 @@ export const createPostSchema = z.object({
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;
+
+export const createTagSchema = singleTagSchema;
+export type CreateTagInput = z.TypeOf<typeof createTagSchema>;
 
 export const getPostsSchema = z.object({
   limit: z.number(),
@@ -147,7 +164,6 @@ export const updatePostSchema = z.object({
   body: z.string().trim().min(10).optional(),
   postId: z.string(),
   link,
-  tags: tagsSchema,
 });
 
 export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;

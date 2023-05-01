@@ -34,12 +34,10 @@ const TagList: React.FC<Props> = ({
           className={loading ? "cursor-disabled pointer-events-none" : ""}
         >
           <Tag
-            title={`Click to see all ${tag?.name} posts`}
             role="link"
             className={`cursor-pointer select-none border-none hover:opacity-80 ${paddings} ${loadingClasses}`}
-          >
-            {tag?.name}
-          </Tag>
+            tag={tag}
+          />
         </Link>
       ))}
     </div>

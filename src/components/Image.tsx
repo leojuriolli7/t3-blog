@@ -1,26 +1,34 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import NextImage from "next/future/image";
+import NextImage, { StaticImageData } from "next/future/image";
 import ShouldRender from "./ShouldRender";
 import { ImageProps } from "next/future/image";
 import clsx from "clsx";
+interface StaticRequire {
+  default: StaticImageData;
+}
 
-type Props = Omit<ImageProps, "loading"> & {
+type Props = Omit<ImageProps, "loading" | "src"> & {
   isLoading?: boolean;
+  src?: string | StaticRequire;
+  full?: boolean;
 };
 
-type SkeletonProps = Pick<ImageProps, "width" | "height" | "className">;
+type SkeletonProps = Pick<Props, "width" | "height" | "className" | "full">;
 
 const ImageSkeleton: React.FC<SkeletonProps> = ({
   width,
   height,
   className,
+  full,
 }) => {
+  const dimensions = full ? "w-full h-full" : `w-[${width}px] h-[${height}px]`;
+
   return (
     <div
       role="status"
       className={clsx(
         "animate-pulse bg-gray-300 dark:bg-neutral-700",
-        `w-[${width}px] h-[${height}px]`,
+        dimensions,
         className
       )}
     >
@@ -36,7 +44,7 @@ const ImageSkeleton: React.FC<SkeletonProps> = ({
  * It handles loading automatically by rendering a skeleton and also handles errors.
  */
 const CustomImage: React.FC<Props> = (props) => {
-  const { src, isLoading, ...rest } = props;
+  const { src, isLoading, full, ...rest } = props;
 
   const [loaded, setLoaded] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -76,16 +84,31 @@ const CustomImage: React.FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);
 
+  // Only way for next/image to set width & height 100%
+  const fillContainerProps = {
+    sizes: "100vw",
+    width: 0,
+    height: 0,
+    unoptimized: true,
+    style: { width: "100%", height: "100%" },
+  };
+
   return (
     <>
-      <ShouldRender if={!loading}>
-        <NextImage {...rest} src={currentSrc} onError={handleError} />
+      <ShouldRender if={!loading && !!src}>
+        <NextImage
+          {...rest}
+          src={currentSrc}
+          onError={handleError}
+          {...(full && fillContainerProps)}
+        />
       </ShouldRender>
       <ShouldRender if={loading}>
         <ImageSkeleton
           width={rest.width}
           height={rest.height}
           className={rest.className}
+          full={full}
         />
       </ShouldRender>
     </>

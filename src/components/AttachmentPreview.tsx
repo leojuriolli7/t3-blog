@@ -6,6 +6,7 @@ import { RiFileTextFill, RiPlayMiniFill } from "react-icons/ri";
 import ShouldRender from "./ShouldRender";
 import Image from "./Image";
 import AudioPlayer from "./AudioPlayer";
+import clsx from "clsx";
 
 export type MediaType = {
   name: string;
@@ -20,6 +21,7 @@ type Props = {
   removeFile?: () => void;
   downloadable?: boolean;
   optimized?: boolean;
+  compact?: boolean;
 };
 
 const AttachmentPreview: React.FC<Props> = ({
@@ -29,6 +31,7 @@ const AttachmentPreview: React.FC<Props> = ({
   downloadable = false,
   removeFile,
   optimized = false,
+  compact = false,
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const audioPlayingState = useState<boolean>(false);
@@ -56,7 +59,12 @@ const AttachmentPreview: React.FC<Props> = ({
   useEffect(() => setIsAudioPlaying(false), [file, setIsAudioPlaying]);
 
   return (
-    <div className="relative rounded-md border border-zinc-300 bg-white p-4 first:mt-4 dark:border-zinc-700/90 dark:bg-zinc-800/70">
+    <div
+      className={clsx(
+        "relative rounded-md border border-zinc-300 bg-white first:mt-4 dark:border-zinc-700/90 dark:bg-zinc-800/70",
+        !compact && "p-4"
+      )}
+    >
       <div className="flex gap-3">
         <div onClick={onClickImage} className="group relative h-16 w-16">
           <ShouldRender if={type === "document"}>
@@ -102,7 +110,10 @@ const AttachmentPreview: React.FC<Props> = ({
               width={64}
               height={64}
               alt={file.name || "Uploaded image"}
-              className="h-full cursor-pointer object-cover transition-all group-hover:brightness-50 dark:group-hover:opacity-50"
+              className={clsx(
+                "h-full cursor-pointer object-cover transition-all group-hover:brightness-50 dark:group-hover:opacity-50",
+                compact && "rounded-l-md"
+              )}
               // Attachment images cannot be optimized because their URL is constantly changing.
               unoptimized={!optimized}
             />

@@ -127,8 +127,11 @@ model VerificationToken {
 }
 
 model Tag {
-  id    String @id @default(uuid())
-  name  String @unique
+  id                String @id @default(uuid())
+  name              String @unique
+  description       String
+  avatar            String
+  backgroundImage   String
   posts Post[]
 
   @@fulltext([name])

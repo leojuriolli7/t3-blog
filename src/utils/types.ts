@@ -16,6 +16,7 @@ export type SinglePost = InferQueryOutput<"posts.single-post">;
 export type PostFromList = InferQueryOutput<"posts.posts">["posts"][number];
 
 export type FollowingPosts = InferQueryOutput<"posts.following-posts">;
+export type TagType = InferQueryOutput<"posts.tags">[number];
 
 export type TaggedPosts =
   InferQueryOutput<"posts.posts-by-tags">["tags"][number]["posts"][number];

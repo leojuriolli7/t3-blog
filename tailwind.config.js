@@ -21,6 +21,9 @@ module.exports = {
       transitionProperty: {
         borderAndShadow: "border, box-shadow",
       },
+      transformOrigin: {
+        "hover-card": "var(--radix-hover-card-content-transform-origin)",
+      },
       fontFamily: {
         inter: ["Inter", ...defaultTheme.fontFamily.sans],
       },
@@ -29,14 +32,33 @@ module.exports = {
           "0%": { transform: "translateX(-100%)", opacity: "0" },
           "100%": { transform: "translateX(0)", opacity: "100%" },
         },
-        popIn: {
-          "0%": { transform: "scale(0.1)", opacity: 0 },
-          "100%": { transform: "scale(1)", opacity: 1 },
+        slideUpAndFade: {
+          "0%": { opacity: 0, transform: "translateY(2px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+        slideRightAndFade: {
+          "0%": { opacity: 0, transform: "translateX(-2px)" },
+          "100%": { opacity: 1, transform: "translateX(0)" },
+        },
+        slideDownAndFade: {
+          "0%": { opacity: 0, transform: "translateY(-2px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+        slideLeftAndFade: {
+          "0%": { opacity: 0, transform: "translateX(2px)" },
+          "100%": { opacity: 1, transform: "translateX(0)" },
         },
       },
       animation: {
         slideOver: "slideFromLeft 500ms ease",
         popIn: "popIn 300ms forwards",
+        slideUpAndFade: "slideUpAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
+        slideDownAndFade:
+          "slideDownAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
+        slideRightAndFade:
+          "slideRightAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
+        slideLeftAndFade:
+          "slideLeftAndFade 300ms cubic-bezier(0.16, 0, 0.13, 1)",
       },
       boxShadow: {
         "3xl": "0 4px 6px rgba(0,0,0,.04)",

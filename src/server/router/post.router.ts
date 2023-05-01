@@ -434,10 +434,13 @@ export const postRouter = createRouter()
           tags: {
             connectOrCreate: input.tags.map((tag) => ({
               create: {
-                name: tag,
+                name: tag.name,
+                avatar: tag.avatar,
+                backgroundImage: tag.backgroundImage,
+                description: tag.description,
               },
               where: {
-                name: tag,
+                name: tag.name,
               },
             })),
           },
@@ -631,23 +634,6 @@ export const postRouter = createRouter()
         });
       }
 
-      // Find which tags were on the post previously, but are now removed.
-      const previousPostTags = previousPost?.tags.map((tag) => tag.name) || [];
-
-      // Tags that will have no posts after current post is deleted must be deleted aswell.
-      const tagsToDelete = previousPost?.tags.filter(
-        (tag) => tag._count.posts === 1 && input.tags.indexOf(tag.name) === -1
-      );
-
-      const tagsToRemove = previousPostTags.filter(
-        (tag) => input.tags.indexOf(tag) === -1
-      );
-
-      // Filter for all new/existing tags who remain on the post.
-      const tagsToCreateOrConnect = input.tags.filter(
-        (tag) => tagsToRemove.indexOf(tag) < 0
-      );
-
       const previousLink = previousPost?.link?.url;
       const userIsDeletingLink = !input?.link?.url && !!previousLink;
       const userIsAddingNewLink = !!input?.link?.url && !!previousLink;
@@ -686,33 +672,8 @@ export const postRouter = createRouter()
                 },
               }),
           },
-          tags: {
-            ...(tagsToCreateOrConnect?.length && {
-              connectOrCreate: tagsToCreateOrConnect.map((tag) => ({
-                create: {
-                  name: tag,
-                },
-                where: {
-                  name: tag,
-                },
-              })),
-            }),
-            ...(tagsToRemove?.length && {
-              disconnect: tagsToRemove.map((tag) => ({ name: tag })),
-            }),
-          },
         },
       });
-
-      if (tagsToDelete?.length) {
-        await ctx.prisma.tag.deleteMany({
-          where: {
-            name: {
-              in: tagsToDelete.map((tag) => tag.name),
-            },
-          },
-        });
-      }
 
       return post;
     },

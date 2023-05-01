@@ -12,6 +12,7 @@
       "@api/*": ["src/api/*"],
       "@config/*": ["src/config/*"],
       "@hooks/*": ["src/hooks/*"],
+      "@store/*": ["src/store/*"],
       "@package": ["package.json"],
       "@env": ["env.mjs"],
       "@schema/*": ["src/schema/*"]
