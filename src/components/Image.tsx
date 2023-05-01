@@ -73,10 +73,6 @@ const CustomImage: React.FC<Props> = (props) => {
 
     img.onload = onLoaded;
 
-    if (typeof currentSrc === "string") {
-      setLoaded(true);
-    }
-
     return () => {
       setLoaded(false);
     };
@@ -95,7 +91,7 @@ const CustomImage: React.FC<Props> = (props) => {
 
   return (
     <>
-      <ShouldRender if={!loading && !!src}>
+      <ShouldRender if={!loading}>
         <NextImage
           {...rest}
           src={currentSrc}
