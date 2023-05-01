@@ -44,8 +44,8 @@ const enabledPlugins = [
   "link",
   "clear",
   "logger",
-  "mode-toggle",
-  "full-screen",
+  "mode-toggle"
+  // "full-screen",
 ];
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
