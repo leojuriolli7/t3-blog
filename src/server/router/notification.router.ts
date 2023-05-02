@@ -5,7 +5,7 @@ import {
 } from "@schema/notification.schema";
 import { createRouter } from "@server/createRouter";
 import { formatDate } from "@server/utils/formatDate";
-import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
+import { isLoggedInMiddleware } from "@server/utils/middlewares";
 
 type NotificationTypes =
   | "reply"

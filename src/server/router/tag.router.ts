@@ -6,7 +6,7 @@ import {
   getSingleTagSchema,
   updateTagSchema,
 } from "@schema/tag.schema";
-import { deleteChildComments, isLoggedInMiddleware } from "@server/utils";
+import { deleteChildComments, isAdminMiddleware } from "@server/utils";
 import { env } from "@env";
 
 export const tagRouter = createRouter()
@@ -29,7 +29,7 @@ export const tagRouter = createRouter()
       return tag;
     },
   })
-  .middleware(isLoggedInMiddleware)
+  .middleware(isAdminMiddleware)
   .mutation("update", {
     input: updateTagSchema,
     async resolve({ ctx, input }) {

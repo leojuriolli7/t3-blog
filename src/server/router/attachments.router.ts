@@ -8,7 +8,7 @@ import {
 } from "@schema/attachment.schema";
 import { s3 } from "@server/config/aws";
 import { env } from "@env";
-import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
+import { isLoggedInMiddleware } from "@server/utils/middlewares";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { generateS3Url } from "@utils/aws/generateS3Url";
 

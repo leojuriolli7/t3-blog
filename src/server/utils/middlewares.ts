@@ -27,3 +27,22 @@ export const isLoggedInMiddleware: MiddlewareFunction<
     },
   });
 };
+
+export const isAdminMiddleware: MiddlewareFunction<
+  Context,
+  AuthenticatedRouterContext,
+  Meta
+> = async ({ ctx, next }) => {
+  if (ctx.session?.user.isAdmin !== true) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You must be an admin to access this method.",
+    });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      session: ctx.session,
+    },
+  });
+};
