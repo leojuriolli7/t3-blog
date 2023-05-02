@@ -19,17 +19,19 @@ import EmptyMessage from "@components/EmptyMessage";
 import { useSession } from "next-auth/react";
 import ActionButton from "@components/ActionButton";
 import UpsertTagModal from "@components/UpsertTagModal";
-import { useUploadTagImageToS3 } from "@utils/aws/useUploadTagImageToS3";
+import { useUploadTagImagesToS3 } from "@hooks/aws/useUploadTagImagesToS3";
 import { CreateTagInput } from "@schema/tag.schema";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import ConfirmationModal from "@components/ConfirmationModal";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
   const { tagId } = props;
   const [queryValue, setQueryValue] = useState("");
-  const modalOpenState = useState(false);
-  const [, setModalOpen] = modalOpenState;
   const utils = trpc.useContext();
+  const router = useRouter();
 
   const { data: session } = useSession();
   const loggedUserIsAdmin = session?.user?.isAdmin === true;
@@ -46,6 +48,29 @@ const SingleTagPage: NextPage<
     },
   ]);
 
+  const { mutate: deleteTag, isLoading: deleting } = trpc.useMutation(
+    "tags.delete",
+    {
+      onSuccess: () => {
+        toast.success("Tag deleted successfully");
+        router.push("/");
+      },
+    }
+  );
+
+  const isDeleteModalOpen = useState(false);
+  const [, setIsDeleteModalOpen] = isDeleteModalOpen;
+
+  const showDeleteConfirm = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, [setIsDeleteModalOpen]);
+
+  const onConfirm = useCallback(() => {
+    if (loggedUserIsAdmin) {
+      deleteTag({ id: tagId });
+    }
+  }, [deleteTag, loggedUserIsAdmin, tagId]);
+
   const { mutate: updateTag } = trpc.useMutation("tags.update", {
     onSuccess: () => {
       // This will refetch the comments.
@@ -57,7 +82,14 @@ const SingleTagPage: NextPage<
       ]);
     },
   });
-  const { uploadTagImages } = useUploadTagImageToS3();
+
+  const editModalOpenState = useState(false);
+  const [, setEditModalOpen] = editModalOpenState;
+  const showEditModal = useCallback(() => {
+    if (loggedUserIsAdmin) setEditModalOpen(true);
+  }, [setEditModalOpen, loggedUserIsAdmin]);
+
+  const { uploadTagImages } = useUploadTagImagesToS3();
 
   const onFinishedEditing = useCallback(
     async (values: CreateTagInput) => {
@@ -134,11 +166,8 @@ const SingleTagPage: NextPage<
 
             <ShouldRender if={loggedUserIsAdmin}>
               <div className="absolute -top-2 right-2 flex gap-2">
-                <ActionButton
-                  action="edit"
-                  onClick={() => setModalOpen(true)}
-                />
-                <ActionButton action="delete" />
+                <ActionButton action="edit" onClick={showEditModal} />
+                <ActionButton action="delete" onClick={showDeleteConfirm} />
               </div>
             </ShouldRender>
           </div>
@@ -221,8 +250,16 @@ const SingleTagPage: NextPage<
 
       <UpsertTagModal
         onFinish={onFinishedEditing}
-        openState={modalOpenState}
+        openState={editModalOpenState}
         initialTag={tag}
+      />
+
+      <ConfirmationModal
+        title="Are you sure you want to delete this tag?"
+        confirmationLabel="Delete tag"
+        openState={isDeleteModalOpen}
+        loading={deleting}
+        onConfirm={onConfirm}
       />
     </>
   );

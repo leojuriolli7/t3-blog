@@ -21,7 +21,7 @@ import TextInput from "@components/TextInput";
 import { generateS3Url } from "@utils/aws/generateS3Url";
 import { env } from "@env";
 import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
-import { useUploadTagImageToS3 } from "@utils/aws/useUploadTagImageToS3";
+import { useUploadTagImagesToS3 } from "@hooks/aws/useUploadTagImagesToS3";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -44,7 +44,7 @@ const CreatePostPage: React.FC = () => {
     "attachments.create-presigned-url"
   );
 
-  const { uploadTagImages } = useUploadTagImageToS3();
+  const { uploadTagImages } = useUploadTagImagesToS3();
 
   const uploadAttachment = async (postId: string, file: File) => {
     const name = file?.name || "Uploaded attachment";

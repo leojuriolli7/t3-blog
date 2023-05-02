@@ -1,8 +1,8 @@
 import { env } from "@env";
 import { trpc } from "@utils/trpc";
 import { useCallback } from "react";
-import { generateS3Url } from "./generateS3Url";
-import { uploadFileToS3 } from "./uploadFileToS3";
+import { generateS3Url } from "@utils/aws/generateS3Url";
+import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
 
 type Files = {
   avatar?: File;
@@ -10,9 +10,9 @@ type Files = {
 };
 
 /**
- * This helper function will upload a tag avatar or banner to S3.
+ * This helper hook will upload a tag avatar and/or banner to S3.
  */
-export const useUploadTagImageToS3 = () => {
+export const useUploadTagImagesToS3 = () => {
   const { mutateAsync: createPresignedTagUrl } = trpc.useMutation(
     "attachments.create-presigned-tag-url"
   );
