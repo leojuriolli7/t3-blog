@@ -1,0 +1,31 @@
+import z from "zod";
+
+export const singleTagSchema = z.object({
+  name: z.string().max(50, "Maximum of 50 characters"),
+  id: z.string(),
+  description: z
+    .string()
+    .min(3, "Minimum of 3 characters")
+    .max(256, "Maximum of 256 characters"),
+  avatar: z.string(),
+  backgroundImage: z.string(),
+  // TO-DO: better validation.
+  avatarFile: z.custom().optional(),
+  backgroundImageFile: z.custom().optional(),
+});
+
+export const getSingleTagSchema = z.object({
+  tagId: z.string(),
+});
+
+export const tagsSchema = singleTagSchema
+  .array()
+  .nonempty("Post must have at least one tag")
+  .max(5, "Maximum of 5 tags per post");
+
+export const createTagSchema = singleTagSchema;
+export type CreateTagInput = z.TypeOf<typeof createTagSchema>;
+
+export const deleteTagSchema = z.object({
+  id: z.string(),
+});

@@ -24,29 +24,9 @@ import {
   updatePostSchema,
   getLikedPostsSchema,
   voteOnPollSchema,
-  getSingleTagSchema,
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
-  .query("tags", {
-    resolve({ ctx }) {
-      const tags = ctx.prisma.tag.findMany();
-
-      return tags;
-    },
-  })
-  .query("single-tag", {
-    input: getSingleTagSchema,
-    async resolve({ ctx, input }) {
-      const tag = ctx.prisma.tag.findFirst({
-        where: {
-          id: input.tagId,
-        },
-      });
-
-      return tag;
-    },
-  })
   .query("posts-by-tags", {
     input: getPostsByTagsSchema,
     async resolve({ ctx, input }) {

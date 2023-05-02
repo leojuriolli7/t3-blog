@@ -3,13 +3,14 @@ import { useFormContext } from "react-hook-form";
 import AttachmentPreview from "@components/AttachmentPreview";
 import Field from "@components/Field";
 import PreviewMediaModal from "@components/PreviewMediaModal";
-import { CreateTagInput } from "@schema/post.schema";
+import { CreateTagInput } from "@schema/tag.schema";
 
 type Props = {
   type: "avatar" | "banner";
+  initialValue?: string;
 };
 
-export const TagImageInput: React.FC<Props> = ({ type }) => {
+export const TagImageInput: React.FC<Props> = ({ type, initialValue }) => {
   const methods = useFormContext<CreateTagInput>();
   const isAvatar = type === "avatar";
   const { errors } = methods.formState;
@@ -21,8 +22,15 @@ export const TagImageInput: React.FC<Props> = ({ type }) => {
   const [, setIsMediaPreviewModalOpen] = isMediaPreviewModalOpen;
 
   const [currentImage, setCurrentImage] = useState<string | undefined>(
-    undefined
+    initialValue || undefined
   );
+
+  const removeImage = () => {
+    methods.resetField(name);
+    setCurrentImage(undefined);
+  };
+
+  const closePreviewModal = () => setIsMediaPreviewModalOpen(true);
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target?.files?.[0];
@@ -69,8 +77,8 @@ export const TagImageInput: React.FC<Props> = ({ type }) => {
               compact
               file={currentFile}
               type="media"
-              onClickImage={() => setIsMediaPreviewModalOpen(true)}
-              removeFile={() => setCurrentImage(undefined)}
+              onClickImage={closePreviewModal}
+              removeFile={removeImage}
             />
 
             <PreviewMediaModal

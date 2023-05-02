@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Tag from "@components/Tag";
 import { MdOutlineAdd } from "react-icons/md";
-import { CreateTagInput } from "@schema/post.schema";
+import { CreateTagInput } from "@schema/tag.schema";
 import type { FieldType, TagType } from "@utils/types";
 import { Controller, useFormContext } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import TextInput from "./TextInput";
-import CreateTagModal from "./CreateTagModal";
+import UpsertTagModal from "./UpsertTagModal";
 
 const CheckableTag = Tag;
 
@@ -140,10 +140,10 @@ const SelectTags: React.FC<Props> = ({
             </button>
           </div>
 
-          <CreateTagModal
+          <UpsertTagModal
             openState={modalOpenState}
             initialTagName={inputValue}
-            onCreated={onNewTagCreated(field)}
+            onFinish={onNewTagCreated(field)}
           />
         </div>
       )}

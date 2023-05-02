@@ -10,7 +10,7 @@ import { s3 } from "@server/config/aws";
 import { env } from "@env";
 import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
-import { generateS3Url } from "@utils/generateS3Url";
+import { generateS3Url } from "@utils/aws/generateS3Url";
 
 const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
 const uploadTimeLimit = Number(env.NEXT_PUBLIC_UPLOADING_TIME_LIMIT);

@@ -106,8 +106,8 @@ model User {
   following Follows[]          @relation("follower")
   url       UserLink?
 
-  notified  Notification[]  @relation(name: "NotifiedNotification")
-  notifier  Notification[]  @relation(name: "NotifierNotification")
+  notified Notification[] @relation(name: "NotifiedNotification")
+  notifier Notification[] @relation(name: "NotifierNotification")
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -115,7 +115,6 @@ model User {
   Comment   Comment[]
 
   @@fulltext([name])
-  
 }
 
 model VerificationToken {
@@ -127,29 +126,27 @@ model VerificationToken {
 }
 
 model Tag {
-  id                String @id @default(uuid())
-  name              String @unique
-  description       String
-  avatar            String
-  backgroundImage   String
-  posts Post[]
+  id              String @id @default(uuid())
+  name            String @unique
+  description     String
+  avatar          String
+  backgroundImage String
+  posts           Post[]
 
   @@fulltext([name])
 }
 
 model PollOption {
-  id     String       @id @default(uuid())
+  id     String @id @default(uuid())
   title  String
   color  String
   postId String
   pollId String
   poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  voters User[]  
+  voters User[]
 
   @@index([pollId])
 }
-
-
 
 model Poll {
   id      String       @id @default(uuid())
@@ -160,38 +157,37 @@ model Poll {
 }
 
 model Notification {
-    id          String    @id @default(cuid())
-    postId      String?
-    post        Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
-    comment     Comment?   @relation(fields: [commentId], references: [id], onDelete: Cascade)
-    commentId   String?
-    notifiedId  String
-    notified    User      @relation(name: "NotifiedNotification", fields: [notifiedId], references: [id], onDelete: Cascade)
-    notifierId  String
-    notifier    User      @relation(name: "NotifierNotification", fields: [notifierId], references: [id], onDelete: Cascade)
-    type        String
-    read        Boolean   @default(false)
-    createdAt   DateTime  @default(now())
+  id         String   @id @default(cuid())
+  postId     String?
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment    Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId  String?
+  notifiedId String
+  notified   User     @relation(name: "NotifiedNotification", fields: [notifiedId], references: [id], onDelete: Cascade)
+  notifierId String
+  notifier   User     @relation(name: "NotifierNotification", fields: [notifierId], references: [id], onDelete: Cascade)
+  type       String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
-    @@index([notifiedId])
-    @@index([notifierId])
-    @@index([postId])
-    @@index([commentId])
+  @@index([notifiedId])
+  @@index([notifierId])
+  @@index([postId])
+  @@index([commentId])
 }
 
-
 model Post {
-  id          String             @id @default(uuid())
-  title       String
-  body        String             @db.Text
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  user        User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String?
-  link        Link?
-  poll        Poll?
-  favoritedBy FavoritesOnUsers[]
-  notifications  Notification[]
+  id            String             @id @default(uuid())
+  title         String
+  body          String             @db.Text
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  user          User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String?
+  link          Link?
+  poll          Poll?
+  favoritedBy   FavoritesOnUsers[]
+  notifications Notification[]
 
   tags Tag[]
 
@@ -223,7 +219,7 @@ model Attachment {
   name   String @default("Uploaded file")
   type   String @default("unknown")
   postId String
-  url    String 
+  url    String
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
@@ -240,10 +236,10 @@ model Comment {
   Post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
 
-  children Comment[] @relation("comment_children")
-  parent   Comment?  @relation("comment_children", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  parentId String?
-  notifications   Notification[]
+  children      Comment[]      @relation("comment_children")
+  parent        Comment?       @relation("comment_children", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId      String?
+  notifications Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

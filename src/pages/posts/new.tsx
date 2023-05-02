@@ -18,8 +18,9 @@ import LinkInput from "@components/LinkInput";
 import CreatePoll from "@components/CreatePoll";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
-import { generateS3Url } from "@utils/generateS3Url";
+import { generateS3Url } from "@utils/aws/generateS3Url";
 import { env } from "@env";
+import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -34,12 +35,9 @@ const CreatePostPage: React.FC = () => {
   const files = watch("files");
   const { errors } = formState;
 
-  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
-    ["posts.tags"],
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(["tags.all"], {
+    refetchOnWindowFocus: false,
+  });
 
   const { mutateAsync: createPresignedUrl } = trpc.useMutation(
     "attachments.create-presigned-url"
@@ -62,19 +60,8 @@ const CreatePostPage: React.FC = () => {
             tagName,
             type,
           });
-          const formData = new FormData();
 
-          Object.keys(fields).forEach((key) => {
-            formData.append(key, fields[key]);
-          });
-
-          formData.append("Content-Type", file.type);
-          formData.append("file", file);
-
-          await fetch(url, {
-            method: "POST",
-            body: formData,
-          });
+          await uploadFileToS3(url, fields, file);
 
           return generateS3Url(
             env.NEXT_PUBLIC_AWS_S3_TAG_IMAGES_BUCKET_NAME,
@@ -104,19 +91,8 @@ const CreatePostPage: React.FC = () => {
       type,
       randomKey,
     });
-    const formData = new FormData();
 
-    Object.keys(fields).forEach((key) => {
-      formData.append(key, fields[key]);
-    });
-
-    formData.append("Content-Type", file.type);
-    formData.append("file", file);
-
-    await fetch(url, {
-      method: "POST",
-      body: formData,
-    });
+    await uploadFileToS3(url, fields, file);
   };
 
   const {

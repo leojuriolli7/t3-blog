@@ -11,11 +11,12 @@ import { UpdateUserInput, updateUserSchema } from "@schema/user.schema";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
 import { useRouter } from "next/router";
-import { generateS3Url } from "@utils/generateS3Url";
+import { generateS3Url } from "@utils/aws/generateS3Url";
 import { env } from "@env";
 import { Modal } from "../Modal";
 import Avatar from "./Avatar";
 import UserLinkField from "./UserLink/UserLinkField";
+import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
 
 type Props = {
   openState: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -90,19 +91,8 @@ const EditAccountModal: React.FC<Props> = ({
       if (!!values?.avatar?.name) {
         const { avatar } = values;
         const { url, fields } = await createPresignedUrl({ userId });
-        const formData = new FormData();
 
-        Object.keys(fields).forEach((key) => {
-          formData.append(key, fields[key]);
-        });
-
-        formData.append("Content-Type", avatar.type);
-        formData.append("file", avatar);
-
-        await fetch(url, {
-          method: "POST",
-          body: formData,
-        });
+        await uploadFileToS3(url, fields, avatar);
       }
 
       const imageUrl = generateS3Url(

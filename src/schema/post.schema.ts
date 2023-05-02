@@ -1,5 +1,6 @@
 import { env } from "@env";
 import z from "zod";
+import { tagsSchema } from "./tag.schema";
 
 const link = z
   .object({
@@ -58,25 +59,6 @@ const fileSchema = z.custom<File>((file) => {
   return isFile;
 });
 
-const singleTagSchema = z.object({
-  name: z.string().max(50, "Maximum of 50 characters"),
-  id: z.string(),
-  description: z
-    .string()
-    .min(3, "Minimum of 3 characters")
-    .max(256, "Maximum of 256 characters"),
-  avatar: z.string(),
-  backgroundImage: z.string(),
-  // TO-DO: better validation.
-  avatarFile: z.custom().optional(),
-  backgroundImageFile: z.custom().optional(),
-});
-
-const tagsSchema = singleTagSchema
-  .array()
-  .nonempty("Post must have at least one tag")
-  .max(5, "Maximum of 5 tags per post");
-
 export const createPostSchema = z.object({
   title: z
     .string()
@@ -97,9 +79,6 @@ export const createPostSchema = z.object({
 });
 
 export type CreatePostInput = z.TypeOf<typeof createPostSchema>;
-
-export const createTagSchema = singleTagSchema;
-export type CreateTagInput = z.TypeOf<typeof createTagSchema>;
 
 export const getPostsSchema = z.object({
   limit: z.number(),
@@ -148,10 +127,6 @@ export const getUserPostsSchema = z.object({
 
 export const getSinglePostSchema = z.object({
   postId: z.string(),
-});
-
-export const getSingleTagSchema = z.object({
-  tagId: z.string(),
 });
 
 export const voteOnPollSchema = z.object({

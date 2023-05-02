@@ -9,11 +9,12 @@ import { v4 as uuid } from "uuid";
 import "highlight.js/styles/atom-one-dark.css";
 import { trpc } from "@utils/trpc";
 import { env } from "@env";
+import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
+import { generateS3Url } from "@utils/aws/generateS3Url";
 import { useSession } from "next-auth/react";
 import { MdInfoOutline } from "react-icons/md";
 import { toast } from "react-toastify";
 import convertToMegabytes from "@utils/convertToMB";
-import { generateS3Url } from "@utils/generateS3Url";
 import ShouldRender from "./ShouldRender";
 
 type Variants = "condensed" | "regular";
@@ -44,7 +45,7 @@ const enabledPlugins = [
   "link",
   "clear",
   "logger",
-  "mode-toggle"
+  "mode-toggle",
   // "full-screen",
 ];
 
@@ -86,20 +87,7 @@ const MarkdownEditor: React.FC<Props> = ({
       return toast.error(`Limit of ${maxSizeInMB}MB per file`);
 
     const { url, fields } = await createPresignedUrl({ userId, randomKey });
-
-    const formData = new FormData();
-
-    Object.keys(fields).forEach((key) => {
-      formData.append(key, fields[key]);
-    });
-
-    formData.append("Content-Type", image.type);
-    formData.append("file", image);
-
-    await fetch(url, {
-      method: "POST",
-      body: formData,
-    });
+    await uploadFileToS3(url, fields, image);
 
     const imageUrl = generateS3Url(
       env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,

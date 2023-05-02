@@ -16,12 +16,21 @@ import {
 import AnimatedTabs from "@components/AnimatedTabs";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
+import { useSession } from "next-auth/react";
+import Button from "@components/Button";
+import ActionButton from "@components/ActionButton";
+import UpsertTagModal from "@components/UpsertTagModal";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
   const { tagId } = props;
   const [queryValue, setQueryValue] = useState("");
+  const modalOpenState = useState(false);
+  const [, setModalOpen] = modalOpenState;
+
+  const { data: session } = useSession();
+  const loggedUserIsAdmin = session?.user?.isAdmin === true;
 
   const { tabProps, selectedTab } = useFilterContent();
 
@@ -29,7 +38,7 @@ const SingleTagPage: NextPage<
   const reachedBottom = useOnScreen(bottomRef);
 
   const { data: tag, isLoading: loadingTag } = trpc.useQuery([
-    "posts.single-tag",
+    "tags.single-tag",
     {
       tagId,
     },
@@ -72,7 +81,7 @@ const SingleTagPage: NextPage<
       <MetaTags title={`${tag?.name || ""} posts`} />
 
       <div className="-mb-5 mt-5 w-full">
-        <div className="h-[200px] w-full">
+        <div className="relative h-[200px] w-full">
           <Image
             src={tag?.backgroundImage}
             isLoading={loadingTag}
@@ -80,6 +89,13 @@ const SingleTagPage: NextPage<
             alt={`${tag?.name || "Tag"} banner`}
             full
           />
+
+          <ShouldRender if={loggedUserIsAdmin}>
+            <div className="absolute -top-2 right-2 flex gap-2">
+              <ActionButton action="edit" onClick={() => setModalOpen(true)} />
+              <ActionButton action="delete" />
+            </div>
+          </ShouldRender>
         </div>
 
         <div className="relative flex w-full gap-4 rounded-b-md border-2 border-zinc-200 bg-white p-2 py-4 dark:border-zinc-700/90 dark:bg-zinc-800/70">
@@ -148,6 +164,12 @@ const SingleTagPage: NextPage<
       </ShouldRender>
 
       <div ref={bottomRef} />
+
+      <UpsertTagModal
+        onFinish={(tag) => console.log("tag", tag)}
+        openState={modalOpenState}
+        initialTag={tag}
+      />
     </>
   );
 };
@@ -166,7 +188,7 @@ export async function getServerSideProps(
     filter: "newest",
   });
 
-  const tagQuery = ssg.prefetchQuery("posts.single-tag", {
+  const tagQuery = ssg.prefetchQuery("tags.single-tag", {
     tagId,
   });
 

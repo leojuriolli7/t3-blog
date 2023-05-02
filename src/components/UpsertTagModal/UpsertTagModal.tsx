@@ -2,24 +2,28 @@ import React, { useCallback, useEffect } from "react";
 import Button from "@components/Button";
 import { FormProvider, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
-import { CreateTagInput, createTagSchema } from "@schema/post.schema";
+import { CreateTagInput, createTagSchema } from "@schema/tag.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Field from "../Field";
 import { Modal } from "../Modal";
 import TextInput from "../TextInput";
 import { TagImageInput } from "./TagImageInput";
+import { TagType } from "@utils/types";
 
 type Props = {
-  initialTagName: string;
+  initialTag?: TagType | null;
+  initialTagName?: string;
   openState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  onCreated: (tag: CreateTagInput) => void;
+  onFinish: (tag: CreateTagInput) => void;
 };
 
-export const CreateTagModal: React.FC<Props> = ({
+export const UpsertTagModal: React.FC<Props> = ({
   initialTagName,
-  onCreated,
+  initialTag,
+  onFinish,
   openState,
 }) => {
+  const isUpdate = !!initialTag;
   const methods = useForm<CreateTagInput>({
     resolver: zodResolver(createTagSchema),
   });
@@ -38,18 +42,31 @@ export const CreateTagModal: React.FC<Props> = ({
         ...values,
       };
 
-      onCreated(filteredPayload);
+      onFinish(filteredPayload);
       resetForm();
 
       setModalOpen(false);
     },
-    [onCreated, setModalOpen, resetForm]
+    [onFinish, setModalOpen, resetForm]
   );
 
   useEffect(() => {
-    if (initialTagName) methods.setValue("name", initialTagName);
+    if (!isUpdate) {
+      initialTagName && methods.setValue("name", initialTagName);
+      methods.setValue("id", uuid());
+    }
 
-    methods.setValue("id", uuid());
+    if (isUpdate) {
+      const validKeys = Object.keys(createTagSchema.strict().shape);
+      type Key = "id" | "avatar" | "backgroundImage" | "name" | "description";
+
+      for (const [key, value] of Object.entries(initialTag)) {
+        if (validKeys.includes(key)) {
+          methods.setValue(key as Key, value);
+        }
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalOpen]);
 
@@ -57,7 +74,7 @@ export const CreateTagModal: React.FC<Props> = ({
     <Modal onClose={resetForm} alwaysCentered openState={openState}>
       <div className="w-[400px] rounded-lg bg-white p-8 backdrop-blur-md dark:bg-zinc-900/70 sm:p-12">
         <h1 className=" text-2xl font-bold tracking-tight text-gray-900 dark:text-neutral-100">
-          Create a new tag
+          {isUpdate ? `Update "${initialTag?.name}"` : "Create a new tag"}
         </h1>
 
         <FormProvider {...methods}>
@@ -84,8 +101,12 @@ export const CreateTagModal: React.FC<Props> = ({
             </Field>
 
             <div className="flex flex-col gap-6">
-              <TagImageInput type="avatar" />
-              <TagImageInput type="banner" />
+              <TagImageInput type="avatar" initialValue={initialTag?.avatar} />
+
+              <TagImageInput
+                type="banner"
+                initialValue={initialTag?.backgroundImage}
+              />
             </div>
 
             <Button
