@@ -1,5 +1,9 @@
 import { createRouter } from "@server/createRouter";
-import { deleteTagSchema, getSingleTagSchema } from "@schema/tag.schema";
+import {
+  deleteTagSchema,
+  getSingleTagSchema,
+  updateTagSchema,
+} from "@schema/tag.schema";
 import { isLoggedInMiddleware } from "@server/utils";
 
 export const tagRouter = createRouter()
@@ -22,6 +26,23 @@ export const tagRouter = createRouter()
       return tag;
     },
   })
-  .middleware(isLoggedInMiddleware);
-// Update tag
+  .middleware(isLoggedInMiddleware)
+  .mutation("update", {
+    input: updateTagSchema,
+    async resolve({ ctx, input }) {
+      const { avatar, backgroundImage, description, name } = input;
+
+      await ctx.prisma.tag.update({
+        data: {
+          ...(avatar && { avatar }),
+          ...(backgroundImage && { backgroundImage }),
+          ...(description && { description }),
+          ...(name && { name }),
+        },
+        where: {
+          id: input.id,
+        },
+      });
+    },
+  });
 // Delete tag

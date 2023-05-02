@@ -128,7 +128,7 @@ model VerificationToken {
 model Tag {
   id              String @id @default(uuid())
   name            String @unique
-  description     String
+  description     String @db.Text
   avatar          String
   backgroundImage String
   posts           Post[]

@@ -37,12 +37,12 @@ export const UpsertTagModal: React.FC<Props> = ({
   const resetForm = useCallback(() => methods.reset(), [methods]);
 
   const onSubmit = useCallback(
-    (values: CreateTagInput) => {
+    async (values: CreateTagInput) => {
       const filteredPayload = {
         ...values,
       };
 
-      onFinish(filteredPayload);
+      await onFinish(filteredPayload);
       resetForm();
 
       setModalOpen(false);
@@ -79,13 +79,13 @@ export const UpsertTagModal: React.FC<Props> = ({
 
         <FormProvider {...methods}>
           <form className="mt-3 flex flex-col gap-3">
-            <Field label="Tag name" error={errors.name}>
+            <Field required label="Tag name" error={errors.name}>
               <TextInput className="rounded-md" {...methods.register("name")} />
             </Field>
 
-            <Field label="Tag description" error={errors.description}>
+            <Field required label="Tag description" error={errors.description}>
               <TextInput
-                className="rounded-md"
+                className="h-24 rounded-md"
                 textarea
                 {...methods.register("description")}
               />
@@ -116,7 +116,7 @@ export const UpsertTagModal: React.FC<Props> = ({
               onClick={methods.handleSubmit(onSubmit)}
               className="mt-6 flex w-full justify-center rounded-md"
             >
-              Create tag
+              {isUpdate ? "Update" : "Create"} tag
             </Button>
           </form>
         </FormProvider>

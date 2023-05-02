@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
 import Image from "@components/Image";
@@ -17,9 +17,10 @@ import AnimatedTabs from "@components/AnimatedTabs";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
 import { useSession } from "next-auth/react";
-import Button from "@components/Button";
 import ActionButton from "@components/ActionButton";
 import UpsertTagModal from "@components/UpsertTagModal";
+import { useUploadTagImageToS3 } from "@utils/aws/useUploadTagImageToS3";
+import { CreateTagInput } from "@schema/tag.schema";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -28,6 +29,7 @@ const SingleTagPage: NextPage<
   const [queryValue, setQueryValue] = useState("");
   const modalOpenState = useState(false);
   const [, setModalOpen] = modalOpenState;
+  const utils = trpc.useContext();
 
   const { data: session } = useSession();
   const loggedUserIsAdmin = session?.user?.isAdmin === true;
@@ -43,6 +45,45 @@ const SingleTagPage: NextPage<
       tagId,
     },
   ]);
+
+  const { mutate: updateTag } = trpc.useMutation("tags.update", {
+    onSuccess: () => {
+      // This will refetch the comments.
+      utils.invalidateQueries([
+        "tags.single-tag",
+        {
+          tagId,
+        },
+      ]);
+    },
+  });
+  const { uploadTagImages } = useUploadTagImageToS3();
+
+  const onFinishedEditing = useCallback(
+    async (values: CreateTagInput) => {
+      if (values?.avatarFile || values?.backgroundImageFile) {
+        const urls = await uploadTagImages(values.name, {
+          avatar: values.avatarFile as File,
+          banner: values.backgroundImageFile as File,
+        });
+
+        const filteredTag = {
+          ...values,
+          ...(urls?.avatarUrl && {
+            avatar: urls?.avatarUrl,
+          }),
+          ...(urls?.backgroundUrl && {
+            backgroundImage: urls?.backgroundUrl,
+          }),
+        };
+
+        return updateTag(filteredTag);
+      }
+
+      updateTag(values);
+    },
+    [updateTag, uploadTagImages]
+  );
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
@@ -81,53 +122,66 @@ const SingleTagPage: NextPage<
       <MetaTags title={`${tag?.name || ""} posts`} />
 
       <div className="-mb-5 mt-5 w-full">
-        <div className="relative h-[200px] w-full">
-          <Image
-            src={tag?.backgroundImage}
-            isLoading={loadingTag}
-            className="rounded-t-md object-cover"
-            alt={`${tag?.name || "Tag"} banner`}
-            full
-          />
+        <div className="w-full rounded-md border-2 border-zinc-200 shadow-sm dark:border-zinc-700/90">
+          <div className="relative h-[200px] w-full">
+            <Image
+              src={tag?.backgroundImage}
+              isLoading={loadingTag}
+              className="rounded-t-md object-cover"
+              alt={`${tag?.name || "Tag"} banner`}
+              full
+            />
 
-          <ShouldRender if={loggedUserIsAdmin}>
-            <div className="absolute -top-2 right-2 flex gap-2">
-              <ActionButton action="edit" onClick={() => setModalOpen(true)} />
-              <ActionButton action="delete" />
+            <ShouldRender if={loggedUserIsAdmin}>
+              <div className="absolute -top-2 right-2 flex gap-2">
+                <ActionButton
+                  action="edit"
+                  onClick={() => setModalOpen(true)}
+                />
+                <ActionButton action="delete" />
+              </div>
+            </ShouldRender>
+          </div>
+
+          <div className="relative flex w-full gap-4 rounded-b-md  bg-white p-2 py-4  dark:bg-zinc-800/70">
+            <Image
+              src={tag?.avatar}
+              alt={`${tag?.name || "Tag"} avatar`}
+              width={80}
+              height={80}
+              isLoading={loadingTag}
+              className="h-20 w-20 flex-shrink-0 rounded-full object-cover"
+            />
+
+            <div className="w-full">
+              <ShouldRender if={!loadingTag}>
+                <h1 className="text-2xl capitalize text-zinc-700 dark:text-zinc-300 xl:text-3xl">
+                  {tag?.name}
+                </h1>
+
+                <p className="mt-1 leading-6 text-zinc-600 dark:text-zinc-400">
+                  {tag?.description}
+                </p>
+              </ShouldRender>
+              <ShouldRender if={loadingTag}>
+                <Skeleton
+                  height="h-[32px] xl:h-[36px]"
+                  lines={1}
+                  width="w-40"
+                />
+
+                <Skeleton
+                  lines={3}
+                  width="w-full"
+                  parentClass="mt-2"
+                  margin="mb-2"
+                />
+              </ShouldRender>
+
+              {/* <div className="mt-1 flex gap-1 text-base text-zinc-700 dark:text-zinc-300">
+              <span className="font-bold">290</span> <span>Subscribers</span>
+            </div> */}
             </div>
-          </ShouldRender>
-        </div>
-
-        <div className="relative flex w-full gap-4 rounded-b-md border-2 border-zinc-200 bg-white p-2 py-4 dark:border-zinc-700/90 dark:bg-zinc-800/70">
-          <Image
-            src={tag?.avatar}
-            alt={`${tag?.name || "Tag"} avatar`}
-            width={80}
-            height={80}
-            isLoading={loadingTag}
-            className="h-20 w-20 flex-shrink-0 rounded-full object-cover"
-          />
-
-          <div className="w-full">
-            <ShouldRender if={!loadingTag}>
-              <h1 className="text-2xl capitalize text-zinc-700 dark:text-zinc-300 xl:text-3xl">
-                {tag?.name}
-              </h1>
-
-              <p className="prose mt-1 leading-6 dark:prose-invert">
-                {tag?.description}
-              </p>
-            </ShouldRender>
-            <ShouldRender if={loadingTag}>
-              <Skeleton height="h-[32px] xl:h-[36px]" lines={1} width="w-40" />
-
-              <Skeleton
-                lines={3}
-                width="w-full"
-                parentClass="mt-2"
-                margin="mb-2"
-              />
-            </ShouldRender>
           </div>
         </div>
 
@@ -166,7 +220,7 @@ const SingleTagPage: NextPage<
       <div ref={bottomRef} />
 
       <UpsertTagModal
-        onFinish={(tag) => console.log("tag", tag)}
+        onFinish={onFinishedEditing}
         openState={modalOpenState}
         initialTag={tag}
       />

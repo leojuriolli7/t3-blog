@@ -59,7 +59,7 @@ export const TagImageInput: React.FC<Props> = ({ type, initialValue }) => {
   );
 
   return (
-    <Field label={label} error={errors[name]}>
+    <Field required label={label} error={errors[name]}>
       {!currentImage && (
         <input
           type="file"

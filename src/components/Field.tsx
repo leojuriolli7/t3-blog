@@ -8,9 +8,16 @@ type Props = {
   error?: FieldError;
   label?: string;
   description?: string;
+  required?: boolean;
 };
 
-const Field: React.FC<Props> = ({ children, error, label, description }) => {
+const Field: React.FC<Props> = ({
+  children,
+  error,
+  label,
+  description,
+  required,
+}) => {
   const [parentRef] = useAutoAnimate();
   return (
     <div className="relative flex w-full flex-col" ref={parentRef}>
@@ -18,6 +25,9 @@ const Field: React.FC<Props> = ({ children, error, label, description }) => {
         <div>
           <label className="block text-sm font-bold text-gray-900 dark:text-neutral-100">
             {label}
+            <span className="text-gray-600 dark:text-neutral-300">
+              {required && "*"}
+            </span>
           </label>
           <ShouldRender if={description}>
             <p className="block text-sm text-gray-700 dark:text-neutral-300">

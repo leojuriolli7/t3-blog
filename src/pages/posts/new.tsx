@@ -21,6 +21,7 @@ import TextInput from "@components/TextInput";
 import { generateS3Url } from "@utils/aws/generateS3Url";
 import { env } from "@env";
 import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
+import { useUploadTagImageToS3 } from "@utils/aws/useUploadTagImageToS3";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -43,42 +44,7 @@ const CreatePostPage: React.FC = () => {
     "attachments.create-presigned-url"
   );
 
-  const { mutateAsync: createPresignedTagUrl } = trpc.useMutation(
-    "attachments.create-presigned-tag-url"
-  );
-
-  const uploadTagImages = useCallback(
-    async (tagName: string, avatar: File, bgImage: File) => {
-      const files = [avatar, bgImage];
-
-      const fileUrls = await Promise.all(
-        files.map(async (file, index) => {
-          const isAvatar = index === 0;
-          const type = isAvatar ? "avatar" : "background";
-
-          const { url, fields } = await createPresignedTagUrl({
-            tagName,
-            type,
-          });
-
-          await uploadFileToS3(url, fields, file);
-
-          return generateS3Url(
-            env.NEXT_PUBLIC_AWS_S3_TAG_IMAGES_BUCKET_NAME,
-            `${tagName}/${type}`
-          );
-        })
-      );
-
-      const filteredUrls = {
-        avatarUrl: fileUrls[0],
-        backgroundUrl: fileUrls[1],
-      };
-
-      return filteredUrls;
-    },
-    [createPresignedTagUrl]
-  );
+  const { uploadTagImages } = useUploadTagImageToS3();
 
   const uploadAttachment = async (postId: string, file: File) => {
     const name = file?.name || "Uploaded attachment";
@@ -124,11 +90,10 @@ const CreatePostPage: React.FC = () => {
 
       const filteredCreatedTags = await Promise.all(
         tagsToCreate.map(async (tag) => {
-          const urls = await uploadTagImages(
-            tag.name,
-            tag.avatarFile as File,
-            tag.backgroundImageFile as File
-          );
+          const urls = await uploadTagImages(tag.name, {
+            avatar: tag.avatarFile as File,
+            banner: tag.backgroundImageFile as File,
+          });
 
           const filteredTag = {
             ...tag,

@@ -29,3 +29,5 @@ export type CreateTagInput = z.TypeOf<typeof createTagSchema>;
 export const deleteTagSchema = z.object({
   id: z.string(),
 });
+
+export const updateTagSchema = singleTagSchema;
