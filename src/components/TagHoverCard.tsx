@@ -11,7 +11,11 @@ type Props = {
   containerRef?: React.RefObject<HTMLDivElement>;
 };
 
-export const TagCard: React.FC<Props> = ({ children, tag, containerRef }) => {
+export const TagHoverCard: React.FC<Props> = ({
+  children,
+  tag,
+  containerRef,
+}) => {
   const portalContainer = containerRef?.current || undefined;
 
   return (
@@ -68,4 +72,4 @@ export const TagCard: React.FC<Props> = ({ children, tag, containerRef }) => {
   );
 };
 
-TagCard.displayName = "TagCard";
+TagHoverCard.displayName = "TagHoverCard";

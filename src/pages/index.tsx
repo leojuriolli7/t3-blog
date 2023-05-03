@@ -11,6 +11,7 @@ import { ButtonLink } from "@components/Button";
 import Link from "next/link";
 import { generateSSGHelper } from "@server/ssgHepers";
 import AnimatedTabs from "@components/AnimatedTabs";
+import { TagSection } from "@components/TagSection";
 
 const PostListingPage: React.FC = () => {
   const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
@@ -105,21 +106,11 @@ const PostListingPage: React.FC = () => {
       </div>
 
       {(loadingTags ? loadingArray : taggedPosts)?.map((tag, key) => (
-        <Section
+        <TagSection
           loading={loadingTags}
-          title={tag?.name}
           key={loadingTags ? key : tag?.id}
-          seeMoreHref={`/posts/tags/${tag?.id}`}
-        >
-          {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
-            <CompactCard
-              loading={loadingTags}
-              key={loadingTags ? key : `${tag?.id}-${post?.id}`}
-              post={post}
-              slide
-            />
-          ))}
-        </Section>
+          tag={tag}
+        />
       ))}
       <hr className="-mb-5 -mt-5 h-0.5 w-full border-0 bg-gray-200 dark:bg-neutral-700" />
 

@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { TagType } from "@utils/types";
-import { TagCard } from "./TagCard";
+import { TagHoverCard } from "./TagHoverCard";
 
 interface TagProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "onChange"> {
@@ -41,7 +41,7 @@ const Tag: React.FC<TagProps> = (props) => {
   const regularTagClasses = "bg-emerald-500 dark:bg-teal-900 text-white";
 
   return (
-    <TagCard tag={tag} containerRef={tagCardContainerRef}>
+    <TagHoverCard tag={tag} containerRef={tagCardContainerRef}>
       <span
         {...rest}
         className={clsx(
@@ -55,7 +55,7 @@ const Tag: React.FC<TagProps> = (props) => {
       >
         {tag?.name}
       </span>
-    </TagCard>
+    </TagHoverCard>
   );
 };
 

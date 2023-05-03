@@ -3,7 +3,7 @@ import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
-import Section from "@components/Section";
+import { TagSection } from "@components/TagSection";
 import CompactCard from "@components/CompactCard";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
@@ -61,29 +61,15 @@ const AllTagsPage: React.FC = () => {
       </div>
       <SearchInput setQuery={setQueryValue} placeholder="Search tags" />
       {(isLoading ? loadingArray(4) : dataToShow)?.map((tag, key) => (
-        <Section
+        <TagSection
           loading={isLoading}
-          title={tag?.name}
+          tag={tag}
           key={isLoading ? key : tag?.id}
-          seeMoreHref={`/posts/tags/${tag?.id}`}
-        >
-          {(isLoading ? loadingArray(1) : tag?.posts)?.map((post, key) => (
-            <CompactCard
-              loading={isLoading}
-              key={isLoading ? key : `${tag?.id}-${post?.id}`}
-              post={post}
-              slide
-            />
-          ))}
-        </Section>
+        />
       ))}
 
       <ShouldRender if={isFetchingNextPage}>
-        <Section loading={isLoading}>
-          {loadingArray(1).map((card, i) => (
-            <CompactCard key={i} loading slide />
-          ))}
-        </Section>
+        <TagSection loading />
       </ShouldRender>
 
       <ShouldRender if={!!queryValue && noDataToShow}>
