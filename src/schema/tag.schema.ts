@@ -7,8 +7,8 @@ export const singleTagSchema = z.object({
     .string()
     .min(3, "Minimum of 3 characters")
     .max(256, "Maximum of 256 characters"),
-  avatar: z.string(),
-  backgroundImage: z.string(),
+  avatar: z.string().nonempty("Required"),
+  backgroundImage: z.string().nonempty("Required"),
   // TO-DO: better validation.
   avatarFile: z.custom().optional(),
   backgroundImageFile: z.custom().optional(),
