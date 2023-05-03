@@ -1,4 +1,5 @@
 import z from "zod";
+import { fileSchema } from "./constants";
 
 export const singleTagSchema = z.object({
   name: z.string().max(50, "Maximum of 50 characters"),
@@ -9,9 +10,8 @@ export const singleTagSchema = z.object({
     .max(256, "Maximum of 256 characters"),
   avatar: z.string().nonempty("Required"),
   backgroundImage: z.string().nonempty("Required"),
-  // TO-DO: better validation.
-  avatarFile: z.custom().optional(),
-  backgroundImageFile: z.custom().optional(),
+  avatarFile: fileSchema.optional(),
+  backgroundImageFile: fileSchema.optional(),
 });
 
 export const getSingleTagSchema = z.object({

@@ -25,9 +25,9 @@ const Field: React.FC<Props> = ({
         <div>
           <label className="block text-sm font-bold text-gray-900 dark:text-neutral-100">
             {label}
-            <span className="text-gray-600 dark:text-neutral-300">
-              {required && "*"}
-            </span>
+            <ShouldRender if={required}>
+              <span className="text-gray-600 dark:text-neutral-300">*</span>
+            </ShouldRender>
           </label>
           <ShouldRender if={description}>
             <p className="block text-sm text-gray-700 dark:text-neutral-300">

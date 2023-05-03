@@ -1,6 +1,7 @@
 import { env } from "@env";
 import z from "zod";
 import { tagsSchema } from "./tag.schema";
+import { fileSchema } from "./constants";
 
 const link = z
   .object({
@@ -52,12 +53,6 @@ const pollSchema = z
     { message: "Maximum of 6 options." }
   )
   .optional();
-
-const fileSchema = z.custom<File>((file) => {
-  const isFile = file instanceof File;
-
-  return isFile;
-});
 
 export const createPostSchema = z.object({
   title: z

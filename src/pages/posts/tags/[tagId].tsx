@@ -24,6 +24,7 @@ import { CreateTagInput } from "@schema/tag.schema";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import ConfirmationModal from "@components/ConfirmationModal";
+import { parseTagPayload } from "@server/utils/parseTagPayload";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -101,13 +102,17 @@ const SingleTagPage: NextPage<
 
   const onFinishedEditing = useCallback(
     async (values: CreateTagInput) => {
+      let payload = values;
+
       if (values?.avatarFile || values?.backgroundImageFile) {
         const urls = await uploadTagImages(values.name, {
           avatar: values.avatarFile as File,
           banner: values.backgroundImageFile as File,
         });
 
-        const filteredTag = {
+        parseTagPayload(values);
+
+        payload = {
           ...values,
           ...(urls?.avatarUrl && {
             avatar: urls?.avatarUrl,
@@ -116,11 +121,10 @@ const SingleTagPage: NextPage<
             backgroundImage: urls?.backgroundUrl,
           }),
         };
-
-        return updateTag(filteredTag);
       }
 
-      updateTag(values);
+      parseTagPayload(payload);
+      updateTag(payload);
     },
     [updateTag, uploadTagImages]
   );

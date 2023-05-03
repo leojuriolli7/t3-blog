@@ -27,7 +27,7 @@ export const TagImageInput: React.FC<Props> = ({ type, initialValue }) => {
 
   const removeImage = () => {
     methods.setValue(name, "");
-    methods.setValue(`${name}File`, "");
+    methods.resetField(`${name}File`);
     setCurrentImage(undefined);
   };
 

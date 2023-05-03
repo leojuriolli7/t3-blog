@@ -104,6 +104,9 @@ const SelectTags: React.FC<Props> = ({
       render={({ field }) => (
         <div ref={containerRef}>
           <h2 className="text-2xl">Tags</h2>
+          <p className="block text-sm text-gray-700 dark:text-neutral-300">
+            Hover on a tag to see its details.
+          </p>
           <ErrorMessage error={error} />
           <div ref={parentRef} className="mb-4 mt-2 flex flex-wrap gap-2">
             {tags.map((tag) => (

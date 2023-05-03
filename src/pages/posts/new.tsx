@@ -18,10 +18,9 @@ import LinkInput from "@components/LinkInput";
 import CreatePoll from "@components/CreatePoll";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
-import { generateS3Url } from "@utils/aws/generateS3Url";
-import { env } from "@env";
 import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
 import { useUploadTagImagesToS3 } from "@hooks/aws/useUploadTagImagesToS3";
+import { parseTagPayload } from "@server/utils/parseTagPayload";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -108,6 +107,12 @@ const CreatePostPage: React.FC = () => {
       const tagsToSend = values.tags
         .filter((tag) => tagsToCreate.indexOf(tag) === -1)
         .concat(filteredCreatedTags);
+
+      // parsing tag payload removing files, because we do not
+      // need them on the server.
+      tagsToSend.forEach((tag) => {
+        parseTagPayload(tag);
+      });
 
       create({
         body: values.body,

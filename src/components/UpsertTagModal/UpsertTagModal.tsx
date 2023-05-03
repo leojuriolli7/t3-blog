@@ -32,17 +32,14 @@ export const UpsertTagModal: React.FC<Props> = ({
 
   const { errors } = methods.formState;
   const description = methods.watch("description");
+  const values = methods.watch();
   const descriptionLength = description?.length || 0;
 
   const resetForm = useCallback(() => methods.reset(), [methods]);
 
   const onSubmit = useCallback(
     async (values: CreateTagInput) => {
-      const filteredPayload = {
-        ...values,
-      };
-
-      await onFinish(filteredPayload);
+      await onFinish(values);
       resetForm();
 
       setModalOpen(false);

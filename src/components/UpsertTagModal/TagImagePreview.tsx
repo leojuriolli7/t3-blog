@@ -29,10 +29,13 @@ const TagImagePreview: React.FC<Props> = ({
           alt={displayLabel}
           className={clsx(
             "h-full cursor-pointer object-cover transition-all group-hover:brightness-50 dark:group-hover:opacity-50",
-            isAvatar ? "w-32 rounded-full" : "w-full"
+            isAvatar ? "w-32 rounded-full" : "w-full rounded-md"
           )}
         />
         <IoExpandOutline
+          onClick={onClickImage}
+          aria-label="Expand image"
+          role="button"
           size={26}
           className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer text-white group-hover:block"
         />
@@ -47,7 +50,7 @@ const TagImagePreview: React.FC<Props> = ({
             title="Remove file"
             aria-label="Remove file"
             onClick={removeFile}
-            className=" text-neutral-700 dark:text-neutral-300"
+            className="text-white"
           />
         </button>
       </div>

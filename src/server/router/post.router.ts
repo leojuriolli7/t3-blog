@@ -300,13 +300,13 @@ export const postRouter = createRouter()
             body: {
               search: query,
             },
-            // `jsonProtocol` preview feature broke this part of the query:
-            // TO-DO: Add back when fixed.
-            // OR: {
-            //   title: {
-            //     search: query,
-            //   },
-            // },
+            OR: [
+              {
+                title: {
+                  search: query,
+                },
+              },
+            ],
           }),
         },
       });
@@ -357,13 +357,13 @@ export const postRouter = createRouter()
             body: {
               search: query,
             },
-            // `jsonProtocol` preview feature broke this part of the query:
-            // TO-DO: Add back when fixed.
-            // OR: {
-            //   title: {
-            //     search: query,
-            //   },
-            // },
+            OR: [
+              {
+                title: {
+                  search: query,
+                },
+              },
+            ],
           }),
         },
       });
