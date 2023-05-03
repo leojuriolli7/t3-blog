@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { Modal } from "./Modal";
@@ -10,6 +10,12 @@ import { useContextualRouting } from "next-use-contextual-routing";
  * redirecting the user to the [postId] page.
  */
 const PostModal: React.FC = () => {
+  /**
+   * This ref is used to make sure the tag card's portal
+   * will be *inside* this modal.
+   */
+  const tagCardRef = useRef<HTMLDivElement>(null);
+
   const { returnHref } = useContextualRouting();
   const router = useRouter();
   const postId = router.query.postId as string;
@@ -50,13 +56,19 @@ const PostModal: React.FC = () => {
   }, [postId]);
 
   return (
-    <Modal openState={openState} alwaysCentered onClose={onCloseModal}>
+    <Modal
+      containerRef={tagCardRef}
+      openState={openState}
+      alwaysCentered
+      onClose={onCloseModal}
+    >
       <div className="grey-scrollbar relative h-[90vh] w-screen max-w-[90vw] overflow-y-auto rounded-lg bg-white p-6 shadow-lg backdrop-blur-2xl scrollbar-thumb-rounded dark:bg-zinc-900/80 xl:max-w-4xl -2sm:p-0 -2sm:pb-6 -2sm:pt-12">
         <div className="mx-auto flex w-11/12 max-w-2xl flex-col items-center gap-10">
           <PostDetails
             data={post}
             isLoading={isLoading || !post}
             postId={postId}
+            tagCardContainerRef={tagCardRef}
           />
         </div>
       </div>

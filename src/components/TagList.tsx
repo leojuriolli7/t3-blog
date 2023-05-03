@@ -8,6 +8,7 @@ type Props = {
   loading: boolean;
   compact?: boolean;
   full?: boolean;
+  tagCardContainerRef?: React.RefObject<HTMLDivElement>;
 };
 
 const TagList: React.FC<Props> = ({
@@ -15,6 +16,7 @@ const TagList: React.FC<Props> = ({
   loading,
   compact = false,
   full = false,
+  tagCardContainerRef,
 }) => {
   const loadingArray = Array.from<undefined>({ length: 3 });
 
@@ -34,6 +36,7 @@ const TagList: React.FC<Props> = ({
           className={loading ? "cursor-disabled pointer-events-none" : ""}
         >
           <Tag
+            tagCardContainerRef={tagCardContainerRef}
             role="link"
             className={`cursor-pointer select-none border-none hover:opacity-80 ${paddings} ${loadingClasses}`}
             tag={tag}

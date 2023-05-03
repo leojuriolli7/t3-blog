@@ -41,12 +41,20 @@ const SingleTagPage: NextPage<
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
-  const { data: tag, isLoading: loadingTag } = trpc.useQuery([
-    "tags.single-tag",
+  const { data: tag, isLoading: loadingTag } = trpc.useQuery(
+    [
+      "tags.single-tag",
+      {
+        tagId,
+      },
+    ],
     {
-      tagId,
-    },
-  ]);
+      onSettled(data) {
+        // if tag not found, 404
+        if (!data?.id) router.push("/404");
+      },
+    }
+  );
 
   const { mutate: deleteTag, isLoading: deleting } = trpc.useMutation(
     "tags.delete",

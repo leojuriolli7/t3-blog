@@ -20,6 +20,7 @@ export const Modal: React.FC<{
   alwaysCentered?: boolean;
   onClose?: () => void;
   hideCloseButton?: boolean;
+  containerRef?: React.RefObject<HTMLDivElement>;
 }> & {
   Title: typeof Dialog.Title;
   Description: typeof Dialog.Description;
@@ -30,6 +31,7 @@ export const Modal: React.FC<{
   children,
   onClose,
   hideCloseButton,
+  containerRef,
 }) => {
   const [open, setOpen] = openState;
 
@@ -42,6 +44,7 @@ export const Modal: React.FC<{
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
+        ref={containerRef}
         as="div"
         className="fixed inset-0 z-[100] overflow-y-auto"
         initialFocus={initialFocus}

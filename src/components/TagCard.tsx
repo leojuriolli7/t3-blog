@@ -1,3 +1,4 @@
+import React from "react";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { TagType } from "@utils/types";
 import Image from "@components/Image";
@@ -7,13 +8,16 @@ import ShouldRender from "./ShouldRender";
 type Props = {
   children: React.ReactNode;
   tag?: TagType;
+  containerRef?: React.RefObject<HTMLDivElement>;
 };
 
-export const TagCard: React.FC<Props> = ({ children, tag }) => {
+export const TagCard: React.FC<Props> = ({ children, tag, containerRef }) => {
+  const portalContainer = containerRef?.current || undefined;
+
   return (
     <HoverCard.Root>
       <HoverCard.Trigger asChild>{children}</HoverCard.Trigger>
-      <HoverCard.Portal>
+      <HoverCard.Portal container={portalContainer}>
         <HoverCard.Content
           className="w-72 origin-hover-card rounded-md border border-zinc-300 bg-white/80 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] backdrop-blur-2xl data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade  data-[state=open]:transition-all dark:border-zinc-800 dark:bg-zinc-950/50"
           sideOffset={5}
@@ -63,3 +67,5 @@ export const TagCard: React.FC<Props> = ({ children, tag }) => {
     </HoverCard.Root>
   );
 };
+
+TagCard.displayName = "TagCard";

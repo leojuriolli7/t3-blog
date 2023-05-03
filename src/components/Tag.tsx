@@ -9,6 +9,7 @@ interface TagProps
   onChange?: (checked: boolean) => void;
   omitBgClass?: boolean;
   tag?: TagType;
+  tagCardContainerRef?: React.RefObject<HTMLDivElement>;
 }
 
 const Tag: React.FC<TagProps> = (props) => {
@@ -20,6 +21,7 @@ const Tag: React.FC<TagProps> = (props) => {
     className,
     omitBgClass,
     tag,
+    tagCardContainerRef,
     ...rest
   } = props;
 
@@ -39,7 +41,7 @@ const Tag: React.FC<TagProps> = (props) => {
   const regularTagClasses = "bg-emerald-500 dark:bg-teal-900 text-white";
 
   return (
-    <TagCard tag={tag}>
+    <TagCard tag={tag} containerRef={tagCardContainerRef}>
       <span
         {...rest}
         className={clsx(
