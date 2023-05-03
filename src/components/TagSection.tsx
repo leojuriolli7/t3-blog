@@ -19,17 +19,17 @@ const SectionHeader = ({ name, description, avatar }: TitleProps) => {
     <div className="flex gap-2">
       <Image
         src={avatar}
-        width={64}
-        height={64}
-        className="h-[64px] w-[64px] rounded-full"
+        width={60}
+        height={60}
+        className="h-[60px] w-[60px] rounded-full"
         alt={`${name} avatar`}
       />
       <div>
-        <h2 className="prose line-clamp-1 text-ellipsis text-2xl font-bold dark:prose-invert">
+        <h2 className="prose line-clamp-1 text-ellipsis text-2xl dark:prose-invert">
           {name}
         </h2>
 
-        <p className="prose line-clamp-2 text-ellipsis leading-6 dark:prose-invert">
+        <p className="line-clamp-2 text-ellipsis leading-6 text-zinc-600 dark:text-zinc-400">
           {description}
         </p>
       </div>
