@@ -4,6 +4,7 @@ import AttachmentPreview from "@components/AttachmentPreview";
 import Field from "@components/Field";
 import PreviewMediaModal from "@components/PreviewMediaModal";
 import { CreateTagInput } from "@schema/tag.schema";
+import TagImagePreview from "./TagImagePreview";
 
 type Props = {
   type: "avatar" | "banner";
@@ -27,6 +28,7 @@ export const TagImageInput: React.FC<Props> = ({ type, initialValue }) => {
 
   const removeImage = () => {
     methods.resetField(name);
+    methods.resetField(`${name}File`);
     setCurrentImage(undefined);
   };
 
@@ -73,10 +75,9 @@ export const TagImageInput: React.FC<Props> = ({ type, initialValue }) => {
       <div className="-mt-4">
         {currentImage && (
           <>
-            <AttachmentPreview
-              compact
-              file={currentFile}
-              type="media"
+            <TagImagePreview
+              type={type}
+              file={currentImage}
               onClickImage={closePreviewModal}
               removeFile={removeImage}
             />
