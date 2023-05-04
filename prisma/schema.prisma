@@ -97,14 +97,15 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  role      String             @default("user")
-  bio       String?            @db.VarChar(160)
-  likes     Like[]
-  votes     PollOption[]
-  favorites FavoritesOnUsers[]
-  followers Follows[]          @relation("following")
-  following Follows[]          @relation("follower")
-  url       UserLink?
+  role           String             @default("user")
+  bio            String?            @db.VarChar(160)
+  likes          Like[]
+  votes          PollOption[]
+  favorites      FavoritesOnUsers[]
+  followers      Follows[]          @relation("following")
+  following      Follows[]          @relation("follower")
+  url            UserLink?
+  subscribedTags Tag[]
 
   notified Notification[] @relation(name: "NotifiedNotification")
   notifier Notification[] @relation(name: "NotifierNotification")
@@ -132,6 +133,7 @@ model Tag {
   avatar          String
   backgroundImage String
   posts           Post[]
+  subscribers     User[]
 
   @@fulltext([name, description])
 }

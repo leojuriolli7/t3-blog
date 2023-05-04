@@ -31,3 +31,7 @@ export const deleteTagSchema = z.object({
 });
 
 export const updateTagSchema = singleTagSchema;
+
+export const subscribeToTagSchema = z.object({
+  tagId: z.string(),
+});

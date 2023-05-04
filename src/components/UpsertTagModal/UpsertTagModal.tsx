@@ -2,16 +2,16 @@ import React, { useCallback, useEffect } from "react";
 import Button from "@components/Button";
 import { FormProvider, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
+import { TagType, SingleTagType } from "@utils/types";
 import { CreateTagInput, createTagSchema } from "@schema/tag.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Field from "../Field";
 import { Modal } from "../Modal";
 import TextInput from "../TextInput";
 import { TagImageInput } from "./TagImageInput";
-import { TagType } from "@utils/types";
 
 type Props = {
-  initialTag?: TagType | null;
+  initialTag?: TagType | SingleTagType | null;
   initialTagName?: string;
   openState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   onFinish: (tag: CreateTagInput) => void;
@@ -58,7 +58,7 @@ export const UpsertTagModal: React.FC<Props> = ({
       type Key = "id" | "avatar" | "backgroundImage" | "name" | "description";
 
       for (const [key, value] of Object.entries(initialTag)) {
-        if (validKeys.includes(key)) {
+        if (validKeys.includes(key) && typeof value === "string") {
           methods.setValue(key as Key, value);
         }
       }

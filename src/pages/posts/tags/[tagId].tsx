@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import ConfirmationModal from "@components/ConfirmationModal";
 import { parseTagPayload } from "@server/utils/parseTagPayload";
+import Button from "@components/Button";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -34,7 +35,8 @@ const SingleTagPage: NextPage<
   const utils = trpc.useContext();
   const router = useRouter();
 
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
+  const isLoggedIn = sessionStatus === "authenticated";
   const loggedUserIsAdmin = session?.user?.isAdmin === true;
 
   const { tabProps, selectedTab } = useFilterContent();
@@ -56,6 +58,45 @@ const SingleTagPage: NextPage<
       },
     }
   );
+
+  const { mutate: subscribe, isLoading: subscribing } = trpc.useMutation(
+    "tags.subscribe",
+    {
+      onMutate: async ({ tagId }) => {
+        await utils.cancelQuery(["tags.single-tag", { tagId }]);
+        const prevData = utils.getQueryData(["tags.single-tag", { tagId }]);
+        const userIsSubscribed = !!prevData!.isSubscribed;
+
+        if (userIsSubscribed) {
+          utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
+            ...old!,
+            isSubscribed: false,
+          }));
+        }
+
+        if (!userIsSubscribed) {
+          utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
+            ...old!,
+            isSubscribed: true,
+          }));
+        }
+
+        return { prevData };
+      },
+      onSettled: () => {
+        utils.invalidateQueries([
+          "tags.single-tag",
+          {
+            tagId,
+          },
+        ]);
+      },
+    }
+  );
+
+  const onClickSubscribe = () => {
+    if (!subscribing) subscribe({ tagId });
+  };
 
   const { mutate: deleteTag, isLoading: deleting } = trpc.useMutation(
     "tags.delete",
@@ -166,7 +207,7 @@ const SingleTagPage: NextPage<
       <MetaTags title={`${tag?.name || ""} posts`} />
 
       <div className="-mb-5 mt-5 w-full">
-        <div className="w-full rounded-md border-2 border-zinc-200 shadow-sm dark:border-zinc-700/90">
+        <div className="w-full rounded-md border-2 border-zinc-200 bg-white shadow-sm dark:border-zinc-700/90 dark:bg-zinc-800/70">
           <div className="relative h-[200px] w-full">
             <Image
               src={tag?.backgroundImage}
@@ -182,9 +223,19 @@ const SingleTagPage: NextPage<
                 <ActionButton action="delete" onClick={showDeleteConfirm} />
               </div>
             </ShouldRender>
+
+            <ShouldRender if={isLoggedIn}>
+              <Button
+                onClick={onClickSubscribe}
+                absolute
+                className="bottom-2 right-2 rounded-full shadow-lg transition-opacity"
+              >
+                {tag?.isSubscribed ? "Unsubscribe" : "Subscribe"}
+              </Button>
+            </ShouldRender>
           </div>
 
-          <div className="relative flex w-full gap-4 rounded-b-md  bg-white p-2 py-4  dark:bg-zinc-800/70">
+          <div className="relative flex w-full gap-4 rounded-b-md p-2 py-4">
             <Image
               src={tag?.avatar}
               alt={`${tag?.name || "Tag"} avatar`}

@@ -4,9 +4,14 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import {
   deleteTagSchema,
   getSingleTagSchema,
+  subscribeToTagSchema,
   updateTagSchema,
 } from "@schema/tag.schema";
-import { deleteChildComments, isAdminMiddleware } from "@server/utils";
+import {
+  deleteChildComments,
+  isAdminMiddleware,
+  isLoggedInMiddleware,
+} from "@server/utils";
 import { env } from "@env";
 
 export const tagRouter = createRouter()
@@ -20,13 +25,77 @@ export const tagRouter = createRouter()
   .query("single-tag", {
     input: getSingleTagSchema,
     async resolve({ ctx, input }) {
-      const tag = ctx.prisma.tag.findFirst({
+      const tag = await ctx.prisma.tag.findFirst({
         where: {
           id: input.tagId,
         },
+        include: {
+          subscribers: {
+            where: {
+              id: ctx?.session?.user?.id,
+            },
+          },
+        },
       });
 
-      return tag;
+      const isSubscribed = !!tag?.subscribers?.length;
+
+      return {
+        ...tag,
+        isSubscribed,
+      };
+    },
+  })
+  .middleware(isLoggedInMiddleware)
+  .mutation("subscribe", {
+    input: subscribeToTagSchema,
+    async resolve({ ctx, input }) {
+      const tag = await ctx.prisma.user.findFirst({
+        where: {
+          id: ctx.session.user.id,
+        },
+        select: {
+          subscribedTags: {
+            where: {
+              id: input.tagId,
+            },
+          },
+        },
+      });
+
+      const isAlreadyFollowingTag = !!tag?.subscribedTags?.length;
+
+      // user is unsubscribing from tag
+      if (isAlreadyFollowingTag) {
+        await ctx.prisma.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            subscribedTags: {
+              disconnect: {
+                id: input.tagId,
+              },
+            },
+          },
+        });
+      }
+
+      // user is subscribing to the tag
+      if (!isAlreadyFollowingTag) {
+        await ctx.prisma.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            subscribedTags: {
+              connect: {
+                id: input.tagId,
+              },
+            },
+          },
+        });
+      }
     },
   })
   .middleware(isAdminMiddleware)
