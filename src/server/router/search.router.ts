@@ -39,6 +39,13 @@ export const searchRouter = createRouter().query("by-type", {
             name: {
               search: query,
             },
+            OR: [
+              {
+                description: {
+                  search: query,
+                },
+              },
+            ],
           },
         }),
       });

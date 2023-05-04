@@ -196,7 +196,7 @@ const SingleTagPage: NextPage<
 
             <div className="w-full">
               <ShouldRender if={!loadingTag}>
-                <h1 className="text-2xl capitalize text-zinc-700 dark:text-zinc-300 xl:text-3xl">
+                <h1 className="text-2xl text-zinc-700 dark:text-zinc-300 xl:text-3xl">
                   {tag?.name}
                 </h1>
 

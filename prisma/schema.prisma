@@ -133,7 +133,7 @@ model Tag {
   backgroundImage String
   posts           Post[]
 
-  @@fulltext([name])
+  @@fulltext([name, description])
 }
 
 model PollOption {

@@ -62,6 +62,13 @@ export const postRouter = createRouter()
             name: {
               search: query,
             },
+            OR: [
+              {
+                description: {
+                  search: query,
+                },
+              },
+            ],
           },
         }),
       });
