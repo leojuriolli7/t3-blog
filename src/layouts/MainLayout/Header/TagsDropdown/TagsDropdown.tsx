@@ -20,7 +20,7 @@ type TagCardProps = {
 
 const TagCard: React.FC<TagCardProps> = ({ name, image, loading, id }) => {
   return (
-    <ul className="w-full">
+    <li className="w-full">
       <Link
         className="flex w-full px-6 py-4 transition-colors hover:bg-zinc-200/40 dark:hover:bg-zinc-800/40"
         href={`/posts/tags/${id}`}
@@ -42,7 +42,7 @@ const TagCard: React.FC<TagCardProps> = ({ name, image, loading, id }) => {
           </p>
         )}
       </Link>
-    </ul>
+    </li>
   );
 };
 
@@ -99,7 +99,7 @@ const TagsDropdown: React.FC = () => {
           replace={false}
         />
       </div>
-      <li className="grey-scrollbar mt-1 max-h-[450px] w-80 overflow-y-auto scrollbar-thumb-rounded">
+      <ul className="grey-scrollbar mt-1 max-h-[450px] w-full overflow-y-auto scrollbar-thumb-rounded">
         {dataToShow?.map((tag) => (
           <TagCard
             key={tag?.id}
@@ -139,7 +139,7 @@ const TagsDropdown: React.FC = () => {
             </Button>
           </div>
         </ShouldRender>
-      </li>
+      </ul>
     </Popover.Main>
   );
 };
