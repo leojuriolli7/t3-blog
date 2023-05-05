@@ -11,22 +11,25 @@ import Skeleton from "@components/Skeleton";
 import ShouldRender from "@components/ShouldRender";
 import Button from "@components/Button";
 
-type Props = {
+type TagCardProps = {
   name?: string;
   image?: string;
   loading: boolean;
   id?: string;
 };
 
-const TagCard: React.FC<Props> = ({ name, image, loading, id }) => {
+const TagCard: React.FC<TagCardProps> = ({ name, image, loading, id }) => {
   return (
-    <Link className="w-full" href={`/posts/tags/${id}`}>
-      <div className="flex w-full px-6 py-4 transition-colors hover:bg-zinc-200/40 dark:hover:bg-zinc-800/40">
+    <ul className="w-full">
+      <Link
+        className="flex w-full px-6 py-4 transition-colors hover:bg-zinc-200/40 dark:hover:bg-zinc-800/40"
+        href={`/posts/tags/${id}`}
+      >
         <Image
           src={image}
           isLoading={loading}
           className="h-8 w-8 flex-shrink-0 rounded-full object-cover"
-          alt="Tag logo"
+          alt={loading ? "Tag avatar" : `${name} tag avatar`}
           width={32}
           height={32}
         />
@@ -38,8 +41,8 @@ const TagCard: React.FC<Props> = ({ name, image, loading, id }) => {
             {name}
           </p>
         )}
-      </div>
-    </Link>
+      </Link>
+    </ul>
   );
 };
 
@@ -96,7 +99,7 @@ const TagsDropdown: React.FC = () => {
           replace={false}
         />
       </div>
-      <div className="grey-scrollbar mt-1 max-h-[450px] w-80 overflow-y-auto scrollbar-thumb-rounded">
+      <li className="grey-scrollbar mt-1 max-h-[450px] w-80 overflow-y-auto scrollbar-thumb-rounded">
         {dataToShow?.map((tag) => (
           <TagCard
             key={tag?.id}
@@ -136,7 +139,7 @@ const TagsDropdown: React.FC = () => {
             </Button>
           </div>
         </ShouldRender>
-      </div>
+      </li>
     </Popover.Main>
   );
 };
