@@ -35,3 +35,10 @@ export const updateTagSchema = singleTagSchema;
 export const subscribeToTagSchema = z.object({
   tagId: z.string(),
 });
+
+export const getSubscribedTagsSchema = z.object({
+  limit: z.number(),
+  cursor: z.string().nullish(),
+  skip: z.number().optional(),
+  query: z.string().optional(),
+});

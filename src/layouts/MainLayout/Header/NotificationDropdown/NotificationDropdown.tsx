@@ -119,7 +119,7 @@ const NotificationDropdown = () => {
 
         <ShouldRender if={noDataToShow}>
           <div className="flex w-full justify-center py-6">
-            <p className="text-neutral-400">
+            <p className="text-neutral-500">
               You have no {emptyMessageLabel[currentTab]}
             </p>
           </div>

@@ -21,16 +21,20 @@ const ImageSkeleton: React.FC<SkeletonProps> = ({
   className,
   full,
 }) => {
-  const dimensions = full ? "w-full h-full" : `w-[${width}px] h-[${height}px]`;
+  const dimensionsStyle = {
+    width: width,
+    height: height,
+  };
 
   return (
     <div
       role="status"
       className={clsx(
         "animate-pulse bg-gray-300 dark:bg-neutral-700",
-        dimensions,
+        full && "h-full w-full",
         className
       )}
+      {...(width && height && { style: dimensionsStyle })}
     >
       <span className="sr-only">Loading...</span>
     </div>

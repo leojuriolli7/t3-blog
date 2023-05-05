@@ -1,15 +1,14 @@
+import { useState } from "react";
 import ShouldRender from "@components/ShouldRender";
 import SlideOver from "@components/SlideOver";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
+import dynamic from "next/dynamic";
+import { useSession } from "next-auth/react";
 import Image from "@components/Image";
 import Link from "next/link";
 import SearchDropdown from "./SearchDropdown";
 import { SidebarContent } from "../Sidebar/Sidebar";
-
-import dynamic from "next/dynamic";
-import { useSession } from "next-auth/react";
 
 const NotificationDropdown = dynamic(
   () => import("./NotificationDropdown/NotificationDropdown"),
@@ -17,6 +16,10 @@ const NotificationDropdown = dynamic(
     ssr: false,
   }
 );
+
+const TagsDropdown = dynamic(() => import("./TagsDropdown/TagsDropdown"), {
+  ssr: false,
+});
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -45,6 +48,8 @@ const Header: React.FC = () => {
 
       <div className="absolute right-0 z-[100] flex items-center gap-3">
         <ShouldRender if={sessionStatus === "authenticated"}>
+          <TagsDropdown />
+
           <NotificationDropdown />
         </ShouldRender>
 

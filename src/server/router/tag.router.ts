@@ -4,6 +4,7 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import {
   deleteTagSchema,
   getSingleTagSchema,
+  getSubscribedTagsSchema,
   subscribeToTagSchema,
   updateTagSchema,
 } from "@schema/tag.schema";
@@ -96,6 +97,42 @@ export const tagRouter = createRouter()
           },
         });
       }
+    },
+  })
+  // list all subscribed tags
+  .query("subscribed", {
+    input: getSubscribedTagsSchema,
+    async resolve({ ctx, input }) {
+      const tags = await ctx.prisma.tag.findMany({
+        where: {
+          subscribers: {
+            some: {
+              id: ctx.session.user.id,
+            },
+          },
+          ...(input.query && {
+            AND: {
+              name: {
+                contains: input.query,
+              },
+            },
+          }),
+        },
+        take: input.limit + 1,
+        skip: input.skip,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (tags.length > input.limit) {
+        const nextItem = tags.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      return {
+        tags,
+        nextCursor,
+      };
     },
   })
   .middleware(isAdminMiddleware)
