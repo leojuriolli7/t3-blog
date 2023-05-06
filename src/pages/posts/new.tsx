@@ -96,8 +96,8 @@ const CreatePostPage: React.FC = () => {
 
           const filteredTag = {
             ...tag,
-            avatar: urls.avatarUrl,
-            backgroundImage: urls.backgroundUrl,
+            avatar: urls.avatarUrl as string,
+            backgroundImage: urls.backgroundUrl as string,
           };
 
           return filteredTag;

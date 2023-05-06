@@ -180,7 +180,6 @@ const SingleTagPage: NextPage<
         };
       }
 
-      parseTagPayload(payload);
       updateTag(payload);
     },
     [updateTag, uploadTagImages]

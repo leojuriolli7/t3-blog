@@ -130,14 +130,7 @@ export const SidebarContent = () => {
               defaultIcon={MdOutlineTag}
               path="/posts/tags/subscribed"
               title="Subscribed"
-              subtitle="Tags you subscribed to"
-            />
-            <Item
-              activeIcon={AiFillLike}
-              defaultIcon={AiOutlineLike}
-              path="/posts/liked"
-              title="Liked"
-              subtitle="Your liked posts"
+              subtitle="Tags you subscribe to"
             />
             <Item
               activeIcon={RiRssFill}
@@ -145,6 +138,13 @@ export const SidebarContent = () => {
               path="/posts/feed"
               title="Your feed"
               subtitle="Posts curated to you"
+            />
+            <Item
+              activeIcon={AiFillLike}
+              defaultIcon={AiOutlineLike}
+              path="/posts/liked"
+              title="Liked"
+              subtitle="Your liked posts"
             />
             <Item
               activeIcon={AiFillHeart}

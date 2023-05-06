@@ -24,8 +24,8 @@ export const useUploadTagImagesToS3 = () => {
       );
 
       const fileUrls = await Promise.all(
-        files?.map(async (file, index) => {
-          const isAvatar = index === 0;
+        files?.map(async (file) => {
+          const isAvatar = file === filesToUpload?.avatar;
           const type = isAvatar ? "avatar" : "background";
 
           const { url, fields } = await createPresignedTagUrl({
@@ -34,17 +34,24 @@ export const useUploadTagImagesToS3 = () => {
           });
 
           await uploadFileToS3(url, fields, file as File);
-
-          return generateS3Url(
+          const generatedUrl = generateS3Url(
             env.NEXT_PUBLIC_AWS_S3_TAG_IMAGES_BUCKET_NAME,
             `${tagName}/${type}`
           );
+
+          return {
+            url: generatedUrl,
+            type,
+          };
         })
       );
 
+      const uploadedAvatar = fileUrls.find((url) => url.type === "avatar");
+      const uploadedBanner = fileUrls.find((url) => url.type === "background");
+
       const filteredUrls = {
-        avatarUrl: fileUrls[0],
-        backgroundUrl: fileUrls[1],
+        avatarUrl: uploadedAvatar?.url,
+        backgroundUrl: uploadedBanner?.url,
       };
 
       return filteredUrls;
