@@ -76,9 +76,15 @@ type Props = {
   data?: SinglePost;
   isLoading: boolean;
   postId: string;
+  tagCardContainerRef?: React.RefObject<HTMLDivElement>;
 };
 
-export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
+export const PostDetails: React.FC<Props> = ({
+  data,
+  isLoading,
+  postId,
+  tagCardContainerRef,
+}) => {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
   const utils = trpc.useContext();
@@ -307,7 +313,7 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
         router.push("/");
 
         // This will refetch the home-page posts.
-        utils.invalidateQueries(["posts.posts"]);
+        utils.invalidateQueries(["posts.all"]);
       },
     }
   );
@@ -506,7 +512,11 @@ export const PostDetails: React.FC<Props> = ({ data, isLoading, postId }) => {
         <div className="-mb-10 w-full">
           <h2 className="text-lg font-medium">Tags</h2>
 
-          <TagList tags={data?.tags} loading={isLoading} />
+          <TagList
+            tags={data?.tags}
+            loading={isLoading}
+            tagCardContainerRef={tagCardContainerRef}
+          />
         </div>
       </ShouldRender>
 

@@ -15,3 +15,8 @@ export const createPresignedPostBodyUrlSchema = z.object({
   userId: z.string(),
   randomKey: z.string(),
 });
+
+export const createPresignedTagUrl = z.object({
+  tagName: z.string(),
+  type: z.enum(["background", "avatar"]),
+});

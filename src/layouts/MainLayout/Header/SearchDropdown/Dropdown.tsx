@@ -1,10 +1,10 @@
 import ShouldRender from "@components/ShouldRender";
 import Tab from "@components/Tab";
 import UserPreview from "@components/UserPreview";
-import Section from "@components/Section";
 import Link from "next/link";
 import clsx from "clsx";
 import { ButtonLink } from "@components/Button";
+import TagPreview from "@components/TagPreview";
 import Comment from "@components/Comment";
 import CompactCard from "@components/CompactCard";
 import { trpc } from "@utils/trpc";
@@ -97,16 +97,7 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
 
         <ShouldRender if={isSearchType("tags")}>
           {data?.tags?.map((tag) => (
-            <Section
-              compact
-              title={tag?.name}
-              key={tag?.id}
-              seeMoreHref={`/posts/tags/${tag?.id}`}
-            >
-              {tag?.posts?.map((post) => (
-                <CompactCard key={`${tag?.id}-${post?.id}`} post={post} slide />
-              ))}
-            </Section>
+            <TagPreview key={tag?.id} tag={tag} loading={isLoading} />
           ))}
         </ShouldRender>
 

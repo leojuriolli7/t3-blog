@@ -11,11 +11,12 @@ import { ButtonLink } from "@components/Button";
 import Link from "next/link";
 import { generateSSGHelper } from "@server/ssgHepers";
 import AnimatedTabs from "@components/AnimatedTabs";
+import { TagSection } from "@components/TagSection";
 
 const PostListingPage: React.FC = () => {
   const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
     [
-      "posts.posts-by-tags",
+      "posts.by-tags",
       {
         tagLimit: 4,
       },
@@ -28,7 +29,7 @@ const PostListingPage: React.FC = () => {
   const taggedPosts = tagsWithPosts?.tags;
 
   const { data: followingPosts } = trpc.useQuery(
-    ["posts.following-posts", { limit: 4 }],
+    ["posts.following", { limit: 4 }],
     {
       refetchOnWindowFocus: false,
     }
@@ -44,7 +45,7 @@ const PostListingPage: React.FC = () => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
-        "posts.posts",
+        "posts.all",
         {
           limit: 4,
           filter: selectedTab.id,
@@ -78,7 +79,7 @@ const PostListingPage: React.FC = () => {
           <h2 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
             Following
           </h2>
-          <p className="mb-3 text-sm xl:text-base">
+          <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400 xl:text-base">
             Posts from all your following
           </p>
           <Section seeMoreHref="posts/following">
@@ -105,21 +106,11 @@ const PostListingPage: React.FC = () => {
       </div>
 
       {(loadingTags ? loadingArray : taggedPosts)?.map((tag, key) => (
-        <Section
+        <TagSection
           loading={loadingTags}
-          title={tag?.name}
           key={loadingTags ? key : tag?.id}
-          seeMoreHref={`/posts/tags/${tag?.id}`}
-        >
-          {(loadingTags ? loadingArray : tag?.posts)?.map((post, key) => (
-            <CompactCard
-              loading={loadingTags}
-              key={loadingTags ? key : `${tag?.id}-${post?.id}`}
-              post={post}
-              slide
-            />
-          ))}
-        </Section>
+          tag={tag}
+        />
       ))}
       <hr className="-mb-5 -mt-5 h-0.5 w-full border-0 bg-gray-200 dark:bg-neutral-700" />
 
@@ -153,11 +144,11 @@ export default PostListingPage;
 export async function getServerSideProps() {
   const ssg = await generateSSGHelper();
 
-  const tagsQuery = ssg.prefetchQuery("posts.posts-by-tags", {
+  const tagsQuery = ssg.prefetchQuery("posts.by-tags", {
     tagLimit: 4,
   });
 
-  const postsQuery = ssg.prefetchInfiniteQuery("posts.posts", {
+  const postsQuery = ssg.prefetchInfiniteQuery("posts.all", {
     limit: 4,
     filter: "newest",
   });

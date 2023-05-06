@@ -8,7 +8,7 @@ import Skeleton from "./Skeleton";
 
 type Props = {
   children?: React.ReactNode;
-  title?: string;
+  title?: React.ReactNode;
   loading?: boolean;
   compact?: boolean;
   seeMoreHref?: string;
@@ -30,7 +30,7 @@ const Section: React.FC<Props> = ({
     >
       <div className="flex w-full justify-between">
         <div>
-          <ShouldRender if={!loading}>
+          <ShouldRender if={!loading && typeof title === "string"}>
             <h2
               className={clsx(
                 "prose line-clamp-1 text-ellipsis break-all font-bold dark:prose-invert",
@@ -41,7 +41,9 @@ const Section: React.FC<Props> = ({
             </h2>
           </ShouldRender>
 
-          <ShouldRender if={loading}>
+          <ShouldRender if={React.isValidElement(title)}>{title}</ShouldRender>
+
+          <ShouldRender if={loading && typeof title === "string"}>
             <Skeleton heading lines={1} width="w-3/5" />
           </ShouldRender>
         </div>
@@ -57,7 +59,10 @@ const Section: React.FC<Props> = ({
               disabled={loading}
               variant="gradient"
               size={compact ? "xs" : "sm"}
-              className="rounded-full"
+              className={clsx(
+                "h-fit flex-shrink-0 rounded-full",
+                loading && "pointer-events-none"
+              )}
             >
               See more
             </ButtonLink>

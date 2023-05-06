@@ -18,6 +18,9 @@ import LinkInput from "@components/LinkInput";
 import CreatePoll from "@components/CreatePoll";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
+import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
+import { useUploadTagImagesToS3 } from "@hooks/aws/useUploadTagImagesToS3";
+import { parseTagPayload } from "@utils/parseTagPayload";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -32,17 +35,15 @@ const CreatePostPage: React.FC = () => {
   const files = watch("files");
   const { errors } = formState;
 
-  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(
-    ["posts.tags"],
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-  const initialTags = tags?.map((tag) => tag.name);
+  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(["tags.all"], {
+    refetchOnWindowFocus: false,
+  });
 
   const { mutateAsync: createPresignedUrl } = trpc.useMutation(
     "attachments.create-presigned-url"
   );
+
+  const { uploadTagImages } = useUploadTagImagesToS3();
 
   const uploadAttachment = async (postId: string, file: File) => {
     const name = file?.name || "Uploaded attachment";
@@ -55,19 +56,8 @@ const CreatePostPage: React.FC = () => {
       type,
       randomKey,
     });
-    const formData = new FormData();
 
-    Object.keys(fields).forEach((key) => {
-      formData.append(key, fields[key]);
-    });
-
-    formData.append("Content-Type", file.type);
-    formData.append("file", file);
-
-    await fetch(url, {
-      method: "POST",
-      body: formData,
-    });
+    await uploadFileToS3(url, fields, file);
   };
 
   const {
@@ -92,10 +82,41 @@ const CreatePostPage: React.FC = () => {
   });
 
   const onSubmit = useCallback(
-    (values: CreatePostInput) => {
+    async (values: CreatePostInput) => {
+      const tagsToCreate = values.tags.filter(
+        (tag) => !!tag.backgroundImageFile && !!tag.avatarFile
+      );
+
+      const filteredCreatedTags = await Promise.all(
+        tagsToCreate.map(async (tag) => {
+          const urls = await uploadTagImages(tag.name, {
+            avatar: tag.avatarFile as File,
+            banner: tag.backgroundImageFile as File,
+          });
+
+          const filteredTag = {
+            ...tag,
+            avatar: urls.avatarUrl,
+            backgroundImage: urls.backgroundUrl,
+          };
+
+          return filteredTag;
+        })
+      );
+
+      const tagsToSend = values.tags
+        .filter((tag) => tagsToCreate.indexOf(tag) === -1)
+        .concat(filteredCreatedTags);
+
+      // parsing tag payload removing files, because we do not
+      // need them on the server.
+      tagsToSend.forEach((tag) => {
+        parseTagPayload(tag);
+      });
+
       create({
         body: values.body,
-        tags: values.tags,
+        tags: tagsToSend as typeof values.tags,
         title: values.title,
         ...(values?.link && {
           link: values?.link,
@@ -106,7 +127,7 @@ const CreatePostPage: React.FC = () => {
           }),
       });
     },
-    [create]
+    [create, uploadTagImages]
   );
 
   useEffect(() => {
@@ -151,7 +172,7 @@ const CreatePostPage: React.FC = () => {
 
           <SelectTags
             control={control}
-            initialTags={initialTags}
+            initialTags={tags}
             name="tags"
             error={errors.tags}
           />

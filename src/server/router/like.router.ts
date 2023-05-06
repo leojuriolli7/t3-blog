@@ -1,6 +1,6 @@
 import { createRouter } from "@server/createRouter";
 import { likePostSchema } from "@schema/like.schema";
-import { isLoggedInMiddleware } from "@server/utils/isLoggedInMiddleware";
+import { isLoggedInMiddleware } from "@server/utils/middlewares";
 
 export const likeRouter = createRouter()
   .middleware(isLoggedInMiddleware)

@@ -110,7 +110,7 @@ const NotificationDropdown = () => {
           label="Old"
         />
       </div>
-      <div className="grey-scrollbar mt-1 max-h-[450px] w-80 overflow-y-auto scrollbar-thumb-rounded">
+      <ul className="grey-scrollbar mt-1 max-h-[450px] w-80 overflow-y-auto scrollbar-thumb-rounded">
         <ShouldRender if={!!dataToShow?.length}>
           {dataToShow?.map((notification) => (
             <NotificationCard key={notification.id} {...notification} />
@@ -119,7 +119,7 @@ const NotificationDropdown = () => {
 
         <ShouldRender if={noDataToShow}>
           <div className="flex w-full justify-center py-6">
-            <p className="text-neutral-400">
+            <p className="text-neutral-500">
               You have no {emptyMessageLabel[currentTab]}
             </p>
           </div>
@@ -144,7 +144,7 @@ const NotificationDropdown = () => {
             </Button>
           </div>
         </ShouldRender>
-      </div>
+      </ul>
     </Popover.Main>
   );
 };

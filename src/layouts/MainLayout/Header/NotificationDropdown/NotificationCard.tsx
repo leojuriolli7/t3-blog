@@ -67,77 +67,79 @@ export const NotificationCard = (notification: Notification) => {
   }, [isSystemNotification, notification]);
 
   return (
-    <Link
-      href={notification?.href || "/"}
-      className={clsx(
-        "flex w-full gap-2 p-3 text-sm transition-colors",
-        notification?.href &&
-          "hover:bg-neutral-100/50 dark:hover:bg-zinc-800/40"
-      )}
-      key={notification.id}
-      onClick={handleMarkAsRead({ preventDefault: false })}
-    >
-      <Image
-        width={32}
-        height={32}
-        alt={imageProps.alt}
-        src={imageProps.src}
+    <li className="w-full">
+      <Link
+        href={notification?.href || "/"}
         className={clsx(
-          "h-[32px] flex-shrink-0 rounded-full object-cover",
-          isSystemNotification && "bg-white"
+          "flex w-full gap-2 p-3 text-sm transition-colors",
+          notification?.href &&
+            "hover:bg-neutral-100/50 dark:hover:bg-zinc-800/40"
         )}
-      />
+        key={notification.id}
+        onClick={handleMarkAsRead({ preventDefault: false })}
+      >
+        <Image
+          width={32}
+          height={32}
+          alt={imageProps.alt}
+          src={imageProps.src}
+          className={clsx(
+            "h-[32px] flex-shrink-0 rounded-full object-cover",
+            isSystemNotification && "bg-white"
+          )}
+        />
 
-      <div className="w-full">
-        <div className="flex w-full">
-          <p className={notification.read ? "w-full" : "w-11/12"}>
-            {`${!isSystemNotification ? username : ""} ${
-              notification.message
-            }  ·  `}
-            <span className="text-neutral-400">{notification.createdAt}</span>
-          </p>
+        <div className="w-full">
+          <div className="flex w-full">
+            <p className={notification.read ? "w-full" : "w-11/12"}>
+              {`${!isSystemNotification ? username : ""} ${
+                notification.message
+              }  ·  `}
+              <span className="text-neutral-400">{notification.createdAt}</span>
+            </p>
 
-          <ShouldRender if={notification?.read === false}>
-            <Popover.Main
-              className="rounded-lg"
-              placement="left"
-              icon={
-                <div className="w-1/12">
-                  <HiDotsVertical className="h-4 w-4 dark:text-neutral-500" />
-                </div>
-              }
-            >
-              <button
-                onClick={handleMarkAsRead({ preventDefault: true })}
-                type="button"
-                className="cursor-pointer rounded-lg bg-inherit p-4 text-sm hover:opacity-60 dark:hover:opacity-100 dark:hover:brightness-125"
+            <ShouldRender if={notification?.read === false}>
+              <Popover.Main
+                className="rounded-lg"
+                placement="left"
+                icon={
+                  <div className="w-1/12">
+                    <HiDotsVertical className="h-4 w-4 dark:text-neutral-500" />
+                  </div>
+                }
               >
-                Mark as read
-              </button>
-            </Popover.Main>
+                <button
+                  onClick={handleMarkAsRead({ preventDefault: true })}
+                  type="button"
+                  className="cursor-pointer rounded-lg bg-inherit p-4 text-sm hover:opacity-60 dark:hover:opacity-100 dark:hover:brightness-125"
+                >
+                  Mark as read
+                </button>
+              </Popover.Main>
+            </ShouldRender>
+          </div>
+
+          <ShouldRender if={notificationHasComment}>
+            <div className="mt-2">
+              <HTMLBody className="line-clamp-2 text-ellipsis rounded-md bg-neutral-300/60 p-2 text-neutral-700/90 dark:bg-zinc-800/60 dark:text-neutral-400">
+                {notification?.comment?.body}
+              </HTMLBody>
+            </div>
+          </ShouldRender>
+
+          <ShouldRender if={isFollowNotification || notificationHasComment}>
+            <Button
+              className="mt-2 flex w-full justify-center rounded-full border border-neutral-400 bg-white dark:border-none dark:bg-neutral-700"
+              variant="text"
+              size="sm"
+            >
+              {notification?.type === "reply" && "Reply back"}
+              {notification?.type === "comment" && "Read comment"}
+              {notification?.type === "follow" && "Follow back"}
+            </Button>
           </ShouldRender>
         </div>
-
-        <ShouldRender if={notificationHasComment}>
-          <div className="mt-2">
-            <HTMLBody className="line-clamp-2 text-ellipsis rounded-md bg-neutral-300/60 p-2 text-neutral-700/90 dark:bg-zinc-800/60 dark:text-neutral-400">
-              {notification?.comment?.body}
-            </HTMLBody>
-          </div>
-        </ShouldRender>
-
-        <ShouldRender if={isFollowNotification || notificationHasComment}>
-          <Button
-            className="mt-2 flex w-full justify-center rounded-full border border-neutral-400 bg-white dark:border-none dark:bg-neutral-700"
-            variant="text"
-            size="sm"
-          >
-            {notification?.type === "reply" && "Reply back"}
-            {notification?.type === "comment" && "Read comment"}
-            {notification?.type === "follow" && "Follow back"}
-          </Button>
-        </ShouldRender>
-      </div>
-    </Link>
+      </Link>
+    </li>
   );
 };

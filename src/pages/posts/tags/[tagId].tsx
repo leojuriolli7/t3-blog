@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
+import Image from "@components/Image";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
@@ -15,29 +16,164 @@ import {
 import AnimatedTabs from "@components/AnimatedTabs";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
+import { useSession } from "next-auth/react";
+import ActionButton from "@components/ActionButton";
+import UpsertTagModal from "@components/UpsertTagModal";
+import { useUploadTagImagesToS3 } from "@hooks/aws/useUploadTagImagesToS3";
+import { CreateTagInput } from "@schema/tag.schema";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import ConfirmationModal from "@components/ConfirmationModal";
+import { parseTagPayload } from "@utils/parseTagPayload";
+import Button from "@components/Button";
 
 const SingleTagPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = (props) => {
   const { tagId } = props;
   const [queryValue, setQueryValue] = useState("");
+  const utils = trpc.useContext();
+  const router = useRouter();
+
+  const { data: session, status: sessionStatus } = useSession();
+  const isLoggedIn = sessionStatus === "authenticated";
+  const loggedUserIsAdmin = session?.user?.isAdmin === true;
 
   const { tabProps, selectedTab } = useFilterContent();
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
-  const { data: tag, isLoading: loadingTag } = trpc.useQuery([
-    "posts.single-tag",
+  const { data: tag, isLoading: loadingTag } = trpc.useQuery(
+    [
+      "tags.single-tag",
+      {
+        tagId,
+      },
+    ],
     {
-      tagId,
+      onSettled(data) {
+        // if tag not found, 404
+        if (!data?.id) router.push("/404");
+      },
+    }
+  );
+
+  const { mutate: subscribe, isLoading: subscribing } = trpc.useMutation(
+    "tags.subscribe",
+    {
+      onMutate: async ({ tagId }) => {
+        await utils.cancelQuery(["tags.single-tag", { tagId }]);
+        const prevData = utils.getQueryData(["tags.single-tag", { tagId }]);
+        const userIsSubscribed = !!prevData!.isSubscribed;
+
+        if (userIsSubscribed) {
+          utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
+            ...old!,
+            isSubscribed: false,
+          }));
+        }
+
+        if (!userIsSubscribed) {
+          utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
+            ...old!,
+            isSubscribed: true,
+          }));
+        }
+
+        return { prevData };
+      },
+      onSettled: () => {
+        utils.invalidateQueries([
+          "tags.single-tag",
+          {
+            tagId,
+          },
+        ]);
+      },
+    }
+  );
+
+  const onClickSubscribe = () => {
+    if (!subscribing) subscribe({ tagId });
+  };
+
+  const { mutate: deleteTag, isLoading: deleting } = trpc.useMutation(
+    "tags.delete",
+    {
+      onSuccess: () => {
+        toast.success("Tag deleted successfully");
+        router.push("/");
+      },
+    }
+  );
+
+  const isDeleteModalOpen = useState(false);
+  const [, setIsDeleteModalOpen] = isDeleteModalOpen;
+
+  const showDeleteConfirm = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, [setIsDeleteModalOpen]);
+
+  const onConfirm = useCallback(() => {
+    if (loggedUserIsAdmin) {
+      deleteTag({ id: tagId });
+    }
+  }, [deleteTag, loggedUserIsAdmin, tagId]);
+
+  const { mutate: updateTag } = trpc.useMutation("tags.update", {
+    onSuccess: () => {
+      // This will refetch the comments.
+      utils.invalidateQueries([
+        "tags.single-tag",
+        {
+          tagId,
+        },
+      ]);
     },
-  ]);
+  });
+
+  const editModalOpenState = useState(false);
+  const [, setEditModalOpen] = editModalOpenState;
+  const showEditModal = useCallback(() => {
+    if (loggedUserIsAdmin) setEditModalOpen(true);
+  }, [setEditModalOpen, loggedUserIsAdmin]);
+
+  const { uploadTagImages } = useUploadTagImagesToS3();
+
+  const onFinishedEditing = useCallback(
+    async (values: CreateTagInput) => {
+      let payload = values;
+
+      if (values?.avatarFile || values?.backgroundImageFile) {
+        const urls = await uploadTagImages(values.name, {
+          avatar: values.avatarFile as File,
+          banner: values.backgroundImageFile as File,
+        });
+
+        parseTagPayload(values);
+
+        payload = {
+          ...values,
+          ...(urls?.avatarUrl && {
+            avatar: urls?.avatarUrl,
+          }),
+          ...(urls?.backgroundUrl && {
+            backgroundImage: urls?.backgroundUrl,
+          }),
+        };
+      }
+
+      parseTagPayload(payload);
+      updateTag(payload);
+    },
+    [updateTag, uploadTagImages]
+  );
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
-        "posts.posts",
+        "posts.all",
         {
           limit: 6,
           tagId,
@@ -69,10 +205,77 @@ const SingleTagPage: NextPage<
   return (
     <>
       <MetaTags title={`${tag?.name || ""} posts`} />
-      <div className="-mb-5  mt-5 w-full">
-        <h1 className="text-left text-2xl xl:text-3xl">
-          <ShouldRender if={!loadingTag}>{tag?.name} posts</ShouldRender>
-        </h1>
+
+      <div className="-mb-5 mt-5 w-full">
+        <div className="w-full rounded-md border-2 border-zinc-200 bg-white shadow-sm dark:border-zinc-700/90 dark:bg-zinc-800/70">
+          <div className="relative h-[200px] w-full">
+            <Image
+              src={tag?.backgroundImage}
+              isLoading={loadingTag}
+              className="rounded-t-md object-cover"
+              alt={`${tag?.name || "Tag"} banner`}
+              full
+            />
+
+            <ShouldRender if={loggedUserIsAdmin}>
+              <div className="absolute -top-2 right-2 flex gap-2">
+                <ActionButton action="edit" onClick={showEditModal} />
+                <ActionButton action="delete" onClick={showDeleteConfirm} />
+              </div>
+            </ShouldRender>
+
+            <ShouldRender if={isLoggedIn}>
+              <Button
+                onClick={onClickSubscribe}
+                absolute
+                className="bottom-2 right-2 rounded-full shadow-lg transition-opacity"
+              >
+                {tag?.isSubscribed ? "Unsubscribe" : "Subscribe"}
+              </Button>
+            </ShouldRender>
+          </div>
+
+          <div className="relative flex w-full gap-4 rounded-b-md p-2 py-4">
+            <Image
+              src={tag?.avatar}
+              alt={`${tag?.name || "Tag"} avatar`}
+              width={80}
+              height={80}
+              isLoading={loadingTag}
+              className="h-20 w-20 flex-shrink-0 rounded-full object-cover"
+            />
+
+            <div className="w-full">
+              <ShouldRender if={!loadingTag}>
+                <h1 className="text-2xl text-zinc-700 dark:text-zinc-300 xl:text-3xl">
+                  {tag?.name}
+                </h1>
+
+                <p className="mt-1 leading-6 text-zinc-600 dark:text-zinc-400">
+                  {tag?.description}
+                </p>
+              </ShouldRender>
+              <ShouldRender if={loadingTag}>
+                <Skeleton
+                  height="h-[32px] xl:h-[36px]"
+                  lines={1}
+                  width="w-40"
+                />
+
+                <Skeleton
+                  lines={3}
+                  width="w-full"
+                  parentClass="mt-2"
+                  margin="mb-2"
+                />
+              </ShouldRender>
+
+              {/* <div className="mt-1 flex gap-1 text-base text-zinc-700 dark:text-zinc-300">
+              <span className="font-bold">290</span> <span>Subscribers</span>
+            </div> */}
+            </div>
+          </div>
+        </div>
 
         <ShouldRender if={loadingTag}>
           <Skeleton height="h-[32px] xl:h-[36px]" lines={1} width="w-40" />
@@ -107,6 +310,20 @@ const SingleTagPage: NextPage<
       </ShouldRender>
 
       <div ref={bottomRef} />
+
+      <UpsertTagModal
+        onFinish={onFinishedEditing}
+        openState={editModalOpenState}
+        initialTag={tag}
+      />
+
+      <ConfirmationModal
+        title="Are you sure you want to delete this tag?"
+        confirmationLabel="Delete tag"
+        openState={isDeleteModalOpen}
+        loading={deleting}
+        onConfirm={onConfirm}
+      />
     </>
   );
 };
@@ -119,13 +336,13 @@ export async function getServerSideProps(
   const ssg = await generateSSGHelper();
   const tagId = context.params?.tagId as string;
 
-  const postsQuery = ssg.prefetchInfiniteQuery("posts.posts", {
+  const postsQuery = ssg.prefetchInfiniteQuery("posts.all", {
     limit: 6,
     tagId,
     filter: "newest",
   });
 
-  const tagQuery = ssg.prefetchQuery("posts.single-tag", {
+  const tagQuery = ssg.prefetchQuery("tags.single-tag", {
     tagId,
   });
 

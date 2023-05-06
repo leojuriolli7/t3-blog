@@ -9,6 +9,7 @@ interface AuthenticatedRouterContext extends Context {
 
 interface Meta {}
 
+/** Determine whether user is logged in before procceding. */
 export const isLoggedInMiddleware: MiddlewareFunction<
   Context,
   AuthenticatedRouterContext,
@@ -18,6 +19,26 @@ export const isLoggedInMiddleware: MiddlewareFunction<
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "You must be logged in to access this method.",
+    });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      session: ctx.session,
+    },
+  });
+};
+
+/** Determine whether user is an admin before procceding. */
+export const isAdminMiddleware: MiddlewareFunction<
+  Context,
+  AuthenticatedRouterContext,
+  Meta
+> = async ({ ctx, next }) => {
+  if (ctx.session?.user.isAdmin !== true) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You must be an admin to access this method.",
     });
   }
   return next({

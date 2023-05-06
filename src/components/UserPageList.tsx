@@ -66,7 +66,7 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
     hasNextPage: hasMorePosts,
   } = trpc.useInfiniteQuery(
     [
-      "posts.posts",
+      "posts.all",
       {
         userId,
         limit: 4,

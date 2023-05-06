@@ -1,5 +1,7 @@
 import { env } from "@env";
 import z from "zod";
+import { tagsSchema } from "./tag.schema";
+import { fileSchema } from "./constants";
 
 const link = z
   .object({
@@ -52,12 +54,6 @@ const pollSchema = z
   )
   .optional();
 
-const tagsSchema = z
-  .string()
-  .array()
-  .nonempty("Post must have at least one tag")
-  .max(5, "Maximum of 5 tags per post");
-
 export const createPostSchema = z.object({
   title: z
     .string()
@@ -67,12 +63,7 @@ export const createPostSchema = z.object({
   body: z.string().trim().min(5, "Minimum body length is 5"),
   link,
   tags: tagsSchema,
-  files: z
-    .custom<File>((file) => {
-      const isFile = file instanceof File;
-
-      return isFile;
-    })
+  files: fileSchema
     .array()
     .max(
       Number(env.NEXT_PUBLIC_UPLOAD_MAX_NUMBER_OF_FILES),
@@ -98,8 +89,13 @@ export const getFollowingPostsSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish().optional(),
   skip: z.number().optional(),
-  userId: z.string().optional(),
-  tagId: z.string().optional(),
+  filter: z.string().optional(),
+});
+
+export const getPostsFromSubbedTagsSchema = z.object({
+  limit: z.number(),
+  cursor: z.string().nullish().optional(),
+  skip: z.number().optional(),
   filter: z.string().optional(),
 });
 
@@ -133,10 +129,6 @@ export const getSinglePostSchema = z.object({
   postId: z.string(),
 });
 
-export const getSingleTagSchema = z.object({
-  tagId: z.string(),
-});
-
 export const voteOnPollSchema = z.object({
   postId: z.string(),
   optionId: z.string(),
@@ -147,7 +139,6 @@ export const updatePostSchema = z.object({
   body: z.string().trim().min(10).optional(),
   postId: z.string(),
   link,
-  tags: tagsSchema,
 });
 
 export type UpdatePostInput = z.TypeOf<typeof updatePostSchema>;

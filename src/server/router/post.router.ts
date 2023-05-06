@@ -24,30 +24,11 @@ import {
   updatePostSchema,
   getLikedPostsSchema,
   voteOnPollSchema,
-  getSingleTagSchema,
+  getPostsFromSubbedTagsSchema,
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
-  .query("tags", {
-    resolve({ ctx }) {
-      const tags = ctx.prisma.tag.findMany();
-
-      return tags;
-    },
-  })
-  .query("single-tag", {
-    input: getSingleTagSchema,
-    async resolve({ ctx, input }) {
-      const tag = ctx.prisma.tag.findFirst({
-        where: {
-          id: input.tagId,
-        },
-      });
-
-      return tag;
-    },
-  })
-  .query("posts-by-tags", {
+  .query("by-tags", {
     input: getPostsByTagsSchema,
     async resolve({ ctx, input }) {
       const { tagLimit, cursor, skip } = input;
@@ -82,6 +63,13 @@ export const postRouter = createRouter()
             name: {
               search: query,
             },
+            OR: [
+              {
+                description: {
+                  search: query,
+                },
+              },
+            ],
           },
         }),
       });
@@ -110,7 +98,7 @@ export const postRouter = createRouter()
       };
     },
   })
-  .query("following-posts", {
+  .query("following", {
     input: getFollowingPostsSchema,
     async resolve({ ctx, input }) {
       // No user logged in, so no following to get.
@@ -158,7 +146,7 @@ export const postRouter = createRouter()
       };
     },
   })
-  .query("posts", {
+  .query("all", {
     input: getPostsSchema,
     async resolve({ ctx, input }) {
       const { limit, skip, cursor, filter } = input;
@@ -320,13 +308,13 @@ export const postRouter = createRouter()
             body: {
               search: query,
             },
-            // `jsonProtocol` preview feature broke this part of the query:
-            // TO-DO: Add back when fixed.
-            // OR: {
-            //   title: {
-            //     search: query,
-            //   },
-            // },
+            OR: [
+              {
+                title: {
+                  search: query,
+                },
+              },
+            ],
           }),
         },
       });
@@ -377,13 +365,13 @@ export const postRouter = createRouter()
             body: {
               search: query,
             },
-            // `jsonProtocol` preview feature broke this part of the query:
-            // TO-DO: Add back when fixed.
-            // OR: {
-            //   title: {
-            //     search: query,
-            //   },
-            // },
+            OR: [
+              {
+                title: {
+                  search: query,
+                },
+              },
+            ],
           }),
         },
       });
@@ -434,10 +422,13 @@ export const postRouter = createRouter()
           tags: {
             connectOrCreate: input.tags.map((tag) => ({
               create: {
-                name: tag,
+                name: tag.name,
+                avatar: tag.avatar,
+                backgroundImage: tag.backgroundImage,
+                description: tag.description,
               },
               where: {
-                name: tag,
+                name: tag.name,
               },
             })),
           },
@@ -631,23 +622,6 @@ export const postRouter = createRouter()
         });
       }
 
-      // Find which tags were on the post previously, but are now removed.
-      const previousPostTags = previousPost?.tags.map((tag) => tag.name) || [];
-
-      // Tags that will have no posts after current post is deleted must be deleted aswell.
-      const tagsToDelete = previousPost?.tags.filter(
-        (tag) => tag._count.posts === 1 && input.tags.indexOf(tag.name) === -1
-      );
-
-      const tagsToRemove = previousPostTags.filter(
-        (tag) => input.tags.indexOf(tag) === -1
-      );
-
-      // Filter for all new/existing tags who remain on the post.
-      const tagsToCreateOrConnect = input.tags.filter(
-        (tag) => tagsToRemove.indexOf(tag) < 0
-      );
-
       const previousLink = previousPost?.link?.url;
       const userIsDeletingLink = !input?.link?.url && !!previousLink;
       const userIsAddingNewLink = !!input?.link?.url && !!previousLink;
@@ -686,33 +660,8 @@ export const postRouter = createRouter()
                 },
               }),
           },
-          tags: {
-            ...(tagsToCreateOrConnect?.length && {
-              connectOrCreate: tagsToCreateOrConnect.map((tag) => ({
-                create: {
-                  name: tag,
-                },
-                where: {
-                  name: tag,
-                },
-              })),
-            }),
-            ...(tagsToRemove?.length && {
-              disconnect: tagsToRemove.map((tag) => ({ name: tag })),
-            }),
-          },
         },
       });
-
-      if (tagsToDelete?.length) {
-        await ctx.prisma.tag.deleteMany({
-          where: {
-            name: {
-              in: tagsToDelete.map((tag) => tag.name),
-            },
-          },
-        });
-      }
 
       return post;
     },
@@ -803,5 +752,111 @@ export const postRouter = createRouter()
           id: input.optionId,
         },
       });
+    },
+  })
+  .query("subscribed", {
+    input: getPostsFromSubbedTagsSchema,
+    async resolve({ ctx, input }) {
+      const posts = await ctx.prisma.post.findMany({
+        where: {
+          tags: {
+            some: {
+              subscribers: {
+                some: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          },
+        },
+        include: {
+          likes: true,
+          user: true,
+          link: true,
+          tags: true,
+        },
+        take: input.limit + 1,
+        skip: input.skip,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        ...(input?.filter
+          ? { orderBy: getFiltersByInput(input?.filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (posts.length > input.limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      const formattedPosts = await formatPosts(posts);
+
+      return {
+        posts: formattedPosts,
+        nextCursor,
+      };
+    },
+  })
+  // Posts from following users or from subscribed tags.
+  .query("your-feed", {
+    input: getPostsFromSubbedTagsSchema,
+    async resolve({ ctx, input }) {
+      const posts = await ctx.prisma.post.findMany({
+        where: {
+          tags: {
+            some: {
+              subscribers: {
+                some: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          },
+          OR: [
+            {
+              user: {
+                followers: {
+                  some: {
+                    followerId: ctx?.session?.user?.id,
+                  },
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          likes: true,
+          user: true,
+          link: true,
+          tags: true,
+        },
+        take: input.limit + 1,
+        skip: input.skip,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        ...(input?.filter
+          ? { orderBy: getFiltersByInput(input?.filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (posts.length > input.limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      const formattedPosts = await formatPosts(posts);
+
+      return {
+        posts: formattedPosts,
+        nextCursor,
+      };
     },
   });

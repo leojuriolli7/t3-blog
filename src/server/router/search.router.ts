@@ -39,6 +39,13 @@ export const searchRouter = createRouter().query("by-type", {
             name: {
               search: query,
             },
+            OR: [
+              {
+                description: {
+                  search: query,
+                },
+              },
+            ],
           },
         }),
       });
@@ -79,13 +86,13 @@ export const searchRouter = createRouter().query("by-type", {
           body: {
             search: input.query,
           },
-          // `jsonProtocol` preview feature broke this part of the query:
-          // TO-DO: Add back when fixed.
-          // OR: {
-          //   title: {
-          //     search: input.query,
-          //   },
-          // },
+          OR: [
+            {
+              title: {
+                search: input.query,
+              },
+            },
+          ],
         },
         include: {
           user: true,

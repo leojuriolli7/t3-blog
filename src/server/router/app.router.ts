@@ -7,9 +7,11 @@ import { userRouter } from "./user.router";
 import { scraperRouter } from "./scraper.router";
 import { searchRouter } from "./search.router";
 import { notificationRouter } from "./notification.router";
+import { tagRouter } from "./tag.router";
 
 export const appRouter = createRouter()
   .merge("posts.", postRouter)
+  .merge("tags.", tagRouter)
   .merge("comments.", commentRouter)
   .merge("users.", userRouter)
   .merge("likes.", likeRouter)

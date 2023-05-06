@@ -16,11 +16,19 @@ export const deleteChildComments = async (
 
   // If no replies, delete comment.
   if (!oneLevelDownReplies.length) {
-    return await prisma.comment.delete({
+    const commentToDelete = await prisma.comment.findFirst({
       where: {
         id: commentId,
       },
     });
+
+    if (!!commentToDelete) {
+      await prisma.comment.delete({
+        where: {
+          id: commentId,
+        },
+      });
+    }
   }
 
   // If has replies, check for other replies inside the replies.
@@ -30,10 +38,18 @@ export const deleteChildComments = async (
     }
 
     // After checking all replies, delete comment.
-    await prisma.comment.delete({
+    const commentToDelete = await prisma.comment.findFirst({
       where: {
         id: commentId,
       },
     });
+
+    if (commentToDelete) {
+      await prisma.comment.delete({
+        where: {
+          id: commentId,
+        },
+      });
+    }
   }
 };

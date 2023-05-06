@@ -12,10 +12,9 @@ import SearchInput from "@components/SearchInput";
 import { SearchFilterTypes } from "@schema/search.schema";
 import { SEARCH_FILTERS } from "@utils/constants";
 import Comment from "@components/Comment";
-import Section from "@components/Section";
-import CompactCard from "@components/CompactCard";
 import UserPreview from "@components/UserPreview";
 import { useRouter } from "next/router";
+import { TagSection } from "@components/TagSection";
 
 const LOTTIE_OPTIONS = {
   loop: true,
@@ -159,15 +158,7 @@ const SearchPage = () => {
 
       <ShouldRender if={!!dataToDisplay?.tags?.length}>
         {dataToDisplay?.tags?.map((tag) => (
-          <Section
-            title={tag?.name}
-            key={tag?.id}
-            seeMoreHref={`/posts/tags/${tag?.id}`}
-          >
-            {tag?.posts?.map((post) => (
-              <CompactCard key={`${tag?.id}-${post?.id}`} post={post} slide />
-            ))}
-          </Section>
+          <TagSection key={tag?.id} tag={tag} loading={isLoading} />
         ))}
       </ShouldRender>
 
@@ -180,11 +171,7 @@ const SearchPage = () => {
       <ShouldRender if={isLoading || isFetchingNextPage}>
         {currentFilter === "users" && <UserPreview loading />}
 
-        {currentFilter === "tags" && (
-          <Section loading>
-            <CompactCard loading slide />
-          </Section>
-        )}
+        {currentFilter === "tags" && <TagSection loading />}
 
         {currentFilter === "posts" && <PostCard loading />}
         {currentFilter === "comments" && <Comment variant="outlined" loading />}

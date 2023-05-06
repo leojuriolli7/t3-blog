@@ -13,6 +13,8 @@ import {
   AiOutlineLike,
   AiOutlineTag,
 } from "react-icons/ai";
+import { RiRssLine, RiRssFill } from "react-icons/ri";
+import { MdTag, MdOutlineTag } from "react-icons/md";
 import { ButtonLink } from "@components/Button";
 import BeatLoader from "@components/BeatLoader";
 import { useSession } from "next-auth/react";
@@ -22,6 +24,7 @@ import packageJson from "@package";
 import Image from "@components/Image";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import ThemeButton from "./ThemeButton";
+import { GoRss } from "react-icons/go";
 
 type ItemProps = {
   path: string;
@@ -111,7 +114,7 @@ export const SidebarContent = () => {
             defaultIcon={AiOutlineTag}
             path="/posts/tags"
             title="All tags"
-            subtitle="Explore through all tags"
+            subtitle="Browse through all tags"
           />
 
           <ShouldRender if={sessionStatus === "authenticated"}>
@@ -123,11 +126,25 @@ export const SidebarContent = () => {
               subtitle="Posts from users you follow"
             />
             <Item
+              activeIcon={MdTag}
+              defaultIcon={MdOutlineTag}
+              path="/posts/tags/subscribed"
+              title="Subscribed"
+              subtitle="Tags you subscribed to"
+            />
+            <Item
               activeIcon={AiFillLike}
               defaultIcon={AiOutlineLike}
               path="/posts/liked"
               title="Liked"
               subtitle="Your liked posts"
+            />
+            <Item
+              activeIcon={RiRssFill}
+              defaultIcon={GoRss}
+              path="/posts/feed"
+              title="Your feed"
+              subtitle="Posts curated to you"
             />
             <Item
               activeIcon={AiFillHeart}

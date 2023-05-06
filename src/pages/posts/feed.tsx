@@ -11,7 +11,7 @@ import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { useEffect, useMemo, useRef } from "react";
 
-const Following = () => {
+const YourFeedPage = () => {
   const { tabProps, selectedTab } = useFilterContent();
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -20,7 +20,7 @@ const Following = () => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
-        "posts.following",
+        "posts.your-feed",
         {
           limit: 6,
           filter: selectedTab.id,
@@ -48,15 +48,16 @@ const Following = () => {
 
   return (
     <>
-      <MetaTags title="Following" />
+      <MetaTags title="Your feed" />
       <div className="w-full text-center">
         <h2 className="prose text-2xl font-bold dark:prose-invert xl:text-3xl">
-          Following feed
+          Your feed
         </h2>
 
         <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400 xl:text-base">
-          Posts from your following
+          Posts from your subscribed tags & following users
         </p>
+
         <div className="mt-3 flex gap-3">
           <AnimatedTabs {...tabProps} />
         </div>
@@ -76,7 +77,7 @@ const Following = () => {
 
         <ShouldRender if={noDataToShow}>
           <EmptyMessage
-            message="Hmm. Could not find any posts from your following."
+            message="Hmm. Could not find any posts from your feed."
             hideRedirect
             small
           />
@@ -88,7 +89,7 @@ const Following = () => {
   );
 };
 
-export default Following;
+export default YourFeedPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);

@@ -3,7 +3,7 @@ import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
-import Section from "@components/Section";
+import { TagSection } from "@components/TagSection";
 import CompactCard from "@components/CompactCard";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
@@ -23,7 +23,7 @@ const AllTagsPage: React.FC = () => {
     hasNextPage,
   } = trpc.useInfiniteQuery(
     [
-      "posts.posts-by-tags",
+      "posts.by-tags",
       {
         tagLimit: 6,
         query: queryValue,
@@ -57,33 +57,21 @@ const AllTagsPage: React.FC = () => {
         <h1 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
           All tags
         </h1>
-        <p className="-mb-3">See all tags created on T3 blog.</p>
+        <p className="-mb-3 text-zinc-600 dark:text-zinc-400">
+          See all tags created on T3 blog.
+        </p>
       </div>
       <SearchInput setQuery={setQueryValue} placeholder="Search tags" />
       {(isLoading ? loadingArray(4) : dataToShow)?.map((tag, key) => (
-        <Section
+        <TagSection
           loading={isLoading}
-          title={tag?.name}
+          tag={tag}
           key={isLoading ? key : tag?.id}
-          seeMoreHref={`/posts/tags/${tag?.id}`}
-        >
-          {(isLoading ? loadingArray(1) : tag?.posts)?.map((post, key) => (
-            <CompactCard
-              loading={isLoading}
-              key={isLoading ? key : `${tag?.id}-${post?.id}`}
-              post={post}
-              slide
-            />
-          ))}
-        </Section>
+        />
       ))}
 
       <ShouldRender if={isFetchingNextPage}>
-        <Section loading={isLoading}>
-          {loadingArray(1).map((card, i) => (
-            <CompactCard key={i} loading slide />
-          ))}
-        </Section>
+        <TagSection loading />
       </ShouldRender>
 
       <ShouldRender if={!!queryValue && noDataToShow}>
@@ -100,7 +88,7 @@ export default AllTagsPage;
 export async function getServerSideProps() {
   const ssg = await generateSSGHelper();
 
-  await ssg.prefetchInfiniteQuery("posts.posts-by-tags", {
+  await ssg.prefetchInfiniteQuery("posts.by-tags", {
     tagLimit: 6,
     query: "",
   });

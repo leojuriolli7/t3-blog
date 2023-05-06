@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 export type SkeletonProps = {
   heading?: boolean;
   lines?: number;
@@ -5,6 +7,7 @@ export type SkeletonProps = {
   height?: string;
   className?: string;
   parentClass?: string;
+  margin?: string;
 };
 
 const Skeleton: React.FC<SkeletonProps> = ({
@@ -14,20 +17,23 @@ const Skeleton: React.FC<SkeletonProps> = ({
   height,
   className,
   parentClass,
+  margin,
 }) => {
   return (
     <div
       role="status"
-      className={`${width || "w-full"} animate-pulse ${parentClass}`}
+      className={clsx("animate-pulse", parentClass, width || "w-full")}
     >
       {Array.from({ length: lines }).map((_, i) => (
         <div
           key={i}
-          className={`${heading ? "h-6" : "h-2.5"} ${
-            height || ""
-          } w-full bg-gray-300 dark:bg-neutral-700 ${
-            i !== lines - 1 ? "mb-4" : ""
-          } ${className}`}
+          className={clsx(
+            "w-full bg-gray-300 dark:bg-neutral-700",
+            heading ? "h-6" : "h-2.5",
+            i !== lines - 1 && (margin || "mb-4"),
+            height,
+            className
+          )}
         />
       ))}
       <span className="sr-only">Loading...</span>
