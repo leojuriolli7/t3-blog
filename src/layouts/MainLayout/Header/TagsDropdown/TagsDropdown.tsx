@@ -117,12 +117,18 @@ const TagsDropdown: React.FC = () => {
         </ShouldRender>
 
         <ShouldRender if={noDataToShow}>
-          <div className="flex w-full justify-center py-6">
+          <div className="w-full py-6 text-center">
             <p className="text-neutral-400">
               {searchQuery
                 ? "No results found"
                 : "You have not subscribed to any tags"}
             </p>
+
+            {!searchQuery && (
+              <Link className="text-emerald-500 underline" href="/posts/tags">
+                Come explore some tags!
+              </Link>
+            )}
           </div>
         </ShouldRender>
 

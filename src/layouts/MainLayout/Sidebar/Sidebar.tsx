@@ -114,7 +114,7 @@ export const SidebarContent = () => {
             defaultIcon={AiOutlineTag}
             path="/posts/tags"
             title="All tags"
-            subtitle="Explore through all tags"
+            subtitle="Browse through all tags"
           />
 
           <ShouldRender if={sessionStatus === "authenticated"}>
