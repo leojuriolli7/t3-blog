@@ -57,7 +57,13 @@ export const TagImageInput: React.FC<Props> = ({ type, initialValue }) => {
   );
 
   return (
-    <Field required label={label} error={errors[name]}>
+    <Field
+      description={`Recommended aspect ratio: ${isAvatar ? "1/1" : "16/9"}`}
+      descriptionClasses="text-xs mb-1"
+      required
+      label={label}
+      error={errors[name]}
+    >
       {!currentImage && (
         <input
           type="file"

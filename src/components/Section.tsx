@@ -43,7 +43,7 @@ const Section: React.FC<Props> = ({
 
           <ShouldRender if={React.isValidElement(title)}>{title}</ShouldRender>
 
-          <ShouldRender if={loading}>
+          <ShouldRender if={loading && typeof title === "string"}>
             <Skeleton heading lines={1} width="w-3/5" />
           </ShouldRender>
         </div>
@@ -59,7 +59,10 @@ const Section: React.FC<Props> = ({
               disabled={loading}
               variant="gradient"
               size={compact ? "xs" : "sm"}
-              className="h-fit flex-shrink-0 rounded-full"
+              className={clsx(
+                "h-fit flex-shrink-0 rounded-full",
+                loading && "pointer-events-none"
+              )}
             >
               See more
             </ButtonLink>

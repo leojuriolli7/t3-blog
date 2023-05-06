@@ -2,6 +2,8 @@ import { TagWithPosts } from "@utils/types";
 import CompactCard from "./CompactCard";
 import Image from "./Image";
 import Section from "./Section";
+import ShouldRender from "./ShouldRender";
+import Skeleton from "./Skeleton";
 
 type Props = {
   loading: boolean;
@@ -12,27 +14,39 @@ type TitleProps = {
   name?: string;
   description?: string;
   avatar?: string;
+  loading?: boolean;
 };
 
-const SectionHeader = ({ name, description, avatar }: TitleProps) => {
+const SectionHeader = ({ name, description, avatar, loading }: TitleProps) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex w-full gap-2">
       <Image
         src={avatar}
+        isLoading={loading}
         width={60}
         height={60}
-        className="h-[60px] w-[60px] rounded-full"
+        className="h-[60px] w-[60px] flex-shrink-0 rounded-full"
         alt={`${name} avatar`}
       />
-      <div>
-        <h2 className="prose line-clamp-1 text-ellipsis text-2xl dark:prose-invert">
-          {name}
-        </h2>
 
-        <p className="line-clamp-2 text-ellipsis leading-6 text-zinc-600 dark:text-zinc-400">
-          {description}
-        </p>
-      </div>
+      <ShouldRender if={!loading}>
+        <div>
+          <h2 className="prose line-clamp-1 text-ellipsis text-2xl dark:prose-invert">
+            {name}
+          </h2>
+
+          <p className="line-clamp-2 text-ellipsis leading-6 text-zinc-600 dark:text-zinc-400">
+            {description}
+          </p>
+        </div>
+      </ShouldRender>
+
+      <ShouldRender if={loading}>
+        <div className="flex w-full flex-col justify-center">
+          <Skeleton heading width="w-[160px]" />
+          <Skeleton width="w-[200px]" className="mt-2" />
+        </div>
+      </ShouldRender>
     </div>
   );
 };
@@ -46,6 +60,7 @@ export const TagSection: React.FC<Props> = ({ loading, tag }) => {
           name={tag?.name}
           description={tag?.description}
           avatar={tag?.avatar}
+          loading={loading}
         />
       }
       seeMoreHref={`/posts/tags/${tag?.id}`}
