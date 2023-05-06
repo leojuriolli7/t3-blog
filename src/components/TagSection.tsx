@@ -25,17 +25,17 @@ const SectionHeader = ({ name, description, avatar, loading }: TitleProps) => {
         isLoading={loading}
         width={60}
         height={60}
-        className="h-[60px] w-[60px] flex-shrink-0 rounded-full"
+        className="h-12 w-12 flex-shrink-0 rounded-full xs:h-[60px] xs:w-[60px]"
         alt={`${name} avatar`}
       />
 
       <ShouldRender if={!loading}>
         <div>
-          <h2 className="prose line-clamp-1 text-ellipsis text-2xl dark:prose-invert">
+          <h2 className="prose line-clamp-1 text-ellipsis text-xl dark:prose-invert xs:text-2xl">
             {name}
           </h2>
 
-          <p className="line-clamp-2 text-ellipsis leading-6 text-zinc-600 dark:text-zinc-400">
+          <p className="line-clamp-2 text-ellipsis text-sm leading-5 text-zinc-600 dark:text-zinc-400 xs:text-base">
             {description}
           </p>
         </div>

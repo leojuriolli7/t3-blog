@@ -97,6 +97,7 @@ const TagsDropdown: React.FC = () => {
           setQuery={setSearchQuery}
           placeholder="Search your subscribed tags"
           replace={false}
+          className="rounded-full text-sm xs:text-base"
         />
       </div>
       <ul className="grey-scrollbar mt-1 max-h-[450px] w-full overflow-y-auto scrollbar-thumb-rounded">
