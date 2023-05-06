@@ -9,6 +9,7 @@ interface AuthenticatedRouterContext extends Context {
 
 interface Meta {}
 
+/** Determine whether user is logged in before procceding. */
 export const isLoggedInMiddleware: MiddlewareFunction<
   Context,
   AuthenticatedRouterContext,
@@ -28,6 +29,7 @@ export const isLoggedInMiddleware: MiddlewareFunction<
   });
 };
 
+/** Determine whether user is an admin before procceding. */
 export const isAdminMiddleware: MiddlewareFunction<
   Context,
   AuthenticatedRouterContext,

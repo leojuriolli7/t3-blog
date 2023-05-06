@@ -23,7 +23,7 @@ const AllTagsPage: React.FC = () => {
     hasNextPage,
   } = trpc.useInfiniteQuery(
     [
-      "posts.posts-by-tags",
+      "posts.by-tags",
       {
         tagLimit: 6,
         query: queryValue,
@@ -57,7 +57,9 @@ const AllTagsPage: React.FC = () => {
         <h1 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
           All tags
         </h1>
-        <p className="-mb-3">See all tags created on T3 blog.</p>
+        <p className="-mb-3 text-zinc-600 dark:text-zinc-400">
+          See all tags created on T3 blog.
+        </p>
       </div>
       <SearchInput setQuery={setQueryValue} placeholder="Search tags" />
       {(isLoading ? loadingArray(4) : dataToShow)?.map((tag, key) => (
@@ -86,7 +88,7 @@ export default AllTagsPage;
 export async function getServerSideProps() {
   const ssg = await generateSSGHelper();
 
-  await ssg.prefetchInfiniteQuery("posts.posts-by-tags", {
+  await ssg.prefetchInfiniteQuery("posts.by-tags", {
     tagLimit: 6,
     query: "",
   });

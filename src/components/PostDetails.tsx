@@ -313,7 +313,7 @@ export const PostDetails: React.FC<Props> = ({
         router.push("/");
 
         // This will refetch the home-page posts.
-        utils.invalidateQueries(["posts.posts"]);
+        utils.invalidateQueries(["posts.all"]);
       },
     }
   );

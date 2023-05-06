@@ -16,7 +16,7 @@ import { TagSection } from "@components/TagSection";
 const PostListingPage: React.FC = () => {
   const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
     [
-      "posts.posts-by-tags",
+      "posts.by-tags",
       {
         tagLimit: 4,
       },
@@ -29,7 +29,7 @@ const PostListingPage: React.FC = () => {
   const taggedPosts = tagsWithPosts?.tags;
 
   const { data: followingPosts } = trpc.useQuery(
-    ["posts.following-posts", { limit: 4 }],
+    ["posts.following", { limit: 4 }],
     {
       refetchOnWindowFocus: false,
     }
@@ -45,7 +45,7 @@ const PostListingPage: React.FC = () => {
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
-        "posts.posts",
+        "posts.all",
         {
           limit: 4,
           filter: selectedTab.id,
@@ -144,11 +144,11 @@ export default PostListingPage;
 export async function getServerSideProps() {
   const ssg = await generateSSGHelper();
 
-  const tagsQuery = ssg.prefetchQuery("posts.posts-by-tags", {
+  const tagsQuery = ssg.prefetchQuery("posts.by-tags", {
     tagLimit: 4,
   });
 
-  const postsQuery = ssg.prefetchInfiniteQuery("posts.posts", {
+  const postsQuery = ssg.prefetchInfiniteQuery("posts.all", {
     limit: 4,
     filter: "newest",
   });

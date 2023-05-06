@@ -32,7 +32,7 @@ const CompactCard: React.FC<Props> = ({ slide, post, loading, bgClass }) => {
         loading && "pointer-events-none",
         slide && "keen-slider__slide",
         bgClass || "bg-white dark:bg-zinc-900",
-        "flex cursor-pointer  flex-col justify-between rounded-xl border border-zinc-300 p-3 shadow-md transition-borderAndShadow hover:shadow-lg dark:border-neutral-700 dark:hover:border-neutral-500/80"
+        "flex cursor-pointer flex-col justify-between rounded-xl border border-zinc-300 p-3 shadow-md transition-borderAndShadow hover:shadow-lg dark:border-zinc-900/50 dark:hover:border-zinc-700/80"
       )}
       style={
         slide

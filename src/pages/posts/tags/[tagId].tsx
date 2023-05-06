@@ -24,7 +24,7 @@ import { CreateTagInput } from "@schema/tag.schema";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import ConfirmationModal from "@components/ConfirmationModal";
-import { parseTagPayload } from "@server/utils/parseTagPayload";
+import { parseTagPayload } from "@utils/parseTagPayload";
 import Button from "@components/Button";
 
 const SingleTagPage: NextPage<
@@ -173,7 +173,7 @@ const SingleTagPage: NextPage<
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
     trpc.useInfiniteQuery(
       [
-        "posts.posts",
+        "posts.all",
         {
           limit: 6,
           tagId,
@@ -336,7 +336,7 @@ export async function getServerSideProps(
   const ssg = await generateSSGHelper();
   const tagId = context.params?.tagId as string;
 
-  const postsQuery = ssg.prefetchInfiniteQuery("posts.posts", {
+  const postsQuery = ssg.prefetchInfiniteQuery("posts.all", {
     limit: 6,
     tagId,
     filter: "newest",

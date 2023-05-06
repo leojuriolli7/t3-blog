@@ -13,7 +13,7 @@ import {
   AiOutlineLike,
   AiOutlineTag,
 } from "react-icons/ai";
-// import { MdTag, MdOutlineTag } from "react-icons/md";
+import { MdTag, MdOutlineTag } from "react-icons/md";
 import { ButtonLink } from "@components/Button";
 import BeatLoader from "@components/BeatLoader";
 import { useSession } from "next-auth/react";
@@ -123,13 +123,13 @@ export const SidebarContent = () => {
               title="Following"
               subtitle="Posts from users you follow"
             />
-            {/* <Item
+            <Item
               activeIcon={MdTag}
               defaultIcon={MdOutlineTag}
               path="/posts/tags/subscribed"
               title="Subscribed"
               subtitle="Tags you subscribed to"
-            /> */}
+            />
             <Item
               activeIcon={AiFillLike}
               defaultIcon={AiOutlineLike}

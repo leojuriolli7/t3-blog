@@ -20,7 +20,7 @@ import Button from "@components/Button";
 import TextInput from "@components/TextInput";
 import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
 import { useUploadTagImagesToS3 } from "@hooks/aws/useUploadTagImagesToS3";
-import { parseTagPayload } from "@server/utils/parseTagPayload";
+import { parseTagPayload } from "@utils/parseTagPayload";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();

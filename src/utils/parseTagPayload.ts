@@ -2,7 +2,7 @@ import { CreateTagInput } from "@schema/tag.schema";
 
 /**
  * This function is used to parse the tag payload before sending it to the server.
- * It will delete the payload's files, as they have already been uploaded and
+ * It will delete the payload's image files, as they have already been uploaded and
  * will not be used on the server.
  */
 export function parseTagPayload(tag: CreateTagInput) {

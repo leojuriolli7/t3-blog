@@ -70,7 +70,7 @@ const EditAccountModal: React.FC<Props> = ({
         ]);
 
         utils.invalidateQueries([
-          "posts.posts",
+          "posts.all",
           {
             limit: 4,
             userId: userId,

@@ -24,10 +24,11 @@ import {
   updatePostSchema,
   getLikedPostsSchema,
   voteOnPollSchema,
+  getPostsFromSubbedTagsSchema,
 } from "@schema/post.schema";
 
 export const postRouter = createRouter()
-  .query("posts-by-tags", {
+  .query("by-tags", {
     input: getPostsByTagsSchema,
     async resolve({ ctx, input }) {
       const { tagLimit, cursor, skip } = input;
@@ -97,7 +98,7 @@ export const postRouter = createRouter()
       };
     },
   })
-  .query("following-posts", {
+  .query("following", {
     input: getFollowingPostsSchema,
     async resolve({ ctx, input }) {
       // No user logged in, so no following to get.
@@ -145,7 +146,7 @@ export const postRouter = createRouter()
       };
     },
   })
-  .query("posts", {
+  .query("all", {
     input: getPostsSchema,
     async resolve({ ctx, input }) {
       const { limit, skip, cursor, filter } = input;
@@ -751,5 +752,52 @@ export const postRouter = createRouter()
           id: input.optionId,
         },
       });
+    },
+  })
+  .query("subscribed", {
+    input: getPostsFromSubbedTagsSchema,
+    async resolve({ ctx, input }) {
+      const posts = await ctx.prisma.post.findMany({
+        where: {
+          tags: {
+            some: {
+              subscribers: {
+                some: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          },
+        },
+        include: {
+          likes: true,
+          user: true,
+          link: true,
+          tags: true,
+        },
+        take: input.limit + 1,
+        skip: input.skip,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        ...(input?.filter
+          ? { orderBy: getFiltersByInput(input?.filter) }
+          : {
+              orderBy: {
+                createdAt: "desc",
+              },
+            }),
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (posts.length > input.limit) {
+        const nextItem = posts.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+
+      const formattedPosts = await formatPosts(posts);
+
+      return {
+        posts: formattedPosts,
+        nextCursor,
+      };
     },
   });
