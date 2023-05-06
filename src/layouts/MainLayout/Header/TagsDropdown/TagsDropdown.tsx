@@ -87,7 +87,7 @@ const TagsDropdown: React.FC = () => {
       strategy="fixed"
       rounded
       icon={
-        <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full  border-[1px]  border-zinc-300 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-zinc-900 dark:hover:bg-zinc-800">
+        <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full  border-[1px] border-zinc-300 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-zinc-900 dark:hover:bg-zinc-800">
           <AiFillTag className="h-5 w-5 text-gray-500 dark:text-gray-400" />
         </div>
       }
@@ -97,7 +97,7 @@ const TagsDropdown: React.FC = () => {
           setQuery={setSearchQuery}
           placeholder="Search your subscribed tags"
           replace={false}
-          className="rounded-full text-sm xs:text-base"
+          className="rounded-full"
         />
       </div>
       <ul className="grey-scrollbar mt-1 max-h-[450px] w-full overflow-y-auto scrollbar-thumb-rounded">
