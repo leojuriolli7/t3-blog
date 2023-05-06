@@ -79,7 +79,7 @@ const PostListingPage: React.FC = () => {
           <h2 className="prose w-full text-left text-2xl font-bold dark:prose-invert xl:text-3xl">
             Following
           </h2>
-          <p className="mb-3 text-sm xl:text-base">
+          <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400 xl:text-base">
             Posts from all your following
           </p>
           <Section seeMoreHref="posts/following">

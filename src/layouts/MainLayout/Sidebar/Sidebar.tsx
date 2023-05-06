@@ -13,6 +13,7 @@ import {
   AiOutlineLike,
   AiOutlineTag,
 } from "react-icons/ai";
+import { RiRssLine, RiRssFill } from "react-icons/ri";
 import { MdTag, MdOutlineTag } from "react-icons/md";
 import { ButtonLink } from "@components/Button";
 import BeatLoader from "@components/BeatLoader";
@@ -23,6 +24,7 @@ import packageJson from "@package";
 import Image from "@components/Image";
 import getUserDisplayName from "@utils/getUserDisplayName";
 import ThemeButton from "./ThemeButton";
+import { GoRss } from "react-icons/go";
 
 type ItemProps = {
   path: string;
@@ -136,6 +138,13 @@ export const SidebarContent = () => {
               path="/posts/liked"
               title="Liked"
               subtitle="Your liked posts"
+            />
+            <Item
+              activeIcon={RiRssFill}
+              defaultIcon={GoRss}
+              path="/posts/feed"
+              title="Your feed"
+              subtitle="Posts curated to you"
             />
             <Item
               activeIcon={AiFillHeart}
