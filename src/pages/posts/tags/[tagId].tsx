@@ -98,6 +98,14 @@ const SingleTagPage: NextPage<
             tagId,
           },
         ]);
+
+        utils.invalidateQueries([
+          "tags.subscribed",
+          {
+            limit: 6,
+            query: "",
+          },
+        ]);
       },
     }
   );
