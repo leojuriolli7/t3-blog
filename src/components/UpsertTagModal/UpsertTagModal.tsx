@@ -69,7 +69,7 @@ export const UpsertTagModal: React.FC<Props> = ({
 
   return (
     <Modal onClose={resetForm} alwaysCentered openState={openState}>
-      <div className="w-[400px] rounded-lg bg-white p-8 backdrop-blur-md dark:bg-zinc-900/70 sm:p-12">
+      <div className="w-[400px] max-w-[95vw] rounded-lg bg-white p-8 backdrop-blur-md dark:bg-zinc-900/70 sm:p-12">
         <h1 className=" text-2xl font-bold tracking-tight text-gray-900 dark:text-neutral-100">
           {isUpdate ? `Update "${initialTag?.name}"` : "Create a new tag"}
         </h1>
