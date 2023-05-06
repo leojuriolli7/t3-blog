@@ -36,6 +36,11 @@ export const tagRouter = createRouter()
               id: ctx?.session?.user?.id,
             },
           },
+          _count: {
+            select: {
+              subscribers: true,
+            },
+          },
         },
       });
 

@@ -61,9 +61,6 @@ export const TagHoverCard: React.FC<Props> = ({
               <div className="prose mt-2 line-clamp-4 text-ellipsis text-sm dark:prose-invert">
                 {tag?.description}
               </div>
-              {/* <div className="mt-1 flex gap-1 text-base">
-                <span className="font-bold">290</span> <span>Subscribers</span>
-              </div> */}
             </div>
           </div>
         </HoverCard.Content>

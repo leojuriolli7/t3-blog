@@ -59,6 +59,8 @@ const SingleTagPage: NextPage<
     }
   );
 
+  const numberOfSubs = tag?._count?.subscribers ?? 0;
+
   const { mutate: subscribe, isLoading: subscribing } = trpc.useMutation(
     "tags.subscribe",
     {
@@ -71,6 +73,9 @@ const SingleTagPage: NextPage<
           utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
             ...old!,
             isSubscribed: false,
+            _count: {
+              subscribers: old!._count!.subscribers - 1,
+            },
           }));
         }
 
@@ -78,6 +83,9 @@ const SingleTagPage: NextPage<
           utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
             ...old!,
             isSubscribed: true,
+            _count: {
+              subscribers: old!._count!.subscribers + 1,
+            },
           }));
         }
 
@@ -270,9 +278,10 @@ const SingleTagPage: NextPage<
                 />
               </ShouldRender>
 
-              {/* <div className="mt-1 flex gap-1 text-base text-zinc-700 dark:text-zinc-300">
-              <span className="font-bold">290</span> <span>Subscribers</span>
-            </div> */}
+              <div className="mt-1 flex gap-1 text-base text-zinc-700 dark:text-zinc-300">
+                <span className="font-bold">{numberOfSubs}</span>{" "}
+                <span>{`Subscriber${numberOfSubs !== 1 ? "s" : ""}`}</span>
+              </div>
             </div>
           </div>
         </div>
