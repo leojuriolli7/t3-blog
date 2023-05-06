@@ -48,9 +48,9 @@ function getHref(notification: Notification) {
 
   const currentType = notification.type.toLowerCase() as NotificationTypes;
 
-  const postTypes = ["favorite", "like", "following-post"];
+  const postTypes = ["following-post"];
   const commentTypes = ["reply", "comment"];
-  const userTypes = ["follow", "no-username", "no-avatar"];
+  const userTypes = ["favorite", "like", "follow", "no-username", "no-avatar"];
 
   if (postTypes.includes(currentType)) return `/posts/${postId}`;
 
