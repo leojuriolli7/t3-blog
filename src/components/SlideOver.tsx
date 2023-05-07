@@ -71,8 +71,8 @@ const SlideOver: React.FC<Props> = ({ children, openState }) => {
                     <div className="relative flex-1 px-4 sm:px-6">
                       <Image
                         src="/static/logo.png"
-                        width={60}
-                        height={60}
+                        width={45}
+                        height={45}
                         alt="T3 logo"
                         className="absolute left-6 top-0"
                       />

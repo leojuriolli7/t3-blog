@@ -107,7 +107,7 @@ export const SidebarContent = () => {
             path="/"
             title="Home"
             subtitle="Go to homepage"
-            className="mt-4"
+            className="mt-4 -xs:mt-2"
           />
           <Item
             activeIcon={AiFillTag}
@@ -178,7 +178,7 @@ export const SidebarContent = () => {
             <ButtonLink
               variant="primary"
               size="lg"
-              className="flex w-full justify-center rounded-full font-bold shadow-md transition-opacity"
+              className="flex w-full justify-center rounded-full font-bold shadow-md transition-opacity -xs:py-1 -xs:text-[15px]"
             >
               {sessionStatus === "authenticated" ? "Create post" : "Sign in"}
             </ButtonLink>

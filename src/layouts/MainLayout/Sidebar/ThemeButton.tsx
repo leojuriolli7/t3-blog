@@ -7,8 +7,7 @@ import { useTheme } from "next-themes";
 import clsx from "clsx";
 
 const iconProps = {
-  size: 20,
-  className: "text-white",
+  className: "text-white w-5 h-5 -xs:w-4 -xs:h-4",
 };
 
 const icons = [
@@ -58,10 +57,10 @@ const ThemeButton = () => {
         onClick={toggleTheme}
         size="lg"
         variant="transparent"
-        className={`flex w-full justify-center rounded-full bg-gradient-to-br shadow-md ${bgClasses} bg-size-200 bg-pos-0 text-white transition-all duration-500 hover:bg-pos-100 hover:opacity-100`}
+        className={`flex w-full justify-center rounded-full bg-gradient-to-br shadow-md ${bgClasses} bg-size-200 bg-pos-0 text-white transition-all duration-500 hover:bg-pos-100 hover:opacity-100 -xs:py-1 -xs:text-[15px]`}
       >
         <div className="flex w-full items-center justify-center gap-2 overflow-hidden">
-          <div className="h-[20px] w-[20px]">
+          <div className="h-5 w-5 -xs:h-4 -xs:w-4">
             <Transition {...transitionConfig} show={hovering}>
               {icons[isDarkMode ? 0 : 1]}
             </Transition>
