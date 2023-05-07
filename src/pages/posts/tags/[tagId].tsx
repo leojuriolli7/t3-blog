@@ -257,7 +257,7 @@ const SingleTagPage: NextPage<
               width={80}
               height={80}
               isLoading={loadingTag}
-              className="h-20 w-20 flex-shrink-0 rounded-full object-cover"
+              className="h-16 w-16 flex-shrink-0 rounded-full object-cover xs:h-20 xs:w-20"
             />
 
             <div className="w-full">
@@ -266,7 +266,7 @@ const SingleTagPage: NextPage<
                   {tag?.name}
                 </h1>
 
-                <p className="mt-1 leading-6 text-zinc-600 dark:text-zinc-400">
+                <p className="mt-1 leading-6 text-zinc-600 dark:text-zinc-400 -xs:text-sm">
                   {tag?.description}
                 </p>
               </ShouldRender>
