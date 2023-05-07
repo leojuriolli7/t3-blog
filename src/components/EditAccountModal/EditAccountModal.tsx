@@ -100,6 +100,10 @@ const EditAccountModal: React.FC<Props> = ({
         userId
       );
 
+      // by adding a timestamp to the url, we ensure that the image cache is invalidated.
+      const timestamp = new Date().getTime().toString();
+      const stampedUrl = `${imageUrl}?${timestamp}`;
+
       update({
         userId,
         ...(values.name && {
@@ -107,7 +111,7 @@ const EditAccountModal: React.FC<Props> = ({
         }),
         bio: values?.bio,
         ...(values.avatar && {
-          image: imageUrl,
+          image: stampedUrl,
         }),
         url: values?.url || null,
       });

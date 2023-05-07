@@ -39,8 +39,12 @@ export const useUploadTagImagesToS3 = () => {
             `${tagName}/${type}`
           );
 
+          // by adding a timestamp to the url, we ensure that the image cache is invalidated.
+          const timestamp = new Date().getTime().toString();
+          const stampedUrl = `${generatedUrl}?${timestamp}`;
+
           return {
-            url: generatedUrl,
+            url: stampedUrl,
             type,
           };
         })
