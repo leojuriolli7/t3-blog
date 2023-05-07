@@ -103,14 +103,14 @@ const PollView: React.FC<Props> = ({ poll }) => {
 
   return (
     <div
-      className="w-full bg-white p-3 ring-1 ring-neutral-300 dark:bg-zinc-900 dark:ring-0 xs:p-4 -xs:-mb-4"
+      className="w-full bg-white p-3 ring-1 ring-neutral-300 dark:bg-zinc-900 dark:ring-0 xl:p-4 -xl:-mb-4"
       aria-label="Poll"
     >
-      <h2 className="text-base font-bold xs:text-lg" aria-label="Poll title">
+      <h2 className="text-base font-bold xl:text-lg" aria-label="Poll title">
         {poll?.title}
       </h2>
 
-      <ul className="flex w-full flex-col gap-2 py-2 xs:px-2">
+      <ul className="flex w-full flex-col gap-2 py-2 xl:px-2">
         {poll?.options.map((option) => (
           <PollOption
             key={option.id}

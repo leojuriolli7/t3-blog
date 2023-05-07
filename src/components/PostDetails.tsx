@@ -347,7 +347,7 @@ export const PostDetails: React.FC<Props> = ({
         />
       </ShouldRender>
 
-      <main className="relative flex w-full flex-col gap-10 rounded-lg border border-zinc-200 bg-slate-100 px-12 py-12 shadow-lg dark:border-zinc-700/90 dark:bg-zinc-800/70 -xs:px-4 -xs:py-8">
+      <main className="relative flex w-full flex-col gap-10 rounded-lg border border-zinc-200 bg-slate-100 px-12 py-12 shadow-lg dark:border-zinc-700/90 dark:bg-zinc-800/70 -xl:px-4 -xl:py-8">
         <ShouldRender if={data && canDeleteOrEditPost}>
           <div className="align-center absolute -top-2 right-2 flex gap-3">
             <ActionButton
@@ -365,7 +365,7 @@ export const PostDetails: React.FC<Props> = ({
 
         <ShouldRender if={!isEditing}>
           <ShouldRender if={!isLoading}>
-            <h1 className="prose text-2xl font-bold dark:prose-invert xs:text-4xl xl:text-3xl">
+            <h1 className="prose text-2xl font-bold dark:prose-invert xl:text-3xl">
               {data?.title}
             </h1>
           </ShouldRender>
