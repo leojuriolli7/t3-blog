@@ -82,9 +82,18 @@ I could notice whenever I first loaded the site, or scrolled down to load new po
 | ![Screenshot from 2023-03-29 23-46-02](https://user-images.githubusercontent.com/100495707/228715389-f1206b83-ae93-4e1f-b5af-d18bb1356e5d.png) | ![Screenshot from 2023-03-29 23-47-33](https://user-images.githubusercontent.com/100495707/228715384-b8cee082-a162-4d9e-a0f6-1a1f791242a1.png)  | 
 
 ## Overcoming T3 Stack limitations
+
+### File uploads
 tRPC [does not support `multipart/form-data`](https://github.com/trpc/trpc/discussions/658#discussioncomment-998746), so file uploads could not be done reliably inside the tRPC router. For that reason, I decided to use the AWS SDK, S3 buckets and presigned URLs, a very safe and reliable method of uploading files. 
 
 In this case, the tRPC router is only responsible with creating presigned URLs for uploads on the client and getting/parsing the AWS objects before sending the JSON to the client on any queries. 
+
+### Image caching
+Next.js has a very effective and powerful image caching when using their `next/image` component. However, this can be an issue when updating an image without changing its url, like for example, updating a user's profile picture, the url is the same, but the content has changed. Next.js is not able to identify the change. 
+
+To counteract this, every time an image is updated, a timestamp is appended to its url, to ensure the path will be different and the cache will be invalidated immediately. Eg: `bucket-url/user-id/avatar?1231903109` 
+
+[See more on the commit.](https://github.com/leojuriolli7/t3-blog/commit/67145e0c2e8ee7c0d531d392a8d4191df31b293e)
 
 ## Run the project
 ### Environment variables:
