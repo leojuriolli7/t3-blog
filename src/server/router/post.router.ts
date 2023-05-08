@@ -807,16 +807,18 @@ export const postRouter = createRouter()
     async resolve({ ctx, input }) {
       const posts = await ctx.prisma.post.findMany({
         where: {
-          tags: {
-            some: {
-              subscribers: {
+          OR: [
+            {
+              tags: {
                 some: {
-                  id: ctx.session.user.id,
+                  subscribers: {
+                    some: {
+                      id: ctx.session.user.id,
+                    },
+                  },
                 },
               },
             },
-          },
-          OR: [
             {
               user: {
                 followers: {
