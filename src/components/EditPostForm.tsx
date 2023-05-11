@@ -1,5 +1,5 @@
 import { useForm, FormProvider } from "react-hook-form";
-import { createPostSchema, UpdatePostInput } from "@schema/post.schema";
+import { UpdatePostInput, updatePostSchema } from "@schema/post.schema";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
@@ -24,7 +24,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const postId = router.query.postId as string;
 
   const methods = useForm<UpdatePostInput>({
-    resolver: zodResolver(createPostSchema),
+    resolver: zodResolver(updatePostSchema),
     shouldFocusError: false,
     defaultValues: {
       body: post?.markdownBody,
@@ -33,6 +33,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   });
 
   const { errors } = methods.formState;
+  console.log("errors:", errors);
 
   const {
     mutate: update,
@@ -95,6 +96,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     if (post) {
       methods.setValue("body", post?.markdownBody);
       methods.setValue("title", post?.title);
+      methods.setValue("postId", post?.id as string);
     }
   }, [post, methods]);
 
