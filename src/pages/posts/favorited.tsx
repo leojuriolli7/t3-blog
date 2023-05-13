@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import MetaTags from "@components/MetaTags";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import { getServerSession, User } from "next-auth";
-import { GetServerSidePropsContext, NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import PostCard from "@components/PostCard";

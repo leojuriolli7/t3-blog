@@ -1,7 +1,5 @@
 import { format, isToday, formatDistance } from "date-fns";
 
-type Patterns = "distance" | "smart";
-
 type Options = { smart: boolean };
 
 export const formatDate = (date: Date, options?: Options) => {

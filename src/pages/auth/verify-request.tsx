@@ -1,5 +1,5 @@
 import React from "react";
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";

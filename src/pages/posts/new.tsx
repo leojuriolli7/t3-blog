@@ -10,7 +10,7 @@ import { v4 as uuid } from "uuid";
 import Field from "@components/Field";
 import MetaTags from "@components/MetaTags";
 import SelectTags from "@components/SelectTags";
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import Dropzone from "@components/Dropzone";

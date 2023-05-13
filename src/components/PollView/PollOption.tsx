@@ -1,6 +1,6 @@
 import ShouldRender from "@components/ShouldRender";
-import { User } from "@prisma/client";
-import { Fragment, useEffect, useRef } from "react";
+import type { User } from "@prisma/client";
+import { useEffect, useRef } from "react";
 import { MdOutlineCheckBox } from "react-icons/md";
 
 type Props = {

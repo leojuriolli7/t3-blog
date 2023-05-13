@@ -1,6 +1,6 @@
-import { AppRouter } from "@server/router/app.router";
-import { inferProcedureOutput } from "@trpc/server";
-import { ControllerRenderProps, FieldValues } from "react-hook-form";
+import type { AppRouter } from "@server/router/app.router";
+import type { inferProcedureOutput } from "@trpc/server";
+import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 
 export type TQuery = keyof AppRouter["_def"]["queries"];
 

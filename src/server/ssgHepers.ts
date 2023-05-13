@@ -2,8 +2,8 @@ import { createSSGHelpers } from "@trpc/react/ssg";
 import SuperJSON from "superjson";
 import { createContext } from "@server/createContext";
 import { appRouter } from "./router/app.router";
-import { NextApiRequest, NextApiResponse } from "next";
-import { IncomingMessage, ServerResponse } from "http";
+import type { NextApiRequest, NextApiResponse } from "next";
+import type { IncomingMessage, ServerResponse } from "http";
 
 type RequestType = IncomingMessage & {
   cookies: Partial<{

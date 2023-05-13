@@ -1,4 +1,4 @@
-import { CreateTagInput } from "@schema/tag.schema";
+import type { CreateTagInput } from "@schema/tag.schema";
 
 /**
  * This function is used to parse the tag payload before sending it to the server.

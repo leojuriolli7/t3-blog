@@ -7,7 +7,7 @@ import useFilterContent from "@hooks/useFilterContent";
 import useOnScreen from "@hooks/useOnScreen";
 import { authOptions } from "@pages/api/auth/[...nextauth]";
 import { trpc } from "@utils/trpc";
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { useEffect, useMemo, useRef } from "react";
 

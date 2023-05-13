@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";

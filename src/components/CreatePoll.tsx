@@ -1,10 +1,10 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { CreatePostInput } from "@schema/post.schema";
+import type { CreatePostInput } from "@schema/post.schema";
 import { toast } from "react-toastify";
 import debounce from "lodash.debounce";
 import { useFormContext } from "react-hook-form";
-import { PollOption } from "@prisma/client";
+import type { PollOption } from "@prisma/client";
 import { MdOutlineAdd } from "react-icons/md";
 import ActionButton from "./ActionButton";
 import Field from "./Field";

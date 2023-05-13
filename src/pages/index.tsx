@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
 import useOnScreen from "@hooks/useOnScreen";

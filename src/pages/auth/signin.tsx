@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
-import { GetServerSidePropsContext, NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import { useForm } from "react-hook-form";
 import {
   SignInWithEmailInput,

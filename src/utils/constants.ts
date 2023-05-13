@@ -1,4 +1,4 @@
-import { SearchFilterTypes } from "@schema/search.schema";
+import type { SearchFilterTypes } from "@schema/search.schema";
 
 const environmentUrl =
   process.env.NEXT_PUBLIC_BYPASS_URL || process.env.NEXT_PUBLIC_VERCEL_URL;

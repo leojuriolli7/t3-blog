@@ -5,7 +5,7 @@ import { IoExpandOutline } from "react-icons/io5";
 import Skeleton from "./Skeleton";
 import unescape from "lodash.unescape";
 import ShouldRender from "./ShouldRender";
-import { Link } from "@prisma/client";
+import type { Link } from "@prisma/client";
 type Props = {
   data?: Metadata | Link;
   loading: boolean;

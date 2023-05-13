@@ -6,7 +6,7 @@ import rehypeStringify from "rehype-stringify";
 import rehypeTruncate from "rehype-truncate";
 import rehypeCode from "rehype-highlight";
 import rehypeRewrite from "rehype-rewrite";
-import { Root, RootContent } from "hast";
+import type { Root, RootContent } from "hast";
 
 type Options = {
   /**

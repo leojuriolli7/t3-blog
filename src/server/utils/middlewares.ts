@@ -1,7 +1,7 @@
-import { Context } from "../createContext";
+import type { Context } from "../createContext";
 import { TRPCError } from "@trpc/server";
-import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
-import { Session } from "next-auth";
+import type { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
+import type { Session } from "next-auth";
 
 interface AuthenticatedRouterContext extends Context {
   session: Session;

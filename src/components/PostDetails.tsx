@@ -16,7 +16,7 @@ import FavoriteButton from "@components/FavoriteButton";
 import LinkPreview from "@components/LinkPreview";
 import PollView from "@components/PollView/PollView";
 import HTMLBody from "@components/HTMLBody";
-import { Attachment } from "@prisma/client";
+import type { Attachment } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import MetaTags from "./MetaTags";
