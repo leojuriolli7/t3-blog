@@ -92,7 +92,7 @@ const TagsDropdown: React.FC = () => {
         </div>
       }
     >
-      <div className="flex w-full justify-end gap-2 p-3">
+      <div className="flex w-full min-w-[300px] justify-end gap-2 p-3">
         <SearchInput
           setQuery={setSearchQuery}
           placeholder="Search your subscribed tags"

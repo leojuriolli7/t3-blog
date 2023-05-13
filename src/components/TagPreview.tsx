@@ -12,7 +12,7 @@ type Props = {
 
 const TagPreview: React.FC<Props> = ({ tag, loading }) => {
   return (
-    <Link href={`/users/${tag?.id}`} className="w-full">
+    <Link href={`/posts/tags/${tag?.id}`} className="w-full">
       <div
         className={clsx(
           loading ? "pointer-events-none" : "",
