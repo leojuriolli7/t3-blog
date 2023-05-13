@@ -1,10 +1,10 @@
+import { GetServerSidePropsContext } from "next";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
 import ShouldRender from "@components/ShouldRender";
 import MetaTags from "@components/MetaTags";
 import { TagSection } from "@components/TagSection";
-import CompactCard from "@components/CompactCard";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
 import { generateSSGHelper } from "@server/ssgHepers";
@@ -85,8 +85,10 @@ const AllTagsPage: React.FC = () => {
 
 export default AllTagsPage;
 
-export async function getServerSideProps() {
-  const ssg = await generateSSGHelper();
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { req, res } = context;
+
+  const ssg = await generateSSGHelper(req, res);
 
   await ssg.prefetchInfiniteQuery("posts.by-tags", {
     tagLimit: 6,

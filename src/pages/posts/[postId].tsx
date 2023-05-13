@@ -40,7 +40,9 @@ export default SinglePostPage;
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ postId: string }>
 ) {
-  const ssg = await generateSSGHelper();
+  const { req, res } = context;
+
+  const ssg = await generateSSGHelper(req, res);
   const postId = context.params?.postId as string;
 
   await ssg.prefetchQuery("posts.single-post", {

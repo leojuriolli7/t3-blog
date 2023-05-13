@@ -349,7 +349,9 @@ export default SingleTagPage;
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ tagId: string }>
 ) {
-  const ssg = await generateSSGHelper();
+  const { req, res } = context;
+
+  const ssg = await generateSSGHelper(req, res);
   const tagId = context.params?.tagId as string;
 
   const postsQuery = ssg.prefetchInfiniteQuery("posts.all", {

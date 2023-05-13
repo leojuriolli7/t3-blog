@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
+import { GetServerSidePropsContext } from "next";
 import { trpc } from "@utils/trpc";
 import PostCard from "@components/PostCard";
 import useOnScreen from "@hooks/useOnScreen";
@@ -141,8 +142,10 @@ const PostListingPage: React.FC = () => {
 
 export default PostListingPage;
 
-export async function getServerSideProps() {
-  const ssg = await generateSSGHelper();
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { req, res } = context;
+
+  const ssg = await generateSSGHelper(req, res);
 
   const tagsQuery = ssg.prefetchQuery("posts.by-tags", {
     tagLimit: 4,

@@ -417,7 +417,9 @@ export default UserPage;
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ userId: string }>
 ) {
-  const ssg = await generateSSGHelper();
+  const { req, res } = context;
+
+  const ssg = await generateSSGHelper(req, res);
   const userId = context.params?.userId as string;
 
   await ssg.prefetchQuery("users.single-user", {
