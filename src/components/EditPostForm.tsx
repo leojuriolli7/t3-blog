@@ -33,7 +33,6 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   });
 
   const { errors } = methods.formState;
-  console.log("errors:", errors);
 
   const {
     mutate: update,
