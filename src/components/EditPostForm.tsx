@@ -3,7 +3,7 @@ import { UpdatePostInput, updatePostSchema } from "@schema/post.schema";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { trpc } from "@utils/trpc";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { SinglePost } from "@utils/types";
 import { useRouter } from "next/router";
 import MarkdownEditor from "./MarkdownEditor";
@@ -22,6 +22,9 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
   const utils = trpc.useContext();
   const router = useRouter();
   const postId = router.query.postId as string;
+
+  const uploadingImagesState = useState(false);
+  const [uploading] = uploadingImagesState;
 
   const methods = useForm<UpdatePostInput>({
     resolver: zodResolver(updatePostSchema),
@@ -121,7 +124,11 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
         </Field>
 
         <Field error={errors.body}>
-          <MarkdownEditor control={methods.control} name="body" />
+          <MarkdownEditor
+            uploadingState={uploadingImagesState}
+            control={methods.control}
+            name="body"
+          />
         </Field>
 
         <LinkInput initialLink={post?.link} />
@@ -130,7 +137,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
           variant="primary"
           className="flex w-full min-w-fit justify-center rounded-lg sm:w-6/12"
           type="submit"
-          loading={updating}
+          loading={updating || uploading}
         >
           Update
         </Button>

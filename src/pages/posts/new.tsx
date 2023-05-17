@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,9 @@ import { parseTagPayload } from "@utils/parseTagPayload";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
+
+  const uploadingImagesState = useState(false);
+  const [uploading] = uploadingImagesState;
 
   const methods = useForm<CreatePostInput>({
     resolver: zodResolver(createPostSchema),
@@ -157,6 +160,7 @@ const CreatePostPage: React.FC = () => {
 
           <Field error={errors.body}>
             <MarkdownEditor
+              uploadingState={uploadingImagesState}
               placeholder="your post content - you can use markdown!"
               control={control}
               name="body"
@@ -181,7 +185,7 @@ const CreatePostPage: React.FC = () => {
             className="mx-auto flex w-full min-w-fit justify-center rounded-lg sm:w-6/12"
             variant="primary"
             type="submit"
-            loading={isLoading}
+            loading={isLoading || uploading}
             disabled={fetchingTags}
           >
             Create

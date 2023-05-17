@@ -26,7 +26,7 @@ type Props = {
   defaultValue?: string;
   placeholder?: string;
   imageUploadTip?: boolean;
-  withImageUploads?: boolean;
+  uploadingState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 
 const enabledPlugins = [
@@ -60,31 +60,48 @@ const MarkdownEditor: React.FC<Props> = ({
   placeholder,
   defaultValue,
   imageUploadTip,
-  withImageUploads = true,
+  uploadingState,
 }) => {
+  const [, setUploading] = uploadingState || [];
+  const withImageUploads = !!uploadingState;
+
   const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
 
   const { data } = useSession();
-  const userId = data?.user?.id as string;
+  const userId = data?.user.id as string;
+
   const maxSizeInMB = convertToMegabytes(maxFileSize);
 
   const { mutateAsync: createPresignedUrl } = trpc.useMutation(
-    "attachments.create-presigned-post-body-url"
+    "attachments.create-presigned-post-body-url",
+    {
+      onError() {
+        setUploading?.(false);
+      },
+    }
   );
 
   const onImageUpload = async (file: File) => {
+    setUploading?.(true);
+
     const randomKey = uuid();
     const image = file;
 
     const isImage = image.type.includes("image");
 
-    if (!isImage)
+    if (!isImage) {
+      setUploading?.(false);
+
       return toast.error(
         "Only images are available for uploading. Please select an image."
       );
+    }
 
-    if (image.size > maxFileSize)
+    if (image.size > maxFileSize) {
+      setUploading?.(false);
+
       return toast.error(`Limit of ${maxSizeInMB}MB per file`);
+    }
 
     const { url, fields } = await createPresignedUrl({ userId, randomKey });
     await uploadFileToS3(url, fields, image);
@@ -93,6 +110,8 @@ const MarkdownEditor: React.FC<Props> = ({
       env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
       `${userId}-${randomKey}`
     );
+
+    setUploading?.(false);
 
     return imageUrl;
   };

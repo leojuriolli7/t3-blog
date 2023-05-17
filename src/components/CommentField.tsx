@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   CreateCommentInput,
@@ -22,6 +22,9 @@ type Props = {
 const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
   const router = useRouter();
   const postId = router.query.postId as string;
+
+  const uploadingImagesState = useState(false);
+  const [uploading] = uploadingImagesState;
 
   const { handleSubmit, setValue, control, formState } =
     useForm<CreateCommentInput>({
@@ -94,6 +97,7 @@ const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
     <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>
       <Field error={errors.body}>
         <MarkdownEditor
+          uploadingState={uploadingImagesState}
           variant="condensed"
           name="body"
           control={control}
@@ -105,7 +109,7 @@ const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
         <Button
           className="mt-2 flex w-full justify-center rounded-md sm:w-auto"
           type="submit"
-          loading={isLoading}
+          loading={isLoading || uploading}
         >
           {isReply ? "Send reply" : "Send comment"}
         </Button>

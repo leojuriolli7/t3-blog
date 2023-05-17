@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   UpdateCommentInput,
@@ -23,6 +23,9 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
 
   const router = useRouter();
   const postId = router.query.postId as string;
+
+  const uploadingImagesState = useState(false);
+  const [uploading] = uploadingImagesState;
 
   const { handleSubmit, control, formState } = useForm<UpdateCommentInput>({
     resolver: zodResolver(updateCommentSchema),
@@ -72,6 +75,7 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Field error={errors.body}>
         <MarkdownEditor
+          uploadingState={uploadingImagesState}
           control={control}
           variant="condensed"
           name="body"
@@ -83,7 +87,7 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
         className="mt-2 flex w-full justify-center rounded-md px-6 md:w-auto"
         variant="secondary"
         type="submit"
-        loading={updating}
+        loading={updating || uploading}
       >
         Update
       </Button>
