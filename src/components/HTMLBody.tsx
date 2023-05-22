@@ -5,6 +5,7 @@ type Props = SkeletonProps & {
   children?: string;
   className?: string;
   loading?: boolean;
+  style?: React.CSSProperties;
 };
 
 /**
@@ -17,6 +18,7 @@ const HTMLBody: React.FC<Props> = ({
   children,
   className,
   loading,
+  style,
   ...props
 }) => {
   return (
@@ -27,6 +29,7 @@ const HTMLBody: React.FC<Props> = ({
 
       <ShouldRender if={!loading}>
         <div
+          style={style || {}}
           className={`${className} markdown__content prose-emerald break-words dark:prose-invert dark:prose-hr:border-neutral-700`}
           dangerouslySetInnerHTML={{ __html: children || "" }}
         />
