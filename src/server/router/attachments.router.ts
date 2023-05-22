@@ -3,7 +3,6 @@ import { createRouter } from "@server/createRouter";
 import {
   createPresignedUrlSchema,
   createPresignedAvatarUrlSchema,
-  createPresignedPostBodyUrlSchema,
   createPresignedTagUrl,
 } from "@schema/attachment.schema";
 import { s3 } from "@server/config/aws";
@@ -11,6 +10,7 @@ import { env } from "@env";
 import { isLoggedInMiddleware } from "@server/utils/middlewares";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { generateS3Url } from "@utils/aws/generateS3Url";
+import { v4 } from "uuid";
 
 const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
 const uploadTimeLimit = Number(env.NEXT_PUBLIC_UPLOADING_TIME_LIMIT);
@@ -86,14 +86,16 @@ export const attachmentsRouter = createRouter()
     },
   })
   .mutation("create-presigned-post-body-url", {
-    input: createPresignedPostBodyUrlSchema,
-    async resolve({ input }) {
-      const { userId, randomKey } = input;
+    async resolve({ ctx }) {
+      const userId = ctx.session.user.id;
+      const randomKey = v4();
+
+      const key = `${userId}-${randomKey}`;
 
       try {
         const { url, fields } = await createPresignedPost(s3, {
           Bucket: env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
-          Key: `${userId}-${randomKey}`,
+          Key: key,
           Expires: uploadTimeLimit,
           Conditions: [
             ["starts-with", "$Content-Type", "image/"],
@@ -101,7 +103,7 @@ export const attachmentsRouter = createRouter()
           ],
         });
 
-        return { url, fields };
+        return { url, fields, key };
       } catch (e) {
         console.log("e:", e);
         throw new trpc.TRPCError({

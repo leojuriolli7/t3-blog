@@ -84,7 +84,6 @@ const MarkdownEditor: React.FC<Props> = ({
   const onImageUpload = async (file: File) => {
     setUploading?.(true);
 
-    const randomKey = uuid();
     const image = file;
 
     const isImage = image.type.includes("image");
@@ -103,12 +102,12 @@ const MarkdownEditor: React.FC<Props> = ({
       return toast.error(`Limit of ${maxSizeInMB}MB per file`);
     }
 
-    const { url, fields } = await createPresignedUrl({ userId, randomKey });
+    const { url, fields, key } = await createPresignedUrl();
     await uploadFileToS3(url, fields, image);
 
     const imageUrl = generateS3Url(
       env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
-      `${userId}-${randomKey}`
+      key
     );
 
     setUploading?.(false);
