@@ -417,7 +417,7 @@ export const PostDetails: React.FC<Props> = ({
             <div className="-mb-4 w-full">
               <LinkPreview loading={isLoading} data={data?.link} />
 
-              <div className="mt-2 w-full break-words border-l-4 border-gray-300 bg-white p-4 text-black shadow dark:border-neutral-500 dark:bg-zinc-900 dark:text-neutral-300">
+              <div className="word-break-word mt-2 w-full border-l-4 border-gray-300 bg-white p-4 text-black shadow dark:border-neutral-500 dark:bg-zinc-900 dark:text-neutral-300">
                 <h3 className="text-lg font-bold sm:text-xl">
                   {data?.link?.title}
                 </h3>

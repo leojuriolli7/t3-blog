@@ -50,7 +50,7 @@ const PollOption: React.FC<Props> = ({
             backgroundColor: `${option.color}60`,
           }}
         >
-          <p className=" line-clamp-1 overflow-hidden break-all text-sm sm:text-base">
+          <p className=" word-break-word line-clamp-1 overflow-hidden text-sm sm:text-base">
             {option.title}
           </p>
         </button>
@@ -59,7 +59,7 @@ const PollOption: React.FC<Props> = ({
       <ShouldRender if={alreadyVoted}>
         <div className="relative w-full select-none rounded-md p-2 ring-1 ring-inset ring-gray-300 dark:ring-neutral-700">
           <div className="flex w-full justify-between gap-2">
-            <p className="relative z-10 line-clamp-1 overflow-hidden text-ellipsis break-all text-sm sm:text-base">
+            <p className="word-break-word relative z-10 line-clamp-1 overflow-hidden text-ellipsis text-sm sm:text-base">
               {option.title}
             </p>
 

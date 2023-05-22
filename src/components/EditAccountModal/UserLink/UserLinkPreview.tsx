@@ -21,7 +21,7 @@ const UserLinkPreview: React.FC<PreviewProps> = ({ data }) => {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={data?.icon} alt={data?.title} width="16px" height="16px" />
 
-          <p className="line-clamp-1 overflow-hidden text-ellipsis break-all text-sm">
+          <p className="word-break-word line-clamp-1 overflow-hidden text-ellipsis text-sm">
             {hovering ? data?.url : data?.title}
           </p>
         </div>

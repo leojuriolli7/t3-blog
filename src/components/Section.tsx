@@ -33,7 +33,7 @@ const Section: React.FC<Props> = ({
           <ShouldRender if={!loading && typeof title === "string"}>
             <h2
               className={clsx(
-                "prose line-clamp-1 text-ellipsis break-all font-bold dark:prose-invert",
+                "word-break-word prose line-clamp-1 text-ellipsis font-bold dark:prose-invert",
                 compact ? "text-lg" : "text-xl sm:text-2xl"
               )}
             >

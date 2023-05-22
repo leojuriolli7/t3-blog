@@ -121,12 +121,7 @@ export const NotificationCard = (notification: Notification) => {
 
           <ShouldRender if={notificationHasComment}>
             <div className="mt-2">
-              <HTMLBody
-                style={{
-                  wordBreak: "break-word",
-                }}
-                className="line-clamp-2 text-ellipsis rounded-md bg-neutral-300/60 p-2 text-neutral-700/90 dark:bg-zinc-800/60 dark:text-neutral-400"
-              >
+              <HTMLBody className="line-clamp-2 text-ellipsis rounded-md bg-neutral-300/60 p-2 text-neutral-700/90 dark:bg-zinc-800/60 dark:text-neutral-400">
                 {notification?.comment?.body}
               </HTMLBody>
             </div>

@@ -42,7 +42,7 @@ const PostCard: React.FC<Props> = ({ post, loading = false }) => {
         shallow
       >
         <ShouldRender if={!loading}>
-          <h2 className="prose break-words text-2xl font-bold dark:prose-invert">
+          <h2 className="word-break-word prose text-2xl font-bold dark:prose-invert">
             {post?.title}
           </h2>
         </ShouldRender>

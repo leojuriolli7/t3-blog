@@ -69,8 +69,8 @@ pre * {
   }
 }
 
-// Create new tailwind class for MD editor dark-mode styles.
 @layer utilities {
+  // Scrollbar styles.
   .base-scrollbar {
     @apply scrollbar-thin scrollbar-track-transparent dark:scrollbar-track-transparent;
   }
@@ -79,11 +79,13 @@ pre * {
     @apply base-scrollbar scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-800;
   }
 
+  // Mask post cards with a gradient.
   .content-mask {
     -webkit-mask-image: linear-gradient(180deg, #000 71%, transparent);
     mask-image: linear-gradient(180deg, #000 71%, transparent);
   }
 
+  // Create new tailwind class for MD editor dark-mode styles.
   .md-dark-mode {
     @apply bg-zinc-900;
 
@@ -127,4 +129,11 @@ pre * {
   input[type="checkbox"] {
     @apply mb-0 mt-0;
   }
+}
+
+// Defining a tailwind class for `word-break: break-word`
+.word-break-word {
+  @apply break-words;
+
+  word-break: break-word;
 }

@@ -140,7 +140,7 @@ const CreatePoll: React.FC = () => {
                     backgroundColor: `${option.color}90`,
                   }}
                 >
-                  <p className="line-clamp-1 overflow-hidden text-ellipsis break-all text-sm sm:text-base">
+                  <p className="word-break-word line-clamp-1 overflow-hidden text-ellipsis text-sm sm:text-base">
                     {option.title}
                   </p>
                 </div>

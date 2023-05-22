@@ -68,17 +68,17 @@ const LinkPreview: React.FC<Props> = ({
           <div className="flex w-full flex-col justify-between py-3 pr-2">
             <ShouldRender if={!loading}>
               <div className="w-full">
-                <p className="line-clamp-1 break-all font-bold">
+                <p className="word-break-word line-clamp-1 font-bold">
                   {data?.title || "Shared link"}
                 </p>
-                <p className="line-clamp-2 break-all text-sm sm:line-clamp-3">
+                <p className="word-break-word line-clamp-2 text-sm sm:line-clamp-3">
                   {data?.description
                     ? unescape(data?.description)
                     : "Link shared on T3 Blog."}
                 </p>
               </div>
               <a
-                className="mt-1 line-clamp-1 break-all text-sm text-emerald-700 underline dark:text-emerald-500"
+                className="word-break-word mt-1 line-clamp-1 text-sm text-emerald-700 underline dark:text-emerald-500"
                 target="_blank"
                 rel="noreferrer"
                 href={data?.url}

@@ -213,7 +213,7 @@ export const SidebarContent = () => {
                 <Link
                   href={`/users/${user?.id}`}
                   aria-label="Go to your profile"
-                  className="-mb-1 line-clamp-1 w-fit max-w-[95%] text-ellipsis break-words text-sm hover:underline xl:text-base"
+                  className="word-break-word -mb-1 line-clamp-1 w-fit max-w-[95%] text-ellipsis text-sm hover:underline xl:text-base"
                 >
                   {getUserDisplayName(user)}
                 </Link>
