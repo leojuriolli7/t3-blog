@@ -105,7 +105,7 @@ const SelectTags: React.FC<Props> = ({
         <div ref={containerRef}>
           <h2 className="text-2xl">Tags</h2>
           <p className="sm:block hidden text-sm text-gray-700 dark:text-neutral-300">
-            Tip: Hover over a tag for a detailed view
+            Hover over a tag for a detailed view.
           </p>
           <ErrorMessage error={error} />
           <div ref={parentRef} className="mb-4 mt-2 flex flex-wrap gap-2">
