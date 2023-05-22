@@ -36,12 +36,14 @@ export const searchRouter = createRouter().query("by-type", {
         },
         ...(query && {
           where: {
-            name: {
-              search: query,
-            },
             OR: [
               {
                 description: {
+                  search: query,
+                },
+              },
+              {
+                name: {
                   search: query,
                 },
               },
@@ -83,12 +85,14 @@ export const searchRouter = createRouter().query("by-type", {
           createdAt: "desc",
         },
         where: {
-          body: {
-            search: input.query,
-          },
           OR: [
             {
               title: {
+                search: input.query,
+              },
+            },
+            {
+              body: {
                 search: input.query,
               },
             },

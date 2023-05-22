@@ -60,12 +60,14 @@ export const postRouter = createRouter()
         },
         ...(query && {
           where: {
-            name: {
-              search: query,
-            },
             OR: [
               {
                 description: {
+                  search: query,
+                },
+              },
+              {
+                name: {
                   search: query,
                 },
               },
@@ -305,12 +307,14 @@ export const postRouter = createRouter()
             },
           },
           ...(query && {
-            body: {
-              search: query,
-            },
             OR: [
               {
                 title: {
+                  search: query,
+                },
+              },
+              {
+                body: {
                   search: query,
                 },
               },
@@ -362,12 +366,14 @@ export const postRouter = createRouter()
             userId,
           },
           ...(query && {
-            body: {
-              search: query,
-            },
             OR: [
               {
                 title: {
+                  search: query,
+                },
+              },
+              {
+                body: {
                   search: query,
                 },
               },
