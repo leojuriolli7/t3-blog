@@ -256,7 +256,7 @@ const UserPage: NextPage<
               variant="gradient"
               onClick={handleClickFollowButton}
               absolute
-              className="-bottom-3 left-1/2 -translate-x-1/2 px-3 py-2"
+              className="-bottom-3 left-1/2 -translate-x-1/2 px-3 py-2 rounded-3xl"
             >
               {user?.alreadyFollowing ? "Unfollow" : "Follow"}
             </Button>
