@@ -135,7 +135,7 @@ const CreatePoll: React.FC = () => {
                 key={option.title}
               >
                 <div
-                  className="w-full max-w-[500px] p-2"
+                  className="w-full max-w-[500px] rounded-md p-2"
                   style={{
                     backgroundColor: `${option.color}90`,
                   }}
