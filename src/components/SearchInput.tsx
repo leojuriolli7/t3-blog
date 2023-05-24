@@ -59,7 +59,7 @@ const SearchInput: React.FC<Props> = ({
   // If there is a query parameter (?q=...) when the page
   // first opens, we set is as the query.
   useEffect(() => {
-    if (router.isReady && !!router.query.q) {
+    if (router.isReady && !!router.query.q && !!replace) {
       const queryParam = router.query.q as string;
 
       setQuery(queryParam);
