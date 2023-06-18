@@ -157,6 +157,12 @@ const MarkdownEditor: React.FC<Props> = ({
             htmlClass="html-section"
             onImageUpload={withImageUploads ? onImageUpload : undefined}
             renderHTML={(text) => mdParser.parse(text)}
+            // default to show only the markdown editor.
+            view={{
+              menu: true, 
+              md: true, 
+              html: false
+            }}
             {...field}
             onChange={handleChange(field)}
           />
