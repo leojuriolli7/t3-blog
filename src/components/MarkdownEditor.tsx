@@ -49,6 +49,7 @@ const enabledPlugins = [
   // "full-screen",
 ];
 
+// TO-DO: Refactor to use a new text editor.
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
 });
