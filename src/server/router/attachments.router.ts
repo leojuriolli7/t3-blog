@@ -15,6 +15,8 @@ import { v4 } from "uuid";
 const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
 const uploadTimeLimit = Number(env.NEXT_PUBLIC_UPLOADING_TIME_LIMIT);
 
+// TO-DO: Separate this router into different 
+// serverless func for faster cold starts.
 export const attachmentsRouter = createRouter()
   .middleware(isLoggedInMiddleware)
   .mutation("create-presigned-url", {
