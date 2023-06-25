@@ -83,6 +83,19 @@ I could notice whenever I first loaded the site, or scrolled down to load new po
 
 ## Overcoming T3 Stack limitations
 
+### Cold starts
+
+This project is deployed on Vercel with Serverless Functions. This means every time someone opens the website, there is a waiting period while the function is initialized.
+
+As the website grew, and so did the amount of tRPC routers and dependencies, the cold-starts got to 7-10 seconds. To solve this, I split all the tRPC routers into their own serverless functions, meaning they could load up individually and on-demand (and in parallel), instead of loading everything at once.
+
+[Here is the Pull Request.](https://github.com/leojuriolli7/t3-blog/pull/40)
+
+| Before                                                                                                                             | After                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Screenshot from 2023-06-24 21-43-30](https://github.com/leojuriolli7/t3-blog/assets/100495707/09eae191-624f-4572-bb9c-0123d7744f01) | ![Screenshot from 2023-06-24 21-42-57](https://github.com/leojuriolli7/t3-blog/assets/100495707/55178e5b-9f65-4169-abba-c762c79f12d6) |
+
+
 ### File uploads
 tRPC [does not support `multipart/form-data`](https://github.com/trpc/trpc/discussions/658#discussioncomment-998746), so file uploads could not be done reliably inside the tRPC router. For that reason, I decided to use the AWS SDK, S3 buckets and presigned URLs, a very safe and reliable method of uploading files. 
 

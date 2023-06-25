@@ -1,12 +1,7 @@
 import type { AppRouter } from "@server/router/app.router";
-import type {
-  inferProcedureOutput,
-  inferRouterInputs,
-  inferRouterOutputs,
-} from "@trpc/server";
+import type { inferRouterOutputs } from "@trpc/server";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 
-type RouterInput = inferRouterInputs<AppRouter>;
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type CommentWithChildren =

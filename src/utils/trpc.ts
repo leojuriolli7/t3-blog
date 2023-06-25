@@ -1,7 +1,6 @@
 import type { AppRouter } from "@server/router/app.router";
 import { httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
-import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
 import { url } from "./constants";
 
@@ -16,17 +15,12 @@ const ENDPOINTS = [
   "tags",
   "users",
 ] as const;
+
 export type Endpoint = (typeof ENDPOINTS)[number];
 
 const resolveEndpoint = (links: any) => {
-  // TODO: Update our trpc routes so they are more clear.
-  // This function parses paths like the following and maps them
-  // to the correct API endpoints.
-  // - viewer.me - 2 segment paths like this are for logged in requests
-  // - viewer.public.i18n - 3 segments paths can be public or authed
   return (ctx: any) => {
     const parts = ctx.op.path.split(".");
-    console.log("parts:", parts);
     let endpoint;
     let path = "";
     if (parts.length == 2) {
@@ -54,9 +48,7 @@ export const trpc = createTRPCNext<AppRouter>({
       links: [
         // adds pretty logs to your console in development and logs errors in production
         loggerLink({
-          enabled: (opts) =>
-            !!process.env.NEXT_PUBLIC_DEBUG ||
-            (opts.direction === "down" && opts.result instanceof Error),
+          enabled: () => process.env.NEXT_PUBLIC_ENVIRONMENT === "develop",
         }),
         splitLink({
           // check for context property `skipBatch`
@@ -94,17 +86,3 @@ export const trpc = createTRPCNext<AppRouter>({
    */
   ssr: false,
 });
-
-/**
- * Inference helper for inputs.
- *
- * @example type HelloInput = RouterInputs['example']['hello']
- */
-export type RouterInputs = inferRouterInputs<AppRouter>;
-
-/**
- * Inference helper for outputs.
- *
- * @example type HelloOutput = RouterOutputs['example']['hello']
- */
-export type RouterOutputs = inferRouterOutputs<AppRouter>;
