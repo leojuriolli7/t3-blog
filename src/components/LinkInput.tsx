@@ -55,7 +55,7 @@ const LinkInput: React.FC<Props> = ({ initialLink }) => {
   const {
     data: metadata,
     error,
-    isLoading,
+    isFetching,
   } = trpc.scraper.scrapeLink.useQuery(
     { url: link },
     {
@@ -111,13 +111,13 @@ const LinkInput: React.FC<Props> = ({ initialLink }) => {
           ref={inputRef}
           type="text"
           className="rounded-md"
-          loading={isLoading}
+          loading={isFetching}
           onChange={onChange}
           placeholder="Paste your link"
         />
       </Field>
-      <ShouldRender if={!!metadata || isLoading}>
-        <LinkPreview loading={isLoading} data={metadata} />
+      <ShouldRender if={!!metadata || isFetching}>
+        <LinkPreview loading={isFetching} data={metadata} />
       </ShouldRender>
     </div>
   );
