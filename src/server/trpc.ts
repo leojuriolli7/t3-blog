@@ -17,10 +17,14 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
   };
 };
 
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+export const createTRPCContext = async (
+  opts: CreateNextContextOptions,
+  /** If true, will skip getting the server-side session. */
+  skipSession?: boolean
+) => {
   const { req, res } = opts;
 
-  const session = await getServerAuthSession({ req, res });
+  const session = skipSession ? null : await getServerAuthSession({ req, res });
 
   return createInnerTRPCContext({
     session,
