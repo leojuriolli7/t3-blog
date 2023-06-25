@@ -91,6 +91,8 @@ As the website grew, and so did the amount of tRPC routers and dependencies, the
 
 [Here is the Pull Request.](https://github.com/leojuriolli7/t3-blog/pull/40)
 
+Another necessary change to counteract cold-starts was to [lazy-load all tRPC procedures.](https://github.com/leojuriolli7/t3-blog/pull/41)
+
 | Before                                                                                                                             | After                                                                                                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | ![Screenshot from 2023-06-24 21-43-30](https://github.com/leojuriolli7/t3-blog/assets/100495707/09eae191-624f-4572-bb9c-0123d7744f01) | ![Screenshot from 2023-06-24 21-42-57](https://github.com/leojuriolli7/t3-blog/assets/100495707/55178e5b-9f65-4169-abba-c762c79f12d6) |
