@@ -24,6 +24,7 @@ type Options = {
 };
 
 // Parse markdown to HTML. (Post/Comment body)
+// TO-DO: Use MDX.
 export async function markdownToHtml(markdown: string, options?: Options) {
   const {
     removeLinksAndImages = true,

@@ -58,7 +58,10 @@ const AttachmentPreview: React.FC<Props> = ({
   return (
     <div className="relative rounded-md border border-zinc-300 bg-white p-4 first:mt-4 dark:border-zinc-700/90 dark:bg-zinc-800/70">
       <div className="flex gap-3">
-        <div onClick={onClickImage} className="group relative h-16 w-16">
+        <div
+          onClick={onClickImage}
+          className="group relative h-16 w-16 min-w-[64px]"
+        >
           <ShouldRender if={type === "document"}>
             <div className="flex h-16 w-16 items-center justify-center bg-emerald-500 dark:bg-emerald-700">
               <RiFileTextFill className="text-white" size={27} />

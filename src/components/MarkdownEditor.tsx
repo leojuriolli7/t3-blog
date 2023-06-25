@@ -49,6 +49,7 @@ const enabledPlugins = [
   // "full-screen",
 ];
 
+// TO-DO: Refactor to use a new text editor.
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
 });
@@ -155,6 +156,12 @@ const MarkdownEditor: React.FC<Props> = ({
             htmlClass="html-section"
             onImageUpload={withImageUploads ? onImageUpload : undefined}
             renderHTML={(text) => mdParser.parse(text)}
+            // default to show only the markdown editor.
+            view={{
+              menu: true,
+              md: true,
+              html: false,
+            }}
             {...field}
             onChange={handleChange(field)}
           />
