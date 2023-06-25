@@ -1,8 +1,8 @@
-import { createSSGHelpers } from "@trpc/react/ssg";
 import SuperJSON from "superjson";
-import { createContext } from "@server/createContext";
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import { appRouter } from "./router/app.router";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createTRPCContext } from "@server/trpc";
 import type { IncomingMessage, ServerResponse } from "http";
 
 type RequestType = IncomingMessage & {
@@ -15,9 +15,9 @@ type ResponseType = ServerResponse;
 
 // We need the request and response to get the user session.
 export const generateSSGHelper = async (req: RequestType, res: ResponseType) =>
-  createSSGHelpers({
+  createServerSideHelpers({
     router: appRouter,
-    ctx: await createContext({
+    ctx: await createTRPCContext({
       req: req as NextApiRequest,
       res: res as NextApiResponse,
     }),

@@ -18,14 +18,11 @@ const YourFeedPage = () => {
   const reachedBottom = useOnScreen(bottomRef);
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    trpc.useInfiniteQuery(
-      [
-        "posts.your-feed",
-        {
-          limit: 6,
-          filter: selectedTab.id,
-        },
-      ],
+    trpc.posts.yourFeed.useInfiniteQuery(
+      {
+        limit: 6,
+        filter: selectedTab.id,
+      },
       {
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
       }

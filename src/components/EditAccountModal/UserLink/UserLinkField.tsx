@@ -28,8 +28,8 @@ const UserLinkField: React.FC<Props> = ({ initialLink }) => {
 
   const currentMetadata = watch("url");
 
-  const { error, isLoading } = trpc.useQuery(
-    ["scraper.scrape-link", { url: link }],
+  const { error, isLoading } = trpc.scraper.scrapeLink.useQuery(
+    { url: link },
     {
       refetchOnWindowFocus: false,
       enabled: !!link,

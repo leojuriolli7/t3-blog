@@ -56,31 +56,34 @@ const LinkInput: React.FC<Props> = ({ initialLink }) => {
     data: metadata,
     error,
     isLoading,
-  } = trpc.useQuery(["scraper.scrape-link", { url: link }], {
-    refetchOnWindowFocus: false,
-    enabled: !!link,
-    onSettled: (data, error) => {
-      if (error || !data?.url) {
-        setValue("link", undefined, { shouldValidate: true });
-      }
+  } = trpc.scraper.scrapeLink.useQuery(
+    { url: link },
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!link,
+      onSettled: (data, error) => {
+        if (error || !data?.url) {
+          setValue("link", undefined, { shouldValidate: true });
+        }
 
-      if (data?.url) {
-        const dataToSend = {
-          image: data?.image || `${baseUrl}/static/default.jpg`,
-          title: data?.title || "Shared link",
-          url: data.url,
-          description: data?.description
-            ? unescape(data?.description)
-            : "Link shared on T3 blog.",
-          ...(data?.publisher && {
-            publisher: data?.publisher,
-          }),
-        };
+        if (data?.url) {
+          const dataToSend = {
+            image: data?.image || `${baseUrl}/static/default.jpg`,
+            title: data?.title || "Shared link",
+            url: data.url,
+            description: data?.description
+              ? unescape(data?.description)
+              : "Link shared on T3 blog.",
+            ...(data?.publisher && {
+              publisher: data?.publisher,
+            }),
+          };
 
-        setValue("link", dataToSend, { shouldValidate: true });
-      }
-    },
-  });
+          setValue("link", dataToSend, { shouldValidate: true });
+        }
+      },
+    }
+  );
 
   useEffect(() => {
     if (error) toast.error(error.message);

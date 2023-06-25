@@ -13,9 +13,8 @@ type Files = {
  * This helper hook will upload a tag avatar and/or banner to S3.
  */
 export const useUploadTagImagesToS3 = () => {
-  const { mutateAsync: createPresignedTagUrl } = trpc.useMutation(
-    "attachments.create-presigned-tag-url"
-  );
+  const { mutateAsync: createPresignedTagUrl } =
+    trpc.attachments.createPresignedTagUrl.useMutation();
 
   const uploadTagImages = useCallback(
     async (tagName: string, filesToUpload: Files) => {

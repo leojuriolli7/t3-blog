@@ -42,14 +42,11 @@ const EditCommentForm: React.FC<Props> = ({ comment, onFinish }) => {
     mutate: update,
     isLoading: updating,
     error: updateError,
-  } = trpc.useMutation(["comments.update-comment"], {
+  } = trpc.comments.updateComment.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries([
-        "comments.all-comments",
-        {
-          postId,
-        },
-      ]);
+      utils.comments.allComments.invalidate({
+        postId,
+      });
     },
   });
 

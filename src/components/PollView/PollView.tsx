@@ -28,15 +28,14 @@ const PollView: React.FC<Props> = ({ poll }) => {
   const postId = router.query.postId as string;
   const utils = trpc.useContext();
 
-  const { mutate: voteOnPoll, isLoading: voting } = trpc.useMutation(
-    ["posts.vote-on-poll"],
-    {
+  const { mutate: voteOnPoll, isLoading: voting } =
+    trpc.posts.voteOnPoll.useMutation({
       async onMutate({ optionId, postId }) {
-        await utils.cancelQuery(["posts.single-post", { postId }]);
+        await utils.posts.singlePost.cancel({ postId });
 
-        const prevData = utils.getQueryData(["posts.single-post", { postId }]);
+        const prevData = utils.posts.singlePost.getData({ postId });
 
-        utils.setQueryData(["posts.single-post", { postId }], (old) => {
+        utils.posts.singlePost.setData({ postId }, (old) => {
           const options = [...old!.poll!.options];
 
           const changedOptionIndex = options.findIndex(
@@ -77,15 +76,11 @@ const PollView: React.FC<Props> = ({ poll }) => {
         return { prevData };
       },
       onSuccess: () => {
-        utils.invalidateQueries([
-          "posts.single-post",
-          {
-            postId,
-          },
-        ]);
+        utils.posts.singlePost.invalidate({
+          postId,
+        });
       },
-    }
-  );
+    });
 
   const handleVote = useCallback(
     (id: string) => () => {

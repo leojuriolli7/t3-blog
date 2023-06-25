@@ -1,4 +1,4 @@
-import { createRouter } from "../createRouter";
+import { createTRPCRouter } from "@server/trpc";
 import { commentRouter } from "./comment.router";
 import { attachmentsRouter } from "./attachments.router";
 import { likeRouter } from "./like.router";
@@ -9,16 +9,17 @@ import { searchRouter } from "./search.router";
 import { notificationRouter } from "./notification.router";
 import { tagRouter } from "./tag.router";
 
-export const appRouter = createRouter()
-  .merge("posts.", postRouter)
-  .merge("tags.", tagRouter)
-  .merge("comments.", commentRouter)
-  .merge("users.", userRouter)
-  .merge("likes.", likeRouter)
-  .merge("attachments.", attachmentsRouter)
-  .merge("scraper.", scraperRouter)
-  .merge("search.", searchRouter)
-  .merge("notification.", notificationRouter);
+export const appRouter = createTRPCRouter({
+  comments: commentRouter,
+  attachments: attachmentsRouter,
+  likes: likeRouter,
+  posts: postRouter,
+  users: userRouter,
+  scraper: scraperRouter,
+  search: searchRouter,
+  notification: notificationRouter,
+  tags: tagRouter,
+});
 
 // Export only the type of a router
 // This prevents us from importing server code on the client.

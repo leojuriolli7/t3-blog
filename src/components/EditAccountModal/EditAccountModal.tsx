@@ -44,13 +44,11 @@ const EditAccountModal: React.FC<Props> = ({
   const bioLength = bio?.length || 0;
   const { errors } = formState;
 
-  const { mutateAsync: createPresignedUrl } = trpc.useMutation(
-    "attachments.create-presigned-avatar-url"
-  );
+  const { mutateAsync: createPresignedUrl } =
+    trpc.attachments.createPresignedAvatarUrl.useMutation();
 
-  const { mutate: update, isLoading: updating } = trpc.useMutation(
-    ["users.update-profile"],
-    {
+  const { mutate: update, isLoading: updating } =
+    trpc.users.updateProfile.useMutation({
       onSuccess: (data) => {
         // Overwrite auth session image to the newly uploaded image url.
         if (!!data?.image && userId === session?.user?.id) {
@@ -62,20 +60,14 @@ const EditAccountModal: React.FC<Props> = ({
           session!.user.name = data.name;
         }
 
-        utils.invalidateQueries([
-          "users.single-user",
-          {
-            userId: userId,
-          },
-        ]);
+        utils.users.singleUser.invalidate({
+          userId: userId,
+        });
 
-        utils.invalidateQueries([
-          "posts.all",
-          {
-            limit: 4,
-            userId: userId,
-          },
-        ]);
+        utils.posts.all.invalidate({
+          limit: 4,
+          userId: userId,
+        });
 
         toast.success("Profile updated successfully!");
         setIsOpen(false);
@@ -83,8 +75,7 @@ const EditAccountModal: React.FC<Props> = ({
       onError(error) {
         toast.error(error?.message);
       },
-    }
-  );
+    });
 
   const onSubmit = useCallback(
     async (values: UpdateUserInput) => {

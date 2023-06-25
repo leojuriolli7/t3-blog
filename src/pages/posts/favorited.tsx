@@ -25,15 +25,12 @@ const UserFavoritesPage: NextPage<Props> = ({ user }) => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = trpc.useInfiniteQuery(
-    [
-      "posts.get-favorite-posts",
-      {
-        limit: 6,
-        query: queryValue,
-        userId: user.id,
-      },
-    ],
+  } = trpc.posts.getFavoritePosts.useInfiniteQuery(
+    {
+      limit: 6,
+      query: queryValue,
+      userId: user.id,
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }

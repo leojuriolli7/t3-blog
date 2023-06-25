@@ -91,13 +91,10 @@ const UserPage: NextPage<
   const redirectToTerms = (value: "privacy" | "conduct") => () =>
     router.push(`/terms/${value}`);
 
-  const { data: user, isLoading: loadingUser } = trpc.useQuery(
-    [
-      "users.single-user",
-      {
-        userId,
-      },
-    ],
+  const { data: user, isLoading: loadingUser } = trpc.users.singleUser.useQuery(
+    {
+      userId,
+    },
     {
       onSettled(data) {
         // if user not found, 404
@@ -129,7 +126,7 @@ const UserPage: NextPage<
     mutate: deleteUser,
     error: deleteError,
     isLoading: deleting,
-  } = trpc.useMutation(["users.delete-user"], {
+  } = trpc.users.deleteUser.useMutation({
     onSuccess: () => {
       setIsDeleteAccountModalOpen(false);
       signOut({
@@ -149,19 +146,18 @@ const UserPage: NextPage<
   const openFollowingModalState = useState(false);
   const [, setOpenFollowingModal] = openFollowingModalState;
 
-  const { mutate: follow, error: followError } = trpc.useMutation(
-    ["users.follow-user"],
-    {
+  const { mutate: follow, error: followError } =
+    trpc.users.followUser.useMutation({
       async onMutate({ userId }) {
-        await utils.cancelQuery(["users.single-user", { userId }]);
+        await utils.users.singleUser.cancel({ userId });
 
-        const prevData = utils.getQueryData(["users.single-user", { userId }]);
+        const prevData = utils.users.singleUser.getData({ userId });
 
         const userWasFollowing = !!prevData!.alreadyFollowing;
 
         // User is unfollowing
         if (userWasFollowing) {
-          utils.setQueryData(["users.single-user", { userId }], (old) => ({
+          utils.users.singleUser.setData({ userId }, (old) => ({
             ...old!,
             alreadyFollowing: false,
             _count: {
@@ -173,7 +169,7 @@ const UserPage: NextPage<
 
         // User is following
         if (!userWasFollowing) {
-          utils.setQueryData(["users.single-user", { userId }], (old) => ({
+          utils.users.singleUser.setData({ userId }, (old) => ({
             ...old!,
             alreadyFollowing: true,
             _count: {
@@ -187,34 +183,24 @@ const UserPage: NextPage<
       },
 
       onError: (err, newData, context) => {
-        utils.setQueryData(["users.single-user"], context?.prevData as User);
+        utils.users.singleUser.setData({ userId }, context?.prevData as User);
       },
       onSettled: () => {
-        utils.invalidateQueries([
-          "users.single-user",
-          {
-            userId,
-          },
-        ]);
+        utils.users.singleUser.invalidate({
+          userId,
+        });
 
-        utils.invalidateQueries([
-          "users.get-followers",
-          {
-            userId,
-            limit: 10,
-          },
-        ]);
+        utils.users.getFollowers.invalidate({
+          userId,
+          limit: 10,
+        });
 
-        utils.invalidateQueries([
-          "users.get-following",
-          {
-            userId,
-            limit: 10,
-          },
-        ]);
+        utils.users.getFollowing.invalidate({
+          userId,
+          limit: 10,
+        });
       },
-    }
-  );
+    });
 
   const handleClickFollowButton = useCallback(
     () => follow({ userId }),
@@ -256,7 +242,7 @@ const UserPage: NextPage<
               variant="gradient"
               onClick={handleClickFollowButton}
               absolute
-              className="-bottom-3 left-1/2 -translate-x-1/2 px-3 py-2 rounded-3xl"
+              className="-bottom-3 left-1/2 -translate-x-1/2 rounded-3xl px-3 py-2"
             >
               {user?.alreadyFollowing ? "Unfollow" : "Follow"}
             </Button>
@@ -422,9 +408,10 @@ export async function getServerSideProps(
   const ssg = await generateSSGHelper(req, res);
   const userId = context.params?.userId as string;
 
-  await ssg.prefetchQuery("users.single-user", {
+  await ssg.users.singleUser.prefetch({
     userId,
   });
+
   return {
     props: {
       trpcState: ssg.dehydrate(),

@@ -44,13 +44,10 @@ const SingleTagPage: NextPage<
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
 
-  const { data: tag, isLoading: loadingTag } = trpc.useQuery(
-    [
-      "tags.single-tag",
-      {
-        tagId,
-      },
-    ],
+  const { data: tag, isLoading: loadingTag } = trpc.tags.singleTag.useQuery(
+    {
+      tagId,
+    },
     {
       onSettled(data) {
         // if tag not found, 404
@@ -61,16 +58,15 @@ const SingleTagPage: NextPage<
 
   const numberOfSubs = tag?._count?.subscribers ?? 0;
 
-  const { mutate: subscribe, isLoading: subscribing } = trpc.useMutation(
-    "tags.subscribe",
-    {
+  const { mutate: subscribe, isLoading: subscribing } =
+    trpc.tags.subscribe.useMutation({
       onMutate: async ({ tagId }) => {
-        await utils.cancelQuery(["tags.single-tag", { tagId }]);
-        const prevData = utils.getQueryData(["tags.single-tag", { tagId }]);
+        await utils.tags.singleTag.cancel({ tagId });
+        const prevData = utils.tags.singleTag.getData({ tagId });
         const userIsSubscribed = !!prevData!.isSubscribed;
 
         if (userIsSubscribed) {
-          utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
+          utils.tags.singleTag.setData({ tagId }, (old) => ({
             ...old!,
             isSubscribed: false,
             _count: {
@@ -80,7 +76,7 @@ const SingleTagPage: NextPage<
         }
 
         if (!userIsSubscribed) {
-          utils.setQueryData(["tags.single-tag", { tagId }], (old) => ({
+          utils.tags.singleTag.setData({ tagId }, (old) => ({
             ...old!,
             isSubscribed: true,
             _count: {
@@ -92,37 +88,28 @@ const SingleTagPage: NextPage<
         return { prevData };
       },
       onSettled: () => {
-        utils.invalidateQueries([
-          "tags.single-tag",
-          {
-            tagId,
-          },
-        ]);
+        utils.tags.singleTag.invalidate({
+          tagId,
+        });
 
-        utils.invalidateQueries([
-          "tags.subscribed",
-          {
-            limit: 6,
-            query: "",
-          },
-        ]);
+        utils.tags.subscribed.invalidate({
+          limit: 6,
+          query: "",
+        });
       },
-    }
-  );
+    });
 
   const onClickSubscribe = () => {
     if (!subscribing) subscribe({ tagId });
   };
 
-  const { mutate: deleteTag, isLoading: deleting } = trpc.useMutation(
-    "tags.delete",
-    {
+  const { mutate: deleteTag, isLoading: deleting } =
+    trpc.tags.delete.useMutation({
       onSuccess: () => {
         toast.success("Tag deleted successfully");
         router.push("/");
       },
-    }
-  );
+    });
 
   const isDeleteModalOpen = useState(false);
   const [, setIsDeleteModalOpen] = isDeleteModalOpen;
@@ -137,15 +124,12 @@ const SingleTagPage: NextPage<
     }
   }, [deleteTag, loggedUserIsAdmin, tagId]);
 
-  const { mutate: updateTag } = trpc.useMutation("tags.update", {
+  const { mutate: updateTag } = trpc.tags.update.useMutation({
     onSuccess: () => {
       // This will refetch the comments.
-      utils.invalidateQueries([
-        "tags.single-tag",
-        {
-          tagId,
-        },
-      ]);
+      utils.tags.singleTag.invalidate({
+        tagId,
+      });
     },
   });
 
@@ -186,16 +170,13 @@ const SingleTagPage: NextPage<
   );
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    trpc.useInfiniteQuery(
-      [
-        "posts.all",
-        {
-          limit: 6,
-          tagId,
-          filter: selectedTab.id,
-          query: queryValue,
-        },
-      ],
+    trpc.posts.all.useInfiniteQuery(
+      {
+        limit: 6,
+        tagId,
+        filter: selectedTab.id,
+        query: queryValue,
+      },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
@@ -354,13 +335,13 @@ export async function getServerSideProps(
   const ssg = await generateSSGHelper(req, res);
   const tagId = context.params?.tagId as string;
 
-  const postsQuery = ssg.prefetchInfiniteQuery("posts.all", {
+  const postsQuery = ssg.posts.all.prefetchInfinite({
     limit: 6,
     tagId,
     filter: "newest",
   });
 
-  const tagQuery = ssg.prefetchQuery("tags.single-tag", {
+  const tagQuery = ssg.tags.singleTag.prefetch({
     tagId,
   });
 

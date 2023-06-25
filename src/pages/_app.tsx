@@ -1,16 +1,11 @@
 import Head from "next/head";
-import { loggerLink } from "@trpc/client/links/loggerLink";
-import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
-import { withTRPC } from "@trpc/next";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
-import superjson from "superjson";
-import { url } from "@utils/constants";
 import RouterProgressBar from "@components/RouterProgressBar";
-import { AppRouter } from "@server/router/app.router";
 import MainLayout from "@layouts/MainLayout";
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
+import { trpc } from "@utils/trpc";
 import PostModal from "@components/PostModal";
 import "@styles/globals.scss";
 import "react-markdown-editor-lite/lib/index.css";
@@ -42,47 +37,4 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   );
 }
 
-export default withTRPC<AppRouter>({
-  config({ ctx }) {
-    // Defining sub-links:
-    // LoggerLink: Log all requests on console for debugging.
-    // BatchLink: Send a number of requests together as a batch. (Better performance)
-    const links = [
-      loggerLink({
-        enabled: () => process.env.NEXT_PUBLIC_ENVIRONMENT === "develop",
-      }),
-      httpBatchLink({
-        url,
-        maxBatchSize: 10,
-      }),
-    ];
-
-    const ONE_DAY_SECONDS = 60 * 60 * 24;
-    ctx?.res?.setHeader(
-      "Cache-Control",
-      `s-maxage=1, stale-while-revalidate=${ONE_DAY_SECONDS}`
-    );
-
-    return {
-      queryClientConfig: {
-        defaultOptions: {
-          queries: {
-            staleTime: 60,
-          },
-        },
-      },
-      headers() {
-        if (ctx?.req) {
-          const { connection: _connection, ...headers } = ctx.req.headers;
-          return {
-            ...headers,
-            "x-ssr": "1",
-          };
-        }
-        return {};
-      },
-      links,
-      transformer: superjson,
-    };
-  },
-})(App);
+export default trpc.withTRPC(App);

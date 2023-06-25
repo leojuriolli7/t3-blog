@@ -1,25 +1,23 @@
 import * as trpc from "@trpc/server";
-import { createRouter } from "@server/createRouter";
 import {
   createPresignedUrlSchema,
   createPresignedAvatarUrlSchema,
-  createPresignedTagUrl,
+  createPresignedTagUrlSchema,
 } from "@schema/attachment.schema";
 import { s3 } from "@server/config/aws";
 import { env } from "@env";
-import { isLoggedInMiddleware } from "@server/utils/middlewares";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { generateS3Url } from "@utils/aws/generateS3Url";
 import { v4 } from "uuid";
+import { createTRPCRouter, protectedProcedure } from "@server/trpc";
 
 const maxFileSize = Number(env.NEXT_PUBLIC_UPLOAD_MAX_FILE_SIZE);
 const uploadTimeLimit = Number(env.NEXT_PUBLIC_UPLOADING_TIME_LIMIT);
 
-export const attachmentsRouter = createRouter()
-  .middleware(isLoggedInMiddleware)
-  .mutation("create-presigned-url", {
-    input: createPresignedUrlSchema,
-    async resolve({ ctx, input }) {
+export const attachmentsRouter = createTRPCRouter({
+  createPresignedUrl: protectedProcedure
+    .input(createPresignedUrlSchema)
+    .mutation(async ({ ctx, input }) => {
       const { postId, name, type, randomKey } = input;
 
       const attachmentKey = `${postId}/${randomKey}`;
@@ -58,64 +56,37 @@ export const attachmentsRouter = createRouter()
           message: "Error creating S3 presigned url",
         });
       }
-    },
-  })
-  .mutation("create-presigned-avatar-url", {
-    input: createPresignedAvatarUrlSchema,
-    async resolve({ input }) {
-      const { userId } = input;
-      try {
-        const { url, fields } = await createPresignedPost(s3, {
-          Bucket: env.NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME,
-          Key: userId,
-          Expires: uploadTimeLimit,
-          Conditions: [
-            ["starts-with", "$Content-Type", "image/"],
-            ["content-length-range", 0, maxFileSize],
-          ],
-        });
+    }),
 
-        return { url, fields };
-      } catch (e) {
-        console.log("e:", e);
-        throw new trpc.TRPCError({
-          code: "BAD_REQUEST",
-          message: "Error creating S3 presigned avatar url",
-        });
-      }
-    },
-  })
-  .mutation("create-presigned-post-body-url", {
-    async resolve({ ctx }) {
-      const userId = ctx.session.user.id;
-      const randomKey = v4();
+  createPresignedPostBodyUrl: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const randomKey = v4();
 
-      const key = `${userId}-${randomKey}`;
+    const key = `${userId}-${randomKey}`;
 
-      try {
-        const { url, fields } = await createPresignedPost(s3, {
-          Bucket: env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
-          Key: key,
-          Expires: uploadTimeLimit,
-          Conditions: [
-            ["starts-with", "$Content-Type", "image/"],
-            ["content-length-range", 0, maxFileSize],
-          ],
-        });
+    try {
+      const { url, fields } = await createPresignedPost(s3, {
+        Bucket: env.NEXT_PUBLIC_AWS_S3_POST_BODY_BUCKET_NAME,
+        Key: key,
+        Expires: uploadTimeLimit,
+        Conditions: [
+          ["starts-with", "$Content-Type", "image/"],
+          ["content-length-range", 0, maxFileSize],
+        ],
+      });
 
-        return { url, fields, key };
-      } catch (e) {
-        console.log("e:", e);
-        throw new trpc.TRPCError({
-          code: "BAD_REQUEST",
-          message: "Error creating S3 presigned post body url",
-        });
-      }
-    },
-  })
-  .mutation("create-presigned-tag-url", {
-    input: createPresignedTagUrl,
-    async resolve({ input }) {
+      return { url, fields, key };
+    } catch (e) {
+      console.log("e:", e);
+      throw new trpc.TRPCError({
+        code: "BAD_REQUEST",
+        message: "Error creating S3 presigned post body url",
+      });
+    }
+  }),
+  createPresignedTagUrl: protectedProcedure
+    .input(createPresignedTagUrlSchema)
+    .mutation(async ({ input }) => {
       const { tagName, type } = input;
 
       try {
@@ -137,5 +108,29 @@ export const attachmentsRouter = createRouter()
           message: "Error creating S3 presigned tag url",
         });
       }
-    },
-  });
+    }),
+  createPresignedAvatarUrl: protectedProcedure
+    .input(createPresignedAvatarUrlSchema)
+    .mutation(async ({ input }) => {
+      const { userId } = input;
+      try {
+        const { url, fields } = await createPresignedPost(s3, {
+          Bucket: env.NEXT_PUBLIC_AWS_S3_AVATARS_BUCKET_NAME,
+          Key: userId,
+          Expires: uploadTimeLimit,
+          Conditions: [
+            ["starts-with", "$Content-Type", "image/"],
+            ["content-length-range", 0, maxFileSize],
+          ],
+        });
+
+        return { url, fields };
+      } catch (e) {
+        console.log("e:", e);
+        throw new trpc.TRPCError({
+          code: "BAD_REQUEST",
+          message: "Error creating S3 presigned avatar url",
+        });
+      }
+    }),
+});

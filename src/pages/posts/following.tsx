@@ -18,14 +18,11 @@ const Following = () => {
   const reachedBottom = useOnScreen(bottomRef);
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    trpc.useInfiniteQuery(
-      [
-        "posts.following",
-        {
-          limit: 6,
-          filter: selectedTab.id,
-        },
-      ],
+    trpc.posts.following.useInfiniteQuery(
+      {
+        limit: 6,
+        filter: selectedTab.id,
+      },
       {
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
       }

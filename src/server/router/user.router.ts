@@ -1,5 +1,4 @@
 import * as trpc from "@trpc/server";
-import { createRouter } from "@server/createRouter";
 import {
   deleteUserSchema,
   followUserSchema,
@@ -8,12 +7,17 @@ import {
   getSingleUserSchema,
   updateUserSchema,
 } from "@schema/user.schema";
-import { isLoggedInMiddleware, isStringEmpty, formatDate } from "@server/utils";
+import { isStringEmpty, formatDate } from "@server/utils";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@server/trpc";
 
-export const userRouter = createRouter()
-  .query("single-user", {
-    input: getSingleUserSchema,
-    async resolve({ ctx, input }) {
+export const userRouter = createTRPCRouter({
+  singleUser: publicProcedure
+    .input(getSingleUserSchema)
+    .query(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findFirst({
         where: {
           id: input.userId,
@@ -53,11 +57,11 @@ export const userRouter = createRouter()
         createdAt: formattedDate,
         alreadyFollowing: false,
       };
-    },
-  })
-  .query("get-following", {
-    input: getFollowingFromUserSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  getFollowing: publicProcedure
+    .input(getFollowingFromUserSchema)
+    .query(async ({ ctx, input }) => {
       const { limit, skip, cursor } = input;
 
       const following = await ctx.prisma.follows.findMany({
@@ -85,11 +89,11 @@ export const userRouter = createRouter()
         following,
         nextCursor,
       };
-    },
-  })
-  .query("get-followers", {
-    input: getFollowersSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  getFollowers: publicProcedure
+    .input(getFollowersSchema)
+    .query(async ({ ctx, input }) => {
       const { limit, skip, cursor } = input;
 
       const followers = await ctx.prisma.follows.findMany({
@@ -117,12 +121,11 @@ export const userRouter = createRouter()
         followers,
         nextCursor,
       };
-    },
-  })
-  .middleware(isLoggedInMiddleware)
-  .mutation("delete-user", {
-    input: deleteUserSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  deleteUser: protectedProcedure
+    .input(deleteUserSchema)
+    .mutation(async ({ ctx, input }) => {
       const isAdmin = ctx?.session?.user?.isAdmin;
 
       if (ctx.session?.user.id !== input.userId && !isAdmin) {
@@ -144,11 +147,11 @@ export const userRouter = createRouter()
 
         await ctx.prisma.$transaction([deleteUser]);
       }
-    },
-  })
-  .mutation("update-profile", {
-    input: updateUserSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  updateProfile: protectedProcedure
+    .input(updateUserSchema)
+    .mutation(async ({ ctx, input }) => {
       const { userId } = input;
       const isAdmin = ctx?.session?.user?.isAdmin;
 
@@ -217,11 +220,11 @@ export const userRouter = createRouter()
         },
       });
       return user;
-    },
-  })
-  .mutation("follow-user", {
-    input: followUserSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  followUser: protectedProcedure
+    .input(followUserSchema)
+    .mutation(async ({ ctx, input }) => {
       const followerId = ctx.session.user.id;
       const followingId = input.userId;
 
@@ -261,5 +264,5 @@ export const userRouter = createRouter()
           },
         });
       }
-    },
-  });
+    }),
+});

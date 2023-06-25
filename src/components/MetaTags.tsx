@@ -20,9 +20,12 @@ const MetaTags: React.FC<Props> = ({
   const session = useSession();
   const user = session?.data?.user;
 
-  const { data: totalUnreads } = trpc.useQuery(["notification.total-unreads"], {
-    enabled: !!user?.id,
-  });
+  const { data: totalUnreads } = trpc.notification.totalUnreads.useQuery(
+    undefined,
+    {
+      enabled: !!user?.id,
+    }
+  );
 
   const formattedTitle = useMemo(() => {
     const defaultTitle = `${totalUnreads ? `(${totalUnreads})` : ""} T3 Blog`;

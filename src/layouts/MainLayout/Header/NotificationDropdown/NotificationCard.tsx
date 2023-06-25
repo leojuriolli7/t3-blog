@@ -19,30 +19,21 @@ export const NotificationCard = (notification: Notification) => {
   const username = getUserDisplayName(notification.notifier);
   const utils = trpc.useContext();
 
-  const { mutate: markAsRead } = trpc.useMutation(
-    ["notification.mark-as-read"],
-    {
-      onSettled: () => {
-        utils.invalidateQueries(["notification.total-unreads"]);
+  const { mutate: markAsRead } = trpc.notification.markAsRead.useMutation({
+    onSettled: () => {
+      utils.notification.totalUnreads.invalidate();
 
-        utils.invalidateQueries([
-          "notification.get-all",
-          {
-            limit: 6,
-            read: true,
-          },
-        ]);
+      utils.notification.getAll.invalidate({
+        limit: 6,
+        read: true,
+      });
 
-        utils.invalidateQueries([
-          "notification.get-all",
-          {
-            limit: 6,
-            read: false,
-          },
-        ]);
-      },
-    }
-  );
+      utils.notification.getAll.invalidate({
+        limit: 6,
+        read: false,
+      });
+    },
+  });
 
   const handleMarkAsRead =
     ({ preventDefault }: { preventDefault: boolean }) =>

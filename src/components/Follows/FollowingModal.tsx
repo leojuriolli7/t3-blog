@@ -19,14 +19,11 @@ const FollowingModal: React.FC<Props> = ({ openState, user }) => {
   const [, toggleModal] = openState;
 
   const { data, fetchNextPage, isLoading, isFetchingNextPage, hasNextPage } =
-    trpc.useInfiniteQuery(
-      [
-        "users.get-following",
-        {
-          limit: 10,
-          userId,
-        },
-      ],
+    trpc.users.getFollowing.useInfiniteQuery(
+      {
+        limit: 10,
+        userId,
+      },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }

@@ -38,13 +38,15 @@ const CreatePostPage: React.FC = () => {
   const files = watch("files");
   const { errors } = formState;
 
-  const { data: tags, isLoading: fetchingTags } = trpc.useQuery(["tags.all"], {
-    refetchOnWindowFocus: false,
-  });
-
-  const { mutateAsync: createPresignedUrl } = trpc.useMutation(
-    "attachments.create-presigned-url"
+  const { data: tags, isLoading: fetchingTags } = trpc.tags.all.useQuery(
+    undefined,
+    {
+      refetchOnWindowFocus: false,
+    }
   );
+
+  const { mutateAsync: createPresignedUrl } =
+    trpc.attachments.createPresignedUrl.useMutation();
 
   const { uploadTagImages } = useUploadTagImagesToS3();
 
@@ -67,7 +69,7 @@ const CreatePostPage: React.FC = () => {
     mutate: create,
     error: createError,
     isLoading,
-  } = trpc.useMutation(["posts.create-post"], {
+  } = trpc.posts.createPost.useMutation({
     onSuccess: async ({ id }) => {
       if (files) {
         const filesArray = Array.from(files);

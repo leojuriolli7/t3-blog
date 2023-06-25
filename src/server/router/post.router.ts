@@ -1,11 +1,9 @@
-import { createRouter } from "@server/createRouter";
 import { s3 } from "@server/config/aws";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "@env";
 import {
   deleteChildComments,
   getFiltersByInput,
-  isLoggedInMiddleware,
   formatPosts,
   getPostWithLikes,
   markdownToHtml,
@@ -26,11 +24,16 @@ import {
   voteOnPollSchema,
   getPostsFromSubbedTagsSchema,
 } from "@schema/post.schema";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "@server/trpc";
 
-export const postRouter = createRouter()
-  .query("by-tags", {
-    input: getPostsByTagsSchema,
-    async resolve({ ctx, input }) {
+export const postRouter = createTRPCRouter({
+  byTags: publicProcedure
+    .input(getPostsByTagsSchema)
+    .query(async ({ ctx, input }) => {
       const { tagLimit, cursor, skip } = input;
 
       const query = input?.query;
@@ -98,14 +101,10 @@ export const postRouter = createRouter()
         tags: tagsWithPosts,
         nextCursor,
       };
-    },
-  })
-  .query("following", {
-    input: getFollowingPostsSchema,
-    async resolve({ ctx, input }) {
-      // No user logged in, so no following to get.
-      if (!ctx.session?.user) return null;
-
+    }),
+  following: protectedProcedure
+    .input(getFollowingPostsSchema)
+    .query(async ({ ctx, input }) => {
       const posts = await ctx.prisma.post.findMany({
         where: {
           user: {
@@ -146,68 +145,64 @@ export const postRouter = createRouter()
         posts: formattedPosts,
         nextCursor,
       };
-    },
-  })
-  .query("all", {
-    input: getPostsSchema,
-    async resolve({ ctx, input }) {
-      const { limit, skip, cursor, filter } = input;
+    }),
+  all: publicProcedure.input(getPostsSchema).query(async ({ ctx, input }) => {
+    const { limit, skip, cursor, filter } = input;
 
-      const posts = await ctx.prisma.post.findMany({
-        take: limit + 1,
-        skip: skip,
-        cursor: cursor ? { id: cursor } : undefined,
-        ...(filter
-          ? { orderBy: getFiltersByInput(filter) }
-          : {
-              orderBy: {
-                createdAt: "desc",
-              },
-            }),
-        include: {
-          user: true,
-          likes: true,
-          tags: true,
-          link: true,
-        },
-        ...(input.userId && {
-          where: {
-            userId: input.userId,
-          },
-        }),
-        ...(input.tagId && {
-          where: {
-            tags: {
-              some: {
-                id: input.tagId,
-              },
+    const posts = await ctx.prisma.post.findMany({
+      take: limit + 1,
+      skip: skip,
+      cursor: cursor ? { id: cursor } : undefined,
+      ...(filter
+        ? { orderBy: getFiltersByInput(filter) }
+        : {
+            orderBy: {
+              createdAt: "desc",
             },
-            ...(input.query && {
-              body: {
-                search: input.query,
-              },
-            }),
+          }),
+      include: {
+        user: true,
+        likes: true,
+        tags: true,
+        link: true,
+      },
+      ...(input.userId && {
+        where: {
+          userId: input.userId,
+        },
+      }),
+      ...(input.tagId && {
+        where: {
+          tags: {
+            some: {
+              id: input.tagId,
+            },
           },
-        }),
-      });
+          ...(input.query && {
+            body: {
+              search: input.query,
+            },
+          }),
+        },
+      }),
+    });
 
-      let nextCursor: typeof cursor | undefined = undefined;
-      if (posts.length > limit) {
-        const nextItem = posts.pop(); // return the last item from the array
-        nextCursor = nextItem?.id;
-      }
+    let nextCursor: typeof cursor | undefined = undefined;
+    if (posts.length > limit) {
+      const nextItem = posts.pop(); // return the last item from the array
+      nextCursor = nextItem?.id;
+    }
 
-      const formattedPosts = await formatPosts(posts);
+    const formattedPosts = await formatPosts(posts);
 
-      return {
-        posts: formattedPosts,
-        nextCursor,
-      };
-    },
-  })
-  .query("single-post", {
-    input: getSinglePostSchema,
-    async resolve({ ctx, input }) {
+    return {
+      posts: formattedPosts,
+      nextCursor,
+    };
+  }),
+  singlePost: publicProcedure
+    .input(getSinglePostSchema)
+    .query(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findFirst({
         where: {
           id: input.postId,
@@ -282,11 +277,10 @@ export const postRouter = createRouter()
         favoritedByMe: favoritedByUser,
         poll,
       };
-    },
-  })
-  .query("get-favorite-posts", {
-    input: getFavoritesSchema,
-    async resolve({ ctx, input }) {
+    }),
+  getFavoritePosts: protectedProcedure
+    .input(getFavoritesSchema)
+    .query(async ({ ctx, input }) => {
       const { userId, limit, skip, cursor } = input;
       const query = input?.query;
 
@@ -335,11 +329,11 @@ export const postRouter = createRouter()
         posts: formattedPosts,
         nextCursor,
       };
-    },
-  })
-  .query("get-liked-posts", {
-    input: getLikedPostsSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  getLikedPosts: protectedProcedure
+    .input(getLikedPostsSchema)
+    .query(async ({ ctx, input }) => {
       const query = input?.query;
 
       const { userId, limit, skip, cursor } = input;
@@ -394,12 +388,10 @@ export const postRouter = createRouter()
         posts: formattedPosts,
         nextCursor,
       };
-    },
-  })
-  .middleware(isLoggedInMiddleware)
-  .mutation("create-post", {
-    input: createPostSchema,
-    async resolve({ ctx, input }) {
+    }),
+  createPost: protectedProcedure
+    .input(createPostSchema)
+    .mutation(async ({ ctx, input }) => {
       const inputHasNoTags = !input?.tags?.length;
 
       if (
@@ -513,11 +505,10 @@ export const postRouter = createRouter()
       }
 
       return post;
-    },
-  })
-  .mutation("delete-post", {
-    input: getSinglePostSchema,
-    async resolve({ ctx, input }) {
+    }),
+  deletePost: protectedProcedure
+    .input(getSinglePostSchema)
+    .mutation(async ({ ctx, input }) => {
       const isAdmin = ctx.session.user.isAdmin;
 
       const post = await ctx.prisma.post.findFirst({
@@ -582,11 +573,11 @@ export const postRouter = createRouter()
           },
         },
       });
-    },
-  })
-  .mutation("update-post", {
-    input: updatePostSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  updatePost: protectedProcedure
+    .input(updatePostSchema)
+    .mutation(async ({ ctx, input }) => {
       const isAdmin = ctx.session.user.isAdmin;
 
       if (!input?.title && !input.body) {
@@ -670,11 +661,10 @@ export const postRouter = createRouter()
       });
 
       return post;
-    },
-  })
-  .mutation("favorite-post", {
-    input: favoritePostSchema,
-    async resolve({ input, ctx }) {
+    }),
+  favoritePost: protectedProcedure
+    .input(favoritePostSchema)
+    .mutation(async ({ ctx, input }) => {
       const { postId, userId } = input;
 
       const userHasAlreadyFavoritedPost =
@@ -719,11 +709,10 @@ export const postRouter = createRouter()
           },
         });
       }
-    },
-  })
-  .mutation("vote-on-poll", {
-    input: voteOnPollSchema,
-    async resolve({ ctx, input }) {
+    }),
+  voteOnPoll: protectedProcedure
+    .input(voteOnPollSchema)
+    .mutation(async ({ ctx, input }) => {
       const poll = await ctx.prisma.poll.findUnique({
         where: {
           postId: input.postId,
@@ -758,11 +747,11 @@ export const postRouter = createRouter()
           id: input.optionId,
         },
       });
-    },
-  })
-  .query("subscribed", {
-    input: getPostsFromSubbedTagsSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  subscribed: protectedProcedure
+    .input(getPostsFromSubbedTagsSchema)
+    .query(async ({ ctx, input }) => {
       const posts = await ctx.prisma.post.findMany({
         where: {
           tags: {
@@ -805,12 +794,11 @@ export const postRouter = createRouter()
         posts: formattedPosts,
         nextCursor,
       };
-    },
-  })
+    }),
   // Posts from following users or from subscribed tags.
-  .query("your-feed", {
-    input: getPostsFromSubbedTagsSchema,
-    async resolve({ ctx, input }) {
+  yourFeed: protectedProcedure
+    .input(getPostsFromSubbedTagsSchema)
+    .query(async ({ ctx, input }) => {
       const posts = await ctx.prisma.post.findMany({
         where: {
           OR: [
@@ -866,5 +854,5 @@ export const postRouter = createRouter()
         posts: formattedPosts,
         nextCursor,
       };
-    },
-  });
+    }),
+});

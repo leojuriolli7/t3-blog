@@ -18,14 +18,11 @@ const SubscribedTagsPage = () => {
   const reachedBottom = useOnScreen(bottomRef);
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    trpc.useInfiniteQuery(
-      [
-        "posts.subscribed",
-        {
-          limit: 6,
-          filter: selectedTab.id,
-        },
-      ],
+    trpc.posts.subscribed.useInfiniteQuery(
+      {
+        limit: 6,
+        filter: selectedTab.id,
+      },
       {
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
       }

@@ -49,16 +49,13 @@ const SearchPage = () => {
   );
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } =
-    trpc.useInfiniteQuery(
-      [
-        "search.by-type",
-        {
-          query: query,
-          limit: 6,
-          type: currentFilter,
-          truncateComments: false,
-        },
-      ],
+    trpc.search.byType.useInfiniteQuery(
+      {
+        query: query,
+        limit: 6,
+        type: currentFilter,
+        truncateComments: false,
+      },
       {
         refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
