@@ -1,9 +1,19 @@
 import type { AppRouter } from "@server/router/app.router";
-import { httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
+import type { OperationLink } from "@trpc/client/src/links/types";
+import type { AnyRouter } from "@trpc/server";
+import {
+  type Operation,
+  type OperationResultObservable,
+  httpBatchLink,
+  httpLink,
+  loggerLink,
+  splitLink,
+} from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import superjson from "superjson";
 import { url } from "./constants";
 
+// all `pages/api/**/[trpc].ts` paths.
 const ENDPOINTS = [
   "attachments",
   "comments",
@@ -18,8 +28,17 @@ const ENDPOINTS = [
 
 export type Endpoint = (typeof ENDPOINTS)[number];
 
-const resolveEndpoint = (links: any) => {
-  return (ctx: any) => {
+type LinksType = Record<string, OperationLink<AnyRouter, unknown, unknown>>;
+
+type ResolveEndpointContext = {
+  op: Operation<unknown>;
+  next: (
+    op: Operation<unknown>
+  ) => OperationResultObservable<AnyRouter, unknown>;
+};
+
+const resolveEndpoint = (links: LinksType) => {
+  return (ctx: ResolveEndpointContext) => {
     const parts = ctx.op.path.split(".");
     let endpoint;
     let path = "";
