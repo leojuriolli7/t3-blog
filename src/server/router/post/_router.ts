@@ -113,7 +113,7 @@ export const postRouter = createTRPCRouter({
       return UNSTABLE_HANDLER_CACHE.getFavoritePosts({ input, ctx });
     }),
 
-  getLikedPosts: protectedProcedure
+  getLikedPosts: publicProcedure
     .input(getLikedPostsSchema)
     .query(async ({ ctx, input }) => {
       if (!UNSTABLE_HANDLER_CACHE.getLikedPosts) {

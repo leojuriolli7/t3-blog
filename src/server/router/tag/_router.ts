@@ -71,6 +71,7 @@ export const tagRouter = createTRPCRouter({
       return UNSTABLE_HANDLER_CACHE.subscribe({ ctx, input });
     }),
 
+  // get subscribed tags.
   subscribed: protectedProcedure
     .input(getSubscribedTagsSchema)
     .query(async ({ ctx, input }) => {
