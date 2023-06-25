@@ -6,7 +6,7 @@ export const createNextApiHandler = (router: AnyRouter) =>
   trpcNext.createNextApiHandler({
     router,
     createContext: ({ req, res }) => {
-      return createTRPCContext({ req, res }, true);
+      return createTRPCContext({ req, res });
     },
     batching: {
       enabled: true,
