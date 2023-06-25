@@ -11,4 +11,6 @@ export const searchSchema = z.object({
   truncateComments: z.boolean().optional(),
 });
 
+export type SearchInput = z.TypeOf<typeof searchSchema>;
+
 export type SearchFilterTypes = z.TypeOf<typeof type>;

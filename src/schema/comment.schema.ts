@@ -12,6 +12,8 @@ export const getCommentsSchema = z.object({
   postId: z.string().uuid(),
 });
 
+export type GetAllCommentsInput = z.TypeOf<typeof getCommentsSchema>;
+
 export const getUserCommentsSchema = z.object({
   userId: z.string(),
   limit: z.number(),
@@ -20,9 +22,13 @@ export const getUserCommentsSchema = z.object({
   filter: z.string().optional(),
 });
 
+export type GetUserCommentsInput = z.TypeOf<typeof getUserCommentsSchema>;
+
 export const deleteCommentSchema = z.object({
   commentId: z.string(),
 });
+
+export type DeleteCommentInput = z.TypeOf<typeof deleteCommentSchema>;
 
 export const updateCommentSchema = z.object({
   body: z.string().min(2, "Minimum comment length is 2"),

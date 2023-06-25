@@ -4,6 +4,8 @@ export const getSingleUserSchema = z.object({
   userId: z.string(),
 });
 
+export type GetSingleUserInput = z.TypeOf<typeof getSingleUserSchema>;
+
 export const signInWithEmailSchema = z.object({
   email: z.string().email(),
 });
@@ -13,6 +15,8 @@ export type SignInWithEmailInput = z.TypeOf<typeof signInWithEmailSchema>;
 export const deleteUserSchema = z.object({
   userId: z.string(),
 });
+
+export type DeleteUserSchema = z.TypeOf<typeof deleteUserSchema>;
 
 export const followUserSchema = deleteUserSchema;
 
@@ -27,6 +31,9 @@ export const getFollowingFromUserSchema = z.object({
   skip: z.number().optional(),
   userId: z.string().optional(),
 });
+
+export type GetFollowingInput = z.TypeOf<typeof getFollowingFromUserSchema>;
+
 export const getFollowersSchema = getFollowingFromUserSchema;
 
 export const urlSchema = z

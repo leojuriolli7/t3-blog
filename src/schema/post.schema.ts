@@ -85,6 +85,8 @@ export const getPostsSchema = z.object({
   query: z.string().optional(),
 });
 
+export type GetPostsInput = z.TypeOf<typeof getPostsSchema>;
+
 export const getFollowingPostsSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish().optional(),
@@ -92,12 +94,18 @@ export const getFollowingPostsSchema = z.object({
   filter: z.string().optional(),
 });
 
+export type GetFollowingPostsInput = z.TypeOf<typeof getFollowingPostsSchema>;
+
 export const getPostsFromSubbedTagsSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish().optional(),
   skip: z.number().optional(),
   filter: z.string().optional(),
 });
+
+export type GetPostsFromSubbedTagsInput = z.TypeOf<
+  typeof getPostsFromSubbedTagsSchema
+>;
 
 export const getFavoritesSchema = z.object({
   limit: z.number(),
@@ -107,6 +115,8 @@ export const getFavoritesSchema = z.object({
   filter: z.string().optional(),
   query: z.string().optional(),
 });
+
+export type GetFavoritesInput = z.TypeOf<typeof getFavoritesSchema>;
 
 export const getLikedPostsSchema = getFavoritesSchema;
 
@@ -118,6 +128,8 @@ export const getPostsByTagsSchema = z.object({
   query: z.string().optional(),
 });
 
+export type GetPostsByTagsInput = z.TypeOf<typeof getPostsByTagsSchema>;
+
 export const getUserPostsSchema = z.object({
   limit: z.number(),
   cursor: z.string().nullish(),
@@ -125,14 +137,20 @@ export const getUserPostsSchema = z.object({
   userId: z.string(),
 });
 
+export type GetUserPostsInput = z.TypeOf<typeof getUserPostsSchema>;
+
 export const getSinglePostSchema = z.object({
   postId: z.string(),
 });
+
+export type GetSinglePostInput = z.TypeOf<typeof getSinglePostSchema>;
 
 export const voteOnPollSchema = z.object({
   postId: z.string(),
   optionId: z.string(),
 });
+
+export type VoteOnPollInput = z.TypeOf<typeof voteOnPollSchema>;
 
 export const updatePostSchema = z.object({
   title: z.string().trim().max(256, "Max title length is 256").optional(),
