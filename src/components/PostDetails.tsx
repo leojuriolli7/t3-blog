@@ -129,19 +129,18 @@ export const PostDetails: React.FC<Props> = ({
     };
   }, [attachments]);
 
-  const { mutate: favoritePost, error: favoriteError } = trpc.useMutation(
-    ["posts.favorite-post"],
-    {
+  const { mutate: favoritePost, error: favoriteError } =
+    trpc.posts.favoritePost.useMutation({
       async onMutate({ postId, userId }) {
-        await utils.cancelQuery(["posts.single-post", { postId }]);
+        await utils.posts.singlePost.cancel({ postId });
 
-        const prevData = utils.getQueryData(["posts.single-post", { postId }]);
+        const prevData = utils.posts.singlePost.getData({ postId });
 
         const userHadFavorited = !!prevData!.favoritedByMe;
 
         // User is undoing favorite
         if (userHadFavorited) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             favoritedByMe: false,
           }));
@@ -149,7 +148,7 @@ export const PostDetails: React.FC<Props> = ({
 
         // User is adding post to favorites
         if (!userHadFavorited) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             favoritedByMe: true,
           }));
@@ -160,40 +159,35 @@ export const PostDetails: React.FC<Props> = ({
       // If the mutation fails,
       // use the context returned from onMutate to roll back
       onError: (err, newData, context) => {
-        utils.setQueryData(
-          ["posts.single-post"],
+        utils.posts.singlePost.setData(
+          { postId },
           context?.prevData as SinglePost
         );
       },
       // Always refetch after error or success
       onSettled: () => {
         // This will refetch the single-post query.
-        utils.invalidateQueries([
-          "posts.single-post",
-          {
-            postId,
-          },
-        ]);
+        utils.posts.singlePost.invalidate({
+          postId,
+        });
       },
-    }
-  );
+    });
 
-  const { mutate: likePost, error: likeError } = trpc.useMutation(
-    ["likes.like-post"],
-    {
+  const { mutate: likePost, error: likeError } =
+    trpc.likes.likePost.useMutation({
       onMutate: async ({ dislike, postId }) => {
         // Cancel any outgoing refetches
         // (so they don't overwrite our optimistic update)
-        await utils.cancelQuery(["posts.single-post", { postId }]);
+        await utils.posts.singlePost.cancel({ postId });
 
-        const prevData = utils.getQueryData(["posts.single-post", { postId }]);
+        const prevData = utils.posts.singlePost.getData({ postId });
 
         const userHadAlreadyLiked = prevData!.likedByMe;
         const userHadDisliked = prevData!.dislikedByMe;
 
         // User undoing dislike by clicking dislike button again.
         if (userHadDisliked && dislike) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             dislikes: prevData!.dislikes - 1,
             dislikedByMe: false,
@@ -202,7 +196,7 @@ export const PostDetails: React.FC<Props> = ({
 
         // User disliking post.
         if (!userHadDisliked && dislike) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             dislikes: prevData!.dislikes + 1,
             dislikedByMe: true,
@@ -211,7 +205,7 @@ export const PostDetails: React.FC<Props> = ({
 
         // User disliking post and undoing previous like.
         if (userHadAlreadyLiked && dislike) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             dislikes: prevData!.dislikes + 1,
             likedByMe: false,
@@ -222,7 +216,7 @@ export const PostDetails: React.FC<Props> = ({
 
         // User liking post.
         if (!userHadAlreadyLiked && !dislike) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             likes: prevData!.likes + 1,
             likedByMe: true,
@@ -231,7 +225,7 @@ export const PostDetails: React.FC<Props> = ({
 
         // User liking post and undoing previous dislike.
         if (userHadDisliked && !dislike) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             likes: prevData!.likes + 1,
             likedByMe: true,
@@ -242,7 +236,7 @@ export const PostDetails: React.FC<Props> = ({
 
         // User undoing like by clicking like button again.
         if (userHadAlreadyLiked && !dislike) {
-          utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+          utils.posts.singlePost.setData({ postId }, (old) => ({
             ...old!,
             likes: prevData!.likes - 1,
             likedByMe: false,
@@ -255,23 +249,19 @@ export const PostDetails: React.FC<Props> = ({
       // If the mutation fails,
       // use the context returned from onMutate to roll back
       onError: (err, newData, context) => {
-        utils.setQueryData(
-          ["posts.single-post"],
+        utils.posts.singlePost.setData(
+          { postId },
           context?.prevData as SinglePost
         );
       },
       // Always refetch after error or success
       onSettled: () => {
         // This will refetch the single-post query.
-        utils.invalidateQueries([
-          "posts.single-post",
-          {
-            postId,
-          },
-        ]);
+        utils.posts.singlePost.invalidate({
+          postId,
+        });
       },
-    }
-  );
+    });
 
   const handleLikeOrDislikePost = useCallback(
     (dislike: boolean) => () => {
@@ -306,17 +296,15 @@ export const PostDetails: React.FC<Props> = ({
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  const { mutate: deletePost, isLoading: deleting } = trpc.useMutation(
-    ["posts.delete-post"],
-    {
+  const { mutate: deletePost, isLoading: deleting } =
+    trpc.posts.deletePost.useMutation({
       onSuccess: () => {
         router.push("/");
 
         // This will refetch the home-page posts.
-        utils.invalidateQueries(["posts.all"]);
+        utils.posts.all.invalidate();
       },
-    }
-  );
+    });
 
   const onClickDeletePost = useCallback(
     () =>

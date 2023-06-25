@@ -58,14 +58,11 @@ const TagsDropdown: React.FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = trpc.useInfiniteQuery(
-    [
-      "tags.subscribed",
-      {
-        limit: 6,
-        query: searchQuery,
-      },
-    ],
+  } = trpc.tags.subscribed.useInfiniteQuery(
+    {
+      limit: 6,
+      query: searchQuery,
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       enabled: !!user?.id,

@@ -1,13 +1,12 @@
 import { searchSchema } from "@schema/search.schema";
-import { createRouter } from "@server/createRouter";
+import { createTRPCRouter, publicProcedure } from "@server/trpc";
 import { formatPosts } from "@server/utils";
 import { formatDate } from "@server/utils/formatDate";
 import { markdownToHtml } from "@server/utils/markdownToHtml";
 import * as trpc from "@trpc/server";
 
-export const searchRouter = createRouter().query("by-type", {
-  input: searchSchema,
-  async resolve({ ctx, input }) {
+export const searchRouter = createTRPCRouter({
+  byType: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
     const { limit, skip, cursor, query, type, truncateComments } = input;
 
     const fetchTags = async () => {
@@ -247,5 +246,5 @@ export const searchRouter = createRouter().query("by-type", {
         code: "BAD_REQUEST",
       });
     }
-  },
+  }),
 });

@@ -1,6 +1,5 @@
 import { deleteChildComments } from "./deleteChildComments";
 import { getFiltersByInput } from "./getFiltersByInput";
-import { isLoggedInMiddleware, isAdminMiddleware } from "./middlewares";
 import formatComments from "./formatComments";
 import { formatDate } from "./formatDate";
 import { isStringEmpty } from "./isStringEmpty";
@@ -16,6 +15,4 @@ export {
   isStringEmpty,
   formatComments,
   getFiltersByInput,
-  isLoggedInMiddleware,
-  isAdminMiddleware,
 };

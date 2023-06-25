@@ -73,14 +73,12 @@ const MarkdownEditor: React.FC<Props> = ({
 
   const maxSizeInMB = convertToMegabytes(maxFileSize);
 
-  const { mutateAsync: createPresignedUrl } = trpc.useMutation(
-    "attachments.create-presigned-post-body-url",
-    {
+  const { mutateAsync: createPresignedUrl } =
+    trpc.attachments.createPresignedPostBodyUrl.useMutation({
       onError() {
         setUploading?.(false);
       },
-    }
-  );
+    });
 
   const onImageUpload = async (file: File) => {
     setUploading?.(true);
@@ -160,9 +158,9 @@ const MarkdownEditor: React.FC<Props> = ({
             renderHTML={(text) => mdParser.parse(text)}
             // default to show only the markdown editor.
             view={{
-              menu: true, 
-              md: true, 
-              html: false
+              menu: true,
+              md: true,
+              html: false,
             }}
             {...field}
             onChange={handleChange(field)}

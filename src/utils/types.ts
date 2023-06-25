@@ -1,41 +1,42 @@
 import type { AppRouter } from "@server/router/app.router";
-import type { inferProcedureOutput } from "@trpc/server";
+import type {
+  inferProcedureOutput,
+  inferRouterInputs,
+  inferRouterOutputs,
+} from "@trpc/server";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 
-export type TQuery = keyof AppRouter["_def"]["queries"];
-
-export type InferQueryOutput<TRouteKey extends TQuery> = inferProcedureOutput<
-  AppRouter["_def"]["queries"][TRouteKey]
->;
+type RouterInput = inferRouterInputs<AppRouter>;
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type CommentWithChildren =
-  InferQueryOutput<"comments.all-comments">[number];
+  RouterOutput["comments"]["allComments"][number];
 
-export type SinglePost = InferQueryOutput<"posts.single-post">;
+export type SinglePost = RouterOutput["posts"]["singlePost"];
 
-export type PostFromList = InferQueryOutput<"posts.all">["posts"][number];
+export type PostFromList = RouterOutput["posts"]["all"]["posts"][number];
 
-export type FollowingPosts = InferQueryOutput<"posts.following">;
-export type TagType = InferQueryOutput<"tags.all">[number];
+export type FollowingPosts = RouterOutput["posts"]["following"];
+export type TagType = RouterOutput["tags"]["all"][number];
 
-export type SingleTagType = InferQueryOutput<"tags.single-tag">;
+export type SingleTagType = RouterOutput["tags"]["singleTag"];
 
-export type TagWithPosts = InferQueryOutput<"posts.by-tags">["tags"][number];
+export type TagWithPosts = RouterOutput["posts"]["byTags"]["tags"][number];
 
 export type TaggedPosts =
-  InferQueryOutput<"posts.by-tags">["tags"][number]["posts"][number];
+  RouterOutput["posts"]["byTags"]["tags"][number]["posts"][number];
 
-export type User = InferQueryOutput<"users.single-user">;
-export type UserLink = InferQueryOutput<"users.single-user">["url"];
+export type User = RouterOutput["users"]["singleUser"];
+export type UserLink = RouterOutput["users"]["singleUser"]["url"];
 
 export type FollowingUser =
-  InferQueryOutput<"users.get-following">["following"][number]["following"];
+  RouterOutput["users"]["getFollowing"]["following"][number]["following"];
 
-export type Metadata = InferQueryOutput<"scraper.scrape-link">;
-export type Poll = InferQueryOutput<"posts.single-post">["poll"];
+export type Metadata = RouterOutput["scraper"]["scrapeLink"];
+export type Poll = RouterOutput["posts"]["singlePost"]["poll"];
 
 export type Notification =
-  InferQueryOutput<"notification.get-all">["list"][number];
+  RouterOutput["notification"]["getAll"]["list"][number];
 
 // React-hook-form Controller's 'field' type
 export type FieldType = ControllerRenderProps<FieldValues, string>;

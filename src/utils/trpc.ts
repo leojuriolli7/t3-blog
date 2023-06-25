@@ -1,4 +1,110 @@
 import type { AppRouter } from "@server/router/app.router";
-import { createReactQueryHooks } from "@trpc/react";
+import { httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
+import { createTRPCNext } from "@trpc/next";
+import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
+import superjson from "superjson";
+import { url } from "./constants";
 
-export const trpc = createReactQueryHooks<AppRouter>();
+const ENDPOINTS = [
+  "attachments",
+  "comments",
+  "likes",
+  "notification",
+  "posts",
+  "scraper",
+  "search",
+  "tags",
+  "users",
+] as const;
+export type Endpoint = (typeof ENDPOINTS)[number];
+
+const resolveEndpoint = (links: any) => {
+  // TODO: Update our trpc routes so they are more clear.
+  // This function parses paths like the following and maps them
+  // to the correct API endpoints.
+  // - viewer.me - 2 segment paths like this are for logged in requests
+  // - viewer.public.i18n - 3 segments paths can be public or authed
+  return (ctx: any) => {
+    const parts = ctx.op.path.split(".");
+    console.log("parts:", parts);
+    let endpoint;
+    let path = "";
+    if (parts.length == 2) {
+      endpoint = parts[0] as keyof typeof links;
+      path = parts[1];
+    } else {
+      endpoint = parts[1] as keyof typeof links;
+      path = parts.splice(2, parts.length - 2).join(".");
+    }
+
+    return links[endpoint]({ ...ctx, op: { ...ctx.op, path } });
+  };
+};
+
+export const trpc = createTRPCNext<AppRouter>({
+  config() {
+    /**
+     * If you want to use SSR, you need to use the server's full URL
+     * @link https://trpc.io/docs/ssr
+     */
+    return {
+      /**
+       * @link https://trpc.io/docs/links
+       */
+      links: [
+        // adds pretty logs to your console in development and logs errors in production
+        loggerLink({
+          enabled: (opts) =>
+            !!process.env.NEXT_PUBLIC_DEBUG ||
+            (opts.direction === "down" && opts.result instanceof Error),
+        }),
+        splitLink({
+          // check for context property `skipBatch`
+          condition: (op) => !!op.context.skipBatch,
+          // when condition is true, use normal request
+          true: (runtime) => {
+            const links = Object.fromEntries(
+              ENDPOINTS.map((endpoint) => [
+                endpoint,
+                httpLink({ url: url + "/" + endpoint })(runtime),
+              ])
+            );
+            return resolveEndpoint(links);
+          },
+          // when condition is false, use batch request
+          false: (runtime) => {
+            const links = Object.fromEntries(
+              ENDPOINTS.map((endpoint) => [
+                endpoint,
+                httpBatchLink({ url: url + "/" + endpoint })(runtime),
+              ])
+            );
+            return resolveEndpoint(links);
+          },
+        }),
+      ],
+      /**
+       * @link https://trpc.io/docs/data-transformers
+       */
+      transformer: superjson,
+    };
+  },
+  /**
+   * @link https://trpc.io/docs/ssr
+   */
+  ssr: false,
+});
+
+/**
+ * Inference helper for inputs.
+ *
+ * @example type HelloInput = RouterInputs['example']['hello']
+ */
+export type RouterInputs = inferRouterInputs<AppRouter>;
+
+/**
+ * Inference helper for outputs.
+ *
+ * @example type HelloOutput = RouterOutputs['example']['hello']
+ */
+export type RouterOutputs = inferRouterOutputs<AppRouter>;

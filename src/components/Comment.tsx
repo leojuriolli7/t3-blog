@@ -148,15 +148,12 @@ const Comment: React.FC<CommentProps> = ({
     mutate: deleteComment,
     isLoading: deleting,
     error: deleteError,
-  } = trpc.useMutation(["comments.delete-comment"], {
+  } = trpc.comments.deleteComment.useMutation({
     onSuccess: () => {
       // This will refetch the comments.
-      utils.invalidateQueries([
-        "comments.all-comments",
-        {
-          postId,
-        },
-      ]);
+      utils.comments.allComments.invalidate({
+        postId,
+      });
     },
   });
 

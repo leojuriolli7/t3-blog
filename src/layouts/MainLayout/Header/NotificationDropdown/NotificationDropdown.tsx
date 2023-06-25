@@ -47,9 +47,12 @@ const NotificationDropdown = () => {
 
   const toggleTab = (value: TabType) => () => setCurrentTab(value);
 
-  const { data: totalUnreads } = trpc.useQuery(["notification.total-unreads"], {
-    enabled: !!user?.id,
-  });
+  const { data: totalUnreads } = trpc.notification.totalUnreads.useQuery(
+    undefined,
+    {
+      enabled: !!user?.id,
+    }
+  );
 
   const {
     data: notifications,
@@ -57,14 +60,11 @@ const NotificationDropdown = () => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = trpc.useInfiniteQuery(
-    [
-      "notification.get-all",
-      {
-        limit: 6,
-        read: getInputFromCurrentTab(currentTab),
-      },
-    ],
+  } = trpc.notification.getAll.useInfiniteQuery(
+    {
+      limit: 6,
+      read: getInputFromCurrentTab(currentTab),
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       enabled: !!user?.id,

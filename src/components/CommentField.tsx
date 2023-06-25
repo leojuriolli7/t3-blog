@@ -48,7 +48,7 @@ const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
     mutate,
     isLoading,
     error: createCommentError,
-  } = trpc.useMutation(["comments.add-comment"], {
+  } = trpc.comments.addComment.useMutation({
     onSuccess: () => {
       // Reset markdown editor content.
       setValue("body", "");
@@ -56,12 +56,9 @@ const CommentField: React.FC<Props> = ({ parentId, onCommented }) => {
       if (onCommented) onCommented();
 
       // This will refetch the comments.
-      utils.invalidateQueries([
-        "comments.all-comments",
-        {
-          postId,
-        },
-      ]);
+      utils.comments.allComments.invalidate({
+        postId,
+      });
     },
   });
 

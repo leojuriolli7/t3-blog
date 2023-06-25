@@ -36,13 +36,10 @@ const PostModal: React.FC = () => {
     }, 300);
   };
 
-  const { data: post, isLoading } = trpc.useQuery(
-    [
-      "posts.single-post",
-      {
-        postId,
-      },
-    ],
+  const { data: post, isLoading } = trpc.posts.singlePost.useQuery(
+    {
+      postId,
+    },
     {
       enabled: canOpenModal && open,
     }

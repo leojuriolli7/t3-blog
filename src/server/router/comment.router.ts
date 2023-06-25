@@ -1,8 +1,6 @@
-import { createRouter } from "@server/createRouter";
 import {
   formatComments,
   markdownToHtml,
-  isLoggedInMiddleware,
   deleteChildComments,
   getFiltersByInput,
   formatDate,
@@ -16,11 +14,16 @@ import {
   getUserCommentsSchema,
   updateCommentSchema,
 } from "@schema/comment.schema";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@server/trpc";
 
-export const commentRouter = createRouter()
-  .query("user-comments", {
-    input: getUserCommentsSchema,
-    async resolve({ ctx, input }) {
+export const commentRouter = createTRPCRouter({
+  userComments: publicProcedure
+    .input(getUserCommentsSchema)
+    .query(async ({ ctx, input }) => {
       const { userId, limit, skip, cursor } = input;
 
       try {
@@ -83,11 +86,11 @@ export const commentRouter = createRouter()
           code: "BAD_REQUEST",
         });
       }
-    },
-  })
-  .query("all-comments", {
-    input: getCommentsSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  allComments: publicProcedure
+    .input(getCommentsSchema)
+    .query(async ({ ctx, input }) => {
       const { postId } = input;
 
       try {
@@ -143,12 +146,10 @@ export const commentRouter = createRouter()
           code: "BAD_REQUEST",
         });
       }
-    },
-  })
-  .middleware(isLoggedInMiddleware)
-  .mutation("add-comment", {
-    input: createCommentSchema,
-    async resolve({ ctx, input }) {
+    }),
+  addComment: protectedProcedure
+    .input(createCommentSchema)
+    .mutation(async ({ ctx, input }) => {
       const { body, postId, parentId } = input;
 
       const { session } = ctx;
@@ -244,11 +245,11 @@ export const commentRouter = createRouter()
           code: "BAD_REQUEST",
         });
       }
-    },
-  })
-  .mutation("delete-comment", {
-    input: deleteCommentSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  deleteComment: protectedProcedure
+    .input(deleteCommentSchema)
+    .mutation(async ({ ctx, input }) => {
       try {
         const { commentId } = input;
         const isAdmin = ctx.session.user.isAdmin;
@@ -276,11 +277,11 @@ export const commentRouter = createRouter()
           code: "BAD_REQUEST",
         });
       }
-    },
-  })
-  .mutation("update-comment", {
-    input: updateCommentSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  updateComment: protectedProcedure
+    .input(updateCommentSchema)
+    .mutation(async ({ ctx, input }) => {
       const isAdmin = ctx.session.user.isAdmin;
 
       if (isStringEmpty(input.body)) {
@@ -315,5 +316,5 @@ export const commentRouter = createRouter()
       });
 
       return comment;
-    },
-  });
+    }),
+});

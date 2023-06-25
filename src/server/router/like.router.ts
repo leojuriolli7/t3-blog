@@ -1,12 +1,10 @@
-import { createRouter } from "@server/createRouter";
 import { likePostSchema } from "@schema/like.schema";
-import { isLoggedInMiddleware } from "@server/utils/middlewares";
+import { createTRPCRouter, protectedProcedure } from "@server/trpc";
 
-export const likeRouter = createRouter()
-  .middleware(isLoggedInMiddleware)
-  .mutation("like-post", {
-    input: likePostSchema,
-    async resolve({ ctx, input }) {
+export const likeRouter = createTRPCRouter({
+  likePost: protectedProcedure
+    .input(likePostSchema)
+    .mutation(async ({ input, ctx }) => {
       const { dislike, postId } = input;
       const isDislike = dislike;
       const isLike = !dislike;
@@ -100,5 +98,5 @@ export const likeRouter = createRouter()
           }
         }
       }
-    },
-  });
+    }),
+});

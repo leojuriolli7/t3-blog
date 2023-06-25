@@ -41,11 +41,11 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
     mutate: update,
     isLoading: updating,
     error: updateError,
-  } = trpc.useMutation(["posts.update-post"], {
+  } = trpc.posts.updatePost.useMutation({
     onMutate: async ({ postId, link }) => {
-      await utils.cancelQuery(["posts.single-post", { postId }]);
+      await utils.posts.singlePost.cancel({ postId });
 
-      const prevData = utils.getQueryData(["posts.single-post", { postId }]);
+      const prevData = utils.posts.singlePost.getData({ postId });
 
       const formattedLink = link?.url
         ? {
@@ -59,7 +59,7 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
           }
         : undefined;
 
-      utils.setQueryData(["posts.single-post", { postId }], (old) => ({
+      utils.posts.singlePost.setData({ postId }, (old) => ({
         ...old!,
         link: formattedLink,
       }));
@@ -67,18 +67,15 @@ const EditPostForm: React.FC<Props> = ({ post, onFinish }) => {
       return { prevData };
     },
     onError: (err, newData, context) => {
-      utils.setQueryData(
-        ["posts.single-post"],
+      utils.posts.singlePost.setData(
+        { postId },
         context?.prevData as SinglePost
       );
     },
     onSettled: () => {
-      utils.invalidateQueries([
-        "posts.single-post",
-        {
-          postId,
-        },
-      ]);
+      utils.posts.singlePost.invalidate({
+        postId,
+      });
     },
   });
 

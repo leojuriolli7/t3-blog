@@ -15,22 +15,20 @@ import AnimatedTabs from "@components/AnimatedTabs";
 import { TagSection } from "@components/TagSection";
 
 const PostListingPage: React.FC = () => {
-  const { data: tagsWithPosts, isLoading: loadingTags } = trpc.useQuery(
-    [
-      "posts.by-tags",
+  const { data: tagsWithPosts, isLoading: loadingTags } =
+    trpc.posts.byTags.useQuery(
       {
         tagLimit: 4,
       },
-    ],
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+      {
+        refetchOnWindowFocus: false,
+      }
+    );
 
   const taggedPosts = tagsWithPosts?.tags;
 
-  const { data: followingPosts } = trpc.useQuery(
-    ["posts.following", { limit: 4 }],
+  const { data: followingPosts } = trpc.posts.following.useQuery(
+    { limit: 4 },
     {
       refetchOnWindowFocus: false,
     }
@@ -44,14 +42,11 @@ const PostListingPage: React.FC = () => {
   const reachedBottom = useOnScreen(bottomRef);
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    trpc.useInfiniteQuery(
-      [
-        "posts.all",
-        {
-          limit: 4,
-          filter: selectedTab.id,
-        },
-      ],
+    trpc.posts.all.useInfiniteQuery(
+      {
+        limit: 4,
+        filter: selectedTab.id,
+      },
       {
         refetchOnWindowFocus: false,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -147,11 +142,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const ssg = await generateSSGHelper(req, res);
 
-  const tagsQuery = ssg.prefetchQuery("posts.by-tags", {
+  const tagsQuery = ssg.posts.byTags.prefetch({
     tagLimit: 4,
   });
 
-  const postsQuery = ssg.prefetchInfiniteQuery("posts.all", {
+  const postsQuery = ssg.posts.all.prefetchInfinite({
     limit: 4,
     filter: "newest",
   });

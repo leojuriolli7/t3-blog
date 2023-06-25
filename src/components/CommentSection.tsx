@@ -9,13 +9,10 @@ const CommentSection: React.FC = () => {
   const router = useRouter();
   const postId = router.query.postId as string;
 
-  const { data: comments } = trpc.useQuery(
-    [
-      "comments.all-comments",
-      {
-        postId,
-      },
-    ],
+  const { data: comments } = trpc.comments.allComments.useQuery(
+    {
+      postId,
+    },
     {
       refetchOnWindowFocus: false,
       enabled: !!postId,

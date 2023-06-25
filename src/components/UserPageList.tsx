@@ -35,15 +35,12 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
     isFetchingNextPage: fetchingMoreComments,
     hasNextPage: hasMoreComments,
     fetchNextPage: fetchMoreComments,
-  } = trpc.useInfiniteQuery(
-    [
-      "comments.user-comments",
-      {
-        userId,
-        limit: 4,
-        filter: currentFilter.id,
-      },
-    ],
+  } = trpc.comments.userComments.useInfiniteQuery(
+    {
+      userId,
+      limit: 4,
+      filter: currentFilter.id,
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       enabled: isCommentsTab,
@@ -64,15 +61,12 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
     fetchNextPage: fetchMorePosts,
     isFetchingNextPage: isFetchingMorePosts,
     hasNextPage: hasMorePosts,
-  } = trpc.useInfiniteQuery(
-    [
-      "posts.all",
-      {
-        userId,
-        limit: 4,
-        filter: currentFilter.id,
-      },
-    ],
+  } = trpc.posts.all.useInfiniteQuery(
+    {
+      userId,
+      limit: 4,
+      filter: currentFilter.id,
+    },
     {
       enabled: isPostsTab,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -92,14 +86,11 @@ const UserPageList: React.FC<Props> = ({ currentTab }) => {
     fetchNextPage: fetchMoreLiked,
     isFetchingNextPage: isFetchingMoreLiked,
     hasNextPage: hasMoreLiked,
-  } = trpc.useInfiniteQuery(
-    [
-      "posts.get-liked-posts",
-      {
-        limit: 6,
-        userId,
-      },
-    ],
+  } = trpc.posts.getLikedPosts.useInfiniteQuery(
+    {
+      limit: 6,
+      userId,
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }

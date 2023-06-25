@@ -11,7 +11,7 @@ export const createPresignedAvatarUrlSchema = z.object({
   userId: z.string(),
 });
 
-export const createPresignedTagUrl = z.object({
+export const createPresignedTagUrlSchema = z.object({
   tagName: z.string(),
   type: z.enum(["background", "avatar"]),
 });

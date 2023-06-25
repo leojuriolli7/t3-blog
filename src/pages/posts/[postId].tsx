@@ -16,13 +16,10 @@ const SinglePostPage: NextPage<
 
   const router = useRouter();
 
-  const { data, isLoading } = trpc.useQuery(
-    [
-      "posts.single-post",
-      {
-        postId,
-      },
-    ],
+  const { data, isLoading } = trpc.posts.singlePost.useQuery(
+    {
+      postId,
+    },
     {
       onSettled(data) {
         // if post not found, 404
@@ -45,9 +42,10 @@ export async function getServerSideProps(
   const ssg = await generateSSGHelper(req, res);
   const postId = context.params?.postId as string;
 
-  await ssg.prefetchQuery("posts.single-post", {
+  await ssg.posts.singlePost.prefetch({
     postId,
   });
+
   return {
     props: {
       trpcState: ssg.dehydrate(),

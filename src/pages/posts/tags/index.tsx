@@ -21,14 +21,11 @@ const AllTagsPage: React.FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = trpc.useInfiniteQuery(
-    [
-      "posts.by-tags",
-      {
-        tagLimit: 6,
-        query: queryValue,
-      },
-    ],
+  } = trpc.posts.byTags.useInfiniteQuery(
+    {
+      tagLimit: 6,
+      query: queryValue,
+    },
     {
       getNextPageParam: (lastPage) => lastPage?.nextCursor,
       refetchOnWindowFocus: false,
@@ -90,7 +87,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const ssg = await generateSSGHelper(req, res);
 
-  await ssg.prefetchInfiniteQuery("posts.by-tags", {
+  await ssg.posts.byTags.prefetchInfinite({
     tagLimit: 6,
     query: "",
   });

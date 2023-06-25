@@ -1,4 +1,3 @@
-import { createRouter } from "@server/createRouter";
 import { s3 } from "@server/config/aws";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import {
@@ -8,24 +7,25 @@ import {
   subscribeToTagSchema,
   updateTagSchema,
 } from "@schema/tag.schema";
-import {
-  deleteChildComments,
-  isAdminMiddleware,
-  isLoggedInMiddleware,
-} from "@server/utils";
+import { deleteChildComments } from "@server/utils";
 import { env } from "@env";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@server/trpc";
 
-export const tagRouter = createRouter()
-  .query("all", {
-    resolve({ ctx }) {
-      const tags = ctx.prisma.tag.findMany();
+export const tagRouter = createTRPCRouter({
+  all: publicProcedure.query(async ({ ctx }) => {
+    const tags = ctx.prisma.tag.findMany();
 
-      return tags;
-    },
-  })
-  .query("single-tag", {
-    input: getSingleTagSchema,
-    async resolve({ ctx, input }) {
+    return tags;
+  }),
+
+  singleTag: publicProcedure
+    .input(getSingleTagSchema)
+    .query(async ({ ctx, input }) => {
       const tag = await ctx.prisma.tag.findFirst({
         where: {
           id: input.tagId,
@@ -50,12 +50,11 @@ export const tagRouter = createRouter()
         ...tag,
         isSubscribed,
       };
-    },
-  })
-  .middleware(isLoggedInMiddleware)
-  .mutation("subscribe", {
-    input: subscribeToTagSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  subscribe: protectedProcedure
+    .input(subscribeToTagSchema)
+    .mutation(async ({ ctx, input }) => {
       const tag = await ctx.prisma.user.findFirst({
         where: {
           id: ctx.session.user.id,
@@ -102,12 +101,11 @@ export const tagRouter = createRouter()
           },
         });
       }
-    },
-  })
-  // list all subscribed tags
-  .query("subscribed", {
-    input: getSubscribedTagsSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  subscribed: protectedProcedure
+    .input(getSubscribedTagsSchema)
+    .query(async ({ ctx, input }) => {
       const tags = await ctx.prisma.tag.findMany({
         where: {
           subscribers: {
@@ -138,12 +136,10 @@ export const tagRouter = createRouter()
         tags,
         nextCursor,
       };
-    },
-  })
-  .middleware(isAdminMiddleware)
-  .mutation("update", {
-    input: updateTagSchema,
-    async resolve({ ctx, input }) {
+    }),
+  update: adminProcedure
+    .input(updateTagSchema)
+    .mutation(async ({ ctx, input }) => {
       const { avatar, backgroundImage, description, name } = input;
 
       await ctx.prisma.tag.update({
@@ -157,11 +153,11 @@ export const tagRouter = createRouter()
           id: input.id,
         },
       });
-    },
-  })
-  .mutation("delete", {
-    input: deleteTagSchema,
-    async resolve({ ctx, input }) {
+    }),
+
+  delete: adminProcedure
+    .input(deleteTagSchema)
+    .mutation(async ({ ctx, input }) => {
       const postsWithOneTag = await ctx.prisma.post.findMany({
         where: {
           tags: {
@@ -212,5 +208,5 @@ export const tagRouter = createRouter()
           id: input.id,
         },
       });
-    },
-  });
+    }),
+});

@@ -29,16 +29,13 @@ const Dropdown: React.FC<Props> = ({ query, open }) => {
   const [currentFilter, setCurrentFilter] =
     useState<SearchFilterTypes>("posts");
 
-  const { data, isLoading } = trpc.useQuery(
-    [
-      "search.by-type",
-      {
-        query,
-        type: currentFilter,
-        limit: 4,
-        truncateComments: true,
-      },
-    ],
+  const { data, isLoading } = trpc.search.byType.useQuery(
+    {
+      query,
+      type: currentFilter,
+      limit: 4,
+      truncateComments: true,
+    },
     {
       enabled: !!query,
       refetchOnWindowFocus: false,

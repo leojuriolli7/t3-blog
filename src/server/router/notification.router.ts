@@ -3,9 +3,8 @@ import {
   getNotificationsSchema,
   markAsReadSchema,
 } from "@schema/notification.schema";
-import { createRouter } from "@server/createRouter";
+import { createTRPCRouter, protectedProcedure } from "@server/trpc";
 import { formatDate } from "@server/utils/formatDate";
-import { isLoggedInMiddleware } from "@server/utils/middlewares";
 
 type NotificationTypes =
   | "reply"
@@ -62,11 +61,11 @@ function getHref(notification: Notification) {
   if (userTypes.includes(currentType)) return `/users/${notifierId}`;
 }
 
-export const notificationRouter = createRouter()
-  .middleware(isLoggedInMiddleware)
-  .query("get-all", {
-    input: getNotificationsSchema,
-    async resolve({ ctx, input }) {
+export const notificationRouter = createTRPCRouter({
+  getAll: protectedProcedure
+    .input(getNotificationsSchema)
+    .input(getNotificationsSchema)
+    .query(async ({ ctx, input }) => {
       const { limit, skip, cursor, read } = input;
 
       const notifications = await ctx.prisma.notification.findMany({
@@ -121,27 +120,24 @@ export const notificationRouter = createRouter()
         list: filteredNotifications,
         nextCursor,
       };
-    },
-  })
-  .query("total-unreads", {
-    async resolve({ ctx }) {
-      const unreads = await ctx.prisma.notification.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-        where: {
-          notifiedId: ctx.session?.user?.id,
-          read: false,
-        },
-      });
+    }),
 
-      return unreads.length;
-    },
-  })
-  .middleware(isLoggedInMiddleware)
-  .mutation("mark-as-read", {
-    input: markAsReadSchema,
-    async resolve({ ctx, input }) {
+  totalUnreads: protectedProcedure.query(async ({ ctx }) => {
+    const unreads = await ctx.prisma.notification.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        notifiedId: ctx.session?.user?.id,
+        read: false,
+      },
+    });
+
+    return unreads.length;
+  }),
+  markAsRead: protectedProcedure
+    .input(markAsReadSchema)
+    .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.notification.update({
         where: {
           id: input.notificationId,
@@ -150,5 +146,5 @@ export const notificationRouter = createRouter()
           read: true,
         },
       });
-    },
-  });
+    }),
+});
