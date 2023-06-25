@@ -6,6 +6,9 @@ export const createNextApiHandler = (router: AnyRouter) =>
   trpcNext.createNextApiHandler({
     router,
     createContext: createTRPCContext,
+    batching: {
+      enabled: true,
+    },
     onError({ error }) {
       if (error.code === "INTERNAL_SERVER_ERROR") {
         console.error("Something went wrong", error);

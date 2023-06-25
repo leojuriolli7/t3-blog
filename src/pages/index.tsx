@@ -13,6 +13,7 @@ import Link from "next/link";
 import { generateSSGHelper } from "@server/ssgHepers";
 import AnimatedTabs from "@components/AnimatedTabs";
 import { TagSection } from "@components/TagSection";
+import { useSession } from "next-auth/react";
 
 const PostListingPage: React.FC = () => {
   const { data: tagsWithPosts, isLoading: loadingTags } =
@@ -26,11 +27,13 @@ const PostListingPage: React.FC = () => {
     );
 
   const taggedPosts = tagsWithPosts?.tags;
+  const session = useSession();
 
   const { data: followingPosts } = trpc.posts.following.useQuery(
     { limit: 4 },
     {
       refetchOnWindowFocus: false,
+      enabled: session?.status === "authenticated",
     }
   );
 
