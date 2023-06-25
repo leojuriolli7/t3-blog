@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate --data-proxy",
+    "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
     "change-role": "node -r esbuild-register scripts/change-role.ts",
     "prepare": "husky install"
