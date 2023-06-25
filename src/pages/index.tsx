@@ -143,7 +143,7 @@ export default PostListingPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req, res } = context;
 
-  const ssg = await generateSSGHelper(req, res);
+  const ssg = await generateSSGHelper({ req, res, skipSession: true });
 
   const tagsQuery = ssg.posts.byTags.prefetch({
     tagLimit: 4,

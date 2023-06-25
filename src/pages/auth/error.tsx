@@ -2,9 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import type { GetServerSidePropsContext } from "next";
-import { authOptions } from "@pages/api/auth/[...nextauth]";
-import { getServerSession } from "next-auth";
 import MetaTags from "@components/MetaTags";
+import { getServerAuthSession } from "@server/utils/auth";
 
 export type ErrorType =
   | "default"
@@ -109,8 +108,11 @@ const ErrorPage = () => {
 
 export default ErrorPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await getServerAuthSession({ req, res });
 
   // If the user is already logged in, redirect.
   if (session) {

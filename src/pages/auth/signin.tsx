@@ -6,8 +6,6 @@ import { FcGoogle } from "react-icons/fc";
 import { MdEmail } from "react-icons/md";
 import { useRouter } from "next/router";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 import type { GetServerSidePropsContext, NextPage } from "next";
 import { useForm } from "react-hook-form";
 import {
@@ -18,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import MetaTags from "@components/MetaTags";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
+import { getServerAuthSession } from "@server/utils/auth";
 
 type SigninOptions = "github" | "google" | "discord" | "email";
 
@@ -187,8 +186,11 @@ const SigninPage: NextPage = () => {
 
 export default SigninPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await getServerAuthSession({ req, res });
 
   // If the user is already logged in, redirect.
   if (session) {

@@ -332,7 +332,7 @@ export async function getServerSideProps(
 ) {
   const { req, res } = context;
 
-  const ssg = await generateSSGHelper(req, res);
+  const ssg = await generateSSGHelper({ req, res });
   const tagId = context.params?.tagId as string;
 
   const postsQuery = ssg.posts.all.prefetchInfinite({

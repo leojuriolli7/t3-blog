@@ -13,13 +13,27 @@ type RequestType = IncomingMessage & {
 
 type ResponseType = ServerResponse;
 
+type Args = {
+  req: RequestType;
+  res: ResponseType;
+  /** If true, will skip getting the server-side session. */
+  skipSession?: boolean;
+};
+
 // We need the request and response to get the user session.
-export const generateSSGHelper = async (req: RequestType, res: ResponseType) =>
+export const generateSSGHelper = async ({
+  req,
+  res,
+  skipSession = false,
+}: Args) =>
   createServerSideHelpers({
     router: appRouter,
-    ctx: await createTRPCContext({
-      req: req as NextApiRequest,
-      res: res as NextApiResponse,
-    }),
+    ctx: await createTRPCContext(
+      {
+        req: req as NextApiRequest,
+        res: res as NextApiResponse,
+      },
+      skipSession
+    ),
     transformer: SuperJSON,
   });

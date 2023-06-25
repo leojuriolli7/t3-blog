@@ -405,7 +405,7 @@ export async function getServerSideProps(
 ) {
   const { req, res } = context;
 
-  const ssg = await generateSSGHelper(req, res);
+  const ssg = await generateSSGHelper({ req, res });
   const userId = context.params?.userId as string;
 
   await ssg.users.singleUser.prefetch({

@@ -1,13 +1,13 @@
 import { createTRPCRouter } from "@server/trpc";
-import { commentRouter } from "./comment.router";
-import { attachmentsRouter } from "./attachments.router";
-import { likeRouter } from "./like.router";
-import { postRouter } from "./post.router";
-import { userRouter } from "./user.router";
-import { scraperRouter } from "./scraper.router";
-import { searchRouter } from "./search.router";
-import { notificationRouter } from "./notification.router";
-import { tagRouter } from "./tag.router";
+import { commentRouter } from "./comment/_router";
+import { attachmentsRouter } from "./attachments/_router";
+import { likeRouter } from "./like/_router";
+import { postRouter } from "./post/_router";
+import { userRouter } from "./user/_router";
+import { scraperRouter } from "./scraper/_router";
+import { searchRouter } from "./search/_router";
+import { notificationRouter } from "./notification/_router";
+import { tagRouter } from "./tag/_router";
 
 export const appRouter = createTRPCRouter({
   comments: commentRouter,

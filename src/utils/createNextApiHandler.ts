@@ -1,11 +1,13 @@
 import * as trpcNext from "@trpc/server/adapters/next";
 import { createTRPCContext } from "@server/trpc";
-import { AnyRouter } from "@trpc/server";
+import type { AnyRouter } from "@trpc/server";
 
 export const createNextApiHandler = (router: AnyRouter) =>
   trpcNext.createNextApiHandler({
     router,
-    createContext: createTRPCContext,
+    createContext: ({ req, res }) => {
+      return createTRPCContext({ req, res });
+    },
     batching: {
       enabled: true,
     },

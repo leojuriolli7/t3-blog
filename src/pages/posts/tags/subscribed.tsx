@@ -5,10 +5,9 @@ import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
 import useFilterContent from "@hooks/useFilterContent";
 import useOnScreen from "@hooks/useOnScreen";
-import { authOptions } from "@pages/api/auth/[...nextauth]";
+import { getServerAuthSession } from "@server/utils/auth";
 import { trpc } from "@utils/trpc";
 import type { GetServerSidePropsContext } from "next";
-import { getServerSession } from "next-auth";
 import { useEffect, useMemo, useRef } from "react";
 
 const SubscribedTagsPage = () => {
@@ -88,8 +87,11 @@ const SubscribedTagsPage = () => {
 
 export default SubscribedTagsPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await getServerAuthSession({ req, res });
 
   if (!session?.user) {
     return { redirect: { destination: "/" } };

@@ -85,7 +85,7 @@ export default AllTagsPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req, res } = context;
 
-  const ssg = await generateSSGHelper(req, res);
+  const ssg = await generateSSGHelper({ req, res, skipSession: true });
 
   await ssg.posts.byTags.prefetchInfinite({
     tagLimit: 6,

@@ -5,3 +5,5 @@ export const likePostSchema = z.object({
   authorId: z.string(),
   dislike: z.boolean().default(false),
 });
+
+export type LikePostInput = z.TypeOf<typeof likePostSchema>;
