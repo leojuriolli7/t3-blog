@@ -25,3 +25,9 @@ export const createPresignedTagUrlSchema = z.object({
 export type CreatePresignedTagUrlInput = z.TypeOf<
   typeof createPresignedTagUrlSchema
 >;
+
+export const deleteAttachmentSchema = z.object({
+  key: z.string(),
+});
+
+export type DeleteAttachmentInput = z.TypeOf<typeof deleteAttachmentSchema>;

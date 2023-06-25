@@ -2,6 +2,7 @@ import {
   createPresignedUrlSchema,
   createPresignedAvatarUrlSchema,
   createPresignedTagUrlSchema,
+  deleteAttachmentSchema,
 } from "@schema/attachment.schema";
 
 import { createTRPCRouter, protectedProcedure } from "@server/trpc";
@@ -11,6 +12,7 @@ type AttachmentsRouterHandlerCache = {
   createPresignedPostBodyUrl?: typeof import("./createPresignedPostBodyUrl.handler").createPresignedPostBodyUrlHandler;
   createPresignedTagUrl?: typeof import("./createPresignedTagUrl.handler").createPresignedTagUrlHandler;
   createPresignedAvatarUrl?: typeof import("./createPresignedAvatarUrl.handler").createPresignedAvatarUrlHandler;
+  deleteAttachment?: typeof import("./deleteAttachment.handler").deleteAttachmentHandler;
 };
 
 const UNSTABLE_HANDLER_CACHE: AttachmentsRouterHandlerCache = {};
@@ -78,5 +80,22 @@ export const attachmentsRouter = createTRPCRouter({
       }
 
       return UNSTABLE_HANDLER_CACHE.createPresignedAvatarUrl({ input });
+    }),
+
+  deleteAttachment: protectedProcedure
+    .input(deleteAttachmentSchema)
+    .mutation(async ({ input }) => {
+      if (!UNSTABLE_HANDLER_CACHE.deleteAttachment) {
+        UNSTABLE_HANDLER_CACHE.deleteAttachment = (
+          await import("./deleteAttachment.handler")
+        ).deleteAttachmentHandler;
+      }
+
+      // Unreachable code but required for type safety
+      if (!UNSTABLE_HANDLER_CACHE.deleteAttachment) {
+        throw new Error("Failed to load handler");
+      }
+
+      return UNSTABLE_HANDLER_CACHE.deleteAttachment({ input });
     }),
 });

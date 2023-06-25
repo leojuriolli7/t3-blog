@@ -17,6 +17,7 @@ import LinkPreview from "@components/LinkPreview";
 import PollView from "@components/PollView/PollView";
 import HTMLBody from "@components/HTMLBody";
 import type { Attachment } from "@prisma/client";
+import { env } from "@env";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import MetaTags from "./MetaTags";
@@ -296,13 +297,34 @@ export const PostDetails: React.FC<Props> = ({
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  const { mutate: deletePost, isLoading: deleting } =
-    trpc.posts.deletePost.useMutation({
-      onSuccess: () => {
+  const { mutate: deleteAttachments } =
+    trpc.attachments.deleteAttachment.useMutation({
+      onSettled: () => {
         router.push("/");
 
         // This will refetch the home-page posts.
         utils.posts.all.invalidate();
+      },
+    });
+
+  const { mutate: deletePost, isLoading: deleting } =
+    trpc.posts.deletePost.useMutation({
+      onSuccess: async () => {
+        // if there are attachments, delete them from S3 before proceeding.
+        if (data?.attachments?.length) {
+          await Promise.all(
+            data?.attachments.map(async (file) => {
+              await deleteAttachments({
+                key: file.id,
+              });
+            })
+          );
+        } else {
+          router.push("/");
+
+          // This will refetch the home-page posts.
+          utils.posts.all.invalidate();
+        }
       },
     });
 

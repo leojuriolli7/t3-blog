@@ -1,9 +1,6 @@
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { env } from "@env";
 import type { PrismaClient } from "@prisma/client";
 import type { Session } from "next-auth";
 import type { GetSinglePostInput } from "@schema/post.schema";
-import { s3 } from "@server/config/aws";
 import { deleteChildComments } from "@server/utils";
 import * as trpc from "@trpc/server";
 
@@ -42,19 +39,6 @@ export const deletePostHandler = async ({ ctx, input }: DeletePostOptions) => {
       code: "UNAUTHORIZED",
       message: "Cannot delete another user's post.",
     });
-  }
-
-  if (post?.attachments?.length) {
-    await Promise.all(
-      post.attachments.map(async (file) => {
-        const deleteAttachmentCommand = new DeleteObjectCommand({
-          Bucket: env.AWS_S3_ATTACHMENTS_BUCKET_NAME,
-          Key: file.id,
-        });
-
-        await s3.send(deleteAttachmentCommand);
-      })
-    );
   }
 
   if (post?.Comment?.length) {
