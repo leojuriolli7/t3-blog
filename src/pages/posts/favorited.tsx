@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import MetaTags from "@components/MetaTags";
-import { authOptions } from "@pages/api/auth/[...nextauth]";
-import { getServerSession, User } from "next-auth";
+import type { User } from "next-auth";
 import type { GetServerSidePropsContext, NextPage } from "next";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
@@ -9,6 +8,7 @@ import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
 import EmptyMessage from "@components/EmptyMessage";
 import SearchInput from "@components/SearchInput";
+import { getServerAuthSession } from "@server/utils/auth";
 
 type Props = {
   user: User;
@@ -94,8 +94,11 @@ const UserFavoritesPage: NextPage<Props> = ({ user }) => {
 
 export default UserFavoritesPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await getServerAuthSession({ req, res });
 
   if (!session?.user) {
     return { redirect: { destination: "/" } };

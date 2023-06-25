@@ -1,12 +1,11 @@
 import React, { useCallback, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
-import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { authOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import MetaTags from "@components/MetaTags";
 import Button from "@components/Button";
+import { getServerAuthSession } from "@server/utils/auth";
 
 const SignoutPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,8 +61,11 @@ const SignoutPage: React.FC = () => {
 
 export default SignoutPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await getServerAuthSession({ req, res });
 
   // If the user is not logged in, redirect.
   if (!session) {

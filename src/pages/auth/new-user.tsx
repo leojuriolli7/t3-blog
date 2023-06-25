@@ -1,10 +1,9 @@
 import React from "react";
 import type { GetServerSidePropsContext } from "next";
 import { prisma } from "@utils/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 import MetaTags from "@components/MetaTags";
 import Spinner from "@components/Spinner";
+import { getServerAuthSession } from "@server/utils/auth";
 
 /**
  * This page is where new users logging in for the first time are
@@ -24,8 +23,12 @@ const NewUserPage: React.FC = () => {
 
 export default NewUserPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({
+  req,
+  res,
+  ...context
+}: GetServerSidePropsContext) {
+  const session = await getServerAuthSession({ req, res });
 
   const callbackUrl = context.query.callbackUrl as string;
 

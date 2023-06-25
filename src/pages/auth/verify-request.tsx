@@ -1,10 +1,9 @@
 import React from "react";
 import type { GetServerSidePropsContext } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
+import { getServerAuthSession } from "@server/utils/auth";
 
 const VerifyEmailPage: React.FC = () => {
   return (
@@ -41,8 +40,11 @@ const VerifyEmailPage: React.FC = () => {
 
 export default VerifyEmailPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export async function getServerSideProps({
+  req,
+  res,
+}: GetServerSidePropsContext) {
+  const session = await getServerAuthSession({ req, res });
 
   // If the user is already logged in, redirect.
   if (session) {
