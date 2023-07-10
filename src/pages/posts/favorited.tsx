@@ -9,12 +9,13 @@ import ShouldRender from "@components/ShouldRender";
 import EmptyMessage from "@components/EmptyMessage";
 import SearchInput from "@components/SearchInput";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
 type Props = {
   user: User;
 };
 
-const UserFavoritesPage: NextPage<Props> = ({ user }) => {
+const UserFavoritesPage = ({ user }: Props) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const [queryValue, setQueryValue] = useState("");
@@ -91,7 +92,7 @@ const UserFavoritesPage: NextPage<Props> = ({ user }) => {
     </>
   );
 };
-
+UserFavoritesPage.PageWrapper = PageWrapper;
 export default UserFavoritesPage;
 
 export async function getServerSideProps({

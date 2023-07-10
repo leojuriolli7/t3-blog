@@ -1,17 +1,14 @@
 import React from "react";
 import { trpc } from "@utils/trpc";
 import { useRouter } from "next/router";
-import {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { generateSSGHelper } from "@server/ssgHepers";
 import { PostDetails } from "@components/PostDetails";
+import { PageWrapper } from "@components/PageWrapper";
 
-const SinglePostPage: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = (props) => {
+const SinglePostPage = (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) => {
   const { postId } = props;
 
   const router = useRouter();
@@ -32,6 +29,7 @@ const SinglePostPage: NextPage<
   return <PostDetails data={data} isLoading={isLoading} postId={postId} />;
 };
 
+SinglePostPage.PageWrapper = PageWrapper;
 export default SinglePostPage;
 
 export async function getServerSideProps(

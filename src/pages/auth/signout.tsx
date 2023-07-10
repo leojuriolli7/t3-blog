@@ -6,8 +6,9 @@ import { useRouter } from "next/router";
 import MetaTags from "@components/MetaTags";
 import Button from "@components/Button";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
-const SignoutPage: React.FC = () => {
+const SignoutPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -59,6 +60,7 @@ const SignoutPage: React.FC = () => {
   );
 };
 
+SignoutPage.PageWrapper = PageWrapper;
 export default SignoutPage;
 
 export async function getServerSideProps({

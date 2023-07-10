@@ -4,13 +4,14 @@ import { prisma } from "@utils/prisma";
 import MetaTags from "@components/MetaTags";
 import Spinner from "@components/Spinner";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
 /**
  * This page is where new users logging in for the first time are
  * redirected to, by Next Auth. Here we will just create two welcome
  * notifications and redirect them back on their way.
  */
-const NewUserPage: React.FC = () => {
+const NewUserPage = () => {
   return (
     <>
       <MetaTags title="Loading..." />
@@ -20,6 +21,8 @@ const NewUserPage: React.FC = () => {
     </>
   );
 };
+
+NewUserPage.PageWrapper = PageWrapper;
 
 export default NewUserPage;
 

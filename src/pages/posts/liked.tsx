@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import MetaTags from "@components/MetaTags";
-import type { GetServerSidePropsContext, NextPage } from "next";
+import type { GetServerSidePropsContext } from "next";
 import type { User } from "next-auth";
 import { trpc } from "@utils/trpc";
 import useOnScreen from "@hooks/useOnScreen";
@@ -9,12 +9,13 @@ import ShouldRender from "@components/ShouldRender";
 import EmptyMessage from "@components/EmptyMessage";
 import SearchInput from "@components/SearchInput";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
 type Props = {
   user: User;
 };
 
-const UserLikedPage: NextPage<Props> = ({ user }) => {
+const UserLikedPage = ({ user }: Props) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const reachedBottom = useOnScreen(bottomRef);
   const [queryValue, setQueryValue] = useState("");
@@ -91,7 +92,7 @@ const UserLikedPage: NextPage<Props> = ({ user }) => {
     </>
   );
 };
-
+UserLikedPage.PageWrapper = PageWrapper;
 export default UserLikedPage;
 
 export async function getServerSideProps({

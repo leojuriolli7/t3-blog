@@ -1,6 +1,7 @@
+import { PageWrapper } from "@components/PageWrapper";
 import React from "react";
 
-const PrivacyPolicyPage: React.FC = () => {
+const PrivacyPolicyPage = () => {
   return (
     <div className="prose mx-auto w-full px-20 py-20 dark:prose-invert sm:px-0">
       <h1>Privacy Policy</h1>
@@ -548,5 +549,5 @@ const PrivacyPolicyPage: React.FC = () => {
     </div>
   );
 };
-
+PrivacyPolicyPage.PageWrapper = PageWrapper;
 export default PrivacyPolicyPage;

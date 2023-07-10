@@ -14,8 +14,9 @@ import { generateSSGHelper } from "@server/ssgHepers";
 import AnimatedTabs from "@components/AnimatedTabs";
 import { TagSection } from "@components/TagSection";
 import { useSession } from "next-auth/react";
+import { PageWrapper } from "@components/PageWrapper";
 
-const PostListingPage: React.FC = () => {
+const PostListingPage = () => {
   const { data: tagsWithPosts, isLoading: loadingTags } =
     trpc.posts.byTags.useQuery(
       {
@@ -138,6 +139,7 @@ const PostListingPage: React.FC = () => {
   );
 };
 
+PostListingPage.PageWrapper = PageWrapper;
 export default PostListingPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

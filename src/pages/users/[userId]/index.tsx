@@ -17,14 +17,11 @@ import UserLinkPreview from "@components/EditAccountModal/UserLink/UserLinkPrevi
 import Button from "@components/Button";
 import clsx from "clsx";
 import { generateSSGHelper } from "@server/ssgHepers";
-import {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { Badge } from "@components/Badge";
 import AnimatedTabs from "@components/AnimatedTabs";
 import { useTabs } from "@hooks/useTabs";
+import { PageWrapper } from "@components/PageWrapper";
 
 const UserPageList = dynamic(() => import("@components/UserPageList"), {
   ssr: false,
@@ -55,9 +52,9 @@ const ConfirmationModal = dynamic(
   }
 );
 
-const UserPage: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = (props) => {
+const UserPage = (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) => {
   const { userId } = props;
 
   const [tabs] = useState({
@@ -398,6 +395,7 @@ const UserPage: NextPage<
   );
 };
 
+UserPage.PageWrapper = PageWrapper;
 export default UserPage;
 
 export async function getServerSideProps(

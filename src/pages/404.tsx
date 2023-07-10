@@ -1,3 +1,4 @@
+import { PageWrapper } from "@components/PageWrapper";
 import Link from "next/link";
 
 const Custom404 = () => {
@@ -23,4 +24,5 @@ const Custom404 = () => {
   );
 };
 
+Custom404.PageWrapper = PageWrapper;
 export default Custom404;

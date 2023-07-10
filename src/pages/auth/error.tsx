@@ -4,6 +4,7 @@ import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import type { GetServerSidePropsContext } from "next";
 import MetaTags from "@components/MetaTags";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
 export type ErrorType =
   | "default"
@@ -105,6 +106,8 @@ const ErrorPage = () => {
     </>
   );
 };
+
+ErrorPage.PageWrapper = PageWrapper;
 
 export default ErrorPage;
 

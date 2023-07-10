@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdEmail } from "react-icons/md";
 import { useRouter } from "next/router";
 import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
-import type { GetServerSidePropsContext, NextPage } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { useForm } from "react-hook-form";
 import {
   SignInWithEmailInput,
@@ -17,6 +17,7 @@ import MetaTags from "@components/MetaTags";
 import Button from "@components/Button";
 import TextInput from "@components/TextInput";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
 type SigninOptions = "github" | "google" | "discord" | "email";
 
@@ -39,7 +40,7 @@ const errors: Record<SignInErrorTypes, string> = {
 
 type LoadingState = Record<SigninOptions, boolean>;
 
-const SigninPage: NextPage = () => {
+const SigninPage = () => {
   const router = useRouter();
   const errorType = router.query.error as SignInErrorTypes;
   const callbackUrl = router.query.callbackUrl as string;
@@ -184,6 +185,7 @@ const SigninPage: NextPage = () => {
   );
 };
 
+SigninPage.PageWrapper = PageWrapper;
 export default SigninPage;
 
 export async function getServerSideProps({

@@ -8,10 +8,9 @@ import MetaTags from "@components/MetaTags";
 import Skeleton from "@components/Skeleton";
 import useFilterContent from "@hooks/useFilterContent";
 import { generateSSGHelper } from "@server/ssgHepers";
-import {
+import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
-  NextPage,
 } from "next";
 import AnimatedTabs from "@components/AnimatedTabs";
 import SearchInput from "@components/SearchInput";
@@ -26,10 +25,11 @@ import { useRouter } from "next/router";
 import ConfirmationModal from "@components/ConfirmationModal";
 import { parseTagPayload } from "@utils/parseTagPayload";
 import Button from "@components/Button";
+import { PageWrapper } from "@components/PageWrapper";
 
-const SingleTagPage: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = (props) => {
+const SingleTagPage = (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) => {
   const { tagId } = props;
   const [queryValue, setQueryValue] = useState("");
   const utils = trpc.useContext();
@@ -324,7 +324,7 @@ const SingleTagPage: NextPage<
     </>
   );
 };
-
+SingleTagPage.PageWrapper = PageWrapper;
 export default SingleTagPage;
 
 export async function getServerSideProps(

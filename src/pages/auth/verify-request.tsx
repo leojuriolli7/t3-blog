@@ -4,8 +4,9 @@ import AuthFeedbackMessage from "@components/AuthFeedbackMessage";
 import MetaTags from "@components/MetaTags";
 import Link from "next/link";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
-const VerifyEmailPage: React.FC = () => {
+const VerifyEmailPage = () => {
   return (
     <>
       <MetaTags title="Link sent to your e-mail" />
@@ -37,6 +38,7 @@ const VerifyEmailPage: React.FC = () => {
     </>
   );
 };
+VerifyEmailPage.PageWrapper = PageWrapper;
 
 export default VerifyEmailPage;
 

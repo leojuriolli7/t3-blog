@@ -20,8 +20,9 @@ import { uploadFileToS3 } from "@utils/aws/uploadFileToS3";
 import { useUploadTagImagesToS3 } from "@hooks/aws/useUploadTagImagesToS3";
 import { parseTagPayload } from "@utils/parseTagPayload";
 import { getServerAuthSession } from "@server/utils/auth";
+import { PageWrapper } from "@components/PageWrapper";
 
-const CreatePostPage: React.FC = () => {
+const CreatePostPage = () => {
   const router = useRouter();
 
   const uploadingImagesState = useState(false);
@@ -197,6 +198,7 @@ const CreatePostPage: React.FC = () => {
   );
 };
 
+CreatePostPage.PageWrapper = PageWrapper;
 export default CreatePostPage;
 
 export async function getServerSideProps({

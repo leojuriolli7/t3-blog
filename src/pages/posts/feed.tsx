@@ -1,6 +1,7 @@
 import AnimatedTabs from "@components/AnimatedTabs";
 import EmptyMessage from "@components/EmptyMessage";
 import MetaTags from "@components/MetaTags";
+import { PageWrapper } from "@components/PageWrapper";
 import PostCard from "@components/PostCard";
 import ShouldRender from "@components/ShouldRender";
 import useFilterContent from "@hooks/useFilterContent";
@@ -84,7 +85,7 @@ const YourFeedPage = () => {
     </>
   );
 };
-
+YourFeedPage.PageWrapper = PageWrapper;
 export default YourFeedPage;
 
 export async function getServerSideProps({

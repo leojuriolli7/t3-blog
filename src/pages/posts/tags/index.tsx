@@ -8,8 +8,9 @@ import { TagSection } from "@components/TagSection";
 import SearchInput from "@components/SearchInput";
 import EmptyMessage from "@components/EmptyMessage";
 import { generateSSGHelper } from "@server/ssgHepers";
+import { PageWrapper } from "@components/PageWrapper";
 
-const AllTagsPage: React.FC = () => {
+const AllTagsPage = () => {
   const [queryValue, setQueryValue] = useState("");
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -79,7 +80,7 @@ const AllTagsPage: React.FC = () => {
     </>
   );
 };
-
+AllTagsPage.PageWrapper = PageWrapper;
 export default AllTagsPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

@@ -15,6 +15,7 @@ import Comment from "@components/Comment";
 import UserPreview from "@components/UserPreview";
 import { useRouter } from "next/router";
 import { TagSection } from "@components/TagSection";
+import { PageWrapper } from "@components/PageWrapper";
 
 const LOTTIE_OPTIONS = {
   loop: true,
@@ -186,4 +187,5 @@ const SearchPage = () => {
   );
 };
 
+SearchPage.PageWrapper = PageWrapper;
 export default SearchPage;

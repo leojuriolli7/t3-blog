@@ -1,6 +1,7 @@
+import { PageWrapper } from "@components/PageWrapper";
 import React from "react";
 
-const TermsAndConditionsPage: React.FC = () => {
+const TermsAndConditionsPage = () => {
   return (
     <div className="prose mx-auto w-full px-20 py-20 dark:prose-invert sm:px-0">
       <h2>
@@ -281,5 +282,5 @@ const TermsAndConditionsPage: React.FC = () => {
     </div>
   );
 };
-
+TermsAndConditionsPage.PageWrapper = PageWrapper;
 export default TermsAndConditionsPage;
