@@ -1,12 +1,9 @@
 import type { Prisma, PrismaClient } from "@prisma/client";
+import type { DefaultArgs } from "@prisma/client/runtime/library";
 
 export const deleteChildComments = async (
   commentId: string,
-  prisma: PrismaClient<
-    Prisma.PrismaClientOptions,
-    never,
-    Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
-  >
+  prisma: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
 ) => {
   const oneLevelDownReplies = await prisma.comment.findMany({
     where: {
